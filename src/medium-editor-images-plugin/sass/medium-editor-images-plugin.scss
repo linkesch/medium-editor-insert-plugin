@@ -1,0 +1,112 @@
+img {
+  max-width: 100%;
+}
+
+q {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border-left: 5px solid #efefef;
+  padding-left: 20px;
+  margin-left: -25px;
+}
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
+.mediumImage-addImage {
+  position: relative;
+  margin: -1em 0 -1em -100px;
+  min-height: 18px;
+  .mediumImage-imageUploadInfo {
+    position: absolute;
+    display: none;
+    width: 100px;
+    top: 0;
+    left: 0;
+    color: #ddd;
+    font-size: 0.9em; 
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+    }   
+  }
+  .mediumImage-placeholder {
+    position: relative;
+    margin-left: 100px;
+    text-align: center;
+    .mediumImage-image {
+      img {
+        margin-top: 1em;
+        margin-bottom: 10px;
+        vertical-align: top;
+      }
+      a {
+        position: absolute;
+        top: 1em;
+        width: 30px;
+        height: 30px;
+        background-color: #3b3b3b; 
+        background-repeat: no-repeat;
+        background-position: center center;
+        cursor: pointer;  
+        &.mediumImage-remove {
+          right: 0;
+          background-image: url(../images/remove.png); 
+        }
+        &.mediumImage-resize-smaller {
+          right: 31px;
+          background-image: url(../images/resize-smaller.png); 
+        }
+        &.mediumImage-resize-bigger {
+          @extend .mediumImage-resize-smaller;
+          background-image: url(../images/resize-bigger.png); 
+        }
+      }
+      &:first-child:after {
+        content:"\a";
+        white-space: pre;
+      }
+      &:not(:first-child) {
+        margin-right: 10px;
+        img {
+          width: 20%; 
+        }
+      }
+    }
+  }
+  &.hover {
+    .mediumImage-placeholder {
+      background: #f0f0f0;
+    }
+  }
+  &:hover {
+    .mediumImage-imageUploadInfo {
+      display: block;
+    }  
+  }
+  &.small {
+    .mediumImage-placeholder {
+      width: 33.33%;
+      float: left;  
+      margin-right: 30px;
+    }
+  }
+}
+
+.hover {
+  .mediumImage-placeholder {
+    min-height: 14px;
+    border: 1px dashed #ddd;
+    margin-top: -1px;
+    margin-bottom: -1px;
+  }
+}

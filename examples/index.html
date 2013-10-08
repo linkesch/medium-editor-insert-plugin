@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>medium editor | demo</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="stylesheet" href="../src/medium-editor/css/medium-editor.css">
+    <link rel="stylesheet" href="../src/medium-editor-images-plugin/css/medium-editor-images-plugin.css">
+    <style>
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="editable" data-placeholder="Type some text"></div>
+    </div>
+    <script src="../src/medium-editor/js/medium-editor.js"></script>
+    <script src="../src/medium-editor-images-plugin/js/jquery-1.10.2.min.js"></script>
+    <script src="../src/medium-editor-images-plugin/js/medium-editor-images-plugin.js"></script>
+    <script>
+        var editor = new MediumEditor('.editable');
+
+        $(function () {
+            $('.editable').mediumImage();
+        });
+    </script>
+</body>
+</html>
