@@ -39,7 +39,7 @@ Screenshots
 Usage
 -----
 
-The first step is to add MediumEditor it self:
+The first step is to add MediumEditor itself:
 
 ```html
 <link rel="stylesheet" href="medium-editor/css/medium-editor.css">
