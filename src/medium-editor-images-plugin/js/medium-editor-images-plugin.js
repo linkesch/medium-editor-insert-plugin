@@ -206,11 +206,9 @@
           xhr.onload = function (e) {
             progress.attr('value', 100);
             progress.html(100);
-          };
-
-          var reader = new FileReader();
-          reader.onload = function (event) {
-            $('.progress:first').before('<span class="mediumImages-image"><img src="'+ event.target.result +'" draggable="true"></span>');
+            
+            var image = 'image.jpg';
+            $('.progress:first').before('<span class="mediumImages-image"><img src="'+ image +'" draggable="true"></span>');
             var img = $('.progress:first').siblings('img');
             $('.progress:first').remove();
               
@@ -218,9 +216,6 @@
               img.parent().mouseleave().mouseenter();
             });
           };
-        
-          reader.readAsDataURL(file);
-
           
         }
       }
