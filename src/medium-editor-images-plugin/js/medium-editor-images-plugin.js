@@ -206,14 +206,6 @@
           xhr.onload = function (e) {
             progress.attr('value', 100);
             progress.html(100);
-            
-            $('.progress:first').before('<span class="mediumImages-image"><img src="'+ e.currentTarget.response +'" draggable="true"></span>');
-            var img = $('.progress:first').siblings('img');
-            $('.progress:first').remove();
-              
-            img.load(function () {
-              img.parent().mouseleave().mouseenter();
-            });
           };
 
           var reader = new FileReader();
