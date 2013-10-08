@@ -41,33 +41,33 @@ Usage
 
 The first step is to add MediumEditor it self:
 
-```
+```html
 <link rel="stylesheet" href="medium-editor/css/medium-editor.css">
 <script src="medium-editor/js/medium-editor.js"></script>
 ```
 
 Next add jQuery:
 
-```
+```html
 <script src="medium-editor-images-plugin/js/jquery-1.10.2.min.js"></script>
 ```
 
 Now you can add the plugin:
 
-```
+```html
 <link rel="stylesheet" href="medium-editor-images-plugin/css/medium-editor-images-plugin.css">
 <script src="medium-editor-images-plugin/js/medium-editor-images-plugin.js"></script>
 ```
 
 Initialize MediumEditor as you normally would:
 
-```
+```html
 <script>var editor = new MediumEditor('.editable');</script>
 ```
 
 Finally, you can initialize the images plugin:
 
-```
+```javascript
 $(function () {
   $('.editable').mediumImage();
 });
