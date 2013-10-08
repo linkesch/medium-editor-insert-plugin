@@ -215,6 +215,20 @@
               img.parent().mouseleave().mouseenter();
             });
           };
+
+          var reader = new FileReader();
+          reader.onload = function (event) {
+            $('.progress:first').before('<span class="mediumImages-image"><img src="'+ event.target.result +'" draggable="true"></span>');
+            var img = $('.progress:first').siblings('img');
+            $('.progress:first').remove();
+              
+            img.load(function () {
+              img.parent().mouseleave().mouseenter();
+            });
+          };
+        
+          reader.readAsDataURL(file);
+
           
         }
       }

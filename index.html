@@ -21,7 +21,9 @@
         var editor = new MediumEditor('.editable');
 
         $(function () {
-            $('.editable').mediumImages();
+            $('.editable').mediumImages({
+                'uploadScript': 'upload.html'
+            });
         });
     </script>
 </body>
