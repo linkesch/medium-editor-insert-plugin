@@ -22,11 +22,11 @@ q {
   -webkit-user-drag: element;
 }
 
-.mediumImage-addImage {
+.mediumImages-addImage {
   position: relative;
   margin: -1em 0 -1em -100px;
   min-height: 18px;
-  .mediumImage-imageUploadInfo {
+  .mediumImages-imageUploadInfo {
     position: absolute;
     display: none;
     width: 100px;
@@ -39,11 +39,11 @@ q {
       cursor: pointer;
     }   
   }
-  .mediumImage-placeholder {
+  .mediumImages-placeholder {
     position: relative;
     margin-left: 100px;
     text-align: center;
-    .mediumImage-image {
+    .mediumImages-image {
       img {
         margin-top: 1em;
         margin-bottom: 10px;
@@ -58,16 +58,16 @@ q {
         background-repeat: no-repeat;
         background-position: center center;
         cursor: pointer;  
-        &.mediumImage-remove {
+        &.mediumImages-remove {
           right: 0;
           background-image: url(../images/remove.png); 
         }
-        &.mediumImage-resize-smaller {
+        &.mediumImages-resize-smaller {
           right: 31px;
           background-image: url(../images/resize-smaller.png); 
         }
-        &.mediumImage-resize-bigger {
-          @extend .mediumImage-resize-smaller;
+        &.mediumImages-resize-bigger {
+          @extend .mediumImages-resize-smaller;
           background-image: url(../images/resize-bigger.png); 
         }
       }
@@ -84,17 +84,17 @@ q {
     }
   }
   &.hover {
-    .mediumImage-placeholder {
+    .mediumImages-placeholder {
       background: #f0f0f0;
     }
   }
   &:hover {
-    .mediumImage-imageUploadInfo {
+    .mediumImages-imageUploadInfo {
       display: block;
     }  
   }
   &.small {
-    .mediumImage-placeholder {
+    .mediumImages-placeholder {
       width: 33.33%;
       float: left;  
       margin-right: 30px;
@@ -103,7 +103,7 @@ q {
 }
 
 .hover {
-  .mediumImage-placeholder {
+  .mediumImages-placeholder {
     min-height: 14px;
     border: 1px dashed #ddd;
     margin-top: -1px;

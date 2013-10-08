@@ -13,23 +13,23 @@ http://orthes.github.io/medium-editor-images-plugin
 Screenshots
 -----------
 
-The plugin adds space between every paragraph to upload images.
+**The plugin adds space between every paragraph to upload images.**
 
 ![Editor 01](http://www.linkesch.sk/uploads/creator5/1_890d6ad67afe18a7e4a4c48f17c97d151f63a49b/image/editor01.png)
 
-You can use native HTML5 drag & drop, too.
+**You can use native HTML5 drag & drop, too.**
 
 ![Editor 02](http://www.linkesch.sk/uploads/creator5/1_890d6ad67afe18a7e4a4c48f17c97d151f63a49b/image/editor02.png)
 
-Added image looks like this and it could be deleted or resized. There are two size possibilities. The first is full width:
+**Added image looks like this and it could be deleted or resized. There are two size possibilities. The first is full width:**
 
 ![Editor 03](http://www.linkesch.sk/uploads/creator5/1_890d6ad67afe18a7e4a4c48f17c97d151f63a49b/image/editor03.png)
 
-The second possible size is 33% aligned left:
+**The second possible size is 33% aligned left:**
 
 ![Editor 04](http://www.linkesch.sk/uploads/creator5/1_890d6ad67afe18a7e4a4c48f17c97d151f63a49b/image/editor04.png)
 
-There are possible multiple uploads, too.
+**There are possible multiple uploads, too.**
 
 ![Editor 05](http://www.linkesch.sk/uploads/creator5/1_890d6ad67afe18a7e4a4c48f17c97d151f63a49b/image/editor05.png)
 ![Editor 06](http://www.linkesch.sk/uploads/creator5/1_890d6ad67afe18a7e4a4c48f17c97d151f63a49b/image/editor06.png)
@@ -69,7 +69,7 @@ Finally, you can initialize the images plugin:
 
 ```javascript
 $(function () {
-  $('.editable').mediumImage();
+  $('.editable').mediumImages();
 });
 ```
 
