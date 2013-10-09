@@ -109,6 +109,9 @@
       
       $(document).on('dragend', '.mediumImages-addImage img', function (e) {
         if (dropSuccessful === true) {
+          if ($(e.originalEvent.target.parentNode).siblings().length === 0) {
+            $(e.originalEvent.target.parentNode).parent().parent().removeClass('small'); 
+          }
           $(e.originalEvent.target.parentNode).mouseleave();
           $(e.originalEvent.target.parentNode).remove();  
           dropSuccessful = false;
