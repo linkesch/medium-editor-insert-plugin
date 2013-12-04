@@ -1,0 +1,20 @@
+{
+  "name": "medium-editor-insert-plugin",
+  "version": "0.0.1",
+  "description": "jQuery insert plugin for MediumEditor",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "qunit": "~1.12.0",
+    "sinon": "~1.7.3",
+    "sinon-qunit": "~1.0.0"
+  }
+}

@@ -1,3 +1,6 @@
+@import "clearfix";
+
+
 img {
   max-width: 100%;
 }
@@ -22,14 +25,34 @@ q, blockquote {
   -webkit-user-drag: element;
 }
 
-.mediumImages-addImage {
+[contenteditable] {
+  outline: 0px solid transparent;
+  &:focus {
+    outline: 0px solid transparent;
+  }
+}
+
+[data-medium-element="true"] {
+  @extend .clearfix;
+}
+
+.medium-editor-placeholder {
+  padding-bottom: 0 !important;
+  min-height: 58px;
+  &:after {
+    content: attr(data-placeholder) !important;
+    top: 1em;
+  }
+}
+
+.mediumInsert {
   position: relative;
-  margin: -1em 0 -1em -100px;
+  margin: -1em 0 -1em -80px;
   min-height: 18px;
-  .mediumImages-imageUploadInfo {
+  .mediumInsert-buttons {
     position: absolute;
     display: none;
-    width: 100px;
+    width: 80px;
     top: 0;
     left: 0;
     color: #ddd;
@@ -37,13 +60,27 @@ q, blockquote {
     a {
       text-decoration: underline;
       cursor: pointer;
+      &.active {
+        font-weight: bold;
+      }
     }   
+    .mediumInsert-buttonsIcon {
+      position: absolute;
+      top: 0;
+      right: 10px;
+    }
+    ul.mediumInsert-buttonsOptions {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: none;
+    }
   }
-  .mediumImages-placeholder {
+  .mediumInsert-placeholder {
     position: relative;
-    margin-left: 100px;
+    margin-left: 80px;
     text-align: center;
-    .mediumImages-image {
+    .mediumInsert-images {
       img {
         margin-top: 1em;
         margin-bottom: 10px;
@@ -58,16 +95,16 @@ q, blockquote {
         background-repeat: no-repeat;
         background-position: center center;
         cursor: pointer;  
-        &.mediumImages-remove {
+        &.mediumInsert-imageRemove {
           right: 0;
           background-image: url(../images/remove.png); 
         }
-        &.mediumImages-resize-smaller {
+        &.mediumInsert-imageResizeSmaller {
           right: 31px;
           background-image: url(../images/resize-smaller.png); 
         }
-        &.mediumImages-resize-bigger {
-          @extend .mediumImages-resize-smaller;
+        &.mediumInsert-imageResizeBigger {
+          @extend .mediumInsert-imageResizeSmaller;
           background-image: url(../images/resize-bigger.png); 
         }
       }
@@ -82,19 +119,23 @@ q, blockquote {
         }
       }
     }
+    .mediumInsert-maps {
+      padding: 10px;
+      background: #ccc;
+    }
   }
   &.hover {
-    .mediumImages-placeholder {
+    .mediumInsert-placeholder {
       background: #f0f0f0;
     }
   }
   &:hover {
-    .mediumImages-imageUploadInfo {
+    .mediumInsert-buttons {
       display: block;
     }  
   }
   &.small {
-    .mediumImages-placeholder {
+    .mediumInsert-placeholder {
       width: 33.33%;
       float: left;  
       margin-right: 30px;
@@ -103,7 +144,7 @@ q, blockquote {
 }
 
 .hover {
-  .mediumImages-placeholder {
+  .mediumInsert-placeholder {
     min-height: 14px;
     border: 1px dashed #ddd;
     margin-top: -1px;
