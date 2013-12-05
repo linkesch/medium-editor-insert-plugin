@@ -232,7 +232,7 @@
         $('.mediumInsert-buttonsOptions', this).hide();
       });
         
-      $el.on('click', '.mediumInsert-buttonsOptions a', function () {
+      $el.on('click', '.mediumInsert-buttons .action a', function () {
         var action = $(this).attr('class').split('-');
         var $placeholder = $(this).parent().parent().parent().siblings('.mediumInsert-placeholder');           
                     
