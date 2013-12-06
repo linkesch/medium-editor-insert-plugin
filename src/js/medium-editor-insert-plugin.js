@@ -147,7 +147,10 @@
     */
     setPlaceholders: function () {
       var that = this,
-          $el = $.fn.mediumInsert.insert.$el;
+          $el = $.fn.mediumInsert.insert.$el,
+          insertBlock = '',
+          insertImage = '<a class="images-add">Image</a>',
+          insertMap = '<a class="maps-add">Map</a>';
          
       if ($el.is(':empty')) {
         $el.html('<p><br></p>');
@@ -158,18 +161,25 @@
       
         $el.children('p').each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
+            if($.fn.mediumInsert.settings.images === true && $.fn.mediumInsert.settings.maps === true) {
+              insertBlock = '<a class="mediumInsert-buttonsShow">Insert</a>'+
+                '<ul class="action mediumInsert-buttonsOptions">'+
+                   '<li>' + insertImage + '</li>' +
+                   '<li>' + insertMap + '</li>' +
+                '</ul>';
+            } else if ($.fn.mediumInsert.settings.images === true) {
+              insertBlock = '<div class="action">' + insertImage + '</div>';
+            } else if ($.fn.mediumInsert.settings.maps === true) {
+              insertBlock = '<div class="action">' + insertMap + '</div>';
+            }
             $(this).after('<div class="mediumInsert" id="mediumInsert-'+ i +'" contenteditable="false">'+
               '<div class="mediumInsert-buttons">'+
                 '<div class="mediumInsert-buttonsIcon">&rarr;</div>'+
-                '<a class="mediumInsert-buttonsShow">Insert</a>'+
-                '<ul class="mediumInsert-buttonsOptions">'+
-                  ($.fn.mediumInsert.settings.images === true ? '<li><a class="images-add">Image</a></li>': '') +
-                  ($.fn.mediumInsert.settings.maps === true ? '<li><a class="maps-add">Map</a></li>': '') +
-                '</ul>'+
+                insertBlock +
               '</div>'+
               '<div class="mediumInsert-placeholder"></div>'+
             '</div>');                 
-          } 
+          }
           i++;
         });
       }).keyup(); 
@@ -222,10 +232,10 @@
         $('.mediumInsert-buttonsOptions', this).hide();
       });
         
-      $el.on('click', '.mediumInsert-buttonsOptions a', function () {
+      $el.on('click', '.mediumInsert-buttons .action a', function () {
         var action = $(this).attr('class').split('-');
-        var $placeholder = $(this).parent().parent().parent().siblings('.mediumInsert-placeholder');           
-                    
+        var $placeholder = $(this).parents('.mediumInsert-buttons').siblings('.mediumInsert-placeholder');
+        
         if ($.fn.mediumInsert[action[0]] && $.fn.mediumInsert[action[0]][action[1]]) {
           $.fn.mediumInsert[action[0]][action[1]]($placeholder);
         }
