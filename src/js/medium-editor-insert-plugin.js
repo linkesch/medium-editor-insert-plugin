@@ -186,7 +186,7 @@
         $el.children('p').each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
             $(this).after(insertBlock);     
-            $('.mediumInsert', this).attr('id', 'mediumInsert-'+ i);            
+            $(this).next('.mediumInsert').attr('id', 'mediumInsert-'+ i);            
           }
           i++;
         });
