@@ -224,7 +224,7 @@
         
       $el.on('click', '.mediumInsert-buttonsOptions a', function () {
         var action = $(this).attr('class').split('-');
-        var $placeholder = $(this).parent().parent().parent().siblings('.mediumInsert-placeholder');           
+        var $placeholder = $(this).parents('.mediumInsert-buttons').siblings('.mediumInsert-placeholder');           
                     
         if ($.fn.mediumInsert[action[0]] && $.fn.mediumInsert[action[0]][action[1]]) {
           $.fn.mediumInsert[action[0]][action[1]]($placeholder);
