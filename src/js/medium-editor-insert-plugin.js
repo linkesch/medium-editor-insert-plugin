@@ -147,7 +147,10 @@
     */
     setPlaceholders: function () {
       var that = this,
-          $el = $.fn.mediumInsert.insert.$el;
+          $el = $.fn.mediumInsert.insert.$el,
+          insertImage = '<a class="mediumInsert-action action-images-add">Image</a>',
+          insertMap = '<a class="mediumInsert-action action-maps-add">Map</a>',
+          insertBlock;
          
       if ($el.is(':empty')) {
         $el.html('<p><br></p>');
@@ -159,18 +162,16 @@
         $el.children('p').each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
             insertBlock = '';
-            insertImage = '<a class="images-add">Image</a>';
-            insertMap = '<a class="maps-add">Map</a>';
             if($.fn.mediumInsert.settings.images === true && $.fn.mediumInsert.settings.maps === true) {
               insertBlock = '<a class="mediumInsert-buttonsShow">Insert</a>'+
-                '<ul class="action mediumInsert-buttonsOptions">'+
+                '<ul class="mediumInsert-buttonsOptions">'+
                    '<li>' + insertImage + '</li>' +
                    '<li>' + insertMap + '</li>' +
                 '</ul>';
             } else if ($.fn.mediumInsert.settings.images === true) {
-              insertBlock = '<div class="action">' + insertImage + '</div>';
+              insertBlock = insertImage;
             } else if ($.fn.mediumInsert.settings.maps === true) {
-              insertBlock = '<div class="action">' + insertMap + '</div>';
+              insertBlock = insertMap;
             }
             $(this).after('<div class="mediumInsert" id="mediumInsert-'+ i +'" contenteditable="false">'+
               '<div class="mediumInsert-buttons">'+
@@ -216,7 +217,7 @@
           $options.show();  
           
           $('a', $options).each(function () {
-            var aClass = $(this).attr('class'),
+            var aClass = $(this).attr('class').split('action-')[1],
                 plugin = aClass.split('-')[0];
             if ($('.mediumInsert-'+ plugin, $placeholder).length > 0) {
               $('a:not(.'+ aClass +')', $options).hide(); 
@@ -232,8 +233,8 @@
         $('.mediumInsert-buttonsOptions', this).hide();
       });
         
-      $el.on('click', '.mediumInsert-buttons .action a', function () {
-        var action = $(this).attr('class').split('-');
+      $el.on('click', '.mediumInsert-buttons .mediumInsert-action', function () {
+        var action = $(this).attr('class').split('action-')[1].split('-');
         var $placeholder = $(this).parents('.mediumInsert-buttons').siblings('.mediumInsert-placeholder');           
                     
         if ($.fn.mediumInsert[action[0]] && $.fn.mediumInsert[action[0]][action[1]]) {
