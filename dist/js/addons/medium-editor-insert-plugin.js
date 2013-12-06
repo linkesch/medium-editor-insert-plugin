@@ -142,9 +142,9 @@
     
     /**
     * Method setting placeholders and basic events on them
-    * @param {element} el Parent container element
     * @return {void}
     */
+    
     setPlaceholders: function () {
       var that = this,
           $el = $.fn.mediumInsert.insert.$el,
