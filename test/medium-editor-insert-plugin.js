@@ -97,5 +97,5 @@ asyncTest('setPlaceholders creates click event on options', function () {
 
   $.fn.mediumInsert.insert.setPlaceholders($el);
 
-  $('.mediumInsert-buttonsOptions .images-add', $el).click();
+  $('.mediumInsert-buttonsOptions .action-images-add', $el).click();
 });
