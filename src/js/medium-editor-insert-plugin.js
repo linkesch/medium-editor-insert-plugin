@@ -33,29 +33,20 @@
     var i, j,
         elementid,
         content = {},
-        $clone, $inserts, $insert, $insertData, html;
+        clone, inserts, html;
     for (i = 0; i < this.elements.length; i += 1) {
       elementid = (this.elements[i].id !== '') ? this.elements[i].id : 'element-' + i;
-      
-      $clone = $(this.elements[i]).clone();
-      $inserts = $('.mediumInsert', $clone);
-      for (j = 0; j < $inserts.length; j++) {
-        $insert = $inserts[j];
-        $insertData = $('.mediumInsert-placeholder', $insert).children();console.log($insertData.length);
-        if ($insertData.length === 0) {
-          $insert.remove();
-        } else {
-          $insert.removeAttr('contenteditable');
-          $('img[draggable]', $insert).removeAttr('draggable');
-          if ($insert.hasClass('small')) {
-            $insertData.addClass('small');
-          }
-          $('.mediumInsert-buttons', $insert).remove();
-          $insertData.unwrap();  
-        }
+
+      var clone = $(this.elements[i]).clone();
+      var inserts = $('.mediumInsert', clone);
+
+      for (j = 0; j < inserts.length; j++) {
+        var insert = $(inserts[j]);
+        var image = $('img', insert);
+        insert.replaceWith(image);
       }
-      
-      html = $clone.html().trim();
+
+      html = clone.html().trim();
       content[elementid] = {
         value: html
       };
