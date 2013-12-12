@@ -54,16 +54,6 @@ test('init calls setPlaceholders()', function() {
 });
 
 
-// deselect
-
-test('deselect calls editor.hideToolbar()', function () {
-  var stub1 = this.stub($.fn.mediumInsert.settings.editor, 'hideToolbar');
-
-  $.fn.mediumInsert.insert.deselect();
-  
-  ok(stub1.called, 'editor.hideToolbar() called');
-});
-
 // setPlaceholders
 
 test('setPlaceholders creates placeholders', function () {
