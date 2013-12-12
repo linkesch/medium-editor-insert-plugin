@@ -95,7 +95,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('js', ['jshint', 'uglify', 'copy']);
+  grunt.registerTask('js', ['jshint', 'qunit', 'uglify', 'copy']);
   grunt.registerTask('css', ['compass']);
   grunt.registerTask('default', ['js', 'css']);
   
