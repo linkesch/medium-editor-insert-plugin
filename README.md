@@ -5,14 +5,13 @@ This plugin expands capabilities of [MediumEditor](https://github.com/daviferrei
 
 The plugin is next, completely rewritten version of previous "images plugin". Now inserting images is only one of the plugin's addons. More addons (inserting files and maps) are coming soon...
 
-Current available addons:
-
-- images
+[![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
 
 
 ## Table of Contents
 
 - [Demo](#demo)
+- [Available Addons](#addons)
 - [Usage](#usage)
 - [Options](#options)
 - [Development](#development)
@@ -23,6 +22,15 @@ Current available addons:
 ## <a name="demo"></a>Demo
 
 http://orthes.github.io/medium-editor-insert-plugin
+
+
+## <a name="addons"></a>Available Addons
+
+Current available addons:
+
+- images
+
+More are coming soon...
 
 
 ## <a name="usage"></a>Usage
