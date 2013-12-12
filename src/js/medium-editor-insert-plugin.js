@@ -10,20 +10,7 @@
  */
 
 (function ($) {
-
-
-  /**
-  * Extend MediumEditor with a function for hiding the toolbar
-  * @return {void}
-  */
-  
-  MediumEditor.prototype.hideToolbar = function () {
-    if (this.toolbar) {
-      this.toolbar.style.display = 'none';
-    }
-  };
-  
-  
+    
   /**
   * Extend MediumEditor's serialize function to get rid of unnecesarry Medium Editor Insert Plugin stuff
   * @return {object} content Object containing HTML content of each element
@@ -131,13 +118,12 @@
     },
     
     /**
-    * Deselect selected text and hide MediumEditor toolbar
+    * Deselect selected text
     * @return {void}
     */
     
     deselect: function () {
       document.getSelection().removeAllRanges();
-      $.fn.mediumInsert.settings.editor.hideToolbar();
     },
     
     /**
