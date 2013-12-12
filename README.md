@@ -103,7 +103,7 @@ These are available Grunt tasks:
 
 ## <a name="contributing"></a>Contributing
 
-I'm happy when you not only use the plugin, but contribute your improvements, too. To do that, please meet my only two requirements:
+I'm happy when you not only use the plugin, but contribute your improvements, too. To do that, you need to meet only two requirements:
 
 1. Use the same coding style as the plugin
 2. Write QUnit tests (if you're adding a new funcionality) and test your changes with **grunt test**
