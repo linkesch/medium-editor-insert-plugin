@@ -10,14 +10,22 @@ Current available addons:
 - images
 
 
-Demo
-----
+## Table of Contents
+
+- [Demo](#demo)
+- [Usage](#usage)
+- [Options](#options)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Author](#author)
+
+
+## <a name="demo"></a>Demo
 
 http://orthes.github.io/medium-editor-insert-plugin
 
 
-Usage
------
+## <a name="usage"></a>Usage
 
 The first step is to add all prerequisites (MediumEditor and jQuery):
 
@@ -60,8 +68,7 @@ $(function () {
 ```
 
 
-Options
--------
+## <a name="options"></a>Options
 
 - **editor**: (MediumEditor) instance of MediumEditor
 - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
@@ -69,8 +76,7 @@ Options
 - **maps**: (boolean) whether to use maps addon: Default *false*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js)
 
 
-Development
------------
+## <a name="development"></a>Development
 
 The plugin uses [Grunt](http://gruntjs.com/) for automating development tasks and [Bower](http://bower.io/) for package management. To install all the necessities for development run these commands:
 
@@ -87,8 +93,7 @@ These are available Grunt tasks:
 - **watch**: watches for modifications on script/scss files and runs js/css task
 
 
-Contributing
-------------
+## <a name="contributing"></a>Contributing
 
 I'm happy when you not only use the plugin, but contribute your improvements, too. To do that, please meet my only two requirements:
 
@@ -96,20 +101,6 @@ I'm happy when you not only use the plugin, but contribute your improvements, to
 2. Write QUnit tests (if you're adding a new funcionality) and test your changes with **grunt test**
 
 
-Author
-------
+## <a name="author"></a>Author
 
 Pavel Linkesch | [@linkesch](http://twitter.com/linkesch) | http://www.linkesch.sk
-
-
-Changelog
----------
-
-**[2013-12-04]**
-
-- Renamed to Insert Plugin
-- Completely rewritten
-- Possible to extend the plugin with addons - insert not only images, but files, maps, etc.
-- Added tests
-- Fixed issue with breaking of MediumEditor's placeholder
-- Overridden MediumEditor's seralize function to strip unnecessary elements inserted by the plugin
