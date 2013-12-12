@@ -69,6 +69,33 @@ Options
 - **maps**: (boolean) whether to use maps addon: Default *false*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js)
 
 
+Development
+-----------
+
+The plugin uses [Grunt](http://gruntjs.com/) for automating development tasks and [Bower](http://bower.io/) for package management. To install all the necessities for development run these commands:
+
+```
+npm install
+bower install
+```
+
+These are available Grunt tasks:
+
+- **js**: runs jshint, uglify and copy
+- **css**: runs compass
+- **test**: runs jshint and qunit
+- **watch**: watches for modifications on script/scss files and runs js/css task
+
+
+Contributing
+------------
+
+I'm happy when you not only use the plugin, but contribute your improvements, too. To do that, please meet my only two requirements:
+
+1. Use the same coding style as the plugin
+2. Write QUnit tests (if you're adding a new funcionality) and test your changes with **grunt test**
+
+
 Author
 ------
 
