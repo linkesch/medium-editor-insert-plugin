@@ -40,7 +40,7 @@
       $clone = $(this.elements[i]).clone();
       $inserts = $('.mediumInsert', $clone);
       for (j = 0; j < $inserts.length; j++) {
-        $insert = $inserts[j];
+        $insert = $($inserts[j]);
         $insertData = $('.mediumInsert-placeholder', $insert).children();
         if ($insertData.length === 0) {
           $insert.remove();
