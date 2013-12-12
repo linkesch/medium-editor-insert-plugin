@@ -48,10 +48,10 @@ module.exports = function(grunt) {
     },
     
     jshint: {
-      files: ['src/js/*.js', 'src/js/**/*.js', 'test/*.js', 'test/**/*.js']
-      /*options: {
-        ignores: ['src/js/lib/modernizr-custom.js', 'src/js/templates/templates.js']
-      }*/
+      files: ['src/js/*.js', 'src/js/**/*.js', 'test/*.js', 'test/**/*.js'],
+      options: {
+        ignores: ['test/lib/**/*.js']
+      }
     },
     
     qunit: {
