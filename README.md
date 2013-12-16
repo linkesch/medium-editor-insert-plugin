@@ -82,7 +82,8 @@ $(function () {
 - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
 - **images**: (boolean) whether to use images addon: Default *true*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-images.min.js)
 - **maps**: (boolean) whether to use maps addon: Default *false*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js)
-
+- **imagesPlugin**: (object) options for images addon
+  - **formatData**: (function) function that formats data before sending them to server while uploading an image 
 
 ## <a name="development"></a>Development
 
