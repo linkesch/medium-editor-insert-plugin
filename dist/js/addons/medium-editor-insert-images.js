@@ -80,14 +80,14 @@
     * @return {void}
     */
       
-    uploadCompleted: function (e) {
+    uploadCompleted: function (jqxhr) {
       var $progress = $('.progress:first', this.$el),
           $img;
         
       $progress.attr('value', 100);
       $progress.html(100);
                           
-      $progress.before('<span class="mediumInsert-images"><img src="'+ e.currentTarget.response +'" draggable="true" alt=""></span>');
+      $progress.before('<span class="mediumInsert-images"><img src="'+ jqxhr.responseText +'" draggable="true" alt=""></span>');
       $img = $progress.siblings('img');
       $progress.remove();
                 
@@ -114,7 +114,6 @@
       xhr = function () {
         var xhr = new XMLHttpRequest();
         xhr.upload.onprogress = that.updateProgressBar;
-        xhr.onload = that.uploadCompleted;
         return xhr;
       };
 
@@ -130,6 +129,7 @@
             xhr: xhr,
             cache: false,
             contentType: false,
+            complete: this.uploadCompleted,
             processData: false,
             data: this.options.formatData(file)
           });
