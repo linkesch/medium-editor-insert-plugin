@@ -63,9 +63,6 @@ asyncTest('uploadFiles calls uploadCompleted', function () {
   
   this.stub($.fn.mediumInsert.images, 'uploadCompleted', function () {
     ok(1, 'uploadCompleted called');
-    try {
-      $.fn.mediumInsert.images.uploadCompleted.restore();  
-    } catch ($e) {}
     start();  
   });
 
