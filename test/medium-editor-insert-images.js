@@ -58,6 +58,18 @@ test('uploadFiles creates progress bar', function () {
   equal($('progress', $el).length, 1, 'progress bar created');
 });
 
+asyncTest('uploadFiles calls uploadCompleted', function () {
+  var $el = $('#qunit-fixture').html('<div class="mediumInsert-placeholder"></div>');
+  
+  this.stub($.fn.mediumInsert.images, 'uploadCompleted', function () {
+    ok(1, 'uploadCompleted called');
+    start();  
+  });
+
+  $.fn.mediumInsert.images.uploadFiles($('.mediumInsert-placeholder', $el), [{ type: 'image/png' }]);
+});
+
+
 
 // setImageEvents
 
