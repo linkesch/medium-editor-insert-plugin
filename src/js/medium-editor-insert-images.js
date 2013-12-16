@@ -20,9 +20,20 @@
     
     init: function () {
       this.$el = $.fn.mediumInsert.insert.$el;
+      this.options = $.extend(this.default,
+        $.fn.mediumInsert.settings.imagesPlugin);
       
       this.setImageEvents();
       this.setDragAndDropEvents();
+    },
+
+
+    default: {
+      formatData: function (file) {
+        var formData = new FormData();
+        formData.append('file', file);
+        return formData;
+      }
     },
       
     /**
@@ -98,24 +109,30 @@
         'image/png': true,
         'image/jpeg': true,
         'image/gif': true
+      },
+      that = this,
+      xhr = function () {
+        var xhr = new XMLHttpRequest();
+        xhr.upload.onprogress = that.updateProgressBar;
+        xhr.onload = that.uploadCompleted;
+        return xhr;
       };
-      
+
       for (var i = 0; i < files.length; i++) {
         var file = files[i];
 
         if (acceptedTypes[file.type] === true) {
-          var formData = new FormData();
-          formData.append('file', file);
-          
           $placeholder.append('<progress class="progress" min="0" max="100" value="0">0</progress>');
-          
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', $.fn.mediumInsert.settings.imagesUploadScript);
-            
-          xhr.send(formData);
-            
-          xhr.upload.onprogress = this.updateProgressBar;
-          xhr.onload = this.uploadCompleted;
+
+          $.ajax({
+            type: "post",
+            url: $.fn.mediumInsert.settings.imagesUploadScript,
+            xhr: xhr,
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: this.options.formatData(file)
+          });
         }
       }
     },
@@ -280,9 +297,6 @@
           dropSuccessful = true;
         }
       });
-      
     }
-    
   };
-  
 }(jQuery));
