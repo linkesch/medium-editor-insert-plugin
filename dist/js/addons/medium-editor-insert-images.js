@@ -27,6 +27,9 @@
       this.setDragAndDropEvents();
     },
 
+    /**
+    * Images default options
+    */
 
     default: {
       formatData: function (file) {
@@ -76,7 +79,7 @@
     
     /**
     * Show uploaded image after upload completed
-    * @param {event} e XMLHttpRequest.onload event
+    * @param {jqXHR} jqxhr jqXHR object
     * @return {void}
     */
       
