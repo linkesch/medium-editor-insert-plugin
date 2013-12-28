@@ -125,17 +125,7 @@
 
         if (acceptedTypes[file.type] === true) {
           $placeholder.append('<progress class="progress" min="0" max="100" value="0">0</progress>');
-
-          $.ajax({
-            type: "post",
-            url: $.fn.mediumInsert.settings.imagesUploadScript,
-            xhr: xhr,
-            cache: false,
-            contentType: false,
-            complete: this.uploadCompleted,
-            processData: false,
-            data: this.options.formatData(file)
-          });
+          $.fn.mediumInsert.settings.imagesUploadScript(file);
         }
       }
     },
