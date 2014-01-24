@@ -37,6 +37,21 @@
         var formData = new FormData();
         formData.append('file', file);
         return formData;
+      },
+      uploadCompleted: function (jqxhr) {
+        var $progress = $('.progress:first', this.$el),
+          $img;
+
+        $progress.attr('value', 100);
+        $progress.html(100);
+
+        $progress.before('<div class="mediumInsert-images"><img src="'+ jqxhr.responseText +'" draggable="true" alt=""></div>');
+        $img = $progress.siblings('img');
+        $progress.remove();
+
+        $img.load(function () {
+          $img.parent().mouseleave().mouseenter();
+        });
       }
     },
 
@@ -89,29 +104,6 @@
     },
 
     /**
-    * Show uploaded image after upload completed
-    * @param {jqXHR} jqxhr jqXHR object
-    * @return {void}
-    */
-
-    uploadCompleted: function (jqxhr) {
-      var $progress = $('.progress:first', this.$el),
-          $img;
-
-      $progress.attr('value', 100);
-      $progress.html(100);
-
-      $progress.before('<div class="mediumInsert-images"><img src="'+ jqxhr.responseText +'" draggable="true" alt=""></div>');
-      $img = $progress.siblings('img');
-      $progress.remove();
-
-      $img.load(function () {
-        $img.parent().mouseleave().mouseenter();
-      });
-    },
-
-
-    /**
     * Upload files, display progress bar and finally uploaded file
     * @param {element} placeholder Placeholder to add image to
     * @param {FileList} files Files to upload
@@ -143,7 +135,7 @@
             xhr: xhr,
             cache: false,
             contentType: false,
-            complete: this.uploadCompleted,
+            complete: this.options.uploadCompleted,
             processData: false,
             data: this.options.formatData(file)
           });
