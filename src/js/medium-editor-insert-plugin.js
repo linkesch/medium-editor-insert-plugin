@@ -50,7 +50,56 @@
     return content;
   };
   
+  /**
+  * Extend MediumEditor's deactivate function to call $.fn.mediumInsert.insert.disable function
+  * @return {void}
+  */
   
+  MediumEditor.prototype.deactivate = function () {
+    var i;
+    if (!this.isActive) {
+      return;
+    }
+    this.isActive = false;
+
+    if (this.toolbar !== undefined) {
+      this.toolbar.style.display = 'none';
+    }
+
+    document.documentElement.removeEventListener('mouseup', this.checkSelectionWrapper);
+
+    for (i = 0; i < this.elements.length; i += 1) {
+      this.elements[i].removeEventListener('keyup', this.checkSelectionWrapper);
+      this.elements[i].removeEventListener('blur', this.checkSelectionWrapper);
+      this.elements[i].removeAttribute('contentEditable');
+    }
+    
+    $.fn.mediumInsert.insert.$el.mediumInsert('disable');
+  };
+  
+  /**
+  * Extend MediumEditor's activate function to call $.fn.mediumInsert.insert.enable function
+  * @return {void}
+  */
+  
+  MediumEditor.prototype.activate = function () {
+    var i;
+    if (this.isActive) {
+      return;
+    }
+
+    if (this.toolbar !== undefined) {
+      this.toolbar.style.display = 'block';
+    }
+
+    this.isActive = true;
+      for (i = 0; i < this.elements.length; i += 1) {
+        this.elements[i].setAttribute('contentEditable', true);
+      }
+    this.bindSelect();
+    
+    $.fn.mediumInsert.insert.$el.mediumInsert('enable');
+  };
   
   /**
   * Medium Editor Insert Plugin
@@ -60,32 +109,36 @@
 
   $.fn.mediumInsert = function (options) {
  
-    $.fn.mediumInsert.settings = $.extend($.fn.mediumInsert.settings, options);
+    if (typeof options === 'string' && $.fn.mediumInsert.insert[options]) {
+      $.fn.mediumInsert.insert[options]();
+    } else {
+      $.fn.mediumInsert.settings = $.extend($.fn.mediumInsert.settings, options);
 
-    
-    /**
-    * Initial plugin loop
-    */
-     
-    return this.each(function () {
-
-      $('p', this).bind('dragover drop', function (e) {
-        e.preventDefault();
-        return false;
-      });
-    
-      $.fn.mediumInsert.insert.init($(this));
       
-      if ($.fn.mediumInsert.settings.images === true) {
-        $.fn.mediumInsert.images.init(); 
-      }
-      
-      if ($.fn.mediumInsert.settings.maps === true) {
-        $.fn.mediumInsert.maps.init(); 
-      }
+      /**
+      * Initial plugin loop
+      */
        
-    });
- 
+      return this.each(function () {
+  
+        $('p', this).bind('dragover drop', function (e) {
+          e.preventDefault();
+          return false;
+        });
+      
+        $.fn.mediumInsert.insert.init($(this));
+        
+        if ($.fn.mediumInsert.settings.images === true) {
+          $.fn.mediumInsert.images.init(); 
+        }
+        
+        if ($.fn.mediumInsert.settings.maps === true) {
+          $.fn.mediumInsert.maps.init(); 
+        }
+         
+      });  
+    }
+    
   };
   
   
@@ -95,6 +148,7 @@
   
   $.fn.mediumInsert.settings = {
     'imagesUploadScript': 'upload.php',
+    'enabled': true,
     'images': true,
     'maps': false,
   };
@@ -114,7 +168,8 @@
       
     init: function ($el) {
       this.$el = $el;
-      this.setPlaceholders();  
+      this.setPlaceholders();
+      this.setEvents();  
     },
     
     /**
@@ -127,7 +182,29 @@
     },
     
     /**
-    * Method setting placeholders and basic events on them
+    * Disable the plugin
+    * @return {void}
+    */
+    
+    disable: function () {
+      $.fn.mediumInsert.settings.enabled = false; 
+      
+      $.fn.mediumInsert.insert.$el.find('.mediumInsert-buttons').addClass('hide');
+    },
+    
+    /**
+    * Enable the plugin
+    * @return {void}
+    */
+    
+    enable: function () {
+      $.fn.mediumInsert.settings.enabled = true; 
+      
+      $.fn.mediumInsert.insert.$el.find('.mediumInsert-buttons').removeClass('hide');
+    },
+    
+    /**
+    * Method setting placeholders
     * @return {void}
     */
     
@@ -137,7 +214,7 @@
           insertBlock = '',
           insertImage = '<a class="mediumInsert-action action-images-add">Image</a>',
           insertMap = '<a class="mediumInsert-action action-maps-add">Map</a>';
-         
+                  
       if($.fn.mediumInsert.settings.images === true && $.fn.mediumInsert.settings.maps === true) {
         insertBlock = '<a class="mediumInsert-buttonsShow">Insert</a>'+
           '<ul class="mediumInsert-buttonsOptions">'+
@@ -177,7 +254,18 @@
           i++;
         });
       }).keyup(); 
-        
+    }, 
+    
+    
+    /**
+    * Set events on placeholders
+    * @return {void}
+    */
+    
+    setEvents: function () {
+      var that = this,
+          $el = $.fn.mediumInsert.insert.$el;
+
       $el.on('selectstart', '.mediumInsert', function (e) {
         e.preventDefault();
         return false;
@@ -236,7 +324,7 @@
         
         $(this).parents('.mediumInsert').mouseleave();
       });
-    } 
+    }
       
   };
  

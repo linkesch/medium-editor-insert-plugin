@@ -161,6 +161,10 @@
         var $img = $('img', this),
             positionTop,
             positionLeft;
+            
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
 
         if ($img.length > 0) {
           $(this).append('<a class="mediumInsert-imageRemove"></a>');
@@ -226,29 +230,53 @@
           dropSortIndex, dropSortParent;
 
       $(document).on('dragover', 'body', function () {
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+
         $(this).addClass('hover');
       });
 
       $(document).on('dragend', 'body', function () {
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+        
         $(this).removeClass('hover');
       });
 
       this.$el.on('dragover', '.mediumInsert', function () {
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+        
         $(this).addClass('hover');
         $(this).attr('contenteditable', true);
       });
 
       this.$el.on('dragleave', '.mediumInsert', function () {
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+        
         $(this).removeClass('hover');
         $(this).attr('contenteditable', false);
       });
 
       this.$el.on('dragstart', '.mediumInsert .mediumInsert-images img', function (e) {
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+        
         dropSortIndex = $(this).parent().index();
         dropSortParent = $(this).parent().parent().parent().attr('id');
       });
 
       this.$el.on('dragend', '.mediumInsert .mediumInsert-images img', function (e) {
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+        
         if (dropSuccessful === true) {
           if ($(e.originalEvent.target.parentNode).siblings().length === 0) {
             $(e.originalEvent.target.parentNode).parent().parent().removeClass('small');
@@ -261,11 +289,20 @@
       });
 
       this.$el.on('dragover', '.mediumInsert .mediumInsert-images img', function (e) {
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+        
         e.preventDefault();
       });
 
       this.$el.on('drop', '.mediumInsert .mediumInsert-images img', function (e) {
         var index, $dragged, finalIndex;
+
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+        
 
         if (dropSortParent !== $(this).parent().parent().parent().attr('id')) {
           dropSort = false;
@@ -294,6 +331,11 @@
         var files;
 
         e.preventDefault();
+
+        if ($.fn.mediumInsert.settings.enabled === false) {
+          return;
+        }
+
         $(this).removeClass('hover');
         $('body').removeClass('hover');
         $(this).attr('contenteditable', false);

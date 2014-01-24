@@ -14,6 +14,7 @@ The plugin is next, completely rewritten version of previous "images plugin". No
 - [Available Addons](#addons)
 - [Usage](#usage)
 - [Options](#options)
+- [Methods](#methods)
 - [Development](#development)
 - [Contributing](#contributing)
 - [Author](#author)
@@ -82,8 +83,22 @@ $(function () {
 - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
 - **images**: (boolean) whether to use images addon: Default *true*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-images.min.js)
 - **maps**: (boolean) whether to use maps addon: Default *false*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js)
+- **enabled**: (boolean) plugin's state: Default *true*.
 - **imagesPlugin**: (object) options for images addon
   - **formatData**: (function) function that formats data before sending them to server while uploading an image 
+
+
+## <a name="methods"></a>Methods
+
+- **enable**: enables the plugin. It's connected to Medium Editor's own activate function, so if the editor is activated, so is the plugin. (The plugin is enabled automatically. Use it only if you previously disabled the plugin.)
+- **disable**: disables the plugin. It's connected to Medium Editor's own deactivate function, so if the editor is deactivated, so is the plugin.
+
+Use example:
+
+```javascript
+$('.editable').mediumInsert('disable');
+```
+ 
 
 ## <a name="development"></a>Development
 

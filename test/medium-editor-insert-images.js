@@ -6,7 +6,9 @@ module("images", {
   setup: function() {
     $.fn.mediumInsert.settings.editor = new MediumEditor('.editable');
     $.fn.mediumInsert.settings.imagesUploadScript = 'examples/upload.php';
+    $.fn.mediumInsert.settings.enabled = true;
     $.fn.mediumInsert.images.$el = $('#qunit-fixture');
+    $.fn.mediumInsert.insert.$el = $('#qunit-fixture');
   }
 });
 
@@ -103,6 +105,25 @@ asyncTest('setImageEvents creates mouseenter event on image', function () {
   $(document).one('mouseenter', '.mediumInsert-images', function () {
     ok($('.mediumInsert-imageRemove', $el).length > 0, 'remove icon showed on mouseenter');
     ok($('.mediumInsert-imageResizeSmaller', $el).length > 0, 'resize smaller icon showed on mouseenter');
+    start();
+  });
+
+  $('.mediumInsert-images', $el).mouseenter();
+});
+
+asyncTest('setImageEvents mouseenter event on image does nothing if the plugin is disabled', function () {
+  var $el = $('#qunit-fixture').html('<div class="mediumInsert" id="mediumInsert-0" contenteditable="false">'+
+    '<div class="mediumInsert-placeholder">'+
+      '<span class="mediumInsert-images"><img src="test/fixtures/image.png" draggable="true"></span>'+
+    '</div>'+
+  '</div>');
+
+  $el.mediumInsert('disable');
+  $.fn.mediumInsert.images.setImageEvents();
+
+  $(document).one('mouseenter', '.mediumInsert-images', function () {
+    equal($('.mediumInsert-imageRemove', $el).length, 0, 'remove icon doesn\'t show on mouseenter');
+    equal($('.mediumInsert-imageResizeSmaller', $el).length, 0, 'resize smaller icon doesn\'t showed on mouseenter');
     start();
   });
 

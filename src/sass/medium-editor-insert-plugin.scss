@@ -45,6 +45,10 @@ q, blockquote {
   }
 }
 
+.hide {
+  display: none !important;
+}
+
 .mediumInsert {
   position: relative;
   margin: -1em 0 -1em -80px;

@@ -1,4 +1,42 @@
 /**
+* Medium Editor extensions
+*/
+
+module('medium editor extensions');
+
+asyncTest('extend editor\'s deactivate function to call plugins\'s disable', function() {
+  var editor = new MediumEditor('#qunit-fixture'),
+      stub = this.stub($.fn.mediumInsert.insert, 'disable', function () {
+        $.fn.mediumInsert.insert.disable.restore();
+        ok(true, 'disable() called');
+        start();
+      });
+  
+  $('#qunit-fixture').mediumInsert({
+    editor: editor
+  });
+  
+  editor.deactivate();
+});
+
+asyncTest('extend editor\'s activate function to call plugins\'s enable', function() {
+  var editor = new MediumEditor('#qunit-fixture'),
+      stub = this.stub($.fn.mediumInsert.insert, 'enable', function () {
+        $.fn.mediumInsert.insert.enable.restore();
+        ok(true, 'enable() called');
+        start();
+      });
+  
+  $('#qunit-fixture').mediumInsert({
+    editor: editor
+  });
+  
+  editor.deactivate();
+  editor.activate();
+});
+
+
+/**
 * Initial loop
 */
 
@@ -45,12 +83,58 @@ test('init sets el', function () {
   deepEqual($.fn.mediumInsert.insert.$el, $el, 'el is set');
 });
 
-test('init calls setPlaceholders()', function() {
-  var stub1 = this.stub($.fn.mediumInsert.insert, 'setPlaceholders');
+test('init calls setPlaceholders() and setEvents()', function() {
+  var stub1 = this.stub($.fn.mediumInsert.insert, 'setPlaceholders'),
+      stub2 = this.stub($.fn.mediumInsert.insert, 'setEvents');
       
   $.fn.mediumInsert.insert.init($('div'));
 
   ok(stub1.called, 'setPlaceholders() called');
+  ok(stub2.called, 'setEvents() called');
+});
+
+
+// disable
+
+test('disable param calls disable function', function () {
+  var $el = $('<div></div>'),
+      stub = this.stub($.fn.mediumInsert.insert, 'disable');
+
+  $el.mediumInsert('disable');
+    
+  ok(stub.called, 'disable() called');
+});
+
+test('disable deactivates the plugin', function () {
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
+  
+  $el.mediumInsert('disable');
+  
+  equal($.fn.mediumInsert.settings.enabled, false, 'plugin deactivated');
+  ok($('.mediumInsert-buttons', $el).hasClass('hide'), 'hide insert buttons');
+});
+
+
+// enable
+
+test('enable param calls enable function', function () {
+  var $el = $('<div></div>'),
+      stub = this.stub($.fn.mediumInsert.insert, 'enable');
+
+  $el.mediumInsert('enable');
+    
+  ok(stub.called, 'enable() called');
+});
+
+test('enable activates the plugin', function () {
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons hide"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
+  
+  $.fn.mediumInsert.settings.enabled = false;
+  
+  $el.mediumInsert('enable');
+  
+  equal($.fn.mediumInsert.settings.enabled, true, 'plugin activated');
+  equal($('.mediumInsert-buttons', $el).hasClass('hide'), false, 'show insert buttons');
 });
 
 
@@ -59,15 +143,18 @@ test('init calls setPlaceholders()', function() {
 test('setPlaceholders creates placeholders', function () {
   var $el = $('#qunit-fixture').html('<p></p><p></p>');
 
-  $.fn.mediumInsert.insert.setPlaceholders($el);
+  $.fn.mediumInsert.insert.setPlaceholders();
   
   equal($('.mediumInsert', $el).length, 2, 'two placeholders created');
 });
 
-asyncTest('setPlaceholders creates click event on buttonShow', function () {
-  var $el = $('#qunit-fixture').html('<p></p>');
 
-  $.fn.mediumInsert.insert.setPlaceholders($el);
+// setEvents
+
+asyncTest('setEvents creates click event on buttonShow', function () {
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
+
+  $.fn.mediumInsert.insert.setEvents();
     
   $('.mediumInsert-buttonsShow', $el).click(function () {
     ok($('.mediumInsert-buttonsOptions', $el).is(':visible'), 'clicking on buttonsShow, shows buttons');
@@ -75,8 +162,8 @@ asyncTest('setPlaceholders creates click event on buttonShow', function () {
   }).click();
 });
 
-asyncTest('setPlaceholders creates click event on options', function () {
-  var $el = $('#qunit-fixture').html('<p></p>'),
+asyncTest('setEvents creates click event on options', function () {
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>'),
       stub;
       
   stub = this.stub($.fn.mediumInsert.images, 'add', function ($placeholder) {
@@ -85,7 +172,7 @@ asyncTest('setPlaceholders creates click event on options', function () {
     start();
   });
 
-  $.fn.mediumInsert.insert.setPlaceholders($el);
+  $.fn.mediumInsert.insert.setEvents();
 
   $('.mediumInsert-buttonsOptions .action-images-add', $el).click();
 });
