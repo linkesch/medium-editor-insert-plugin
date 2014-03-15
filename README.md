@@ -12,6 +12,7 @@ The plugin is next, completely rewritten version of previous "images plugin". No
 
 - [Demo](#demo)
 - [Available Addons](#addons)
+- [Download](#download)
 - [Usage](#usage)
 - [Options](#options)
 - [Methods](#methods)
@@ -32,6 +33,12 @@ Current available addons:
 - images
 
 More are coming soon...
+
+
+## <a name="download"></a>Download
+
+- Bower: ```bower install medium-editor-insert-plugin --save```
+- Manual: [Download the latest release](https://github.com/orthes/medium-editor-insert-plugin/archive/master.zip)
 
 
 ## <a name="usage"></a>Usage
@@ -85,7 +92,7 @@ $(function () {
 - **maps**: (boolean) whether to use maps addon: Default *false*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js)
 - **enabled**: (boolean) plugin's state: Default *true*.
 - **imagesPlugin**: (object) options for images addon
-  - **formatData**: (function) function that formats data before sending them to server while uploading an image 
+  - **formatData**: (function) function that formats data before sending them to server while uploading an image
 
 
 ## <a name="methods"></a>Methods
@@ -98,7 +105,7 @@ Use example:
 ```javascript
 $('.editable').mediumInsert('disable');
 ```
- 
+
 
 ## <a name="development"></a>Development
 
@@ -130,4 +137,3 @@ I'm happy when you not only use the plugin, but contribute your improvements, to
 Pavel Linkesch | [@linkesch](http://twitter.com/linkesch) | http://www.linkesch.sk
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/orthes/medium-editor-insert-plugin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
