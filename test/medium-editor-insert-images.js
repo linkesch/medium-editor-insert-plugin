@@ -105,6 +105,19 @@ asyncTest('setImageEvents creates mouseenter event on image', function () {
   $(document).one('mouseenter', '.mediumInsert-images', function () {
     ok($('.mediumInsert-imageRemove', $el).length > 0, 'remove icon showed on mouseenter');
     ok($('.mediumInsert-imageResizeSmaller', $el).length > 0, 'resize smaller icon showed on mouseenter');
+  });
+
+  $('.mediumInsert-images', $el).mouseenter();
+
+  $el = $('#qunit-fixture').html('<div class="mediumInsert small" id="mediumInsert-0" contenteditable="false">'+
+    '<div class="mediumInsert-placeholder">'+
+      '<span class="mediumInsert-images"><img src="test/fixtures/image.png" draggable="true"></span>'+
+    '</div>'+
+  '</div>');
+
+  $(document).one('mouseenter', '.mediumInsert-images', function () {
+    ok($('.mediumInsert-imageRemove', $el).length > 0, 'remove icon showed on mouseenter');
+    ok($('.mediumInsert-imageResizeBigger', $el).length > 0, 'resize bigger icon showed on mouseenter');
     start();
   });
 
@@ -288,4 +301,3 @@ asyncTest('setDragAndDropEvents set drop event to .mediumInsert', function () {
   $event.originalEvent = { dataTransfer: { files: ['test'] }};
   $('.mediumInsert').trigger($event);
 });
-

@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    
+
     uglify: {
       build: {
         options: {
@@ -33,12 +33,12 @@ module.exports = function(grunt) {
         dest: 'dist/js/addons/medium-editor-insert-maps.min.js'
       }
     },
-    
+
     copy: {
       main: {
         files: [
           {
-            expand: true, 
+            expand: true,
             cwd: 'src/js/',
             src: ['*'],
             dest: 'dist/js/addons/'
@@ -46,21 +46,30 @@ module.exports = function(grunt) {
         ]
       }
     },
-    
+
     jshint: {
       files: ['src/js/*.js', 'src/js/**/*.js', 'test/*.js', 'test/**/*.js'],
       options: {
         ignores: ['test/lib/**/*.js']
       }
     },
-    
+
     qunit: {
       unit: 'test.html'
     },
-    
-    compass: {                 
-      dist: {                   
-        options: {              
+
+    blanket_qunit: {
+      all: {
+        options: {
+          urls: ['test.html?coverage=true&gruntReport'],
+          threshold: 60
+        }
+      }
+    },
+
+    compass: {
+      dist: {
+        options: {
           sassDir: 'src/sass',
           cssDir: 'dist/css',
           environment: 'production',
@@ -68,7 +77,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
     watch: {
       scripts: {
         files: ['src/js/**/*.js'],
@@ -93,10 +102,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  
-  grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('js', ['jshint', 'qunit', 'uglify', 'copy']);
+  grunt.loadNpmTasks('grunt-blanket-qunit');
+
+  grunt.registerTask('test', ['jshint', 'blanket_qunit']);
+  grunt.registerTask('js', ['test', 'uglify', 'copy']);
   grunt.registerTask('css', ['compass']);
   grunt.registerTask('default', ['js', 'css']);
-  
+
 };

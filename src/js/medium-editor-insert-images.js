@@ -108,6 +108,8 @@
       $img.load(function () {
         $img.parent().mouseleave().mouseenter();
       });
+
+      $.fn.mediumInsert.insert.$el.keyup();
     },
 
 
@@ -161,7 +163,7 @@
         var $img = $('img', this),
             positionTop,
             positionLeft;
-            
+
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
@@ -241,7 +243,7 @@
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
-        
+
         $(this).removeClass('hover');
       });
 
@@ -249,7 +251,7 @@
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
-        
+
         $(this).addClass('hover');
         $(this).attr('contenteditable', true);
       });
@@ -258,7 +260,7 @@
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
-        
+
         $(this).removeClass('hover');
         $(this).attr('contenteditable', false);
       });
@@ -267,7 +269,7 @@
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
-        
+
         dropSortIndex = $(this).parent().index();
         dropSortParent = $(this).parent().parent().parent().attr('id');
       });
@@ -276,7 +278,7 @@
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
-        
+
         if (dropSuccessful === true) {
           if ($(e.originalEvent.target.parentNode).siblings().length === 0) {
             $(e.originalEvent.target.parentNode).parent().parent().removeClass('small');
@@ -292,7 +294,7 @@
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
-        
+
         e.preventDefault();
       });
 
@@ -302,7 +304,7 @@
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
-        
+
 
         if (dropSortParent !== $(this).parent().parent().parent().attr('id')) {
           dropSort = false;
