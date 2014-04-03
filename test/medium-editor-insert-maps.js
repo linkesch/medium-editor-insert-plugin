@@ -5,9 +5,13 @@
 module("images", {
   setup: function() {
     $.fn.mediumInsert.settings.editor = new MediumEditor('.editable');
-    $.fn.mediumInsert.settings.imagesUploadScript = 'examples/upload.php';
+    $.fn.mediumInsert.settings.addons = {
+      images: {
+        imagesUploadScript: 'examples/upload.php'
+      }
+    };
     $.fn.mediumInsert.settings.enabled = true;
-    $.fn.mediumInsert.maps.$el = $('#qunit-fixture');
+    $.fn.mediumInsert.getAddon('maps').$el = $('#qunit-fixture');
     $.fn.mediumInsert.insert.$el = $('#qunit-fixture');
   }
 });
@@ -16,10 +20,11 @@ module("images", {
 // init
 
 test('init() sets addon\'s $el', function () {
-  $.fn.mediumInsert.maps.$el = null;
-  $.fn.mediumInsert.maps.init();
+  var maps = $.fn.mediumInsert.getAddon('maps');
+  maps.$el = null;
+  maps.init();
 
-  deepEqual($.fn.mediumInsert.maps.$el, $.fn.mediumInsert.insert.$el, 'addon\'s $el is set');
+  deepEqual(maps.$el, $.fn.mediumInsert.insert.$el, 'addon\'s $el is set');
 });
 
 
@@ -30,6 +35,6 @@ test('add() adds comming soon text', function () {
   var $el = $('#qunit-fixture').html('<div class="mediumInsert-placeholder"></div>'),
       $placeholder =  $('.mediumInsert-placeholder', $el);
 
-  $.fn.mediumInsert.maps.add($placeholder);
+  $.fn.mediumInsert.getAddon('maps').add($placeholder);
   equal($placeholder.html(), '<div class="mediumInsert-maps">Map - Coming soon...</div>', 'Coming soon added');
 });

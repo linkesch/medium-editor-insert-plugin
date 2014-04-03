@@ -10,6 +10,10 @@
  */
 
 (function ($) {
+  /*
+  * Private storage of registered addons
+  */
+  var addons = {};
 
   /**
   * Extend MediumEditor's serialize function to get rid of unnecesarry Medium Editor Insert Plugin stuff
@@ -93,9 +97,9 @@
     }
 
     this.isActive = true;
-      for (i = 0; i < this.elements.length; i += 1) {
-        this.elements[i].setAttribute('contentEditable', true);
-      }
+    for (i = 0; i < this.elements.length; i += 1) {
+      this.elements[i].setAttribute('contentEditable', true);
+    }
     this.bindSelect();
 
     $.fn.mediumInsert.insert.$el.mediumInsert('enable');
@@ -128,14 +132,11 @@
 
         $.fn.mediumInsert.insert.init($(this));
 
-        if ($.fn.mediumInsert.settings.images === true) {
-          $.fn.mediumInsert.images.init();
+        for (var i in $.fn.mediumInsert.settings.addons) {
+          var addonOptions = $.fn.mediumInsert.settings.addons[i];
+          addonOptions.$el = $.fn.mediumInsert.insert.$el;
+          addons[i].init(addonOptions);
         }
-
-        if ($.fn.mediumInsert.settings.maps === true) {
-          $.fn.mediumInsert.maps.init();
-        }
-
       });
     }
 
@@ -147,10 +148,24 @@
   */
 
   $.fn.mediumInsert.settings = {
-    'imagesUploadScript': 'upload.php',
-    'enabled': true,
-    'images': true,
-    'maps': false,
+    enabled: true,
+    addons: {
+      images: {}
+    }
+  };
+
+  /**
+  * Register new addon
+  */
+  $.fn.mediumInsert.registerAddon = function(name, addon){
+    addons[name] = addon;
+  };
+
+  /**
+  * Get registered addon
+  */
+  $.fn.mediumInsert.getAddon = function(name){
+    return addons[name];
   };
 
 
@@ -211,33 +226,24 @@
     setPlaceholders: function () {
       var that = this,
           $el = $.fn.mediumInsert.insert.$el,
-          insertBlock = '',
-          insertImage = '<a class="mediumInsert-action action-images-add">Image</a>',
-          insertMap = '<a class="mediumInsert-action action-maps-add">Map</a>';
+          insertBlock = '<ul class="mediumInsert-buttonsOptions">';
 
-      if($.fn.mediumInsert.settings.images === true && $.fn.mediumInsert.settings.maps === true) {
-        insertBlock = '<a class="mediumInsert-buttonsShow">Insert</a>'+
-          '<ul class="mediumInsert-buttonsOptions">'+
-            '<li>' + insertImage + '</li>' +
-            '<li>' + insertMap + '</li>' +
-          '</ul>';
-      } else if ($.fn.mediumInsert.settings.images === true) {
-        insertBlock = insertImage;
-      } else if ($.fn.mediumInsert.settings.maps === true) {
-        insertBlock = insertMap;
-      }
-
-      if (insertBlock !== '') {
-        insertBlock = '<div class="mediumInsert" contenteditable="false">'+
-          '<div class="mediumInsert-buttons">'+
-            '<div class="mediumInsert-buttonsIcon">&rarr;</div>'+
-            insertBlock +
-          '</div>'+
-          '<div class="mediumInsert-placeholder"></div>'+
-        '</div>';
-      } else {
+      if (Object.keys($.fn.mediumInsert.settings.addons).length === 0) {
         return false;
       }
+
+      for (var i in $.fn.mediumInsert.settings.addons) {
+        insertBlock += '<li>' + addons[i].insertButton + '</li>';
+      }
+      insertBlock += '</ul>';
+      insertBlock = '<div class="mediumInsert" contenteditable="false">'+
+        '<div class="mediumInsert-buttons">'+
+          '<div class="mediumInsert-buttonsIcon">&rarr;</div>'+
+          '<a class="mediumInsert-buttonsShow">Insert</a>'+
+          insertBlock +
+        '</div>'+
+        '<div class="mediumInsert-placeholder"></div>'+
+      '</div>';
 
       if ($el.is(':empty')) {
         $el.html('<p><br></p>');
@@ -324,8 +330,8 @@
         var action = $(this).attr('class').split('action-')[1].split('-'),
             $placeholder = $(this).parents('.mediumInsert-buttons').siblings('.mediumInsert-placeholder');
 
-        if ($.fn.mediumInsert[action[0]] && $.fn.mediumInsert[action[0]][action[1]]) {
-          $.fn.mediumInsert[action[0]][action[1]]($placeholder);
+        if (addons[action[0]] && addons[action[0]][action[1]]) {
+          addons[action[0]][action[1]]($placeholder);
         }
 
         $(this).parents('.mediumInsert').mouseleave();

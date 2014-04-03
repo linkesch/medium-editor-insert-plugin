@@ -32,8 +32,10 @@
     $(function () {
       $('.editable').mediumInsert({
         editor: editor,
-        images: true,
-        maps: true
+        plugins: {
+          images: {},
+          maps: {}
+        }
       });
     });
   </script>
