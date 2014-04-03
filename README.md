@@ -78,7 +78,9 @@ Finally, you can initialize the insert plugin with images addon:
 $(function () {
   $('.editable').mediumInsert({
     editor: editor,
-    images: true
+    addons: {
+      images: {}
+    }
   });
 });
 ```
@@ -87,13 +89,10 @@ $(function () {
 ## <a name="options"></a>Options
 
 - **editor**: (MediumEditor) instance of MediumEditor
-- **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
-- **images**: (boolean) whether to use images addon: Default *true*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-images.min.js)
-- **maps**: (boolean) whether to use maps addon: Default *false*. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js)
+- **addons**: (object) keys are names of used addons and values is object of addon options. Now available images and maps addons. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js or medium-editor-insert-images.min.js). Options for images addon:
+    - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
+    - **formatData**: (function) function that formats data before sending them to server while uploading an image
 - **enabled**: (boolean) plugin's state: Default *true*.
-- **imagesPlugin**: (object) options for images addon
-  - **formatData**: (function) function that formats data before sending them to server while uploading an image
-
 
 ## <a name="methods"></a>Methods
 
@@ -106,6 +105,10 @@ Use example:
 $('.editable').mediumInsert('disable');
 ```
 
+
+- **registerAddon**: create new addon, like images or maps. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
+
+- **getAddon**: simple getter for available addons.
 
 ## <a name="development"></a>Development
 
@@ -122,7 +125,6 @@ These are available Grunt tasks:
 - **css**: runs compass
 - **test**: runs jshint and qunit
 - **watch**: watches for modifications on script/scss files and runs js/css task
-
 
 ## <a name="contributing"></a>Contributing
 

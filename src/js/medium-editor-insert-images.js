@@ -11,21 +11,31 @@
 
 (function ($) {
 
-  $.fn.mediumInsert.images = {
+  $.fn.mediumInsert.registerAddon('images', {
 
     /**
     * Images initial function
     * @return {void}
     */
 
-    init: function () {
-      this.$el = $.fn.mediumInsert.insert.$el;
-      this.options = $.extend(this.default,
-        $.fn.mediumInsert.settings.imagesPlugin);
+    init: function (options) {
+      if (options && options.$el) {
+        this.$el = options.$el;
+      }
+      this.options = $.extend(this.default, options);
 
       this.setImageEvents();
       this.setDragAndDropEvents();
       this.preparePreviousImages();
+    },
+
+
+    insertButton: function(buttonLabels){
+      var label = 'Img';
+      if (buttonLabels == 'fontawesome') {
+        label = '<i class="fa fa-picture-o"></i>';
+      }
+      return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
     },
 
     /**
@@ -33,6 +43,7 @@
     */
 
     default: {
+      imagesUploadScript: 'upload.php',
       formatData: function (file) {
         var formData = new FormData();
         formData.append('file', file);
@@ -141,7 +152,7 @@
 
           $.ajax({
             type: "post",
-            url: $.fn.mediumInsert.settings.imagesUploadScript,
+            url: this.options.imagesUploadScript,
             xhr: xhr,
             cache: false,
             contentType: false,
@@ -356,5 +367,5 @@
         }
       });
     }
-  };
+  });
 }(jQuery));
