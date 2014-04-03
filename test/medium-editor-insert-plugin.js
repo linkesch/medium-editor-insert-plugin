@@ -98,12 +98,14 @@ module('initial loop');
 
 test('initial loop calls init functions', function() {
   var stub1 = this.stub($.fn.mediumInsert.insert, 'init'),
-      stub2 = this.stub($.fn.mediumInsert.images, 'init'),
-      stub3 = this.stub($.fn.mediumInsert.maps, 'init');
+      stub2 = this.stub($.fn.mediumInsert.getAddon('images'), 'init'),
+      stub3 = this.stub($.fn.mediumInsert.getAddon('maps'), 'init');
 
   $('div').mediumInsert({
-    images: true,
-    maps: true
+    addons: {
+      images: {},
+      maps: {}
+    }
   });
 
   ok(stub1.called, 'insert.init() called');
@@ -119,8 +121,11 @@ test('initial loop calls init functions', function() {
 module("insert", {
   setup: function() {
     $.fn.mediumInsert.settings.editor = new MediumEditor('.editable');
-    $.fn.mediumInsert.settings.imagesUploadScript = 'examples/upload.php';
-    $.fn.mediumInsert.settings.images = true;
+    $.fn.mediumInsert.settings.addons = {
+      images: {
+        imagesUploadScript: 'examples/upload.php'
+      }
+    };
     $.fn.mediumInsert.insert.$el = $('#qunit-fixture');
   }
 });
@@ -204,8 +209,7 @@ test('setPlaceholders creates placeholders', function () {
 
 test('setPlaceholders returns false if no addon is selected', function () {
   $('div').mediumInsert({
-    images: false,
-    maps: false
+    addons: []
   });
 
   equal($.fn.mediumInsert.insert.setPlaceholders(), false, 'setPlaceholders() returned false');
@@ -249,9 +253,9 @@ asyncTest('setEvents creates click event on options', function () {
   var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>'),
       stub;
 
-  stub = this.stub($.fn.mediumInsert.images, 'add', function ($placeholder) {
+  stub = this.stub($.fn.mediumInsert.getAddon('images'), 'add', function ($placeholder) {
     ok(stub.called, 'click on images-add calls images.add method');
-    $.fn.mediumInsert.images.add.restore();
+    $.fn.mediumInsert.getAddon('images').add.restore();
     start();
   });
 
