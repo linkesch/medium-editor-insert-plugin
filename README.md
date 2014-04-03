@@ -106,7 +106,7 @@ $('.editable').mediumInsert('disable');
 ```
 
 
-- **registerAddon**: create new addon, like images or maps. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` field that contains code of button in list of available addons.
+- **registerAddon**: create new addon, like images or maps. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
 
 - **getAddon**: simple getter for available addons.
 
