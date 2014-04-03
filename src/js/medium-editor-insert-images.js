@@ -30,7 +30,13 @@
     },
 
 
-    insertButton: '<a class="mediumInsert-action action-images-add">Image</a>',
+    insertButton: function(buttonLabels){
+      var label = 'Img';
+      if (buttonLabels == 'fontawesome') {
+        label = '<i class="fa fa-picture-o"></i>';
+      }
+      return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action action-images-add">'+label+'</button>';
+    },
 
     /**
     * Images default options

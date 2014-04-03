@@ -22,7 +22,9 @@
       this.$el = $.fn.mediumInsert.insert.$el;
     },
 
-    insertButton: '<a class="mediumInsert-action action-maps-add">Map</a>',
+    insertButton: function(){
+      return '<button  data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button>';
+    },
 
     /**
     * Add map to placeholder

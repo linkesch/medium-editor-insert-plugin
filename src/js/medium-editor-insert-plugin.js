@@ -146,7 +146,6 @@
   /**
   * Settings
   */
-
   $.fn.mediumInsert.settings = {
     enabled: true,
     addons: {
@@ -226,20 +225,22 @@
     setPlaceholders: function () {
       var that = this,
           $el = $.fn.mediumInsert.insert.$el,
-          insertBlock = '<ul class="mediumInsert-buttonsOptions">';
+          editor = $.fn.mediumInsert.settings.editor,
+          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
+          insertBlock = '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
 
       if (Object.keys($.fn.mediumInsert.settings.addons).length === 0) {
         return false;
       }
 
       for (var i in $.fn.mediumInsert.settings.addons) {
-        insertBlock += '<li>' + addons[i].insertButton + '</li>';
+        insertBlock += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
       }
       insertBlock += '</ul>';
       insertBlock = '<div class="mediumInsert" contenteditable="false">'+
         '<div class="mediumInsert-buttons">'+
           '<div class="mediumInsert-buttonsIcon">&rarr;</div>'+
-          '<a class="mediumInsert-buttonsShow">Insert</a>'+
+          '<a class="mediumInsert-buttonsShow">+</a>'+
           insertBlock +
         '</div>'+
         '<div class="mediumInsert-placeholder"></div>'+
@@ -327,11 +328,12 @@
       });
 
       $el.on('click', '.mediumInsert-buttons .mediumInsert-action', function () {
-        var action = $(this).attr('class').split('action-')[1].split('-'),
+        var addon = $(this).data('addon'),
+            action = $(this).data('action'),
             $placeholder = $(this).parents('.mediumInsert-buttons').siblings('.mediumInsert-placeholder');
 
-        if (addons[action[0]] && addons[action[0]][action[1]]) {
-          addons[action[0]][action[1]]($placeholder);
+        if (addons[addon] && addons[addon][action]) {
+          addons[addon][action]($placeholder);
         }
 
         $(this).parents('.mediumInsert').mouseleave();
