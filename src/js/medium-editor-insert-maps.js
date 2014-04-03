@@ -22,8 +22,12 @@
       this.$el = $.fn.mediumInsert.insert.$el;
     },
 
-    insertButton: function(){
-      return '<button  data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button>';
+    insertButton: function(buttonLabels){
+      var label = 'Map';
+      if (buttonLabels == 'fontawesome') {
+        label = '<i class="fa fa-map-marker"></i>';
+      }
+      return '<button data-addon="maps" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
     },
 
     /**

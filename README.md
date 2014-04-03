@@ -78,7 +78,7 @@ Finally, you can initialize the insert plugin with images addon:
 $(function () {
   $('.editable').mediumInsert({
     editor: editor,
-    plugins: {
+    addons: {
       images: {}
     }
   });

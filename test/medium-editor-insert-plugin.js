@@ -10,8 +10,8 @@ test('customize editor\'s serialize function', function () {
         '<div class="mediumInsert-buttonsIcon">→</div>'+
         '<a class="mediumInsert-buttonsShow">Insert</a>'+
         '<ul class="mediumInsert-buttonsOptions">'+
-          '<li><a class="mediumInsert-action action-images-add">Image</a></li>'+
-          '<li><a class="mediumInsert-action action-maps-add">Map</a></li>'+
+          '<li><button data-addon="images" data-action="add" class="mediumInsert-action action-images-add">Image</button></li>'+
+          '<li><button data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button></li>'+
         '</ul>'+
       '</div>'+
       '<div class="mediumInsert-placeholder"><img></div>'+
@@ -21,8 +21,8 @@ test('customize editor\'s serialize function', function () {
         '<div class="mediumInsert-buttonsIcon">→</div>'+
         '<a class="mediumInsert-buttonsShow">Insert</a>'+
         '<ul class="mediumInsert-buttonsOptions">'+
-          '<li><a class="mediumInsert-action action-images-add">Image</a></li>'+
-          '<li><a class="mediumInsert-action action-maps-add">Map</a></li>'+
+          '<li><button data-addon="images" data-action="add" class="mediumInsert-action action-images-add">Image</button></li>'+
+          '<li><button data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button></li>'+
         '</ul>'+
       '</div>'+
       '<div class="mediumInsert-placeholder"></div>'+
@@ -165,7 +165,7 @@ test('disable param calls disable function', function () {
 });
 
 test('disable deactivates the plugin', function () {
-  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><button data-addon="images" data-action="add" class="mediumInsert-action action-images-add">Image</button></li><li><button data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
 
   $el.mediumInsert('disable');
 
@@ -186,7 +186,7 @@ test('enable param calls enable function', function () {
 });
 
 test('enable activates the plugin', function () {
-  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons hide"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons hide"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><button data-addon="images" data-action="add" class="mediumInsert-action action-images-add">Image</button></li><li><button data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
 
   $.fn.mediumInsert.settings.enabled = false;
 
@@ -222,8 +222,8 @@ test('setPlaceholders adds empty paragraph at the end if the last placeholder is
         '<div class="mediumInsert-buttonsIcon">→</div>'+
         '<a class="mediumInsert-buttonsShow">Insert</a>'+
         '<ul class="mediumInsert-buttonsOptions">'+
-          '<li><a class="mediumInsert-action action-images-add">Image</a></li>'+
-          '<li><a class="mediumInsert-action action-maps-add">Map</a></li>'+
+          '<li><button data-addon="images" data-action="add" class="mediumInsert-action action-images-add">Image</button></li>'+
+          '<li><button data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button></li>'+
         '</ul>'+
       '</div>'+
       '<div class="mediumInsert-placeholder"><img></div>'+
@@ -239,7 +239,7 @@ test('setPlaceholders adds empty paragraph at the end if the last placeholder is
 // setEvents
 
 asyncTest('setEvents creates click event on buttonShow', function () {
-  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><button data-addon="images" data-action="add" class="mediumInsert-action action-images-add">Image</button></li><li><button data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button></li></ul></div><div class="mediumInsert-placeholder"></div></div>');
 
   $.fn.mediumInsert.insert.setEvents();
 
@@ -250,7 +250,7 @@ asyncTest('setEvents creates click event on buttonShow', function () {
 });
 
 asyncTest('setEvents creates click event on options', function () {
-  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><a class="mediumInsert-action action-images-add">Image</a></li><li><a class="mediumInsert-action action-maps-add">Map</a></li></ul></div><div class="mediumInsert-placeholder"></div></div>'),
+  var $el = $('#qunit-fixture').html('<p></p><div class="mediumInsert" contenteditable="false" id="mediumInsert-0"><div class="mediumInsert-buttons"><div class="mediumInsert-buttonsIcon">→</div><a class="mediumInsert-buttonsShow">Insert</a><ul class="mediumInsert-buttonsOptions"><li><button data-addon="images" data-action="add" class="mediumInsert-action action-images-add">Image</button></li><li><button data-addon="maps" data-action="add" class="mediumInsert-action action-maps-add">Map</button></li></ul></div><div class="mediumInsert-placeholder"></div></div>'),
       stub;
 
   stub = this.stub($.fn.mediumInsert.getAddon('images'), 'add', function ($placeholder) {

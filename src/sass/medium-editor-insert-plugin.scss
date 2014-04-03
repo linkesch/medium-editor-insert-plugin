@@ -50,14 +50,24 @@ q, blockquote {
 }
 
 .mediumInsert-buttonsShow {
+  opacity: 0;
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  -o-transform: scale(0);
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  -moz-transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
+  -o-transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
+  -webkit-transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
+  transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 18px;
   margin-top: -5px;
-  border-radius: 15px;
-  border: 1px solid;
-  font-size: 20px;
-  line-height: 30px;
+  border-radius: 10px;
+  border: 2px solid;
+  font-size: 18px;
+  line-height: 18px;
   text-align: center;
   text-decoration: none !important;
   &:after {
@@ -70,12 +80,11 @@ q, blockquote {
 
 .mediumInsert {
   position: relative;
-  margin: -1em 0 -1em -80px;
+  margin: -1em 0 -1em -40px;
   min-height: 18px;
   .mediumInsert-buttons {
     position: absolute;
-    display: none;
-    width: 80px;
+    width: 40px;
     top: 0;
     left: 0;
     color: #ddd;
@@ -86,11 +95,6 @@ q, blockquote {
       &.active {
         font-weight: bold;
       }
-    }
-    .mediumInsert-buttonsIcon {
-      position: absolute;
-      top: 0;
-      right: 10px;
     }
     ul.mediumInsert-buttonsOptions {
       margin: 0;
@@ -103,11 +107,14 @@ q, blockquote {
       top: -10px;
       border-radius: 5px;
       button {
-        min-height: 30px;
-        height: 30px;
+        min-height: auto;
+        height: auto;
         padding: 5px;
         border-left: none;
         float: none;
+        .fa {
+          font-size: 20px;
+        }
       }
     }
   }
@@ -165,8 +172,13 @@ q, blockquote {
     }
   }
   &:hover {
-    .mediumInsert-buttons {
-      display: block;
+    .mediumInsert-buttonsShow {
+      -moz-transform: scale(1);
+      -ms-transform: scale(1);
+      -o-transform: scale(1);
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
     }
   }
   &.small {
@@ -186,3 +198,11 @@ q, blockquote {
     margin-bottom: -1px;
   }
 }
+
+// .mediumInsert-withIcon {
+//   font-size: 7px;
+//   i {
+//     display: block;
+//     font-size: 14px;
+//   }
+// }

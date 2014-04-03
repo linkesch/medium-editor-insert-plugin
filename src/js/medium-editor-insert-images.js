@@ -35,7 +35,7 @@
       if (buttonLabels == 'fontawesome') {
         label = '<i class="fa fa-picture-o"></i>';
       }
-      return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action action-images-add">'+label+'</button>';
+      return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
     },
 
     /**

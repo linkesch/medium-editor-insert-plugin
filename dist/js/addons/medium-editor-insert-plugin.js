@@ -119,6 +119,7 @@
       $.fn.mediumInsert.settings = $.extend($.fn.mediumInsert.settings, options);
 
 
+
       /**
       * Initial plugin loop
       */
@@ -139,7 +140,6 @@
         }
       });
     }
-
   };
 
 
@@ -239,7 +239,6 @@
       insertBlock += '</ul>';
       insertBlock = '<div class="mediumInsert" contenteditable="false">'+
         '<div class="mediumInsert-buttons">'+
-          '<div class="mediumInsert-buttonsIcon">&rarr;</div>'+
           '<a class="mediumInsert-buttonsShow">+</a>'+
           insertBlock +
         '</div>'+
