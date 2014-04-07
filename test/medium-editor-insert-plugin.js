@@ -197,6 +197,25 @@ test('enable activates the plugin', function () {
 });
 
 
+// getMaxId
+
+test('getMaxId returns -1 if no placeholder exist', function () {
+  var id = $.fn.mediumInsert.insert.getMaxId();
+
+  equal(id, -1, '-1 returned');
+});
+
+test('getMaxId returns max num', function () {
+  var id;
+
+  $('#qunit-fixture').html('<div id="mediumInsert-0"></div><div id="mediumInsert-1"></div><div id="mediumInsert-2"></div>');
+
+  id = $.fn.mediumInsert.insert.getMaxId();
+
+  equal(id, 2, 'max returned');
+});
+
+
 // setPlaceholders
 
 test('setPlaceholders creates placeholders', function () {

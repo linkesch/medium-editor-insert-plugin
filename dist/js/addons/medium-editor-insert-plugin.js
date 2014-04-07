@@ -218,6 +218,23 @@
     },
 
     /**
+    * Return max id in #mediumInsert-*
+    * @return {int} max (Max number, -1 if no placeholders exist)
+    */
+    getMaxId: function () {
+      var max = -1;
+
+      $('div[id^="mediumInsert-"]').each(function () {
+        var id = parseInt($(this).attr('id').split('-')[1], 10);
+        if (id > max) {
+          max = id;
+        }
+      });
+
+      return max;
+    },
+
+    /**
     * Method setting placeholders
     * @return {void}
     */
@@ -250,7 +267,7 @@
       }
 
       $el.keyup(function () {
-        var i = 0,
+        var i = that.getMaxId() +1,
             $lastChild = $el.children(':last');
 
         if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
