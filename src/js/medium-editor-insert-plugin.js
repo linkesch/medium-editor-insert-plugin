@@ -267,8 +267,8 @@
       }
 
       $el.keyup(function () {
-        var i = that.getMaxId() +1,
-            $lastChild = $el.children(':last');
+        var $lastChild = $el.children(':last'),
+            i;
 
         if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
           $el.append('<p><br></p>');
@@ -281,6 +281,8 @@
             $(this).parent().remove();
           });
         }
+
+        i = that.getMaxId() +1;
 
         $el.children('p').each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
