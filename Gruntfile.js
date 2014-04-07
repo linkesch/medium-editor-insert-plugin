@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     uglify: {
       build: {
         options: {
-          banner: '/*! \n * <%= pkg.name %> v<%= pkg.version %> - <%= pkg.description %>\n *\n * <%= pkg.homepage %>\n * \n * Copyright (c) 2013 <%= pkg.author.name %> (<%= pkg.author.url %>)\n * Released under the <%= pkg.license %> license\n */\n\n'
+          banner: '/*! \n * <%= pkg.name %> v<%= pkg.version %> - <%= pkg.description %>\n *\n * <%= pkg.homepage %>\n * \n * Copyright (c) 2014 <%= pkg.author.name %> (<%= pkg.author.url %>)\n * Released under the <%= pkg.license %> license\n */\n\n'
         },
         src: ['src/js/medium-editor-insert-plugin.js', 'src/js/medium-editor-insert-images.js', 'src/js/medium-editor-insert-maps.js'],
         dest: 'dist/js/<%= pkg.name %>.all.min.js'
