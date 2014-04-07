@@ -58,15 +58,6 @@ module.exports = function(grunt) {
       unit: 'test.html'
     },
 
-    blanket_qunit: {
-      all: {
-        options: {
-          urls: ['test.html?coverage=true&gruntReport'],
-          threshold: 60
-        }
-      }
-    },
-
     compass: {
       dist: {
         options: {
@@ -102,9 +93,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-blanket-qunit');
 
-  grunt.registerTask('test', ['jshint', 'blanket_qunit']);
+  grunt.registerTask('test', ['jshint', 'qunit']);
   grunt.registerTask('js', ['test', 'uglify', 'copy']);
   grunt.registerTask('css', ['compass']);
   grunt.registerTask('default', ['js', 'css']);
