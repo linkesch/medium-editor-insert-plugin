@@ -1,0 +1,14 @@
+{
+  "name": "medium-editor-insert-plugin-gh-pages",
+  "version": "0.2.0",
+  "description": "jQuery insert plugin for MediumEditor - DEMO",
+  "private": true,
+  "license": "MIT",
+  "authors": [
+    "Pavel linkesch <pavel.linkesch@gmail.com> (http://linkesch.sk)"
+  ],
+  "dependencies": {
+    "jquery": "~1.11.0",
+    "medium-editor-insert-plugin": "~0.2.1"
+  }
+}
