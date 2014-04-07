@@ -6,7 +6,8 @@ This plugin expands capabilities of [MediumEditor](https://github.com/daviferrei
 The plugin is next, completely rewritten version of previous "images plugin". Now inserting images is only one of the plugin's addons. More addons (inserting files and maps) are coming soon...
 
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
-
+[![Bower version](https://badge.fury.io/bo/medium-editor-insert-plugin.svg)](http://badge.fury.io/bo/medium-editor-insert-plugin)
+[![devDependency Status](https://david-dm.org/orthes/medium-editor-insert-plugin/dev-status.svg)](https://david-dm.org/orthes/medium-editor-insert-plugin#info=devDependencies)
 
 ## Table of Contents
 
@@ -98,17 +99,14 @@ $(function () {
 
 - **enable**: enables the plugin. It's connected to Medium Editor's own activate function, so if the editor is activated, so is the plugin. (The plugin is enabled automatically. Use it only if you previously disabled the plugin.)
 - **disable**: disables the plugin. It's connected to Medium Editor's own deactivate function, so if the editor is deactivated, so is the plugin.
+- **registerAddon**: create new addon, like images or maps. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
+- **getAddon**: simple getter for available addons.
 
 Use example:
 
 ```javascript
 $('.editable').mediumInsert('disable');
 ```
-
-
-- **registerAddon**: create new addon, like images or maps. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
-
-- **getAddon**: simple getter for available addons.
 
 ## <a name="development"></a>Development
 
@@ -137,5 +135,3 @@ I'm happy when you not only use the plugin, but contribute your improvements, to
 ## <a name="author"></a>Author
 
 Pavel Linkesch | [@linkesch](http://twitter.com/linkesch) | http://www.linkesch.sk
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/orthes/medium-editor-insert-plugin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
