@@ -274,6 +274,14 @@
           $el.append('<p><br></p>');
         }
 
+        // Fix not deleting placeholder in Firefox
+        // by removing all empty placeholders
+        if (navigator.userAgent.match(/firefox/i) ){
+          $('.mediumInsert .mediumInsert-placeholder:empty', $el).each(function () {
+            $(this).parent().remove();
+          });
+        }
+
         $el.children('p').each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
             $(this).after(insertBlock);
