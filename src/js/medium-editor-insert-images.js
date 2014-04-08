@@ -74,7 +74,7 @@
       $selectFile = $('<input type="file">').click();
       $selectFile.change(function () {
         files = this.files;
-        that.uploadFiles($placeholder, files);
+        that.uploadFiles($placeholder, files, that);
       });
 
       $.fn.mediumInsert.insert.deselect();
@@ -105,8 +105,8 @@
     * @return {void}
     */
 
-    uploadCompleted: function (jqxhr) {
-      var $progress = $('.progress:first', this.$el),
+    uploadCompleted: function (jqxhr, $placeholder) {
+      var $progress = $('.progress:first', $placeholder),
           $img;
 
       $progress.attr('value', 100);
@@ -123,25 +123,47 @@
       $.fn.mediumInsert.insert.$el.keyup();
     },
 
+    /**
+    * Upload single file
+    *
+    * @param {element} $placeholder Placeholder to add image to
+    * @param {File} file File to upload
+    * @param {object} that Context
+    * @param {void}
+    */
+
+    uploadFile: function ($placeholder, file, that) {
+      $.ajax({
+        type: "post",
+        url: that.options.imagesUploadScript,
+        xhr: function () {
+          var xhr = new XMLHttpRequest();
+          xhr.upload.onprogress = that.updateProgressBar;
+          return xhr;
+        },
+        cache: false,
+        contentType: false,
+        complete: function (jqxhr) {
+          that.uploadCompleted(jqxhr, $placeholder);
+        },
+        processData: false,
+        data: that.options.formatData(file)
+      });
+    },
 
     /**
-    * Upload files, display progress bar and finally uploaded file
+    * Lopp though files, check file types and call uploadFile() function on each file that passes
     * @param {element} placeholder Placeholder to add image to
     * @param {FileList} files Files to upload
+    * @param {object} that Context
     * @return {void}
     */
 
-    uploadFiles: function ($placeholder, files) {
+    uploadFiles: function ($placeholder, files, that) {
       var acceptedTypes = {
         'image/png': true,
         'image/jpeg': true,
         'image/gif': true
-      },
-      that = this,
-      xhr = function () {
-        var xhr = new XMLHttpRequest();
-        xhr.upload.onprogress = that.updateProgressBar;
-        return xhr;
       };
 
       for (var i = 0; i < files.length; i++) {
@@ -150,16 +172,7 @@
         if (acceptedTypes[file.type] === true) {
           $placeholder.append('<progress class="progress" min="0" max="100" value="0">0</progress>');
 
-          $.ajax({
-            type: "post",
-            url: this.options.imagesUploadScript,
-            xhr: xhr,
-            cache: false,
-            contentType: false,
-            complete: this.uploadCompleted,
-            processData: false,
-            data: this.options.formatData(file)
-          });
+          that.uploadFile($placeholder, file, that);
         }
       }
     },
@@ -356,7 +369,7 @@
         files = e.originalEvent.dataTransfer.files;
         if (files.length > 0) {
           // File upload
-          that.uploadFiles($('.mediumInsert-placeholder', this), files);
+          that.uploadFiles($('.mediumInsert-placeholder', this), files, that);
         } else if (dropSort === true) {
           dropSort = false;
         } else {

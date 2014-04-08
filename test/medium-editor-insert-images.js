@@ -13,6 +13,7 @@ module("images", {
     };
     $.fn.mediumInsert.settings.enabled = true;
     $.fn.mediumInsert.getAddon('images').$el = $('#qunit-fixture');
+    $.fn.mediumInsert.getAddon('images').options = $.fn.mediumInsert.getAddon('images').default;
     $.fn.mediumInsert.insert.$el = $('#qunit-fixture');
   }
 });
@@ -75,25 +76,29 @@ asyncTest('add inits file upload', function () {
 });
 
 
+
 // uploadFiles
 
 test('uploadFiles creates progress bar', function () {
-  var $el = $('#qunit-fixture').html('<div class="mediumInsert-placeholder"></div>');
+  var that = $.fn.mediumInsert.getAddon('images'),
+      $el = $('#qunit-fixture').html('<div class="mediumInsert-placeholder"></div>');
 
-  $.fn.mediumInsert.getAddon('images').uploadFiles($('.mediumInsert-placeholder', $el), [{ type: 'image/png' }]);
+  that.uploadFiles($('.mediumInsert-placeholder', $el), [{ type: 'image/png' }], that);
 
   equal($('progress', $el).length, 1, 'progress bar created');
 });
 
-asyncTest('uploadFiles calls uploadCompleted', function () {
-  var $el = $('#qunit-fixture').html('<div class="mediumInsert-placeholder"></div>');
+asyncTest('uploadFiles calls uploadFile', function () {
+  var that = $.fn.mediumInsert.getAddon('images'),
+      $el = $('#qunit-fixture').html('<div class="mediumInsert-placeholder"></div>');
 
-  this.stub($.fn.mediumInsert.getAddon('images'), 'uploadCompleted', function () {
-    ok(1, 'uploadCompleted called');
+  this.stub(that, 'uploadFile', function () {
+    ok(1, 'uploadFile called');
+    that.uploadFile.restore();
     start();
   });
 
-  $.fn.mediumInsert.getAddon('images').uploadFiles($('.mediumInsert-placeholder', $el), [{ type: 'image/png' }]);
+  that.uploadFiles($('.mediumInsert-placeholder', $el), [{ type: 'image/png' }], that);
 });
 
 // setImageEvents
