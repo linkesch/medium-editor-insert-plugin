@@ -123,6 +123,7 @@ These are available Grunt tasks:
 - **test**: runs jshint and qunit
 - **watch**: watches for modifications on script/scss files and runs js/css task
 
+
 ## <a name="contributing"></a>Contributing
 
 I'm happy when you not only use the plugin, but contribute your improvements, too. To do that, you need to meet only two requirements:
