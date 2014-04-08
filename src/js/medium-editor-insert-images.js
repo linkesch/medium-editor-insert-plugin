@@ -105,8 +105,8 @@
     * @return {void}
     */
 
-    uploadCompleted: function (jqxhr) {
-      var $progress = $('.progress:first', this.$el),
+    uploadCompleted: function (jqxhr, $el) {
+      var $progress = $('.progress:first', $el),
           $img;
 
       $progress.attr('value', 100);
@@ -156,7 +156,9 @@
             xhr: xhr,
             cache: false,
             contentType: false,
-            complete: this.uploadCompleted,
+            complete: function(jqxhr){
+              that.uploadCompleted(jqxhr, that.$el);
+            },
             processData: false,
             data: this.options.formatData(file)
           });
