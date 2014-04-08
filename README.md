@@ -94,6 +94,7 @@ $(function () {
     - **formatData**: (function) function that formats data before sending them to server while uploading an image
 - **enabled**: (boolean) plugin's state: Default *true*.
 
+
 ## <a name="methods"></a>Methods
 
 - **enable**: enables the plugin. It's connected to Medium Editor's own activate function, so if the editor is activated, so is the plugin. (The plugin is enabled automatically. Use it only if you previously disabled the plugin.)
