@@ -182,6 +182,7 @@
 
     init: function ($el) {
       this.$el = $el;
+      this.isFirefox = navigator.userAgent.match(/firefox/i);
       this.setPlaceholders();
       this.setEvents();
     },
@@ -276,7 +277,7 @@
 
         // Fix not deleting placeholder in Firefox
         // by removing all empty placeholders
-        if (navigator.userAgent.match(/firefox/i) ){
+        if (this.isFirefox){
           $('.mediumInsert .mediumInsert-placeholder:empty', $el).each(function () {
             $(this).parent().remove();
           });
@@ -319,6 +320,27 @@
 
         if (cloneHtml === '' || cloneHtml === '<p><br></p>') {
           $(this).addClass('medium-editor-placeholder');
+        }
+      });
+
+      $el.on('keypress', function (e) {
+        if (that.isFirefox) {
+          if (e.keyCode === 13) {
+            //wrap content text in p to avoid firefox problems
+            $el.contents().each((function(_this) {
+              return function(index, field) {
+                if (field.nodeName === '#text') {
+                  document.execCommand('insertHTML', false, "<p>" + field.data + "</p>");
+                  return field.remove();
+                }
+              };
+            })(this));
+            //Firefox add extra br tag inside p tag
+            var latestPTag = $el.find('p').last();
+            if (latestPTag.text().length > 0) {
+              latestPTag.find('br').remove();
+            }
+          } 
         }
       });
 
