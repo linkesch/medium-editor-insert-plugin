@@ -8,6 +8,7 @@ The plugin is next, completely rewritten version of previous "images plugin". No
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
 [![Bower version](https://badge.fury.io/bo/medium-editor-insert-plugin.svg)](http://badge.fury.io/bo/medium-editor-insert-plugin)
 
+
 ## Table of Contents
 
 - [Demo](#demo)
