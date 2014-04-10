@@ -348,7 +348,7 @@
         // Fix Select-all using (ctrl + a) in chrome
         if (navigator.userAgent.match(/chrome/i)) {
           $el.children().last().removeClass('hide');
-          if ( e.ctrlKey && e.which == 65) {
+          if ( (e.ctrlKey || e.metaKey) && e.which === 65) {
             e.preventDefault();
             if($el.find('p').text().trim().length === 0) {
               return false;
