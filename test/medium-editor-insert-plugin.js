@@ -254,6 +254,21 @@ test('setPlaceholders adds empty paragraph at the end if the last placeholder is
   equal($('#qunit-fixture .mediumInsert').length, 2, 'another .mediumInsert created');
 });
 
+test('setPlaceholders adds empty paragraph if there is no content', function () {
+  var $el = $('#qunit-fixture').html('');
+
+  $.fn.mediumInsert.insert.setPlaceholders();
+  equal($('#qunit-fixture p').length, 1, 'paragraph created');
+});
+
+test('setPlaceholders adds empty paragraph if content is only one <br>', function () {
+  var $el = $('#qunit-fixture').html('<br>');
+
+  $.fn.mediumInsert.insert.setPlaceholders();
+  equal($('#qunit-fixture p').length, 1, 'paragraph created');
+  equal($('#qunit-fixture br').length, 1, 'only 1 br exists');
+});
+
 
 // setEvents
 

@@ -271,6 +271,13 @@
         var $lastChild = $el.children(':last'),
             i;
 
+        // Fix #39
+        // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
+        // To force placeholder to appear, set <p><br></p> as content of the $el
+        if ($el.html() === '' || $el.html() === '<br>') {
+          $el.html('<p><br></p>');
+        }
+
         if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
           $el.append('<p><br></p>');
         }
@@ -323,6 +330,10 @@
         }
       });
 
+
+      // Fix #29
+      // Sometimes in Firefox when you hit enter, <br type="_moz"> appears instead of <p><br></p>
+      // If it happens, force to wrap the <br> into a paragraph
       $el.on('keypress', function (e) {
         if (that.isFirefox) {
           if (e.keyCode === 13) {
@@ -340,10 +351,9 @@
             if (latestPTag.text().length > 0) {
               latestPTag.find('br').remove();
             }
-          } 
+          }
         }
       });
-
 
       $el.on('click', '.mediumInsert-buttons a.mediumInsert-buttonsShow', function () {
         var $options = $(this).siblings('.mediumInsert-buttonsOptions'),
