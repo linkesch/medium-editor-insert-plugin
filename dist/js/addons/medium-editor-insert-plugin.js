@@ -355,6 +355,25 @@
         }
       });
 
+      // Fix #39
+      // For some reason Chrome doesn't "select-all", when the last placeholder is visible.
+      // So it's needed to hide it when the user "selects all", and show it again when they presses any other key.
+      $el.on('keydown', function (e) {
+        // Fix Select-all using (ctrl + a) in chrome
+        if (navigator.userAgent.match(/chrome/i)) {
+          $el.children().last().removeClass('hide');
+          if ( (e.ctrlKey || e.metaKey) && e.which === 65) {
+            e.preventDefault();
+            if($el.find('p').text().trim().length === 0) {
+              return false;
+            }
+
+            $el.children().last().addClass('hide');
+            return document.execCommand('selectAll', false, null);
+          }
+        }
+      });
+
       $el.on('click', '.mediumInsert-buttons a.mediumInsert-buttonsShow', function () {
         var $options = $(this).siblings('.mediumInsert-buttonsOptions'),
             $placeholder = $(this).parent().siblings('.mediumInsert-placeholder');
