@@ -70,6 +70,7 @@ q, blockquote {
   line-height: 18px;
   text-align: center;
   text-decoration: none !important;
+  cursor: pointer;
   &:after {
     left: auto;
     right: 100%;
@@ -89,12 +90,8 @@ q, blockquote {
     left: 0;
     color: #ddd;
     font-size: 0.9em;
-    a {
-      text-decoration: underline;
-      cursor: pointer;
-      &.active {
-        font-weight: bold;
-      }
+    .medium-editor-toolbar-form-anchor {
+      width: 360px;
     }
     ul.mediumInsert-buttonsOptions {
       margin: 0;
@@ -106,6 +103,13 @@ q, blockquote {
       left: 40px;
       top: -10px;
       border-radius: 5px;
+      a {
+        text-decoration: underline;
+        cursor: pointer;
+        &.active {
+          font-weight: bold;
+        }
+      }
       button {
         min-height: auto;
         height: auto;
@@ -137,10 +141,6 @@ q, blockquote {
         background-repeat: no-repeat;
         background-position: center center;
         cursor: pointer;
-        &.mediumInsert-imageRemove {
-          right: 0;
-          background-image: url(../images/remove.png);
-        }
         &.mediumInsert-imageResizeSmaller {
           right: 31px;
           background-image: url(../images/resize-smaller.png);
@@ -197,6 +197,19 @@ q, blockquote {
     margin-top: -1px;
     margin-bottom: -1px;
   }
+}
+
+.mediumInsert-videoRemove {
+  position: absolute;
+  top: 1em;
+  width: 30px;
+  height: 30px;
+  background-color: #3b3b3b;
+  background-repeat: no-repeat;
+  background-position: center center;
+  cursor: pointer;
+  right: 0;
+  background-image: url(../images/remove.png);
 }
 
 // .mediumInsert-withIcon {
