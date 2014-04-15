@@ -1,12 +1,5 @@
 (function ($) {
 
-  var defaults = {
-    width: 400,
-    height: 300,
-    previewWidth: 320,
-    previewHeight: 200
-  };
-
   var services = {
     dailymotion: {
       pattern: /^((http:\/\/)?(www\.)?dailymotion\.com\/video\/)([a-z0-9]+)(_(.*)?)$/,
@@ -17,8 +10,8 @@
       replace: 'http://vimeo.com/moogaloop.swf?clip_id=$4&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1'
     },
     youtube: {
-      pattern: /^((http:\/\/)?(www\.)?youtube\.com\/watch\?v=)([a-zA-Z0-9-]+)(.*)?$/,
-      replace: 'http://www.youtube.com/v/$4&amp;fs=1'
+      pattern: /^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9-]+)(.*)?$/,
+      replace: 'http://www.youtube.com/v/$7&amp;fs=1'
     }
   };
 
@@ -35,9 +28,6 @@
 
   function getEmbedCode(url, width, height) {
     var movieUrl = parseVideoUrl(url);
-
-    width  = width  ? width  : defaults.width;
-    height = height ? height : defaults.height;
 
     return '<object width="' + width + '" height="' + height + '">' +
       "\n" + '  <param name="allowfullscreen" value="true" />' +
@@ -66,7 +56,6 @@
       this.options = $.extend(this.default, options);
 
       this.setVideoEvents();
-      this.setDragAndDropEvents();
       this.preparePreviousVideos();
     },
 
@@ -82,13 +71,15 @@
     * Videos default options
     */
     default: {
+      width: 400,
+      height: 300
     },
 
     /**
     * Make existing videos interactive
     */
     preparePreviousVideos: function () {
-      this.$el.find('.mediumInsert-videos').each(function() {
+      this.$el.find('.mediumInsert-video').each(function() {
         var $parent = $(this).parent();
 
        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
@@ -113,11 +104,13 @@
     */
 
     setVideoEvents: function () {
+      var options = this.options;
+
       this.$el.on('submit', '.mediumInsert-video-form', function(e) {
         var url = $(this).find('input').val(),
             $placeholder = $(this).closest('.mediumInsert-buttons').next();
         try {
-          var code = getEmbedCode(url),
+          var code = getEmbedCode(url, options.width, options.height),
               html = '<div class="mediumInsert-video">'+ code + '</div>';
           $placeholder.append(html).parents('.mediumInsert').mouseleave();
         }
@@ -152,12 +145,10 @@
       });
 
       this.$el.on('blur', '.mediumInsert-video-form input', function () {
-        setTimeout(function(){
-          $(".js-medium-insert-video").remove();
-        }, 50);
+        $(".js-medium-insert-video").remove();
       });
 
-      this.$el.on('mouseleave', '.mediumInsert-videos', function () {
+      this.$el.on('mouseleave', '.mediumInsert-video', function () {
         $('.mediumInsert-videoRemove', this).remove();
       });
 
@@ -168,52 +159,6 @@
         $(this).parent().remove();
 
         $.fn.mediumInsert.insert.deselect();
-      });
-    },
-
-    /**
-    * Set drag and drop evnets
-    * @return {void}
-    */
-
-    setDragAndDropEvents: function () {
-      var that = this,
-          dropSuccessful = false,
-          dropSort = false,
-          dropSortIndex, dropSortParent;
-
-      $(document).on('dragover', 'body', function () {
-        if ($.fn.mediumInsert.settings.enabled === false) {
-          return;
-        }
-
-        $(this).addClass('hover');
-      });
-
-      $(document).on('dragend', 'body', function () {
-        if ($.fn.mediumInsert.settings.enabled === false) {
-          return;
-        }
-
-        $(this).removeClass('hover');
-      });
-
-      this.$el.on('dragover', '.mediumInsert', function () {
-        if ($.fn.mediumInsert.settings.enabled === false) {
-          return;
-        }
-
-        $(this).addClass('hover');
-        $(this).attr('contenteditable', true);
-      });
-
-      this.$el.on('dragleave', '.mediumInsert', function () {
-        if ($.fn.mediumInsert.settings.enabled === false) {
-          return;
-        }
-
-        $(this).removeClass('hover');
-        $(this).attr('contenteditable', false);
       });
     }
   });
