@@ -73,24 +73,36 @@ Initialize MediumEditor as you normally would:
 <script>var editor = new MediumEditor('.editable');</script>
 ```
 
-Finally, you can initialize the insert plugin with images addon:
+Finally, you can initialize the insert plugin with images and embed addon:
 
 ```javascript
 $(function () {
   $('.editable').mediumInsert({
     editor: editor,
     addons: {
-      images: {}
+      images: {},
+      embeds: {}
     }
   });
 });
 ```
 
+![Embeds Sample]()
+
+It can embed various social services to a page
+
+It corresponds to the following services.
+- Youtube
+- Twitter
+- Facebook
+- Instagram
+- Vimeo
+
 
 ## <a name="options"></a>Options
 
 - **editor**: (MediumEditor) instance of MediumEditor
-- **addons**: (object) keys are names of used addons and values is object of addon options. Now available images and maps addons. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js or medium-editor-insert-images.min.js). Options for images addon:
+- **addons**: (object) keys are names of used addons and values is object of addon options. Now available images and maps and embeds addons. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js or medium-editor-insert-images.min.js or medium-editor-insert-embeds.min.js). Options for images addon:
     - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
     - **formatData**: (function) function that formats data before sending them to server while uploading an image
 - **enabled**: (boolean) plugin's state: Default *true*.
@@ -100,7 +112,7 @@ $(function () {
 
 - **enable**: enables the plugin. It's connected to Medium Editor's own activate function, so if the editor is activated, so is the plugin. (The plugin is enabled automatically. Use it only if you previously disabled the plugin.)
 - **disable**: disables the plugin. It's connected to Medium Editor's own deactivate function, so if the editor is deactivated, so is the plugin.
-- **registerAddon**: create new addon, like images or maps. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
+- **registerAddon**: create new addon, like images or maps or embeds. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
 - **getAddon**: simple getter for available addons.
 
 Use example:

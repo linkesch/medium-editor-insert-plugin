@@ -149,7 +149,8 @@
   $.fn.mediumInsert.settings = {
     enabled: true,
     addons: {
-      images: {}
+      images: {},
+      embeds: {}
     }
   };
 
