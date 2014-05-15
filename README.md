@@ -86,6 +86,13 @@ $(function () {
 });
 ```
 
+After you have a working editor with the plugin, you will want to get a clean content of the editor without any additional unnecessary placeholders. This could be done by using the editor's ```serialize()``` function, which returns JSON object with elements contents.
+
+```javascript
+var allContents = editor.serialize();
+var elContent = allContents["element-0"].value;
+```
+
 
 ## <a name="options"></a>Options
 
