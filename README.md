@@ -87,7 +87,7 @@ $(function () {
 });
 ```
 
-![Embeds Sample]()
+![Embeds Sample](https://raw.githubusercontent.com/vexus2/medium-editor-insert-plugin/add_embed/examples/img/embed.png)
 
 It can embed various social services to a page
 
