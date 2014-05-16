@@ -165,6 +165,12 @@ q, blockquote {
       padding: 10px;
       background: #ccc;
     }
+    .mediumInsert-error {
+      background-color: #f2dede;
+      border: 1px solid #ebccd1;
+      color: #a94442;
+      padding: 15px;
+    }
   }
   &.hover {
     .mediumInsert-placeholder {

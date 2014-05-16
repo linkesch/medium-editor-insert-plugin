@@ -14,7 +14,82 @@
   $.fn.mediumInsert.registerAddon('images', {
 
     /**
+    * Images default options
+    */
+
+    default: {
+      /**
+      * Relative path to a script that handles file uploads
+      */
+      imagesUploadScript: 'upload.php',
+
+      /**
+      * Relative path to a script that handles file deleting
+      */
+      imagesDeleteScript: 'delete.php',
+
+      /**
+      * Format data before sending them to server while uploading an image
+      *
+      * @param {File} file File to upload
+      * @return {object} formData FormData instance
+      */
+      formatData: function (file) {
+        var formData = new FormData();
+        formData.append('file', file);
+        return formData;
+      },
+
+      /**
+      * Upload single file
+      *
+      * @param {element} $placeholder Placeholder to add image to
+      * @param {File} file File to upload
+      * @param {object} that Context
+      * @param {void}
+      */
+      uploadFile: function ($placeholder, file, that) {
+        $.ajax({
+          type: "post",
+          url: that.options.imagesUploadScript,
+          xhr: function () {
+            var xhr = new XMLHttpRequest();
+            xhr.upload.onprogress = that.updateProgressBar;
+            return xhr;
+          },
+          cache: false,
+          contentType: false,
+          complete: function (jqxhr) {
+            that.uploadCompleted(jqxhr, $placeholder);
+          },
+          processData: false,
+          data: that.options.formatData(file)
+        });
+      },
+
+      /**
+      * Makes ajax call for deleting a file on a server
+      *
+      * @param {string} file File name
+      * @param {object} that Context
+      * @return {void}
+      */
+      deleteFile: function (file, that) {
+        $.ajax({
+          type: "post",
+          url: that.options.imagesDeleteScript,
+          data: {
+            file: file
+          }
+        });
+      }
+    },
+
+
+    /**
     * Images initial function
+    *
+    * @param {object} options Options to overide defaults
     * @return {void}
     */
 
@@ -30,30 +105,27 @@
     },
 
 
+    /**
+    * Returns insert button
+    *
+    * @param {string} buttonLabels
+    * @return {string}
+    */
+
     insertButton: function(buttonLabels){
       var label = 'Img';
-      if (buttonLabels == 'fontawesome') {
+      if (buttonLabels === 'fontawesome') {
         label = '<i class="fa fa-picture-o"></i>';
       }
       return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
     },
 
     /**
-    * Images default options
-    */
-
-    default: {
-      imagesUploadScript: 'upload.php',
-      formatData: function (file) {
-        var formData = new FormData();
-        formData.append('file', file);
-        return formData;
-      }
-    },
-
-    /**
     * Make existing images interactive
+    *
+    * @return {void}
     */
+
     preparePreviousImages: function () {
       this.$el.find('.mediumInsert-images').each(function() {
         var $parent = $(this).parent();
@@ -63,6 +135,7 @@
 
     /**
     * Add image to placeholder
+    *
     * @param {element} $placeholder Placeholder to add image to
     * @return {element} $selectFile <input type="file"> element
     */
@@ -84,6 +157,7 @@
 
     /**
     * Update progressbar while upload
+    *
     * @param {event} e XMLHttpRequest.upload.onprogress event
     * @return {void}
     */
@@ -93,7 +167,8 @@
           complete;
 
       if (e.lengthComputable) {
-        complete = (e.loaded / e.total * 100 | 0);
+        complete = e.loaded / e.total * 100;
+        complete = complete ? complete : 0;
         $progress.attr('value', complete);
         $progress.html(complete);
       }
@@ -101,6 +176,7 @@
 
     /**
     * Show uploaded image after upload completed
+    *
     * @param {jqXHR} jqxhr jqXHR object
     * @return {void}
     */
@@ -112,13 +188,24 @@
       $progress.attr('value', 100);
       $progress.html(100);
 
-      $progress.before('<div class="mediumInsert-images"><img src="'+ jqxhr.responseText +'" draggable="true" alt=""></div>');
-      $img = $progress.siblings('img');
-      $progress.remove();
+      if (jqxhr.responseText) {
+        $progress.before('<figure class="mediumInsert-images"><img src="'+ jqxhr.responseText +'" draggable="true" alt=""></figure>');
+        $img = $progress.siblings('img');
 
-      $img.load(function () {
-        $img.parent().mouseleave().mouseenter();
-      });
+        $img.load(function () {
+          $img.parent().mouseleave().mouseenter();
+        });
+      } else {
+        $progress.before('<div class="mediumInsert-error">There was a problem uploading the file.</div>');
+
+        setTimeout(function () {
+          $('.mediumInsert-error:first', $placeholder).fadeOut(function () {
+            $(this).remove();
+          });
+        }, 3000);
+      }
+
+      $progress.remove();
 
       $.fn.mediumInsert.insert.$el.keyup();
     },
@@ -133,26 +220,12 @@
     */
 
     uploadFile: function ($placeholder, file, that) {
-      $.ajax({
-        type: "post",
-        url: that.options.imagesUploadScript,
-        xhr: function () {
-          var xhr = new XMLHttpRequest();
-          xhr.upload.onprogress = that.updateProgressBar;
-          return xhr;
-        },
-        cache: false,
-        contentType: false,
-        complete: function (jqxhr) {
-          that.uploadCompleted(jqxhr, $placeholder);
-        },
-        processData: false,
-        data: that.options.formatData(file)
-      });
+      return that.options.uploadFile($placeholder, file, that);
     },
 
     /**
     * Lopp though files, check file types and call uploadFile() function on each file that passes
+    *
     * @param {element} placeholder Placeholder to add image to
     * @param {FileList} files Files to upload
     * @param {object} that Context
@@ -178,11 +251,26 @@
     },
 
     /**
+    * Makes ajax call for deleting a file on a server
+    *
+    * @param {string} file File name
+    * @param {object} that Context
+    * @return {void}
+    */
+
+    deleteFile: function (file, that) {
+      return that.options.deleteFile(file, that);
+    },
+
+    /**
     * Set image events displaying remove and resize buttons
+    *
     * @return {void}
     */
 
     setImageEvents: function () {
+      var that = this;
+
       this.$el.on('mouseenter', '.mediumInsert-images', function () {
         var $img = $('img', this),
             positionTop,
@@ -235,17 +323,22 @@
       });
 
       this.$el.on('click', '.mediumInsert-imageRemove', function () {
+        var img = $(this).siblings('img').attr('src');
+
         if ($(this).parent().siblings().length === 0) {
           $(this).parent().parent().parent().removeClass('small');
         }
         $(this).parent().remove();
+
+        that.deleteFile(img, that);
 
         $.fn.mediumInsert.insert.deselect();
       });
     },
 
     /**
-    * Set drag and drop evnets
+    * Set drag and drop events
+    *
     * @return {void}
     */
 
@@ -289,7 +382,7 @@
         $(this).attr('contenteditable', false);
       });
 
-      this.$el.on('dragstart', '.mediumInsert .mediumInsert-images img', function (e) {
+      this.$el.on('dragstart', '.mediumInsert .mediumInsert-images img', function () {
         if ($.fn.mediumInsert.settings.enabled === false) {
           return;
         }
@@ -322,7 +415,7 @@
         e.preventDefault();
       });
 
-      this.$el.on('drop', '.mediumInsert .mediumInsert-images img', function (e) {
+      this.$el.on('drop', '.mediumInsert .mediumInsert-images img', function () {
         var index, $dragged, finalIndex;
 
         if ($.fn.mediumInsert.settings.enabled === false) {

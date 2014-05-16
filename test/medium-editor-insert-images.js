@@ -76,6 +76,34 @@ asyncTest('add inits file upload', function () {
 });
 
 
+// uploadCompleted
+
+test('uploadCompleted adds image to placeholder', function () {
+  var $placeholder;
+
+  $('#qunit-fixture').html('<div class="mediumInsert-placeholder"><progress class="progress"></progress></div>');
+  $placeholder = $('#qunit-fixture .mediumInsert-placeholder');
+
+  $.fn.mediumInsert.getAddon('images').uploadCompleted({ responseText: 'img.png' }, $placeholder);
+
+  equal($('figure img', $placeholder).attr('src'), 'img.png', 'image added to placeholder');
+  equal($('progress', $placeholder).length, 0, 'progressbar removed');
+});
+
+test('uploadCompleted shows error message if there was a problem uploading a file', function () {
+  var $placeholder;
+
+  $('#qunit-fixture').html('<div class="mediumInsert-placeholder"><progress class="progress"></progress></div>');
+  $placeholder = $('#qunit-fixture .mediumInsert-placeholder');
+
+  $.fn.mediumInsert.getAddon('images').uploadCompleted({ responseText: '' }, $placeholder);
+
+  equal($('.mediumInsert-error', $placeholder).length, 1, 'error message added to placeholder');
+  equal($('figure', $placeholder).length, 0, 'no image added to placeholder');
+  equal($('progress', $placeholder).length, 0, 'progressbar removed');
+});
+
+
 
 // uploadFiles
 
@@ -100,6 +128,60 @@ asyncTest('uploadFiles calls uploadFile', function () {
 
   that.uploadFiles($('.mediumInsert-placeholder', $el), [{ type: 'image/png' }], that);
 });
+
+
+// uploadFile
+
+asyncTest('options.uploadFile make ajax call', function () {
+  var that = $.fn.mediumInsert.getAddon('images');
+
+  this.stub(jQuery, 'ajax', function () {
+    ok(1, 'ajax call made');
+    jQuery.ajax.restore();
+    start();
+  });
+
+  that.options.uploadFile($('#qunit-fixture'), 'img.png', that);
+});
+
+asyncTest('uploadFile calls options.uploadFile', function () {
+  var that = $.fn.mediumInsert.getAddon('images');
+
+  this.stub(that.options, 'uploadFile', function () {
+    ok(1, 'options.uploadFile call made');
+    that.options.uploadFile.restore();
+    start();
+  });
+
+  that.uploadFile($('#qunit-fixture'), 'img.png', that);
+});
+
+// deleteFile
+
+asyncTest('options.deleteFile make ajax call', function () {
+  var that = $.fn.mediumInsert.getAddon('images');
+
+  this.stub(jQuery, 'ajax', function () {
+    ok(1, 'ajax call made');
+    jQuery.ajax.restore();
+    start();
+  });
+
+  that.options.deleteFile('img.png', that);
+});
+
+asyncTest('deleteFile calls options.deleteFile', function () {
+  var that = $.fn.mediumInsert.getAddon('images');
+
+  this.stub(that.options, 'deleteFile', function () {
+    ok(1, 'options.deleteFile call made');
+    that.options.deleteFile.restore();
+    start();
+  });
+
+  that.deleteFile('img.png', that);
+});
+
 
 // setImageEvents
 
@@ -235,6 +317,29 @@ asyncTest('setImageEvents creates click event on imageRemove', function () {
     equal($('.mediumInsert', $el).hasClass('small'), false, 'small class removed');
     start();
   });
+
+  $('.mediumInsert-imageRemove', $el).click();
+});
+
+asyncTest('setImageEvents creates click event on imageRemove which calls delete function', function () {
+  var that = $.fn.mediumInsert.getAddon('images'),
+      $el = $('#qunit-fixture').html('<div class="mediumInsert small" id="mediumInsert-0" contenteditable="false">'+
+    '<div class="mediumInsert-placeholder">'+
+      '<span class="mediumInsert-images">'+
+        '<img src="test/fixtures/image.png" draggable="true">'+
+        '<a class="mediumInsert-imageRemove"></a>'+
+        '<a class="mediumInsert-imageResizeBigger"></a>'+
+      '</span>'+
+    '</div>'+
+  '</div>');
+
+  this.stub(that, 'deleteFile', function () {
+    ok(1, 'deleteFile called');
+    that.deleteFile.restore();
+    start();
+  });
+
+  that.setImageEvents();
 
   $('.mediumInsert-imageRemove', $el).click();
 });

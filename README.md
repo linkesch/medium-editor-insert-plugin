@@ -97,9 +97,13 @@ var elContent = allContents["element-0"].value;
 ## <a name="options"></a>Options
 
 - **editor**: (MediumEditor) instance of MediumEditor
-- **addons**: (object) keys are names of used addons and values is object of addon options. Now available images and maps addons. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-maps.min.js or medium-editor-insert-images.min.js). Options for images addon:
-    - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
-    - **formatData**: (function) function that formats data before sending them to server while uploading an image
+- **addons**: (object) keys are names of used addons and values are objects of addons options. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-{ADDON-NAME}.min.js).
+    - **images**:
+        - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
+        - **imagesDeleteScript**: (string) relative path to a script that handles file deleting. Default: *delete.php*
+        - **formatData**: (function (file)) function that formats data before sending them to server while uploading an image
+        - **uploadFile**: (function ($placeholder, file, that)) function uploading an image to a server
+        - **deleteFile**: (function (file, that)) function deleting an image from a server
 - **enabled**: (boolean) plugin's state: Default *true*.
 
 
