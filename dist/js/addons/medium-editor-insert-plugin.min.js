@@ -1,5 +1,5 @@
 /*!
- * medium-editor-insert-plugin v0.1.1 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.2 - jQuery insert plugin for MediumEditor
  *
  * Addon Initialization
  *
