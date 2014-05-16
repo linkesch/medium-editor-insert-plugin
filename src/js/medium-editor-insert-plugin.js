@@ -9,6 +9,8 @@
  * Released under the MIT license
  */
 
+/* global MediumEditor */
+
 (function ($) {
   /*
   * Private storage of registered addons
@@ -142,13 +144,11 @@
 
         $.fn.mediumInsert.insert.init($(this));
 
-        if (Object.keys($.fn.mediumInsert.settings.addons).length) {
-          for (var i in $.fn.mediumInsert.settings.addons) {
-            var addonOptions = $.fn.mediumInsert.settings.addons[i];
-            addonOptions.$el = $.fn.mediumInsert.insert.$el;
-            addons[i].init(addonOptions);
-          }
-        }
+        $.each($.fn.mediumInsert.settings.addons, function (i) {
+          var addonOptions = $.fn.mediumInsert.settings.addons[i];
+          addonOptions.$el = $.fn.mediumInsert.insert.$el;
+          addons[i].init(addonOptions);
+        });
       });
     }
   };
@@ -264,62 +264,61 @@
           buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
           insertBlock = '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
 
-      if (Object.keys($.fn.mediumInsert.settings.addons).length) {
+      if (Object.keys($.fn.mediumInsert.settings.addons).length === 0) {
+        return false;
+      }
 
-        for (var i in $.fn.mediumInsert.settings.addons) {
-          insertBlock += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
-        }
-        insertBlock += '</ul>';
-        insertBlock = '<div class="mediumInsert" contenteditable="false">'+
-          '<div class="mediumInsert-buttons">'+
-            '<a class="mediumInsert-buttonsShow">+</a>'+
-            insertBlock +
-          '</div>'+
-          '<div class="mediumInsert-placeholder"></div>'+
-        '</div>';
+      $.each($.fn.mediumInsert.settings.addons, function (i) {
+        insertBlock += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
+      });
 
-        if ($el.is(':empty')) {
+      insertBlock += '</ul>';
+      insertBlock = '<div class="mediumInsert" contenteditable="false">'+
+        '<div class="mediumInsert-buttons">'+
+          '<a class="mediumInsert-buttonsShow">+</a>'+
+          insertBlock +
+        '</div>'+
+        '<div class="mediumInsert-placeholder"></div>'+
+      '</div>';
+
+      if ($el.is(':empty')) {
+        $el.html('<p><br></p>');
+      }
+
+      $el.keyup(function () {
+        var $lastChild = $el.children(':last'),
+            i;
+
+        // Fix #39
+        // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
+        // To force placeholder to appear, set <p><br></p> as content of the $el
+        if ($el.html() === '' || $el.html() === '<br>') {
           $el.html('<p><br></p>');
         }
 
-        $el.keyup(function () {
-          var $lastChild = $el.children(':last'),
-              i;
+        if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
+          $el.append('<p><br></p>');
+        }
 
-          // Fix #39
-          // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
-          // To force placeholder to appear, set <p><br></p> as content of the $el
-          if ($el.html() === '' || $el.html() === '<br>') {
-            $el.html('<p><br></p>');
-          }
-
-          if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
-            $el.append('<p><br></p>');
-          }
-
-          // Fix not deleting placeholder in Firefox
-          // by removing all empty placeholders
-          if (this.isFirefox){
-            $('.mediumInsert .mediumInsert-placeholder:empty', $el).each(function () {
-              $(this).parent().remove();
-            });
-          }
-
-          i = that.getMaxId() +1;
-
-          $el.children('p').each(function () {
-            if ($(this).next().hasClass('mediumInsert') === false) {
-              $(this).after(insertBlock);
-              $(this).next('.mediumInsert').attr('id', 'mediumInsert-'+ i);
-            }
-            i++;
+        // Fix not deleting placeholder in Firefox
+        // by removing all empty placeholders
+        if (this.isFirefox){
+          $('.mediumInsert .mediumInsert-placeholder:empty', $el).each(function () {
+            $(this).parent().remove();
           });
+        }
 
-        }).keyup();
+        i = that.getMaxId() +1;
 
-      } else {
-        return false;
-      }
+        $el.children('p').each(function () {
+          if ($(this).next().hasClass('mediumInsert') === false) {
+            $(this).after(insertBlock);
+            $(this).next('.mediumInsert').attr('id', 'mediumInsert-'+ i);
+          }
+          i++;
+        });
+
+      }).keyup();
     },
 
 
