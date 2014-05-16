@@ -37,6 +37,7 @@ test('add() adds embed block forms', function () {
 
   $.fn.mediumInsert.getAddon('embeds').add($placeholder);
   equal($placeholder.html(), '<div class="mediumInsert-embedsPlaceholder">' +
+      '<i class="fa fa-code mediumInsert-embedsImage"></i>' +
       '<div class="mediumInsert-embedsWire">' +
         '<div class="mediumInsert-embedsBox">' +
           '<input type="text" class="mediumInsert-embedsText" placeholder="type or paste url here">' +
@@ -51,6 +52,7 @@ asyncTest('embed "Twitter" url', function () {
   var $el = $('#qunit-fixture').html('<div class="mediumInsert" contenteditable="false">' +
     '<div class="mediumInsert-placeholder">' +
       '<div class="mediumInsert-embedsPlaceholder">' +
+          '<i class="fa fa-code mediumInsert-embedsImage"></i>' +
           '<div class="mediumInsert-embedsWire">' +
             '<div class="mediumInsert-embedsBox">' +
               '<input type="text" class="mediumInsert-embedsText" placeholder="type or paste url here">' +
@@ -82,6 +84,7 @@ asyncTest('embed "Facebook" url', function () {
   var $el = $('#qunit-fixture').html('<div class="mediumInsert" contenteditable="false">' +
     '<div class="mediumInsert-placeholder">' +
       '<div class="mediumInsert-embedsPlaceholder">' +
+          '<i class="fa fa-code mediumInsert-embedsImage"></i>' +
           '<div class="mediumInsert-embedsWire">' +
             '<div class="mediumInsert-embedsBox">' +
               '<input type="text" class="mediumInsert-embedsText" placeholder="type or paste url here">' +
@@ -110,6 +113,7 @@ asyncTest('embed "Vimeo" url', function () {
   var $el = $('#qunit-fixture').html('<div class="mediumInsert" contenteditable="false">' +
     '<div class="mediumInsert-placeholder">' +
       '<div class="mediumInsert-embedsPlaceholder">' +
+          '<i class="fa fa-code mediumInsert-embedsImage"></i>' +
           '<div class="mediumInsert-embedsWire">' +
             '<div class="mediumInsert-embedsBox">' +
               '<input type="text" class="mediumInsert-embedsText" placeholder="type or paste url here">' +
@@ -138,6 +142,7 @@ asyncTest('embed "Youtube" url', function () {
   var $el = $('#qunit-fixture').html('<div class="mediumInsert" contenteditable="false">' +
     '<div class="mediumInsert-placeholder">' +
       '<div class="mediumInsert-embedsPlaceholder">' +
+          '<i class="fa fa-code mediumInsert-embedsImage"></i>' +
           '<div class="mediumInsert-embedsWire">' +
             '<div class="mediumInsert-embedsBox">' +
               '<input type="text" class="mediumInsert-embedsText" placeholder="type or paste url here">' +
@@ -166,6 +171,7 @@ asyncTest('embed "Instagram" url', function () {
   var $el = $('#qunit-fixture').html('<div class="mediumInsert" contenteditable="false">' +
     '<div class="mediumInsert-placeholder">' +
       '<div class="mediumInsert-embedsPlaceholder">' +
+          '<i class="fa fa-code mediumInsert-embedsImage"></i>' +
           '<div class="mediumInsert-embedsWire">' +
             '<div class="mediumInsert-embedsBox">' +
               '<input type="text" class="mediumInsert-embedsText" placeholder="type or paste url here">' +

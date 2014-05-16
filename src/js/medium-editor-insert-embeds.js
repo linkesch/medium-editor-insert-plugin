@@ -39,6 +39,7 @@
       $(".mediumInsert-embedsPlaceholder").remove();
       $.fn.mediumInsert.insert.deselect();
       $placeholder.append('<div class="mediumInsert-embedsPlaceholder">' +
+           '<i class="fa fa-code mediumInsert-embedsImage"></i>' +
            '<div class="mediumInsert-embedsWire">' +
              '<div class="mediumInsert-embedsBox">' +
                '<input type="text" class="mediumInsert-embedsText" placeholder="type or paste url here">' +

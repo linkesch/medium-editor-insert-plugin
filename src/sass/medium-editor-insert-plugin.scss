@@ -178,7 +178,6 @@ q, blockquote {
     padding: 24px;
     height: 160px;
     text-align: center;
-    background: url(../images/embed.png) no-repeat center center;
     background-color: #fffff;
 
     .mediumInsert-embedsWire {
@@ -202,6 +201,10 @@ q, blockquote {
       color: #aaa;
     }
     .mediumInsert-embedsBox input::-webkit-input-placeholder { color: #aaa; }
+    .mediumInsert-embedsImage {
+      font-size: 100px;
+      color: #999;
+    }
 
     .mediumInsert-embedsBox button {
       border: solid 1px #2fbbfc;
