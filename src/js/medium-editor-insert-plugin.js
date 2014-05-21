@@ -1,5 +1,5 @@
 /*!
- * medium-editor-insert-plugin v0.2.3 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.4 - jQuery insert plugin for MediumEditor
  *
  * Addon Initialization
  *
@@ -39,7 +39,7 @@
           $inserts = $('.mediumInsert', $clone);
           for (j = 0; j < $inserts.length; j++) {
             $insert = $($inserts[j]);
-            $insertData = $('.mediumInsert-placeholder', $insert).children();
+            $insertData = $('.mediumInsert-placeholder, .mediumInsert-embeds', $insert).children();
             if ($insertData.length === 0) {
               $insert.remove();
             } else {
