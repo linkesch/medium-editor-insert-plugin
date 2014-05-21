@@ -188,6 +188,8 @@
       $progress.attr('value', 100);
       $progress.html(100);
 
+      jqxhr.responseText = 'image.jpg';
+
       if (jqxhr.responseText) {
         $progress.before('<figure class="mediumInsert-images"><img src="'+ jqxhr.responseText +'" draggable="true" alt=""></figure>');
         $img = $progress.siblings('img');
