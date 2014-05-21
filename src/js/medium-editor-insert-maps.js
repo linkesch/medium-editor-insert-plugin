@@ -1,5 +1,5 @@
 /*!
- * medium-editor-insert-plugin v0.2.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.3 - jQuery insert plugin for MediumEditor
  *
  * Maps Addon
  *
@@ -24,7 +24,7 @@
 
     insertButton: function(buttonLabels){
       var label = 'Map';
-      if (buttonLabels === 'fontawesome') {
+      if (buttonLabels == 'fontawesome' || Array.isArray(buttonLabels) && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
       return '<button data-addon="maps" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';

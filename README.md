@@ -1,9 +1,16 @@
 jQuery insert plugin for MediumEditor
 ======================================
 
-This plugin expands capabilities of [MediumEditor](https://github.com/daviferreira/medium-editor) which is a clone of [medium.com](http://medium.com) WYSIWYG editor.
+This plugin expands capabilities of [MediumEditor](https://github.com/daviferreira/medium-editor) (a clone of [medium.com](http://medium.com) WYSIWYG editor).
 
-The plugin is next, completely rewritten version of previous "images plugin". Now inserting images is only one of the plugin's addons. More addons (inserting files and maps) are coming soon...
+The plugins enables users to insert into the editor various types of content (depending on available addons).
+
+Current available addons:
+
+- images
+- embeds (it can embed various social services - Youtube, Twitter, Facebook, Instagram, Vimeo)
+
+More are coming soon...
 
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
 [![Bower version](https://badge.fury.io/bo/medium-editor-insert-plugin.svg)](http://badge.fury.io/bo/medium-editor-insert-plugin)
@@ -12,7 +19,6 @@ The plugin is next, completely rewritten version of previous "images plugin". No
 ## Table of Contents
 
 - [Demo](#demo)
-- [Available Addons](#addons)
 - [Download](#download)
 - [Usage](#usage)
 - [Options](#options)
@@ -25,15 +31,6 @@ The plugin is next, completely rewritten version of previous "images plugin". No
 ## <a name="demo"></a>Demo
 
 http://orthes.github.io/medium-editor-insert-plugin
-
-
-## <a name="addons"></a>Available Addons
-
-Current available addons:
-
-- images
-
-More are coming soon...
 
 
 ## <a name="download"></a>Download
@@ -65,6 +62,7 @@ Or if you for some reason want, you can load only addons that you want separatel
 <link rel="stylesheet" href="medium-editor-insert-plugin/css/medium-editor-insert-plugin.css">
 <script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-plugin.min.js"></script>
 <script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-images.min.js"></script>
+<script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-embeds.min.js"></script>
 ```
 
 Initialize MediumEditor as you normally would:
@@ -73,14 +71,15 @@ Initialize MediumEditor as you normally would:
 <script>var editor = new MediumEditor('.editable');</script>
 ```
 
-Finally, you can initialize the insert plugin with images addon:
+Finally, you can initialize the insert plugin with images and embed addon:
 
 ```javascript
 $(function () {
   $('.editable').mediumInsert({
     editor: editor,
     addons: {
-      images: {}
+      images: {},
+      embeds: {}
     }
   });
 });
@@ -104,6 +103,7 @@ var elContent = allContents["element-0"].value;
         - **formatData**: (function (file)) function that formats data before sending them to server while uploading an image
         - **uploadFile**: (function ($placeholder, file, that)) function uploading an image to a server
         - **deleteFile**: (function (file, that)) function deleting an image from a server
+    - **embeds**
 - **enabled**: (boolean) plugin's state: Default *true*.
 
 
@@ -111,7 +111,7 @@ var elContent = allContents["element-0"].value;
 
 - **enable**: enables the plugin. It's connected to Medium Editor's own activate function, so if the editor is activated, so is the plugin. (The plugin is enabled automatically. Use it only if you previously disabled the plugin.)
 - **disable**: disables the plugin. It's connected to Medium Editor's own deactivate function, so if the editor is deactivated, so is the plugin.
-- **registerAddon**: create new addon, like images or maps. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
+- **registerAddon**: create new addon, like images or maps or embeds. Your addon object should contain `init(options)` method to initialize your addon and `insertButton` method that contains code of button in list of available addons.
 - **getAddon**: simple getter for available addons.
 
 Use example:

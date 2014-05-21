@@ -118,6 +118,13 @@ q, blockquote {
       }
     }
   }
+  .mediumInsert-embeds {
+    text-align: center;
+    padding: 15px;
+    iframe {
+      margin: 0px auto !important;
+    }
+  }
   .mediumInsert-placeholder {
     position: relative;
     margin-left: 40px;
@@ -170,6 +177,52 @@ q, blockquote {
       border: 1px solid #ebccd1;
       color: #a94442;
       padding: 15px;
+    }
+  }
+  .mediumInsert-embedsPlaceholder {
+    position: relative;
+    padding: 24px;
+    height: 160px;
+    text-align: center;
+    background-color: #fffff;
+
+    .mediumInsert-embedsWire {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      width: 500px;
+      text-align: center;
+    }
+    .mediumInsert-embedsBox {
+      position: relative;
+      left: -250px;
+    }
+    .mediumInsert-embedsBox input[type="text"] {
+      margin: 0 auto;
+      padding: 10px;
+      width: 330px;
+      border: solid 3px #ccc;
+      font-size: 1.0em;
+      font-family: Arial, sans-serif;
+      color: #aaa;
+    }
+    .mediumInsert-embedsBox input::-webkit-input-placeholder { color: #aaa; }
+    .mediumInsert-embedsImage {
+      font-size: 100px;
+      color: #999;
+    }
+
+    .mediumInsert-embedsBox button {
+      border: solid 1px #2fbbfc;
+      padding: 11px 30px;
+      font-family: Arial, sans-serif;
+      font-size: 1.2em;
+      color: #fff;
+      cursor: pointer;
+      background-color: #2fbbfc;
+    }
+    .mediumInsert-embedsBox input[type="text"]:focus {
+      border: solid 1px #EEA34A;
     }
   }
   &.hover {

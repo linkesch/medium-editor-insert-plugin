@@ -1,5 +1,5 @@
 /*!
- * medium-editor-insert-plugin v0.2.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.3 - jQuery insert plugin for MediumEditor
  *
  * Addon Initialization
  *
@@ -160,7 +160,8 @@
   $.fn.mediumInsert.settings = {
     enabled: true,
     addons: {
-      images: {}
+      images: {},
+      embeds: {}
     }
   };
 
