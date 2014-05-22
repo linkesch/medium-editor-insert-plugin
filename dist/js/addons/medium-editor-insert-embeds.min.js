@@ -3,7 +3,7 @@
  *
  * Embeds Addon
  *
- * https://github.com/orthes/medium-editor-images-plugin
+ * https://github.com/orthes/medium-editor-insert-plugin
  *
  * Copyright (c) 2014 Vexus2 (https://github.com/vexus2)
  * Released under the MIT license

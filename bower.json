@@ -3,7 +3,7 @@
   "version": "0.2.4",
   "description": "jQuery insert plugin for MediumEditor",
   "main": [
-    "dist/js/medium-editor-insert-plugin.all.min.js",
+    "dist/js/medium-editor-insert-plugin.all.js",
     "dist/css/medium-editor-insert-plugin.css"
   ],
   "license": "MIT",

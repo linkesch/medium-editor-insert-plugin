@@ -54,6 +54,13 @@ module.exports = function(grunt) {
       }
     },
 
+    concat: {
+      dist: {
+        src: ['src/js/medium-editor-insert-plugin.js', 'src/js/medium-editor-insert-images.js', 'src/js/medium-editor-insert-maps.js', 'src/js/medium-editor-insert-embeds.js'],
+        dest: 'dist/js/<%= pkg.name %>.all.js'
+      }
+    },
+
     jshint: {
       files: ['src/js/*.js', 'src/js/**/*.js', 'test/*.js', 'test/**/*.js'],
       options: {
@@ -100,9 +107,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('js', ['test', 'uglify', 'copy']);
+  grunt.registerTask('js', ['test', 'uglify', 'copy', 'concat']);
   grunt.registerTask('css', ['compass']);
   grunt.registerTask('default', ['js', 'css']);
 

@@ -3,7 +3,7 @@
  *
  * Maps Addon
  *
- * https://github.com/orthes/medium-editor-images-plugin
+ * https://github.com/orthes/medium-editor-insert-plugin
  *
  * Copyright (c) 2013 Pavel Linkesch (http://linkesch.sk)
  * Released under the MIT license

@@ -3,7 +3,7 @@
   "version": "0.2.4",
   "description": "jQuery insert plugin for MediumEditor",
   "license": "MIT",
-  "homepage": "https://github.com/orthes/medium-editor-images-plugin",
+  "homepage": "https://github.com/orthes/medium-editor-insert-plugin",
   "author": {
     "name": "Pavel Linkesch",
     "url": "http://linkesch.sk"
@@ -15,7 +15,8 @@
     "grunt-contrib-qunit": "~0.4.0",
     "grunt-contrib-compass": "~0.7.2",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-contrib-copy": "~0.5.0"
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-concat": "^0.4.0"
   },
   "scripts": {
     "test": "grunt test --verbose"
