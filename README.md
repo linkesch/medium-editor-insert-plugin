@@ -98,6 +98,7 @@ var elContent = allContents["element-0"].value;
 - **editor**: (MediumEditor) instance of MediumEditor
 - **addons**: (object) keys are names of used addons and values are objects of addons options. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-{ADDON-NAME}.min.js).
     - **images**:
+        - **useDragAndDrop**: (boolean) active or inactive image's drag and drop. Default: *true*
         - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
         - **imagesDeleteScript**: (string) relative path to a script that handles file deleting. Default: *delete.php*
         - **formatData**: (function (file)) function that formats data before sending them to server while uploading an image
