@@ -169,6 +169,8 @@ test('convertUrlToEmbedTag() returns html for vimeo', function () {
 
 test('convertUrlToEmbedTag() returns html for youtube', function () {
   var result = this.addon.convertUrlToEmbedTag('https://www.youtube.com/watch?v=rlNmYgNdOkM');
+  equal(result.match(/youtube/).length, 1, 'expected html returned');
 
+  result = this.addon.convertUrlToEmbedTag('https://www.youtube.com/watch?v=_mkiGMtbrPM');
   equal(result.match(/youtube/).length, 1, 'expected html returned');
 });
