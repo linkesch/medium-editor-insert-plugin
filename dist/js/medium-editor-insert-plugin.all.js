@@ -557,7 +557,7 @@
 
     insertButton: function(buttonLabels){
       var label = 'Img';
-      if (buttonLabels == 'fontawesome' || Array.isArray(buttonLabels) && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
       return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
@@ -945,7 +945,7 @@
 
     insertButton: function(buttonLabels){
       var label = 'Map';
-      if (buttonLabels == 'fontawesome' || Array.isArray(buttonLabels) && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
       return '<button data-addon="maps" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
