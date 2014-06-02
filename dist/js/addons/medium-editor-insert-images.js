@@ -19,6 +19,11 @@
 
     default: {
       /**
+      * Active or inactive image's drag and drop
+      */
+      useDragAndDrop: true,
+
+      /**
       * Relative path to a script that handles file uploads
       */
       imagesUploadScript: 'upload.php',
@@ -100,8 +105,13 @@
       this.options = $.extend(this.default, options);
 
       this.setImageEvents();
-      this.setDragAndDropEvents();
+
+      if (this.options.useDragAndDrop === true){
+        this.setDragAndDropEvents();
+      }
+
       this.preparePreviousImages();
+
     },
 
 

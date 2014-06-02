@@ -45,6 +45,15 @@ test('init calls preparePreviousImages()', function() {
   ok(stub1.called, 'preparePreviousImages() called');
 });
 
+test('init does not calls setDragAndDropEvents() when it is deactive', function() {
+  $.fn.mediumInsert.getAddon('images').options.useDragAndDrop = false;
+  var stub1 = this.stub($.fn.mediumInsert.getAddon('images'), 'setDragAndDropEvents');
+
+  $.fn.mediumInsert.getAddon('images').init();
+
+  ok(!stub1.called, 'setDragAndDropEvents() called');
+});
+
 test('existing images have an edit menu after init', function() {
   var $el = $('#qunit-fixture').html('<div class="mediumInsert-images"><img src="test/fixtures/image.png"></img></div>');
 
