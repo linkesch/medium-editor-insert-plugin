@@ -100,6 +100,7 @@ var elContent = allContents["element-0"].value;
     - **images**:
         - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
         - **imagesDeleteScript**: (string) relative path to a script that handles file deleting. Default: *delete.php*
+        - **useDragAndDrop**: (boolean) active or inactive image's drag and drop. Default: *true*
         - **formatData**: (function (file)) function that formats data before sending them to server while uploading an image
         - **uploadFile**: (function ($placeholder, file, that)) function uploading an image to a server
         - **deleteFile**: (function (file, that)) function deleting an image from a server
