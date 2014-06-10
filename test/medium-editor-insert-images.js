@@ -57,6 +57,18 @@ test('existing images have an edit menu after init', function() {
 
   $('.mediumInsert-images', $el).mouseenter();
 });
+test('existing img tag have an edit menu after init', function() {
+  var $el = $('#qunit-fixture').html('<p><img src="test/fixtures/image.png"></p>');
+
+  $.fn.mediumInsert.getAddon('images').init();
+
+  $(document).one('mouseenter', 'img', function() {
+    ok($('.mediumInsert-imageRemove', $el).length > 0, 'remove icon showed on mouseenter');
+    ok($('.mediumInsert-imageResizeSmaller', $el).length > 0, 'resize smaller icon showed on mouseenter');
+  });
+
+  $('img', $el).mouseenter();
+});
 
 // add
 
