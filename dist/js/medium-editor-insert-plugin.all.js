@@ -575,13 +575,15 @@
         $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
       });
 
-      this.$el.find('p > img').each(function() {
-        var $parent = $(this).parent();
-        $parent.html('<div class="mediumInsert" contenteditable="false">'+
-          '<div class="mediumInsert-placeholder">' +
-            '<figure class="mediumInsert-images">' + $parent.html() + '</figure>' +
-          '</div>'+
-        '</div>');
+      this.$el.children('p').each(function() {
+        $(this).find('img').each(function() {
+          var $parent = $(this).parent();
+          $parent.html('<div class="mediumInsert" contenteditable="false">'+
+            '<div class="mediumInsert-placeholder">' +
+              '<figure class="mediumInsert-images">' + $parent.html() + '</figure>' +
+            '</div>'+
+          '</div>');
+        });
       });
     },
 
