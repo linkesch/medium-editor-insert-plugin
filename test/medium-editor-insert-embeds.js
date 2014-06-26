@@ -51,6 +51,18 @@ test('add() appends input to buttons', function () {
   equal($('.mediumInsert-buttons input.mediumInsert-embedsText').length, 1, 'input for embedding inserted');
 });
 
+test('add() uses placeholder translation', function () {
+  $('#qunit-fixture').html('<div class="mediumInsert" contenteditable="false" id="mediumInsert-6">'+
+    '<div class="mediumInsert-buttons"></div>'+
+    '<div class="mediumInsert-placeholder"></div>'+
+  '</div>');
+
+  this.addon.options.urlPlaceholder = 'Example enter URL';
+  this.addon.add($('.mediumInsert-placeholder'));
+
+  equal($('.mediumInsert-embedsWire input').attr('placeholder'), 'Example enter URL', 'placeholder was replaced');
+});
+
 
 // setEmbedButtonEvents
 
