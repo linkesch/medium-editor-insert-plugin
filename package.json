@@ -4,6 +4,10 @@
   "description": "jQuery insert plugin for MediumEditor",
   "license": "MIT",
   "homepage": "https://github.com/orthes/medium-editor-insert-plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orthes/medium-editor-insert-plugin.git"
+  },
   "author": {
     "name": "Pavel Linkesch",
     "url": "http://linkesch.sk"
