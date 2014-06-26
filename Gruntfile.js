@@ -72,14 +72,26 @@ module.exports = function(grunt) {
       unit: 'test.html'
     },
 
-    compass: {
+    sass: {
       dist: {
-        options: {
-          sassDir: 'src/sass',
-          cssDir: 'dist/css',
-          environment: 'production',
-          outputStyle: 'compressed'
-        }
+        src: 'src/sass/*.scss',
+        dest: 'dist/css/'
+      }
+    },
+
+    autoprefixer: {
+      dist: {
+        src: 'dist/css/*.css'
+      }
+    },
+
+    csso: {
+      dist: {
+        expand: true,
+        cwd: 'dist/css/',
+        src: ['*.css', '!*.min.css'],
+        dest: 'dist/css/',
+        ext: '.min.css'
       }
     },
 
@@ -108,10 +120,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-autoprefixer');
+  grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-csso');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
   grunt.registerTask('js', ['test', 'uglify', 'copy', 'concat']);
-  grunt.registerTask('css', ['compass']);
+  grunt.registerTask('css', ['sass', 'autoprefixer', 'csso']);
   grunt.registerTask('default', ['js', 'css']);
 
 };
