@@ -660,7 +660,7 @@
 
       $progress.remove();
 
-      $.fn.mediumInsert.insert.$el.keyup();
+      $placeholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
     },
 
     /**
@@ -1062,6 +1062,8 @@
       } else {
         embed_tag = $('<div class="mediumInsert-embeds"></div>').append(embed_tag);
         that.currentPlaceholder.parent().append(embed_tag);
+
+        that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
       }
     },
 

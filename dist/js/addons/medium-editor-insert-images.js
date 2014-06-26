@@ -217,7 +217,7 @@
 
       $progress.remove();
 
-      $.fn.mediumInsert.insert.$el.keyup();
+      $placeholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
     },
 
     /**
