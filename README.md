@@ -44,7 +44,7 @@ http://orthes.github.io/medium-editor-insert-plugin
 The first step is to add all prerequisites (MediumEditor and jQuery):
 
 ```html
-<link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.css">
+<link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.min.css">
 <link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css">
 <script src="bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
 <script src="bower_components/jquery/jquery.min.js"></script>
