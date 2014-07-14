@@ -104,7 +104,8 @@ var elContent = allContents["element-0"].value;
         - **formatData**: (function (file)) function that formats data before sending them to server while uploading an image
         - **uploadFile**: (function ($placeholder, file, that)) function uploading an image to a server
         - **deleteFile**: (function (file, that)) function deleting an image from a server
-    - **embeds**
+    - **embeds**:
+        - **urlPlaceholder**: (string) placeholder displayed when entering URL to embed. Default: *type or paste url here*
 - **enabled**: (boolean) plugin's state: Default *true*.
 
 
