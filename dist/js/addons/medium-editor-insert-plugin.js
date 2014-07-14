@@ -136,6 +136,7 @@
       */
 
       return this.each(function () {
+        $(this).addClass('medium-editor-insert-plugin');
 
         $('p', this).bind('dragover drop', function (e) {
           e.preventDefault();

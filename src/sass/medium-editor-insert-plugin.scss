@@ -42,12 +42,14 @@ q, blockquote {
   }
 }
 
-.medium-editor-placeholder {
-  padding-bottom: 0 !important;
-  min-height: 58px;
-  &:after {
-    content: attr(data-placeholder) !important;
-    top: 1em;
+.medium-editor-insert-plugin {
+  &.medium-editor-placeholder {
+    padding-bottom: 0 !important;
+    min-height: 58px;
+    &:after {
+      content: attr(data-placeholder) !important;
+      top: 1em;
+    }
   }
 }
 
