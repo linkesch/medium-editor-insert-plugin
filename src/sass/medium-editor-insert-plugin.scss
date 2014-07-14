@@ -34,6 +34,12 @@ q, blockquote {
 
 [data-medium-element="true"] {
   @extend .clearfix;
+  * {
+    box-sizing: content-box;
+  }
+  p {
+    margin: 1em 0;
+  }
 }
 
 .medium-editor-placeholder {

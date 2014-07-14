@@ -44,25 +44,26 @@ http://orthes.github.io/medium-editor-insert-plugin
 The first step is to add all prerequisites (MediumEditor and jQuery):
 
 ```html
-<link rel="stylesheet" href="medium-editor/css/medium-editor.css">
-<script src="medium-editor/js/medium-editor.min.js"></script>
+<link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.css">
+<link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css">
+<script src="bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
 <script src="bower_components/jquery/jquery.min.js"></script>
 ```
 
 Now you have two possibilites. You can load all addons at once:
 
 ```html
-<link rel="stylesheet" href="medium-editor-insert-plugin/css/medium-editor-insert-plugin.css">
-<script src="medium-editor-insert-plugin/js/medium-editor-insert-plugin.all.min.js"></script>
+<link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.css">
+<script src="bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.all.min.js"></script>
 ```
 
 Or if you for some reason want, you can load only addons that you want separately. In this case, don't forget to load medium-editor-insert-plugin.min.js, which is the main plugin file, that initializes addons:
 
 ```html
-<link rel="stylesheet" href="medium-editor-insert-plugin/css/medium-editor-insert-plugin.css">
-<script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-plugin.min.js"></script>
-<script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-images.min.js"></script>
-<script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-embeds.min.js"></script>
+<link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.css">
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-plugin.min.js"></script>
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-images.min.js"></script>
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-embeds.min.js"></script>
 ```
 
 Initialize MediumEditor as you normally would:
