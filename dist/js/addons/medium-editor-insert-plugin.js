@@ -424,7 +424,9 @@
         $('.mediumInsert-buttonsOptions', this).hide();
       });
 
-      $el.on('click', '.mediumInsert-buttons .mediumInsert-action', function () {
+      $el.on('click', '.mediumInsert-buttons .mediumInsert-action', function (e) {
+        e.preventDefault();
+
         var addon = $(this).data('addon'),
             action = $(this).data('action'),
             $placeholder = $(this).parents('.mediumInsert-buttons').siblings('.mediumInsert-placeholder');
