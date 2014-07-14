@@ -14,10 +14,19 @@
   $.fn.mediumInsert.registerAddon('embeds', {
 
     /**
+    * Embed default options
+    */
+
+    default: {
+      urlPlaceholder: 'type or paste url here'
+    },
+
+    /**
      * Embeds initial function
      * @return {void}
      */
-    init : function () {
+    init : function (options) {
+      this.options = $.extend(this.default, options);
       this.$el = $.fn.mediumInsert.insert.$el;
       this.setEmbedButtonEvents();
     },
@@ -39,7 +48,7 @@
       $.fn.mediumInsert.insert.deselect();
 
 
-      var formHtml = '<div class="medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="type or paste url here" class="mediumInsert-embedsText"></div>';
+      var formHtml = '<div class="medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="' + this.options.urlPlaceholder + '" class="mediumInsert-embedsText"></div>';
       $(formHtml).appendTo($placeholder.prev());
       setTimeout(function () {
         $placeholder.prev().find('input').focus();
