@@ -136,6 +136,32 @@ test('setEnterActionEvents() appends embedded data', function () {
   equal($('.mediumInsert .mediumInsert-embeds #insertedTag').length, 1, 'embedded data appended');
 });
 
+test('setEnterActionEvents() triggers input event', function () {
+  var that = this;
+
+  $('#qunit-fixture').html('<div class="mediumEditor" data-medium-element="true">'+
+    '<div class="mediumInsert" contenteditable="false" id="mediumInsert-7">'+
+      '<div class="mediumInsert-buttons"><input class="mediumInsert-embedsText" value="test"></div>'+
+      '<div class="mediumInsert-placeholder"></div>'+
+    '</div>'+
+  '</div>');
+
+  this.stub(this.addon, 'convertUrlToEmbedTag', function () {
+    that.addon.convertUrlToEmbedTag.restore();
+    return '<div id="insertedTag"></div>';
+  });
+  this.addon.currentPlaceholder = $('.mediumInsert-placeholder');
+
+  var stub1 = this.stub();
+  var stub2 = this.stub();
+  $('.mediumEditor').on('input', stub1).on('keyup', stub2);
+
+  this.addon.setEnterActionEvents();
+
+  ok(stub1.called, 'input was triggered');
+  ok(stub2.called, 'keyup was triggered');
+});
+
 
 // removeToolbar
 

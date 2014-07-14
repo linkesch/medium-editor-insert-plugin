@@ -662,7 +662,7 @@
 
       $progress.remove();
 
-      $.fn.mediumInsert.insert.$el.keyup();
+      $placeholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
     },
 
     /**
@@ -768,6 +768,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
+        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeBigger', function () {
@@ -775,6 +776,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
+        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageRemove', function () {
@@ -788,6 +790,7 @@
         that.deleteFile(img, that);
 
         $.fn.mediumInsert.insert.deselect();
+        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
     },
 
@@ -859,6 +862,8 @@
           $(e.originalEvent.target.parentNode).remove();
           dropSuccessful = false;
           dropSort = false;
+
+          $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
         }
       });
 
@@ -899,6 +904,8 @@
 
         dropSort = true;
         dropSortIndex = null;
+
+        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('drop', '.mediumInsert', function (e) {
@@ -1073,6 +1080,8 @@
       } else {
         embed_tag = $('<div class="mediumInsert-embeds"></div>').append(embed_tag);
         that.currentPlaceholder.parent().append(embed_tag);
+
+        that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
       }
     },
 

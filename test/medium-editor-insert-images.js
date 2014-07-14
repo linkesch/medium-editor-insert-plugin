@@ -112,6 +112,21 @@ test('uploadCompleted shows error message if there was a problem uploading a fil
   equal($('progress', $placeholder).length, 0, 'progressbar removed');
 });
 
+test('uploadCompleted triggers input event', function () {
+  var $placeholder;
+
+  $('#qunit-fixture').html('<div class="mediumEditor" data-medium-element="true"><div class="mediumInsert-placeholder"></div></div>');
+  $placeholder = $('#qunit-fixture .mediumInsert-placeholder');
+
+  var stub1 = this.stub();
+  var stub2 = this.stub();
+  $('.mediumEditor').on('input', stub1).on('keyup', stub2);
+
+  $.fn.mediumInsert.getAddon('images').uploadCompleted({ responseText: 'img.png' }, $placeholder);
+
+  ok(stub1.called, 'input was triggered');
+  ok(stub2.called, 'keyup was triggered');
+});
 
 
 // uploadFiles
