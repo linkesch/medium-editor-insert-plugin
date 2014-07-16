@@ -33,7 +33,7 @@
     },
 
     insertButton : function (buttonLabels) {
-      var label = 'Embed';
+      var label = 'Table';
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
