@@ -1,49 +1,54 @@
-/*
- * Clearfix: contain floats
- *
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *    `contenteditable` attribute is included anywhere else in the document.
- *    Otherwise it causes space to appear at the top and bottom of elements
- *    that receive the `clearfix` class.
- * 2. The use of `table` rather than `block` is only necessary if using
- *    `:before` to contain the top-margins of child elements.
- */
-.clearfix:before, [data-medium-element="true"]:before, .clearfix:after, [data-medium-element="true"]:after {
-  content: " ";
-  /* 1 */
-  display: table;
-  /* 2 */ }
+.medium-editor-insert-plugin {
+  /*
+   * Clearfix: contain floats
+   *
+   * For modern browsers
+   * 1. The space content is one way to avoid an Opera bug when the
+   *    `contenteditable` attribute is included anywhere else in the document.
+   *    Otherwise it causes space to appear at the top and bottom of elements
+   *    that receive the `clearfix` class.
+   * 2. The use of `table` rather than `block` is only necessary if using
+   *    `:before` to contain the top-margins of child elements.
+   */
+  .clearfix:before, [data-medium-element="true"]:before, .clearfix:after, [data-medium-element="true"]:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */ }
 
-.clearfix:after, [data-medium-element="true"]:after {
-  clear: both; }
+  .clearfix:after, [data-medium-element="true"]:after {
+    clear: both; }
 
-img {
-  max-width: 100%; }
+  img {
+    max-width: 100%; }
 
-q, blockquote {
-  display: block;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  border-left: 5px solid #efefef;
-  padding-left: 20px;
-  margin-left: -25px; }
+  q, blockquote {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-left: 5px solid #efefef;
+    padding-left: 20px;
+    margin-left: -25px; }
 
-/* Prevent the text contents of draggable elements from being selectable. */
-[draggable] {
-  user-select: none; }
+  /* Prevent the text contents of draggable elements from being selectable. */
+  [draggable] {
+    user-select: none; }
 
-[contenteditable] {
-  outline: 0px solid transparent; }
+  [contenteditable] {
+    outline: 0px solid transparent; }
 
-[contenteditable]:focus {
-  outline: 0px solid transparent; }
+  [contenteditable]:focus {
+    outline: 0px solid transparent; }
 
-[data-medium-element="true"] * {
-  box-sizing: content-box; }
+  [data-medium-element="true"] * {
+    box-sizing: content-box; }
 
-[data-medium-element="true"] p {
-  margin: 1em 0; }
+  [data-medium-element="true"] p {
+    margin: 1em 0; }
+
+  .hide {
+    display: none !important; }
+}
 
 .medium-editor-insert-plugin.medium-editor-placeholder {
   padding-bottom: 0 !important;
@@ -52,9 +57,6 @@ q, blockquote {
 .medium-editor-insert-plugin.medium-editor-placeholder:after {
   content: attr(data-placeholder) !important;
   top: 1em; }
-
-.hide {
-  display: none !important; }
 
 .mediumInsert-buttonsShow {
   opacity: 0;
