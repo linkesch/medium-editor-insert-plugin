@@ -9,6 +9,7 @@ Current available addons:
 
 - images
 - embeds (it can embed various social services - Youtube, Twitter, Facebook, Instagram, Vimeo)
+- tables (basic table creating)
 
 More are coming soon...
 
@@ -64,6 +65,7 @@ Or if you for some reason want, you can load only addons that you want separatel
 <script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-plugin.min.js"></script>
 <script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-images.min.js"></script>
 <script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-embeds.min.js"></script>
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-tables.min.js"></script>
 ```
 
 Initialize MediumEditor as you normally would:
@@ -80,7 +82,8 @@ $(function () {
     editor: editor,
     addons: {
       images: {},
-      embeds: {}
+      embeds: {},
+      tables: {}
     }
   });
 });
@@ -107,6 +110,9 @@ var elContent = allContents["element-0"].value;
         - **deleteFile**: (function (file, that)) function deleting an image from a server
     - **embeds**:
         - **urlPlaceholder**: (string) placeholder displayed when entering URL to embed. Default: *type or paste url here*
+    - **tables**:
+        - **defaultRows**: (integer) default number of rows. Default: *2*
+        - **defaultCols**: (integer) default number of columns. Default: *2*
 - **enabled**: (boolean) plugin's state: Default *true*.
 
 

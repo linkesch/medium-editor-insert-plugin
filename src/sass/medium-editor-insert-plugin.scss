@@ -241,3 +241,66 @@
   border: 1px dashed #ddd;
   margin-top: -1px;
   margin-bottom: -1px; }
+
+.medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox {
+  background-color: #fff;
+  border: 2px solid #333;
+  display: inline-block;
+  z-index: 50;
+  position: relative;
+  
+  label, button {
+    color: #333;
+    text-transform: capitalize;
+  }
+  
+  button.mediumInsert-tableReadyButton {
+    background-color: #fff;
+    border: 1px solid #333;
+  }
+  
+  input.mediumInsert-tableCols,
+  input.mediumInsert-tableRows {
+    width: 50px;
+    display: block;
+    height: initial;
+    background-color: inherit;
+    border: 1px solid #333;
+    color: #333;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  table {
+    margin: 10px;
+    
+    td {
+      text-align: center;
+    }
+    
+    &.mediumInsert-demoTable {
+      border-top: 2px solid #333;
+      border-left: 2px solid #333;
+      height: 100px;
+      width: 100px;
+      
+      td {
+        border-bottom: 2px solid #333;
+        border-right: 2px solid #333;
+      }
+    }
+  }
+}
+
+table.mediumInsert-table {
+  border-top: 2px solid #333;
+  border-left: 2px solid #333;
+  width: 90%;
+  margin: 30px auto;
+  
+  td {
+    border-right: 2px solid #333;
+    border-bottom: 2px solid #333;
+    padding: 12px;
+  }
+}
