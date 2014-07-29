@@ -138,7 +138,8 @@
       return this.each(function () {
         $(this).addClass('medium-editor-insert-plugin');
 
-        $('p', this).bind('dragover drop', function (e) {
+        var blocks = 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote';
+        $(this).on('dragover drop', blocks, function (e) {
           e.preventDefault();
           return false;
         });
