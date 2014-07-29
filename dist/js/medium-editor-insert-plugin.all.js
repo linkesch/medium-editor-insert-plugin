@@ -312,7 +312,8 @@
 
         i = that.getMaxId() +1;
 
-        $el.children('p').each(function () {
+        var blocks = 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote';
+        $el.children(blocks).each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
             $(this).after(insertBlock);
             $(this).next('.mediumInsert').attr('id', 'mediumInsert-'+ i);

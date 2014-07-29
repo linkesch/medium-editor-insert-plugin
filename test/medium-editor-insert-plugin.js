@@ -224,7 +224,7 @@ test('getMaxId returns max num', function () {
 // setPlaceholders
 
 test('setPlaceholders creates placeholders', function () {
-  var $el = $('#qunit-fixture').html('<p></p><p></p>');
+  var $el = $('#qunit-fixture').html('<h3></h3><p></p>');
 
   $.fn.mediumInsert.insert.setPlaceholders();
 
