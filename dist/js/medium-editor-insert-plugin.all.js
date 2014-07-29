@@ -1,5 +1,5 @@
 /*!
- * medium-editor-insert-plugin v0.2.5 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
  *
  * Addon Initialization
  *
@@ -447,7 +447,7 @@
 }(jQuery));
 
 /*!
- * medium-editor-insert-plugin v0.2.5 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
  *
  * Images Addon
  *
@@ -942,7 +942,7 @@
 }(jQuery));
 
 /*!
- * medium-editor-insert-plugin v0.2.5 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
  *
  * Maps Addon
  *
@@ -990,7 +990,7 @@
 }(jQuery));
 
 /*!
- * medium-editor-insert-plugin v0.2.5 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
  *
  * Tables Addon
  *
@@ -1120,7 +1120,7 @@
 }(jQuery));
 
 /*!
- * medium-editor-insert-plugin v0.2.5 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
  *
  * Embeds Addon
  *

@@ -1,5 +1,5 @@
 /*!
- * medium-editor-insert-plugin v0.2.5 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
  *
  * Images Addon
  *
