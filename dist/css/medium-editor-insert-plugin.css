@@ -1,54 +1,49 @@
-/*
- * Clearfix: contain floats
- *
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *    `contenteditable` attribute is included anywhere else in the document.
- *    Otherwise it causes space to appear at the top and bottom of elements
- *    that receive the `clearfix` class.
- * 2. The use of `table` rather than `block` is only necessary if using
- *    `:before` to contain the top-margins of child elements.
- */
-.clearfix:before, [data-medium-element="true"]:before, .clearfix:after, [data-medium-element="true"]:after {
-  content: " ";
-  /* 1 */
-  display: table;
-  /* 2 */ }
-
-.clearfix:after, [data-medium-element="true"]:after {
-  clear: both; }
-
-img {
-  max-width: 100%; }
-
-q, blockquote {
-  display: block;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  border-left: 5px solid #efefef;
-  padding-left: 20px;
-  margin-left: -25px; }
-
-/* Prevent the text contents of draggable elements from being selectable. */
-[draggable] {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none; }
-
-[contenteditable] {
-  outline: 0px solid transparent; }
-
-[contenteditable]:focus {
-  outline: 0px solid transparent; }
-
-[data-medium-element="true"] * {
-  -webkit-box-sizing: content-box;
-     -moz-box-sizing: content-box;
-          box-sizing: content-box; }
-
-[data-medium-element="true"] p {
-  margin: 1em 0; }
+.medium-editor-insert-plugin {
+  /*
+   * Clearfix: contain floats
+   *
+   * For modern browsers
+   * 1. The space content is one way to avoid an Opera bug when the
+   *    `contenteditable` attribute is included anywhere else in the document.
+   *    Otherwise it causes space to appear at the top and bottom of elements
+   *    that receive the `clearfix` class.
+   * 2. The use of `table` rather than `block` is only necessary if using
+   *    `:before` to contain the top-margins of child elements.
+   */
+  /* Prevent the text contents of draggable elements from being selectable. */ }
+  .medium-editor-insert-plugin .clearfix:before, .medium-editor-insert-plugin [data-medium-element="true"]:before, .medium-editor-insert-plugin .clearfix:after, .medium-editor-insert-plugin [data-medium-element="true"]:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */ }
+  .medium-editor-insert-plugin .clearfix:after, .medium-editor-insert-plugin [data-medium-element="true"]:after {
+    clear: both; }
+  .medium-editor-insert-plugin img {
+    max-width: 100%; }
+  .medium-editor-insert-plugin q, .medium-editor-insert-plugin blockquote {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-left: 5px solid #efefef;
+    padding-left: 20px;
+    margin-left: -25px; }
+  .medium-editor-insert-plugin [draggable] {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none; }
+  .medium-editor-insert-plugin [contenteditable] {
+    outline: 0px solid transparent; }
+  .medium-editor-insert-plugin [contenteditable]:focus {
+    outline: 0px solid transparent; }
+  .medium-editor-insert-plugin [data-medium-element="true"] * {
+    -webkit-box-sizing: content-box;
+       -moz-box-sizing: content-box;
+            box-sizing: content-box; }
+  .medium-editor-insert-plugin [data-medium-element="true"] p {
+    margin: 1em 0; }
+  .medium-editor-insert-plugin .hide {
+    display: none !important; }
 
 .medium-editor-insert-plugin.medium-editor-placeholder {
   padding-bottom: 0 !important;
@@ -57,9 +52,6 @@ q, blockquote {
 .medium-editor-insert-plugin.medium-editor-placeholder:after {
   content: attr(data-placeholder) !important;
   top: 1em; }
-
-.hide {
-  display: none !important; }
 
 .mediumInsert-buttonsShow {
   opacity: 0;
