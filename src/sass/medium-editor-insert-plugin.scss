@@ -10,13 +10,13 @@
    * 2. The use of `table` rather than `block` is only necessary if using
    *    `:before` to contain the top-margins of child elements.
    */
-  .clearfix:before, [data-medium-element="true"]:before, .clearfix:after, [data-medium-element="true"]:after {
+  .clearfix:before, &:before, .clearfix:after, &:after {
     content: " ";
     /* 1 */
     display: table;
     /* 2 */ }
 
-  .clearfix:after, [data-medium-element="true"]:after {
+  .clearfix:after, &:after {
     clear: both; }
 
   img {
@@ -34,16 +34,16 @@
   [draggable] {
     user-select: none; }
 
-  [contenteditable] {
-    outline: 0px solid transparent; }
+  &[contenteditable], [contenteditable] {
+    outline: 0px solid transparent;
+    &:focus {
+      outline: 0px solid transparent; }
+  }
 
-  [contenteditable]:focus {
-    outline: 0px solid transparent; }
-
-  [data-medium-element="true"] * {
+  * {
     box-sizing: content-box; }
 
-  [data-medium-element="true"] p {
+  p {
     margin: 1em 0; }
 
   .hide {
@@ -58,249 +58,268 @@
   content: attr(data-placeholder) !important;
   top: 1em; }
 
-.mediumInsert-buttonsShow {
-  opacity: 0;
-  transform: scale(0);
-  transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
-  display: block;
-  width: 18px;
-  height: 18px;
-  margin-top: -5px;
-  border-radius: 10px;
-  border: 2px solid;
-  font-size: 18px;
-  line-height: 18px;
-  text-align: center;
-  text-decoration: none !important; }
-
-.mediumInsert-buttonsShow:after {
-  left: auto;
-  right: 100%;
-  top: 50%;
-  margin-top: -4px; }
-
 .mediumInsert {
-  position: relative;
-  margin: -1em 0 -1em -40px;
-  min-height: 18px; }
+    position: relative;
+    margin: -1em 0 -1em -40px;
+    min-height: 18px;
 
-.mediumInsert .mediumInsert-buttons {
-  position: absolute;
-  width: 40px;
-  bottom: 0;
-  left: 0;
-  color: #ddd;
-  font-size: 0.9em; }
-
-.mediumInsert .mediumInsert-buttons a {
-  text-decoration: underline;
-  cursor: pointer; }
-
-.mediumInsert .mediumInsert-buttons a.active {
-  font-weight: bold; }
-
-.mediumInsert .mediumInsert-buttons ul.mediumInsert-buttonsOptions {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: none;
-  position: absolute;
-  z-index: 2;
-  left: 40px;
-  top: -10px;
-  border-radius: 5px; }
-
-.mediumInsert .mediumInsert-buttons ul.mediumInsert-buttonsOptions button {
-  min-height: auto;
-  height: auto;
-  padding: 5px;
-  border-left: none;
-  float: none; }
-
-.mediumInsert .mediumInsert-buttons ul.mediumInsert-buttonsOptions button .fa {
-  font-size: 20px; }
-
-.mediumInsert .mediumInsert-embeds {
-  text-align: center;
-  padding: 15px; }
-
-.mediumInsert .mediumInsert-embeds iframe {
-  margin: 0px auto !important; }
-
-.mediumInsert .mediumInsert-placeholder {
-  position: relative;
-  margin-left: 40px;
-  text-align: center; }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images img {
-  margin-top: 1em;
-  margin-bottom: 10px;
-  vertical-align: top; }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images a {
-  position: absolute;
-  top: 1em;
-  width: 30px;
-  height: 30px;
-  background-color: #3b3b3b;
-  background-repeat: no-repeat;
-  background-position: center center;
-  cursor: pointer; }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images a.mediumInsert-imageRemove {
-  right: 0;
-  background-image: url(../images/remove.png); }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images a.mediumInsert-imageResizeSmaller, .mediumInsert .mediumInsert-placeholder .mediumInsert-images .mediumInsert .mediumInsert-placeholder .mediumInsert-images a.mediumInsert-imageResizeBigger, .mediumInsert .mediumInsert-placeholder .mediumInsert-images .mediumInsert .mediumInsert-placeholder .mediumInsert-images a.mediumInsert-imageResizeBigger {
-  right: 31px;
-  background-image: url(../images/resize-smaller.png); }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images a.mediumInsert-imageResizeBigger {
-  background-image: url(../images/resize-bigger.png); }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images:first-child:after {
-  content: "\a";
-  white-space: pre; }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images:not(:first-child) {
-  margin-right: 10px; }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-images:not(:first-child) img {
-  width: 20%; }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-maps {
-  padding: 10px;
-  background: #ccc; }
-
-.mediumInsert .mediumInsert-placeholder .mediumInsert-error {
-  background-color: #f2dede;
-  border: 1px solid #ebccd1;
-  color: #a94442;
-  padding: 15px; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder {
-  position: relative;
-  padding: 24px;
-  height: 160px;
-  text-align: center;
-  background-color: #fff; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder .mediumInsert-embedsWire {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  width: 500px;
-  text-align: center; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder .mediumInsert-embedsBox {
-  position: relative;
-  left: -250px; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder .mediumInsert-embedsBox input[type="text"] {
-  margin: 0 auto;
-  padding: 10px;
-  width: 330px;
-  border: solid 3px #ccc;
-  font-size: 1em;
-  font-family: Arial, sans-serif;
-  color: #aaa; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder .mediumInsert-embedsBox input::-webkit-input-placeholder {
-  color: #aaa; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder .mediumInsert-embedsImage {
-  font-size: 100px;
-  color: #999; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder .mediumInsert-embedsBox button {
-  border: solid 1px #2fbbfc;
-  padding: 11px 30px;
-  font-family: Arial, sans-serif;
-  font-size: 1.2em;
-  color: #fff;
-  cursor: pointer;
-  background-color: #2fbbfc; }
-
-.mediumInsert .mediumInsert-embedsPlaceholder .mediumInsert-embedsBox input[type="text"]:focus {
-  border: solid 1px #EEA34A; }
-
-.mediumInsert.hover .mediumInsert-placeholder {
-  background: #f0f0f0; }
-
-.mediumInsert:hover .mediumInsert-buttonsShow {
-  transform: scale(1);
-  opacity: 1; }
-
-.mediumInsert.small .mediumInsert-placeholder {
-  width: 33.33%;
-  float: left;
-  margin-right: 30px; }
-
-.hover .mediumInsert-placeholder {
-  min-height: 14px;
-  border: 1px dashed #ddd;
-  margin-top: -1px;
-  margin-bottom: -1px; }
-
-.medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox {
-  background-color: #fff;
-  border: 2px solid #333;
-  display: inline-block;
-  z-index: 50;
-  position: relative;
-  
-  label, button {
-    color: #333;
-    text-transform: capitalize;
-  }
-  
-  button.mediumInsert-tableReadyButton {
-    background-color: #fff;
-    border: 1px solid #333;
-  }
-  
-  input.mediumInsert-tableCols,
-  input.mediumInsert-tableRows {
-    width: 50px;
+  .mediumInsert-buttonsShow {
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
     display: block;
-    height: initial;
-    background-color: inherit;
-    border: 1px solid #333;
-    color: #333;
-    margin: 0 auto;
+    width: 18px;
+    height: 18px;
+    margin-top: -5px;
+    border-radius: 10px;
+    border: 2px solid;
+    font-size: 18px;
+    line-height: 18px;
     text-align: center;
+    text-decoration: none !important;
+
+    &:after {
+      left: auto;
+      right: 100%;
+      top: 50%;
+      margin-top: -4px; }
   }
-  
-  table {
-    margin: 10px;
-    
-    td {
+
+  .mediumInsert-buttons {
+    position: absolute;
+    width: 40px;
+    bottom: 0;
+    left: 0;
+    color: #ddd;
+    font-size: 0.9em;
+
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+
+      &.active {
+        font-weight: bold; }
+    }
+  }
+
+  ul.mediumInsert-buttonsOptions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: none;
+    position: absolute;
+    z-index: 2;
+    left: 40px;
+    top: -10px;
+    border-radius: 5px;
+
+    button {
+      min-height: auto;
+      height: auto;
+      padding: 5px;
+      border-left: none;
+      float: none;
+
+      .fa {
+        font-size: 20px; }
+    }
+  }
+
+  .mediumInsert-embeds {
+    text-align: center;
+    padding: 15px;
+
+    iframe {
+      margin: 0px auto !important; }
+  }
+
+  .mediumInsert-placeholder {
+    position: relative;
+    margin-left: 40px;
+    text-align: center; }
+
+  .mediumInsert-images {
+    img {
+      margin-top: 1em;
+      margin-bottom: 10px;
+      vertical-align: top; }
+
+    a {
+      position: absolute;
+      top: 1em;
+      width: 30px;
+      height: 30px;
+      background-color: #3b3b3b;
+      background-repeat: no-repeat;
+      background-position: center center;
+      cursor: pointer; }
+  }
+
+  .mediumInsert-imageRemove {
+    right: 0;
+    background-image: url(../images/remove.png); }
+
+  .mediumInsert-imageResizeSmaller, .mediumInsert-imageResizeBigger, .mediumInsert-imageResizeBigger {
+    right: 31px;
+    background-image: url(../images/resize-smaller.png); }
+
+  .mediumInsert-imageResizeBigger {
+    background-image: url(../images/resize-bigger.png); }
+
+  .mediumInsert-images {
+    margin-right: 10px; }
+
+    img {
+      width: auto; }
+
+  .mediumInsert-images:first-child {
+    margin-right: 0
+
+    img {
+      width: 20%; }
+
+    &:after {
+      content: "\a";
+      white-space: pre; }
+  }
+
+  .mediumInsert-maps {
+    padding: 10px;
+    background: #ccc; }
+
+  .mediumInsert-error {
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    color: #a94442;
+    padding: 15px; }
+
+  .mediumInsert-embedsPlaceholder {
+    position: relative;
+    padding: 24px;
+    height: 160px;
+    text-align: center;
+    background-color: #fff; }
+
+  .mediumInsert-embedsWire {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    width: 500px;
+    text-align: center; }
+
+  .mediumInsert-embedsBox {
+    position: relative;
+    left: -250px;
+
+    input[type="text"] {
+      margin: 0 auto;
+      padding: 10px;
+      width: 330px;
+      border: solid 3px #ccc;
+      font-size: 1em;
+      font-family: Arial, sans-serif;
+      color: #aaa;
+
+      &:focus {
+        border: solid 1px #EEA34A; }
+      }
+
+    input::-webkit-input-placeholder {
+      color: #aaa; }
+
+    button {
+      border: solid 1px #2fbbfc;
+      padding: 11px 30px;
+      font-family: Arial, sans-serif;
+      font-size: 1.2em;
+      color: #fff;
+      cursor: pointer;
+      background-color: #2fbbfc; }
+  }
+
+  .mediumInsert-embedsImage {
+    font-size: 100px;
+    color: #999; }
+
+  &.hover .mediumInsert-placeholder {
+    background: #f0f0f0; }
+
+  &:hover .mediumInsert-buttonsShow {
+    transform: scale(1);
+    opacity: 1; }
+
+  &.small .mediumInsert-placeholder {
+    width: 33.33%;
+    float: left;
+    margin-right: 30px; }
+
+  .hover .mediumInsert-placeholder {
+    min-height: 14px;
+    border: 1px dashed #ddd;
+    margin-top: -1px;
+    margin-bottom: -1px; }
+
+  .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox {
+    background-color: #fff;
+    border: 2px solid #333;
+    display: inline-block;
+    z-index: 50;
+    position: relative;
+
+    label, button {
+      color: #333;
+      text-transform: capitalize;
+    }
+
+    button.mediumInsert-tableReadyButton {
+      background-color: #fff;
+      border: 1px solid #333;
+    }
+
+    input.mediumInsert-tableCols,
+    input.mediumInsert-tableRows {
+      width: 50px;
+      display: block;
+      height: initial;
+      background-color: inherit;
+      border: 1px solid #333;
+      color: #333;
+      margin: 0 auto;
       text-align: center;
     }
-    
-    &.mediumInsert-demoTable {
-      border-top: 2px solid #333;
-      border-left: 2px solid #333;
-      height: 100px;
-      width: 100px;
-      
+
+    table {
+      margin: 10px;
+
       td {
-        border-bottom: 2px solid #333;
-        border-right: 2px solid #333;
+        text-align: center;
+      }
+
+      &.mediumInsert-demoTable {
+        border-top: 2px solid #333;
+        border-left: 2px solid #333;
+        height: 100px;
+        width: 100px;
+
+        td {
+          border-bottom: 2px solid #333;
+          border-right: 2px solid #333;
+        }
       }
     }
   }
-}
 
-table.mediumInsert-table {
-  border-top: 2px solid #333;
-  border-left: 2px solid #333;
-  width: 90%;
-  margin: 30px auto;
-  
-  td {
-    border-right: 2px solid #333;
-    border-bottom: 2px solid #333;
-    padding: 12px;
+  table.mediumInsert-table {
+    border-top: 2px solid #333;
+    border-left: 2px solid #333;
+    width: 90%;
+    margin: 30px auto;
+
+    td {
+      border-right: 2px solid #333;
+      border-bottom: 2px solid #333;
+      padding: 12px;
+    }
   }
+
 }
