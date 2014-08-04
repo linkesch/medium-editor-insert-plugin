@@ -375,7 +375,7 @@ asyncTest('setDragAndDropEvents set dragover event to body', function () {
   $.fn.mediumInsert.getAddon('images').setDragAndDropEvents();
 
   $(document).one('dragover', 'body', function () {
-    ok($('body').hasClass('hover'), '.hover added to body');
+    ok($.fn.mediumInsert.getAddon('images').$el.hasClass('hover'), '.hover added to body');
     start();
   });
 
@@ -385,10 +385,10 @@ asyncTest('setDragAndDropEvents set dragover event to body', function () {
 asyncTest('setDragAndDropEvents set dragend event to body', function () {
   $.fn.mediumInsert.getAddon('images').setDragAndDropEvents();
 
-  $('body').addClass('hover');
+  $.fn.mediumInsert.getAddon('images').$el.addClass('hover');
 
   $(document).one('dragend', 'body', function () {
-    equal($('body').hasClass('hover'), false, '.hover removed from body');
+    equal($.fn.mediumInsert.getAddon('images').$el.hasClass('hover'), false, '.hover removed from body');
     start();
   });
 

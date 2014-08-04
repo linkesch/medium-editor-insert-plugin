@@ -366,7 +366,7 @@
           return;
         }
 
-        $(this).addClass('hover');
+        that.$el.addClass('hover');
       });
 
       $(document).on('dragend', 'body', function () {
@@ -374,7 +374,7 @@
           return;
         }
 
-        $(this).removeClass('hover');
+        that.$el.removeClass('hover');
       });
 
       this.$el.on('dragover', '.mediumInsert', function () {
@@ -473,7 +473,7 @@
         }
 
         $(this).removeClass('hover');
-        $('body').removeClass('hover');
+        that.$el.removeClass('hover');
         $(this).attr('contenteditable', false);
 
         files = e.originalEvent.dataTransfer.files;

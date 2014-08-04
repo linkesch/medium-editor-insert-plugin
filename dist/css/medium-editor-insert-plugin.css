@@ -1,15 +1,4 @@
 .medium-editor-insert-plugin {
-  /*
-   * Clearfix: contain floats
-   *
-   * For modern browsers
-   * 1. The space content is one way to avoid an Opera bug when the
-   *    `contenteditable` attribute is included anywhere else in the document.
-   *    Otherwise it causes space to appear at the top and bottom of elements
-   *    that receive the `clearfix` class.
-   * 2. The use of `table` rather than `block` is only necessary if using
-   *    `:before` to contain the top-margins of child elements.
-   */
   /* Prevent the text contents of draggable elements from being selectable. */ }
   .medium-editor-insert-plugin .clearfix:before, .medium-editor-insert-plugin:before, .medium-editor-insert-plugin .clearfix:after, .medium-editor-insert-plugin:after {
     content: " ";
@@ -42,8 +31,19 @@
             box-sizing: content-box; }
   .medium-editor-insert-plugin p {
     margin: 1em 0; }
+  .medium-editor-insert-plugin figure {
+    margin: 0;
+    display: inline-block; }
+  .medium-editor-insert-plugin progress {
+    display: block;
+    margin: 1em auto; }
   .medium-editor-insert-plugin .hide {
     display: none !important; }
+  .medium-editor-insert-plugin.hover .mediumInsert-placeholder {
+    min-height: 14px;
+    border: 1px dashed #ddd;
+    margin-top: -1px;
+    margin-bottom: -1px; }
 
 .medium-editor-insert-plugin.medium-editor-placeholder {
   padding-bottom: 0 !important;
@@ -140,12 +140,13 @@
   .mediumInsert .mediumInsert-imageResizeBigger {
     background-image: url(../images/resize-bigger.png); }
   .mediumInsert .mediumInsert-images {
-    margin-right: 10px; }
+    margin-right: 10px;
+    width: 20%; }
   .mediumInsert img {
     width: auto; }
   .mediumInsert .mediumInsert-images:first-child {
-    margin-right: 0 img;
-    margin-right-width: 20%; }
+    margin-right: 0;
+    width: auto; }
     .mediumInsert .mediumInsert-images:first-child:after {
       content: "\a";
       white-space: pre; }
@@ -206,11 +207,6 @@
     width: 33.33%;
     float: left;
     margin-right: 30px; }
-  .mediumInsert .hover .mediumInsert-placeholder {
-    min-height: 14px;
-    border: 1px dashed #ddd;
-    margin-top: -1px;
-    margin-bottom: -1px; }
   .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox {
     background-color: #fff;
     border: 2px solid #333;
