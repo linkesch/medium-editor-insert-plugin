@@ -221,6 +221,42 @@ test('getMaxId returns max num', function () {
 });
 
 
+// getButtons
+
+test('getButtons returns false when no addons are enabled', function () {
+  $.fn.mediumInsert.settings.addons = {};
+
+  equal($.fn.mediumInsert.insert.getButtons(), false, 'false returned');
+});
+
+test('getButtons returns HTML with all addons', function () {
+  var $ret;
+
+  $.fn.mediumInsert.settings.addons = {
+    images: {},
+    embeds: {}
+  };
+
+  $ret = $($.fn.mediumInsert.insert.getButtons());
+
+  equal($('button[data-addon="images"]', $ret).length, 1, 'image button exists');
+  equal($('button[data-addon="embeds"]', $ret).length, 1, 'embed button exists');
+});
+
+test('getButtons returns HTML with selected addon only', function () {
+  var $ret;
+
+  $.fn.mediumInsert.settings.addons = {
+    images: {},
+    embeds: {}
+  };
+
+  $ret = $($.fn.mediumInsert.insert.getButtons('images'));
+
+  equal($('button[data-addon="images"]', $ret).length, 1, 'image button exists');
+  equal($('button[data-addon="embeds"]', $ret).length, 0, 'embed button does not exist');
+});
+
 // setPlaceholders
 
 test('setPlaceholders creates placeholders', function () {

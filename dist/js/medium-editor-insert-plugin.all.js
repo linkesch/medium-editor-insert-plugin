@@ -255,6 +255,36 @@
     },
 
     /**
+    * Return insert buttons optionally filtered by addon name
+    *
+    * @param {string} addon Addon name of addon to display only
+    * @return {void}
+    */
+    getButtons: function (addon) {
+      var editor = $.fn.mediumInsert.settings.editor,
+          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
+          buttons = '<div class="mediumInsert-buttons">'+
+            '<a class="mediumInsert-buttonsShow">+</a>'+
+            '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
+
+      if (Object.keys($.fn.mediumInsert.settings.addons).length === 0) {
+        return false;
+      }
+
+      if (typeof addon === 'undefined') {
+        $.each($.fn.mediumInsert.settings.addons, function (i) {
+          buttons += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
+        });
+      } else {
+        buttons += '<li>' + addons[addon].insertButton(buttonLabels) + '</li>';
+      }
+
+      buttons += '</ul></div>';
+
+      return buttons;
+    },
+
+    /**
     * Method setting placeholders
     *
     * @return {void}
@@ -265,22 +295,14 @@
           $el = $.fn.mediumInsert.insert.$el,
           editor = $.fn.mediumInsert.settings.editor,
           buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
-          insertBlock = '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
+          insertBlock = this.getButtons();
 
-      if (Object.keys($.fn.mediumInsert.settings.addons).length === 0) {
+      if (insertBlock === false) {
         return false;
       }
 
-      $.each($.fn.mediumInsert.settings.addons, function (i) {
-        insertBlock += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
-      });
-
-      insertBlock += '</ul>';
       insertBlock = '<div class="mediumInsert" contenteditable="false">'+
-        '<div class="mediumInsert-buttons">'+
-          '<a class="mediumInsert-buttonsShow">+</a>'+
-          insertBlock +
-        '</div>'+
+        insertBlock +
         '<div class="mediumInsert-placeholder"></div>'+
       '</div>';
 
@@ -575,7 +597,7 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
-      return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
+      return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
     /**
@@ -587,7 +609,9 @@
     preparePreviousImages: function () {
       this.$el.find('.mediumInsert-images').each(function() {
         var $parent = $(this).parent();
-        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        $parent.html($.fn.mediumInsert.insert.getButtons('images') +
+          '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
+        );
       });
     },
 
@@ -970,7 +994,7 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
-      return '<button data-addon="maps" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
+      return '<button data-addon="maps" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
     /**
@@ -1028,7 +1052,7 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
-      return '<button data-addon="tables" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">' + label + '</button>';
+      return '<button data-addon="tables" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
     /**
@@ -1158,7 +1182,7 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-code"></i>';
       }
-      return '<button data-addon="embeds" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">' + label + '</button>';
+      return '<button data-addon="embeds" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
     /**

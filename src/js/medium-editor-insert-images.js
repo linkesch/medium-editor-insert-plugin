@@ -127,7 +127,7 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
-      return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
+      return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
     /**
@@ -139,7 +139,9 @@
     preparePreviousImages: function () {
       this.$el.find('.mediumInsert-images').each(function() {
         var $parent = $(this).parent();
-        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        $parent.html($.fn.mediumInsert.insert.getButtons('images') +
+          '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
+        );
       });
     },
 
