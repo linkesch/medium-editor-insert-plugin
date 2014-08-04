@@ -39,7 +39,7 @@
           $inserts = $('.mediumInsert', $clone);
           for (j = 0; j < $inserts.length; j++) {
             $insert = $($inserts[j]);
-            $insertData = $('.mediumInsert-placeholder, .mediumInsert-embeds', $insert).children();
+            $insertData = $('.mediumInsert-placeholder', $insert).children();
             if ($insertData.length === 0) {
               $insert.remove();
             } else {
@@ -1150,6 +1150,7 @@
       this.options = $.extend(this.default, options);
       this.$el = $.fn.mediumInsert.insert.$el;
       this.setEmbedButtonEvents();
+      this.preparePreviousEmbeds();
     },
 
     insertButton : function (buttonLabels) {
@@ -1181,6 +1182,18 @@
       $(".mediumInsert-embedsText").focus();
     },
 
+    /**
+    * Make existing embeds interactive
+    *
+    * @return {void}
+    */
+
+    preparePreviousEmbeds: function () {
+      this.$el.find('.mediumInsert-embeds').each(function() {
+        var $parent = $(this).parent();
+        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+      });
+    },
 
     setEmbedButtonEvents : function () {
       var that = this;
@@ -1212,7 +1225,7 @@
         return false;
       } else {
         embed_tag = $('<div class="mediumInsert-embeds"></div>').append(embed_tag);
-        that.currentPlaceholder.parent().append(embed_tag);
+        that.currentPlaceholder.append(embed_tag);
 
         that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
       }
@@ -1225,7 +1238,8 @@
     convertUrlToEmbedTag : function (url) {
       var embed_tag = url.replace(/\n?/g, '').replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
         .replace(/http:\/\/vimeo\.com\/(\d+)$/, '<iframe src="//player.vimeo.com/video/$1" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
-        .replace(/https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
+        // NEED REWORK! Serialized version of embeded twitter status is unusable because the twitter script complitely removes blockquote element and replaces it with iframe
+        //.replace(/https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
         .replace(/https:\/\/www\.facebook\.com\/(\w+)\/posts\/(\d+)$/, '<div id="fb-root"></div><script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, "script", "facebook-jssdk"));</script><div class="fb-post" data-href="https://www.facebook.com/$1/posts/$2"></div>')
         .replace(/http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
       return /<("[^"]*"|'[^']*'|[^'">])*>/.test(embed_tag) ? embed_tag : false;

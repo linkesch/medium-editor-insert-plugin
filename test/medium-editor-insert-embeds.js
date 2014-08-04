@@ -133,7 +133,7 @@ test('setEnterActionEvents() appends embedded data', function () {
   this.addon.currentPlaceholder = $('.mediumInsert-placeholder');
   this.addon.setEnterActionEvents();
 
-  equal($('.mediumInsert .mediumInsert-embeds #insertedTag').length, 1, 'embedded data appended');
+  equal($('.mediumInsert .mediumInsert-placeholder .mediumInsert-embeds #insertedTag').length, 1, 'embedded data appended');
 });
 
 test('setEnterActionEvents() triggers input event', function () {
@@ -181,7 +181,7 @@ test('convertUrlToEmbedTag() returns false for nosupported url', function () {
   equal(this.addon.convertUrlToEmbedTag('http://www.google.com'), false, 'false returned');
 });
 
-test('convertUrlToEmbedTag() returns html for twitter', function () {
+/*test('convertUrlToEmbedTag() returns html for twitter', function () {
   var result = this.addon.convertUrlToEmbedTag('https://twitter.com/phpstorm/status/467987788659720192');
 
   equal(result.match(/twitter\-tweet/).length, 1, 'expected html returned');
@@ -191,7 +191,7 @@ test('convertUrlToEmbedTag() returns html for facebook', function () {
   var result = this.addon.convertUrlToEmbedTag('https://www.facebook.com/kensuu/posts/10152132714538568');
 
   equal(result.match(/fb\-root/).length, 1, 'expected html returned');
-});
+});*/
 
 test('convertUrlToEmbedTag() returns html for instagram', function () {
   var result = this.addon.convertUrlToEmbedTag('http://instagram.com/p/ivS5DStzJd/');
@@ -211,4 +211,15 @@ test('convertUrlToEmbedTag() returns html for youtube', function () {
 
   result = this.addon.convertUrlToEmbedTag('https://www.youtube.com/watch?v=_mkiGMtbrPM');
   equal(result.match(/youtube/).length, 1, 'expected html returned');
+});
+
+
+// preparePreviouseEmbeds
+
+test('preparePreviousEmbeds() wraps an embed to a placeholder', function () {
+  $('#qunit-fixture').html('<div class="mediumInsert-embeds"></div>');
+
+  this.addon.preparePreviousEmbeds();
+
+  ok($('.mediumInsert-embeds').parent().hasClass('mediumInsert-placeholder'), 'embed wraped to a placeholder');
 });
