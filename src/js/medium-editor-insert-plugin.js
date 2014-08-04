@@ -1,14 +1,3 @@
-/*!
- * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
- *
- * Addon Initialization
- *
- * https://github.com/orthes/medium-editor-insert-plugin
- *
- * Copyright (c) 2013 Pavel Linkesch (http://linkesch.sk)
- * Released under the MIT license
- */
-
 /* global MediumEditor */
 
 (function ($) {

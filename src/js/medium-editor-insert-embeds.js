@@ -1,14 +1,3 @@
-/*!
- * medium-editor-insert-plugin v0.2.6 - jQuery insert plugin for MediumEditor
- *
- * Embeds Addon
- *
- * https://github.com/orthes/medium-editor-insert-plugin
- *
- * Copyright (c) 2014 Vexus2 (https://github.com/vexus2)
- * Released under the MIT license
- */
-
 (function ($) {
 
   $.fn.mediumInsert.registerAddon('embeds', {

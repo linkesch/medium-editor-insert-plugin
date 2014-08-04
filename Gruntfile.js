@@ -2,69 +2,27 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    banner: '/*! \n * <%= pkg.name %> v<%= pkg.version %> - <%= pkg.description %>\n *\n * <%= pkg.homepage %>\n * \n * Copyright (c) 2014 <%= pkg.author.name %> (<%= pkg.author.url %>)\n * Released under the <%= pkg.license %> license\n */\n\n',
 
     uglify: {
       build: {
         options: {
-          banner: '/*! \n * <%= pkg.name %> v<%= pkg.version %> - <%= pkg.description %>\n *\n * <%= pkg.homepage %>\n * \n * Copyright (c) 2014 <%= pkg.author.name %> (<%= pkg.author.url %>)\n * Released under the <%= pkg.license %> license\n */\n\n'
+          banner: '<%= banner %>'
         },
         src: ['src/js/medium-editor-insert-plugin.js', 'src/js/medium-editor-insert-images.js', 'src/js/medium-editor-insert-maps.js', 'src/js/medium-editor-insert-embeds.js', 'src/js/medium-editor-insert-tables.js'],
         dest: 'dist/js/<%= pkg.name %>.all.min.js'
       },
-      f1: {
+      build2: {
         options: {
-          preserveComments: 'some'
+          banner: '<%= banner %>'
         },
-        src: 'src/js/medium-editor-insert-plugin.js',
-        dest: 'dist/js/addons/medium-editor-insert-plugin.min.js'
-      },
-      f2: {
-        options: {
-          preserveComments: 'some'
-        },
-        src: 'src/js/medium-editor-insert-images.js',
-        dest: 'dist/js/addons/medium-editor-insert-images.min.js'
-      },
-      f3: {
-        options: {
-          preserveComments: 'some'
-        },
-        src: 'src/js/medium-editor-insert-maps.js',
-        dest: 'dist/js/addons/medium-editor-insert-maps.min.js'
-      },
-      f4: {
-        options: {
-          preserveComments: 'some'
-        },
-        src: 'src/js/medium-editor-insert-embeds.js',
-        dest: 'dist/js/addons/medium-editor-insert-embeds.min.js'
-      },
-      f5: {
-        options: {
-          preserveComments: 'some'
-        },
-        src: 'src/js/medium-editor-insert-tables.js',
-        dest: 'dist/js/addons/medium-editor-insert-tables.min.js'
-      }
-    },
-
-    copy: {
-      main: {
-        files: [
-          {
-            expand: true,
-            cwd: 'src/js/',
-            src: ['*'],
-            dest: 'dist/js/addons/'
-          }
-        ]
-      }
-    },
-
-    concat: {
-      dist: {
-        src: ['src/js/medium-editor-insert-plugin.js', 'src/js/medium-editor-insert-images.js', 'src/js/medium-editor-insert-maps.js', 'src/js/medium-editor-insert-tables.js', 'src/js/medium-editor-insert-embeds.js'],
-        dest: 'dist/js/<%= pkg.name %>.all.js'
+        files: [{
+          expand: true,
+          cwd: 'src/js',
+          src: '**/*.js',
+          dest: 'dist/js/addons',
+          ext: '.min.js'
+        }]
       }
     },
 
@@ -130,14 +88,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-autoprefixer');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-csso');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('js', ['test', 'uglify', 'copy', 'concat']);
+  grunt.registerTask('js', ['test', 'uglify']);
   grunt.registerTask('css', ['sass', 'autoprefixer', 'csso']);
   grunt.registerTask('default', ['js', 'css']);
 
