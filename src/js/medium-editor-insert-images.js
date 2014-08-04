@@ -325,7 +325,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeBigger', function () {
@@ -333,7 +333,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageRemove', function () {
@@ -347,7 +347,7 @@
         that.deleteFile(img, that);
 
         $.fn.mediumInsert.insert.deselect();
-        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
     },
 
@@ -420,7 +420,7 @@
           dropSuccessful = false;
           dropSort = false;
 
-          $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
+          that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
         }
       });
 
@@ -462,7 +462,7 @@
         dropSort = true;
         dropSortIndex = null;
 
-        $(this).closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('drop', '.mediumInsert', function (e) {
@@ -486,7 +486,7 @@
           dropSort = false;
         } else {
           // Image move from block to block
-          $('.mediumInsert-placeholder', this).append('<div class="mediumInsert-images">'+ e.originalEvent.dataTransfer.getData('text/html') +'</div>');
+          $('.mediumInsert-placeholder', this).append('<figure class="mediumInsert-images">'+ e.originalEvent.dataTransfer.getData('text/html') +'</figure>');
           $('meta', this).remove();
           dropSuccessful = true;
         }
