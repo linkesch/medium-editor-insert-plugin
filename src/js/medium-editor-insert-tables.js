@@ -105,7 +105,7 @@
       var $table = $('<table class="mediumInsert-table">');
       that.buildTable($table);
 
-      that.currentPlaceholder.parent().after($table);
+      that.currentPlaceholder.append($table);
       that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
     },
 
