@@ -1,3 +1,5 @@
+@import "medium-editor-insert-plugin-frontend";
+
 .medium-editor-insert-plugin {
   .clearfix:before, &:before, .clearfix:after, &:after {
     content: " ";
@@ -35,11 +37,6 @@
   p {
     margin: 1em 0; }
 
-  figure {
-    margin: 0;
-    display: inline-block;
-  }
-
   progress {
     display: block;
     margin: 1em auto;
@@ -64,9 +61,13 @@
   top: 1em; }
 
 .mediumInsert {
-    position: relative;
-    margin: -1em 0 -1em -40px;
-    min-height: 18px;
+  position: relative;
+  margin-left: -40px !important;
+  min-height: 18px;
+
+  &.small {
+    width: calc(33.33% + 40px);
+  }
 
   .mediumInsert-buttonsShow {
     opacity: 0;
@@ -130,25 +131,12 @@
     }
   }
 
-  .mediumInsert-embeds {
-    text-align: center;
-    padding: 15px;
-
-    iframe {
-      margin: 0px auto !important; }
-  }
-
   .mediumInsert-placeholder {
     position: relative;
     margin-left: 40px;
     text-align: center; }
 
   .mediumInsert-images {
-    img {
-      margin-top: 1em;
-      margin-bottom: 10px;
-      vertical-align: top; }
-
     a {
       position: absolute;
       top: 1em;
@@ -170,26 +158,6 @@
 
   .mediumInsert-imageResizeBigger {
     background-image: url(../images/resize-bigger.png); }
-
-  .mediumInsert-images {
-    margin-right: 10px;
-    width: 20%; }
-
-  img {
-    width: auto; }
-
-  .mediumInsert-images:first-child {
-    margin-right: 0;
-    width: auto;
-
-    &:after {
-      content: "\a";
-      white-space: pre; }
-  }
-
-  .mediumInsert-maps {
-    padding: 10px;
-    background: #ccc; }
 
   .mediumInsert-error {
     background-color: #f2dede;
@@ -252,11 +220,6 @@
     transform: scale(1);
     opacity: 1; }
 
-  &.small .mediumInsert-placeholder {
-    width: 33.33%;
-    float: left;
-    margin-right: 30px; }
-
   .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox {
     background-color: #fff;
     border: 2px solid #333;
@@ -306,18 +269,4 @@
       }
     }
   }
-
-  table.mediumInsert-table {
-    border-top: 2px solid #333;
-    border-left: 2px solid #333;
-    width: 90%;
-    margin: 30px auto;
-
-    td {
-      border-right: 2px solid #333;
-      border-bottom: 2px solid #333;
-      padding: 12px;
-    }
-  }
-
 }
