@@ -8,7 +8,7 @@ The plugins enables users to insert into the editor various types of content (de
 Current available addons:
 
 - images
-- embeds (it can embed various social services - Youtube, Twitter, Facebook, Instagram, Vimeo)
+- embeds (it can embed various social services - Youtube, Vimeo, Twitter, Facebook, Instagram)
 - tables (basic table creating)
 
 More are coming soon...
@@ -96,6 +96,11 @@ var allContents = editor.serialize();
 var elContent = allContents["element-0"].value;
 ```
 
+For styling the content in frontend (where it will be read only without editing posibilities) use this CSS:
+
+```html
+<link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin-frontend.min.css">
+```
 
 ## <a name="options"></a>Options
 
