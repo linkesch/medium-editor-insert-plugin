@@ -92,6 +92,7 @@
         function processEmbedTag(embed_tag) {
             if (!embed_tag) {
                 alert('Incorrect URL format specified');
+                return false;
             } else {
                 embed_tag = $('<div class="mediumInsert-embeds"></div>').append(embed_tag);
                 that.currentPlaceholder.append(embed_tag);
@@ -105,7 +106,7 @@
           });
         } else {
             var embed_tag = that.convertUrlToEmbedTag(url);
-            processEmbedTag(embed_tag);
+            return processEmbedTag(embed_tag);
         }
 
     },
@@ -119,8 +120,7 @@
               url: this.options.oembedEndpoint,
               dataType: "json",
               data: {
-                  url: url,
-                  iframe: 1
+                  url: url
               },
               success: function(data, textStatus, jqXHR) {
                   cb(null, data, jqXHR);
