@@ -8,7 +8,7 @@
 
     default: {
       urlPlaceholder: 'type or paste url here'
-      //,oembedEndpoint: '//medium.iframe.ly/api/oembed'
+      //,oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
     },
 
     /**
@@ -100,7 +100,7 @@
             }
         }
 
-        if (this.options.oembedEndpoint) {
+        if (this.options.oembedProxy) {
           that.getOEmbedHTML(url, function(error, oebmed) {
               processEmbedTag(!error && oebmed.html);
           });
@@ -117,7 +117,7 @@
 
       getOEmbedHTML: function(url, cb) {
           $.ajax({
-              url: this.options.oembedEndpoint,
+              url: this.options.oembedProxy,
               dataType: "json",
               data: {
                   url: url

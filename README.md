@@ -8,7 +8,7 @@ The plugins enables users to insert into the editor various types of content (de
 Current available addons:
 
 - images
-- embeds (it can embed various social services - Youtube, Vimeo, Twitter, Facebook, Instagram)
+- embeds (either through oEmbed proxy, such as [Iframely](https://iframely.com), or pre-defined parsers such as - Youtube, Vimeo, Twitter, Facebook, Instagram)
 - tables (basic table creating)
 
 More are coming soon...
@@ -82,7 +82,9 @@ $(function () {
     editor: editor,
     addons: {
       images: {},
-      embeds: {},
+      embeds: {
+        oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
+      },
       tables: {}
     }
   });
@@ -115,6 +117,7 @@ For styling the content in frontend (where it will be read only without editing 
         - **deleteFile**: (function (file, that)) function deleting an image from a server
     - **embeds**:
         - **urlPlaceholder**: (string) placeholder displayed when entering URL to embed. Default: *type or paste url here*
+        - **oembedProxy**: (string) URL to oEmbed proxy endpoint, such as Iframely, Embedly or your own. You are welcome to use "http://medium.iframe.ly/api/oembed?iframe=1" for your dev and testing needs, courtesy of [Iframely](https://iframely.com). Default: none, which will make the plugin use pre-defined set of embed rules without making server calls.
     - **tables**:
         - **defaultRows**: (integer) default number of rows. Default: *2*
         - **defaultCols**: (integer) default number of columns. Default: *2*
