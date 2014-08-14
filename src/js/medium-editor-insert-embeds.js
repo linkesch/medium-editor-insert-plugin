@@ -8,6 +8,7 @@
 
     default: {
       urlPlaceholder: 'type or paste url here'
+      //,oembedEndpoint: '//medium.iframe.ly/api/oembed'
     },
 
     /**
@@ -87,44 +88,68 @@
       if (!url) {
         return false;
       }
-      that.convertUrlToEmbedTag(url, function(error, oebmed) {
-        if (error || !oebmed.html) {
-          alert('Incorrect URL format specified');
-        } else {
-          embed_tag = oebmed.html;
-          embed_tag = $('<div class="mediumInsert-embeds"></div>').append(embed_tag);
-          that.currentPlaceholder.append(embed_tag);
-          that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
+
+        function processEmbedTag(embed_tag) {
+            if (!embed_tag) {
+                alert('Incorrect URL format specified');
+            } else {
+                embed_tag = $('<div class="mediumInsert-embeds"></div>').append(embed_tag);
+                that.currentPlaceholder.append(embed_tag);
+                that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
+            }
         }
-      });
+
+        if (this.options.oembedEndpoint) {
+          that.getOEmbedHTML(url, function(error, oebmed) {
+              processEmbedTag(!error && oebmed.html);
+          });
+        } else {
+            var embed_tag = that.convertUrlToEmbedTag(url);
+            processEmbedTag(embed_tag);
+        }
+
     },
 
     removeToolbar : function () {
       $(".mediumInsert-embedsWire").remove();
     },
 
-    convertUrlToEmbedTag : function (url, cb) {
-        $.ajax({
-            url: '//medium.iframe.ly/api/oembed',
-            dataType: "json",
-            data: {
-                url: url,
-                iframe: 1
-            },
-            success: function(data, textStatus, jqXHR) {
-                cb(null, data, jqXHR);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                var responseJSON = function() {
-                    try {
-                        return JSON.parse(jqXHR.responseText);
-                    } catch(e) {}
-                }();
+      getOEmbedHTML: function(url, cb) {
+          $.ajax({
+              url: this.options.oembedEndpoint,
+              dataType: "json",
+              data: {
+                  url: url,
+                  iframe: 1
+              },
+              success: function(data, textStatus, jqXHR) {
+                  cb(null, data, jqXHR);
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  var responseJSON = function() {
+                      try {
+                          return JSON.parse(jqXHR.responseText);
+                      } catch(e) {}
+                  }();
 
-                cb((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message, responseJSON, jqXHR);
-            }
-        });
-    }
+                  cb((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message, responseJSON, jqXHR);
+              }
+          });
+      },
+
+      convertUrlToEmbedTag : function (url) {
+          var embed_tag = url.replace(/\n?/g, '').replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
+              .replace(/http:\/\/vimeo\.com\/(\d+)$/, '<iframe src="//player.vimeo.com/video/$1" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
+
+              // TWITTER EMBEDDING NEEDS REWORK! Serialized version of embeded Twitter status is unusable because the Twitter script complitely removes blockquote element and replaces it with iframe
+              //.replace(/https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
+
+              // FACEBOOK EMBEDDING NEEDS REWORK! Similarly to Twitter, FB script removes .fb-post element and replaces it with iframe, which is unusable after serializing editor's content
+              //.replace(/https:\/\/www\.facebook\.com\/(\w+)\/posts\/(\d+)$/, '<div id="fb-root"></div><script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, "script", "facebook-jssdk"));</script><div class="fb-post" data-href="https://www.facebook.com/$1/posts/$2"></div>')
+
+              .replace(/http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
+          return /<("[^"]*"|'[^']*'|[^'">])*>/.test(embed_tag) ? embed_tag : false;
+      }
 
   });
 
