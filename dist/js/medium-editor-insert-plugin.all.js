@@ -570,7 +570,14 @@
 
         if (this.options.oembedProxy) {
           that.getOEmbedHTML(url, function(error, oebmed) {
-              processEmbedTag(!error && oebmed.html);
+
+              var html = !error && oebmed && oebmed.html;
+
+              if (oebmed && !oebmed.html && oebmed.type === 'photo' && oebmed.url) {
+                  html = '<img src="' + oebmed.url + '" />';
+              }
+
+              processEmbedTag(html);
           });
         } else {
             var embed_tag = that.convertUrlToEmbedTag(url);
