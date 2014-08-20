@@ -45,7 +45,7 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-plugin.min.js"></script>
     <script src="bower_components/medium-editor-insert-plugin/src/js/medium-editor-insert-images.js"></script>
-    <script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-embeds.js"></script>
+    <script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-embeds.min.js"></script>
     <script>
       var editor = new MediumEditor('.editable', {
         excludedActions: ['u', 'h3', 'blockquote'],
@@ -59,7 +59,9 @@
             images: {
                 imagesUploadScript: 'upload.html'
             },
-            embeds: {}
+            embeds: {
+                oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
+            }
           }
         });
       });

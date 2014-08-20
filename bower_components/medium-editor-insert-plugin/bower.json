@@ -1,9 +1,9 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "0.2.4",
+  "version": "0.2.10",
   "description": "jQuery insert plugin for MediumEditor",
   "main": [
-    "dist/js/medium-editor-insert-plugin.all.min.js",
+    "dist/js/medium-editor-insert-plugin.all.js",
     "dist/css/medium-editor-insert-plugin.css"
   ],
   "license": "MIT",
@@ -22,7 +22,7 @@
   ],
   "dependencies": {
     "jquery": "1.9.0 - 2.0.3",
-    "medium-editor": "~1.7.5"
+    "medium-editor": "~1.9"
   },
   "devDependencies": {
     "qunit": "~1.12.0",

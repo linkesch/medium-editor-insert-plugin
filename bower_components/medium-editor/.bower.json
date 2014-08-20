@@ -1,6 +1,6 @@
 {
   "name": "medium-editor",
-  "version": "1.7.5",
+  "version": "1.9.0",
   "homepage": "http://daviferreira.github.io/medium-editor/",
   "authors": [
     "Davi Ferreira <hi@daviferreira.com>"
@@ -8,8 +8,8 @@
   "description": "Medium.com WYSIWYG editor clone written in pure JavaScript.",
   "main": [
     "dist/js/medium-editor.js",
-    "dist/js/medium-editor.min.js",
-    "dist/css/medium-editor.css"
+    "dist/css/medium-editor.css",
+    "dist/css/themes/default.css"
   ],
   "keywords": [
     "wysiwyg",
@@ -33,13 +33,13 @@
     "README.md",
     "CHANGES.md"
   ],
-  "_release": "1.7.5",
+  "_release": "1.9.0",
   "_resolution": {
     "type": "version",
-    "tag": "1.7.5",
-    "commit": "0e988136165f2effe54cece2c13b6d8584e7bde2"
+    "tag": "1.9.0",
+    "commit": "5f1b53bbe82ee82b5b4d0bfaa4ebeda7bb6a5809"
   },
   "_source": "git://github.com/daviferreira/medium-editor.git",
-  "_target": "~1.7.5",
+  "_target": "~1.9",
   "_originalSource": "medium-editor"
 }

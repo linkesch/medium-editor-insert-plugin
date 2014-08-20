@@ -8,7 +8,8 @@ The plugins enables users to insert into the editor various types of content (de
 Current available addons:
 
 - images
-- embeds (it can embed various social services - Youtube, Twitter, Facebook, Instagram, Vimeo)
+- embeds (either through oEmbed proxy, such as [Iframely](https://iframely.com), or pre-defined parsers such as - Youtube, Vimeo, Twitter, Facebook, Instagram)
+- tables (basic table creating)
 
 More are coming soon...
 
@@ -44,25 +45,27 @@ http://orthes.github.io/medium-editor-insert-plugin
 The first step is to add all prerequisites (MediumEditor and jQuery):
 
 ```html
-<link rel="stylesheet" href="medium-editor/css/medium-editor.css">
-<script src="medium-editor/js/medium-editor.min.js"></script>
+<link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.min.css">
+<link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css">
+<script src="bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
 <script src="bower_components/jquery/jquery.min.js"></script>
 ```
 
 Now you have two possibilites. You can load all addons at once:
 
 ```html
-<link rel="stylesheet" href="medium-editor-insert-plugin/css/medium-editor-insert-plugin.css">
-<script src="medium-editor-insert-plugin/js/medium-editor-insert-plugin.all.min.js"></script>
+<link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css">
+<script src="bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.all.min.js"></script>
 ```
 
 Or if you for some reason want, you can load only addons that you want separately. In this case, don't forget to load medium-editor-insert-plugin.min.js, which is the main plugin file, that initializes addons:
 
 ```html
-<link rel="stylesheet" href="medium-editor-insert-plugin/css/medium-editor-insert-plugin.css">
-<script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-plugin.min.js"></script>
-<script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-images.min.js"></script>
-<script src="medium-editor-insert-plugin/js/addons/medium-editor-insert-embeds.min.js"></script>
+<link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css">
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-plugin.min.js"></script>
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-images.min.js"></script>
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-embeds.min.js"></script>
+<script src="bower_components/medium-editor-insert-plugin/dist/js/addons/medium-editor-insert-tables.min.js"></script>
 ```
 
 Initialize MediumEditor as you normally would:
@@ -79,7 +82,10 @@ $(function () {
     editor: editor,
     addons: {
       images: {},
-      embeds: {}
+      embeds: {
+        oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
+      },
+      tables: {}
     }
   });
 });
@@ -92,6 +98,11 @@ var allContents = editor.serialize();
 var elContent = allContents["element-0"].value;
 ```
 
+For styling the content in frontend (where it will be read only without editing posibilities) use this CSS:
+
+```html
+<link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin-frontend.min.css">
+```
 
 ## <a name="options"></a>Options
 
@@ -100,10 +111,16 @@ var elContent = allContents["element-0"].value;
     - **images**:
         - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*
         - **imagesDeleteScript**: (string) relative path to a script that handles file deleting. Default: *delete.php*
+        - **useDragAndDrop**: (boolean) active or inactive image's drag and drop. Default: *true*
         - **formatData**: (function (file)) function that formats data before sending them to server while uploading an image
         - **uploadFile**: (function ($placeholder, file, that)) function uploading an image to a server
         - **deleteFile**: (function (file, that)) function deleting an image from a server
-    - **embeds**
+    - **embeds**:
+        - **urlPlaceholder**: (string) placeholder displayed when entering URL to embed. Default: *Paste or type a link*
+        - **oembedProxy**: (string) URL to oEmbed proxy endpoint, such as Iframely, Embedly or your own. You are welcome to use "http://medium.iframe.ly/api/oembed?iframe=1" for your dev and testing needs, courtesy of [Iframely](https://iframely.com). Default: none, which will make the plugin use pre-defined set of embed rules without making server calls.
+    - **tables**:
+        - **defaultRows**: (integer) default number of rows. Default: *2*
+        - **defaultCols**: (integer) default number of columns. Default: *2*
 - **enabled**: (boolean) plugin's state: Default *true*.
 
 

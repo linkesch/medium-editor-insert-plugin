@@ -1,11 +1,9 @@
-/*!
- * medium-editor-insert-plugin v0.2.4 - jQuery insert plugin for MediumEditor
+/*! 
+ * medium-editor-insert-plugin v0.2.10 - jQuery insert plugin for MediumEditor
  *
- * Images Addon
- *
- * https://github.com/orthes/medium-editor-images-plugin
- *
- * Copyright (c) 2013 Pavel Linkesch (http://linkesch.sk)
+ * https://github.com/orthes/medium-editor-insert-plugin
+ * 
+ * Copyright (c) 2014 Pavel Linkesch (http://linkesch.sk)
  * Released under the MIT license
  */
 
@@ -18,6 +16,11 @@
     */
 
     default: {
+      /**
+      * Active or inactive image's drag and drop
+      */
+      useDragAndDrop: true,
+
       /**
       * Relative path to a script that handles file uploads
       */
@@ -100,8 +103,13 @@
       this.options = $.extend(this.default, options);
 
       this.setImageEvents();
-      this.setDragAndDropEvents();
+
+      if (this.options.useDragAndDrop === true){
+        this.setDragAndDropEvents();
+      }
+
       this.preparePreviousImages();
+
     },
 
 
@@ -114,10 +122,10 @@
 
     insertButton: function(buttonLabels){
       var label = 'Img';
-      if (buttonLabels == 'fontawesome' || Array.isArray(buttonLabels) && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
-      return '<button data-addon="images" data-action="add" class="medium-editor-action medium-editor-action-image mediumInsert-action">'+label+'</button>';
+      return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
     /**
@@ -129,7 +137,9 @@
     preparePreviousImages: function () {
       this.$el.find('.mediumInsert-images').each(function() {
         var $parent = $(this).parent();
-        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        $parent.html($.fn.mediumInsert.insert.getButtons('images') +
+          '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
+        );
       });
     },
 
@@ -207,7 +217,7 @@
 
       $progress.remove();
 
-      $.fn.mediumInsert.insert.$el.keyup();
+      $placeholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
     },
 
     /**
@@ -313,6 +323,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeBigger', function () {
@@ -320,6 +331,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageRemove', function () {
@@ -333,6 +345,7 @@
         that.deleteFile(img, that);
 
         $.fn.mediumInsert.insert.deselect();
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
     },
 
@@ -353,7 +366,7 @@
           return;
         }
 
-        $(this).addClass('hover');
+        that.$el.addClass('hover');
       });
 
       $(document).on('dragend', 'body', function () {
@@ -361,7 +374,7 @@
           return;
         }
 
-        $(this).removeClass('hover');
+        that.$el.removeClass('hover');
       });
 
       this.$el.on('dragover', '.mediumInsert', function () {
@@ -404,6 +417,8 @@
           $(e.originalEvent.target.parentNode).remove();
           dropSuccessful = false;
           dropSort = false;
+
+          that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
         }
       });
 
@@ -444,6 +459,8 @@
 
         dropSort = true;
         dropSortIndex = null;
+
+        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
       });
 
       this.$el.on('drop', '.mediumInsert', function (e) {
@@ -456,7 +473,7 @@
         }
 
         $(this).removeClass('hover');
-        $('body').removeClass('hover');
+        that.$el.removeClass('hover');
         $(this).attr('contenteditable', false);
 
         files = e.originalEvent.dataTransfer.files;
@@ -467,7 +484,7 @@
           dropSort = false;
         } else {
           // Image move from block to block
-          $('.mediumInsert-placeholder', this).append('<div class="mediumInsert-images">'+ e.originalEvent.dataTransfer.getData('text/html') +'</div>');
+          $('.mediumInsert-placeholder', this).append('<figure class="mediumInsert-images">'+ e.originalEvent.dataTransfer.getData('text/html') +'</figure>');
           $('meta', this).remove();
           dropSuccessful = true;
         }
