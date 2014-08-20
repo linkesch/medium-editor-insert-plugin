@@ -475,7 +475,7 @@
     */
 
     default: {
-      urlPlaceholder: 'type or paste url here'
+      urlPlaceholder: 'Paste or type a link'
       //,oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
     },
 
@@ -507,7 +507,7 @@
       $.fn.mediumInsert.insert.deselect();
 
 
-      var formHtml = '<div class="medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="' + this.options.urlPlaceholder + '" class="mediumInsert-embedsText"></div>';
+      var formHtml = '<div class="medium-editor-toolbar medium-editor-toolbar-active medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="' + this.options.urlPlaceholder + '" class="mediumInsert-embedsText"></div>';
       $(formHtml).appendTo($placeholder.prev());
       setTimeout(function () {
         $placeholder.prev().find('input').focus();

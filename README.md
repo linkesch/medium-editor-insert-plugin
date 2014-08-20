@@ -116,7 +116,7 @@ For styling the content in frontend (where it will be read only without editing 
         - **uploadFile**: (function ($placeholder, file, that)) function uploading an image to a server
         - **deleteFile**: (function (file, that)) function deleting an image from a server
     - **embeds**:
-        - **urlPlaceholder**: (string) placeholder displayed when entering URL to embed. Default: *type or paste url here*
+        - **urlPlaceholder**: (string) placeholder displayed when entering URL to embed. Default: *Paste or type a link*
         - **oembedProxy**: (string) URL to oEmbed proxy endpoint, such as Iframely, Embedly or your own. You are welcome to use "http://medium.iframe.ly/api/oembed?iframe=1" for your dev and testing needs, courtesy of [Iframely](https://iframely.com). Default: none, which will make the plugin use pre-defined set of embed rules without making server calls.
     - **tables**:
         - **defaultRows**: (integer) default number of rows. Default: *2*
