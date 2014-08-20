@@ -19,6 +19,8 @@
     padding: 15px; }
     .mediumInsert .mediumInsert-embeds iframe {
       margin: 0px auto !important; }
+    .mediumInsert .mediumInsert-embeds div {
+      margin: 0px auto !important; }
   .mediumInsert .mediumInsert-images {
     margin-right: 10px;
     width: 20%; }
