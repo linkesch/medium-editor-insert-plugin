@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.10 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.11 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -159,6 +159,7 @@
   */
   $.fn.mediumInsert.settings = {
     enabled: true,
+    beginning: false,
     addons: {
       images: {},
       embeds: {}
@@ -293,7 +294,8 @@
           $el = $.fn.mediumInsert.insert.$el,
           editor = $.fn.mediumInsert.settings.editor,
           buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
-          insertBlock = this.getButtons();
+          insertBlock = this.getButtons(),
+          $firstEl;
 
       if (insertBlock === false) {
         return false;
@@ -334,6 +336,16 @@
         i = that.getMaxId() +1;
 
         var blocks = 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote';
+
+        if ($.fn.mediumInsert.settings.beginning) {
+          $firstEl = $el.children(blocks).first();
+          if ($firstEl.prev().hasClass('mediumInsert') === false) {
+            $firstEl.before(insertBlock);
+            $firstEl.prev('.mediumInsert').attr('id', 'mediumInsert-'+ i).addClass('mediumInsert-first');
+            i++;
+          }
+        }
+
         $el.children(blocks).each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
             $(this).after(insertBlock);

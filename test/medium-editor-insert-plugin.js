@@ -125,10 +125,12 @@ test('initial loop calls init functions', function() {
 
 module("insert", {
   setup: function() {
-    $.fn.mediumInsert.settings.editor = new MediumEditor('.editable');
-    $.fn.mediumInsert.settings.addons = {
-      images: {
-        imagesUploadScript: 'examples/upload.php'
+    $.fn.mediumInsert.settings = {
+      editor: new MediumEditor('.editable'),
+      addons: {
+        images: {
+          imagesUploadScript: 'examples/upload.php'
+        }
       }
     };
     $.fn.mediumInsert.insert.$el = $('#qunit-fixture');
@@ -265,6 +267,23 @@ test('setPlaceholders creates placeholders', function () {
   $.fn.mediumInsert.insert.setPlaceholders();
 
   equal($('.mediumInsert', $el).length, 2, 'two placeholders created');
+});
+
+test('setPlaceholders creates placeholders at the beginning if it is set in settings', function () {
+  var $el = $('#qunit-fixture').html('<h3></h3><p></p>');
+
+  $.fn.mediumInsert.settings = {
+    enabled: true,
+    beginning: true,
+    addons: {
+      images: {},
+      embeds: {}
+    }
+  };
+  $.fn.mediumInsert.insert.setPlaceholders();
+
+  equal($('.mediumInsert', $el).length, 3, 'two placeholders created');
+  ok($el.children().first().hasClass('mediumInsert'), 'placeholder at the begining was created');
 });
 
 test('setPlaceholders returns false if no addon is selected', function () {

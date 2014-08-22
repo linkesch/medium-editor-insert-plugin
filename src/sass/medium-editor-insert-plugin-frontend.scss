@@ -55,7 +55,12 @@
   }
 
   &.small {
-    width: 33.33%;
+    max-width: 33.33%;
     float: left;
-    margin-right: 30px; }
+    margin-right: 30px;
+    margin-bottom: 20px; }
+
+  &.mediumInsert-first {
+    margin-top: 0;
+  }
 }

@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.10 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.11 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -47,6 +47,9 @@
       border-bottom: 2px solid #333;
       padding: 12px; }
   .mediumInsert.small {
-    width: 33.33%;
+    max-width: 33.33%;
     float: left;
-    margin-right: 30px; }
+    margin-right: 30px;
+    margin-bottom: 20px; }
+  .mediumInsert.mediumInsert-first {
+    margin-top: 0; }

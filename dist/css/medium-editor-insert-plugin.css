@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.10 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.11 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -47,9 +47,12 @@
       border-bottom: 2px solid #333;
       padding: 12px; }
   .mediumInsert.small {
-    width: 33.33%;
+    max-width: 33.33%;
     float: left;
-    margin-right: 30px; }
+    margin-right: 30px;
+    margin-bottom: 20px; }
+  .mediumInsert.mediumInsert-first {
+    margin-top: 0; }
 
 .medium-editor-insert-plugin {
   /* Prevent the text contents of draggable elements from being selectable. */ }
@@ -107,7 +110,7 @@
   margin-left: -40px !important;
   min-height: 18px; }
   .mediumInsert.small {
-    width: calc(33.33% + 40px); }
+    max-width: calc(33.33% + 40px); }
   .mediumInsert .mediumInsert-buttonsShow {
     opacity: 0;
     -webkit-transform: scale(0);
