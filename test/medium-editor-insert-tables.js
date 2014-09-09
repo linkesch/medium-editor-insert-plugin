@@ -37,6 +37,10 @@ test('insertButton() returns html with fontawesome', function () {
   equal(this.addon.insertButton('fontawesome').match(/fa\-table/).length, 1, 'expected button returned');
 });
 
+test('insertButton() returns html with override icon', function () {
+  equal(this.addon.insertButton({'table' : 'TEST-ICON'}).match(/TEST-ICON/).length, 1, 'expected overriden button returned');
+});
+
 
 // add
 

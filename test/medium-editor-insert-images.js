@@ -11,6 +11,7 @@ module("images", {
         $el: $('#qunit-fixture')
       }
     };
+    this.addon = $.fn.mediumInsert.getAddon('images');
     $.fn.mediumInsert.settings.enabled = true;
     $.fn.mediumInsert.getAddon('images').$el = $('#qunit-fixture');
     $.fn.mediumInsert.getAddon('images').options = $.fn.mediumInsert.getAddon('images').default;
@@ -65,6 +66,20 @@ test('existing images have an edit menu after init', function() {
   });
 
   $('.mediumInsert-images', $el).mouseenter();
+});
+
+// insertButton
+
+test('insertButton() returns html', function () {
+  equal(this.addon.insertButton().match(/button/).length, 1, 'expected button returned');
+});
+
+test('insertButton() returns html with fontawesome', function () {
+  equal(this.addon.insertButton('fontawesome').match(/fa\-picture/).length, 1, 'expected button returned');
+});
+
+test('insertButton() returns html with override icon', function () {
+  equal(this.addon.insertButton({'img' : 'TEST-ICON'}).match(/TEST-ICON/).length, 1, 'expected overriden button returned');
 });
 
 // add
