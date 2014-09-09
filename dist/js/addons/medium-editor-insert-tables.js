@@ -35,6 +35,11 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
+
+	  if (typeof buttonLabels === 'object' && buttonLabels.table) {
+		  label = buttonLabels.table;
+	  }
+
       return '<button data-addon="tables" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 

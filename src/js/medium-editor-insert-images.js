@@ -116,6 +116,11 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
+
+	  if (typeof buttonLabels === 'object' && buttonLabels.img) {
+		  label = buttonLabels.img;
+	  }
+
       return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
