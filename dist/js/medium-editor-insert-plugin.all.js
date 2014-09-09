@@ -507,6 +507,10 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-code"></i>';
       }
+	  if (typeof buttonLabels === 'object' && buttonLabels.embed) {
+		  label = buttonLabels.embed;
+	  }
+
       return '<button data-addon="embeds" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
@@ -768,6 +772,11 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
+
+	  if (typeof buttonLabels === 'object' && buttonLabels.img) {
+		  label = buttonLabels.img;
+	  }
+
       return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
@@ -923,7 +932,7 @@
 
     setImageEvents: function () {
       var that = this;
-
+	
       this.$el.on('mouseenter', '.mediumInsert-images', function () {
         var $img = $('img', this),
             positionTop,
@@ -934,12 +943,12 @@
         }
 
         if ($img.length > 0) {
-          $(this).append('<a class="mediumInsert-imageRemove"></a>');
+          $(this).append('<a class="mediumInsert-imageRemove mediumInsert-buttons"></a>');
 
           if ($(this).parent().parent().hasClass('small')) {
-            $(this).append('<a class="mediumInsert-imageResizeBigger"></a>');
+            $(this).append('<a class="mediumInsert-imageResizeBigger mediumInsert-buttons"></a>');
           } else {
-            $(this).append('<a class="mediumInsert-imageResizeSmaller"></a>');
+            $(this).append('<a class="mediumInsert-imageResizeSmaller mediumInsert-buttons"></a>');
           }
 
           positionTop = $img.position().top + parseInt($img.css('margin-top'), 10);
@@ -949,7 +958,7 @@
             'top': positionTop,
             'left': positionLeft
           });
-          $('.mediumInsert-imageResizeBigger, .mediumInsert-imageResizeSmaller', this).css({
+          $('.mediumInsert-imageResizeBigger, .mediumInsert-imageResizeSmaller ', this).css({
             'right': 'auto',
             'top': positionTop,
             'left': positionLeft-31
@@ -1154,6 +1163,10 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
+	  if (typeof buttonLabels === 'object' && buttonLabels.map) {
+		  label = buttonLabels.map;
+	  }
+
       return '<button data-addon="maps" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
@@ -1201,6 +1214,11 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
+
+	  if (typeof buttonLabels === 'object' && buttonLabels.table) {
+		  label = buttonLabels.table;
+	  }
+
       return '<button data-addon="tables" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
