@@ -11,7 +11,8 @@ module("images", {
       }
     };
     $.fn.mediumInsert.settings.enabled = true;
-    $.fn.mediumInsert.getAddon('maps').$el = $('#qunit-fixture');
+    this.addon = $.fn.mediumInsert.getAddon('maps');
+    this.addon.$el = $('#qunit-fixture');
     $.fn.mediumInsert.insert.$el = $('#qunit-fixture');
   }
 });
@@ -37,4 +38,19 @@ test('add() adds comming soon text', function () {
 
   $.fn.mediumInsert.getAddon('maps').add($placeholder);
   equal($placeholder.html(), '<div class="mediumInsert-maps">Map - Coming soon...</div>', 'Coming soon added');
+});
+
+
+// insertButton
+
+test('insertButton() returns html', function () {
+  equal(this.addon.insertButton().match(/button/).length, 1, 'expected button returned');
+});
+
+test('insertButton() returns html with fontawesome', function () {
+  equal(this.addon.insertButton('fontawesome').match(/fa\-map/).length, 1, 'expected button returned');
+});
+
+test('insertButton() returns html with override icon', function () {
+  equal(this.addon.insertButton({'map' : 'TEST-ICON'}).match(/TEST-ICON/).length, 1, 'expected overriden button returned');
 });

@@ -515,6 +515,10 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-code"></i>';
       }
+	  if (typeof buttonLabels === 'object' && buttonLabels.embed) {
+		  label = buttonLabels.embed;
+	  }
+
       return '<button data-addon="embeds" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
@@ -776,6 +780,11 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
+
+	  if (typeof buttonLabels === 'object' && buttonLabels.img) {
+		  label = buttonLabels.img;
+	  }
+
       return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
@@ -1162,6 +1171,10 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
+	  if (typeof buttonLabels === 'object' && buttonLabels.map) {
+		  label = buttonLabels.map;
+	  }
+
       return '<button data-addon="maps" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
@@ -1209,6 +1222,11 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
+
+	  if (typeof buttonLabels === 'object' && buttonLabels.table) {
+		  label = buttonLabels.table;
+	  }
+
       return '<button data-addon="tables" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
