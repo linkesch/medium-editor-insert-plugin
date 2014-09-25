@@ -261,10 +261,18 @@
     */
     getButtons: function (addon) {
       var editor = $.fn.mediumInsert.settings.editor,
-          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
-          buttons = '<div class="mediumInsert-buttons">'+
+          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '';
+
+      var buttons;
+      if($.fn.mediumInsert.settings.enabled) {
+      buttons = '<div class="mediumInsert-buttons">'+
             '<a class="mediumInsert-buttonsShow">+</a>'+
             '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
+      } else {
+      buttons = '<div class="mediumInsert-buttons hide">'+
+            '<a class="mediumInsert-buttonsShow">+</a>'+
+            '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
+      }
 
       if (Object.keys($.fn.mediumInsert.settings.addons).length === 0) {
         return false;
