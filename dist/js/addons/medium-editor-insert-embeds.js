@@ -36,6 +36,10 @@
       if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-code"></i>';
       }
+	  if (typeof buttonLabels === 'object' && buttonLabels.embed) {
+		  label = buttonLabels.embed;
+	  }
+
       return '<button data-addon="embeds" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
