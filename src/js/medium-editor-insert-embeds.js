@@ -77,9 +77,19 @@
         }
       });
 
-      this.$el.on('blur', '.mediumInsert-embedsText', function () {
-        that.removeToolbar();
-      });
+      this.$el
+        .on('blur', '.mediumInsert-embedsText', function () {
+          that.removeToolbar();
+        })
+        // Fix #72
+        // Workaround for CTRL+V not working in FF, when cleanPastedHTML and forcePlainText options on editor are set to true,
+        // because editor steals the event and doesn't pass it to the plugin
+        // https://github.com/orthes/medium-editor-insert-plugin/issues/72
+        .on('paste', '.mediumInsert-embedsText', function (e) {
+          if ($.fn.mediumInsert.insert.isFirefox && e.originalEvent.clipboardData) {
+            $(this).val(e.originalEvent.clipboardData.getData('text/plain'));
+          }
+        });
 
     },
     setEnterActionEvents : function () {
