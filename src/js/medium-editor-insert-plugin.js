@@ -367,9 +367,10 @@
       var that = this,
           $el = $.fn.mediumInsert.insert.$el;
 
-      $el.on('selectstart', '.mediumInsert', function (e) {
-        e.preventDefault();
-        return false;
+      $el.on('selectstart mousedown', '.mediumInsert', function (e) {
+        if ($(e.target).is('img') === false) {
+          e.preventDefault();
+        }
       });
 
       $el.on('blur', function () {
