@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.11 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.13 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -159,7 +159,7 @@
       var that = this,
           $selectFile, files;
 
-      $selectFile = $('<input type="file">').click();
+      $selectFile = $('<input type="file" multiple="multiple">').click();
       $selectFile.change(function () {
         files = this.files;
         that.uploadFiles($placeholder, files, that);

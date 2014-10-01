@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.11 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.13 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -376,9 +376,10 @@
       var that = this,
           $el = $.fn.mediumInsert.insert.$el;
 
-      $el.on('selectstart', '.mediumInsert', function (e) {
-        e.preventDefault();
-        return false;
+      $el.on('selectstart mousedown', '.mediumInsert', function (e) {
+        if ($(e.target).is('img') === false) {
+          e.preventDefault();
+        }
       });
 
       $el.on('blur', function () {
@@ -531,7 +532,7 @@
       $.fn.mediumInsert.insert.deselect();
 
 
-      var formHtml = '<div class="medium-editor-toolbar medium-editor-toolbar-active medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="' + this.options.urlPlaceholder + '" class="mediumInsert-embedsText"></div>';
+      var formHtml = '<div class="medium-editor-toolbar medium-editor-toolbar-active medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="' + this.options.urlPlaceholder + '" class="mediumInsert-embedsText medium-editor-toolbar-anchor-input"></div>';
       $(formHtml).appendTo($placeholder.prev());
       setTimeout(function () {
         $placeholder.prev().find('input').focus();
@@ -565,9 +566,19 @@
         }
       });
 
-      this.$el.on('blur', '.mediumInsert-embedsText', function () {
-        that.removeToolbar();
-      });
+      this.$el
+        .on('blur', '.mediumInsert-embedsText', function () {
+          that.removeToolbar();
+        })
+        // Fix #72
+        // Workaround for CTRL+V not working in FF, when cleanPastedHTML and forcePlainText options on editor are set to true,
+        // because editor steals the event and doesn't pass it to the plugin
+        // https://github.com/orthes/medium-editor-insert-plugin/issues/72
+        .on('paste', '.mediumInsert-embedsText', function (e) {
+          if ($.fn.mediumInsert.insert.isFirefox && e.originalEvent.clipboardData) {
+            $(this).val(e.originalEvent.clipboardData.getData('text/plain'));
+          }
+        });
 
     },
     setEnterActionEvents : function () {
@@ -814,7 +825,7 @@
       var that = this,
           $selectFile, files;
 
-      $selectFile = $('<input type="file">').click();
+      $selectFile = $('<input type="file" multiple="multiple">').click();
       $selectFile.change(function () {
         files = this.files;
         that.uploadFiles($placeholder, files, that);
