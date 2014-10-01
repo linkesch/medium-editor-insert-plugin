@@ -150,7 +150,7 @@
       var that = this,
           $selectFile, files;
 
-      $selectFile = $('<input type="file">').click();
+      $selectFile = $('<input type="file" multiple="multiple">').click();
       $selectFile.change(function () {
         files = this.files;
         that.uploadFiles($placeholder, files, that);
