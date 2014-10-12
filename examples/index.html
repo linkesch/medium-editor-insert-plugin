@@ -22,7 +22,7 @@
       </select>
   </div>
   <br><br>
-  
+
   <div id="container">
     <div class="editable" data-placeholder="Type some text">
       <p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Curabitur blandit tempus porttitor. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
@@ -37,7 +37,9 @@
 
   <script src="../bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
   <script src="../bower_components/jquery/jquery.min.js"></script>
-  <script src="../dist/js/medium-editor-insert-plugin.all.min.js"></script>
+  <script src="../bower_components/handlebars/handlebars.runtime.min.js"></script>
+  <script src="../src/js/templates.js"></script>
+  <script src="../src/js/core.js"></script>
   <script>
     var editor = new MediumEditor('.editable', {
       excludedActions: ['u', 'h3', 'blockquote'],
@@ -47,14 +49,7 @@
     $(function () {
       $('.editable').mediumInsert({
         editor: editor,
-        beginning: true,
-        addons: {
-          images: {},
-          embeds: {
-              oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
-          },
-          tables: {}
-        }
+        beginning: true
       });
     });
 

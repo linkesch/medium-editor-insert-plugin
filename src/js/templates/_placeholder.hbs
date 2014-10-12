@@ -1,0 +1,11 @@
+<div class="mediumInsert" contenteditable="false">
+    <div class="mediumInsert-buttons">
+        <a class="mediumInsert-buttonsShow">+</a>
+        <ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">
+            {{#each addons}}
+                <li><button data-addon="{{name}}" data-action="add" class="medium-editor-action mediumInsert-action">{{label}}</button></li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="mediumInsert-placeholder"></div>
+</div>

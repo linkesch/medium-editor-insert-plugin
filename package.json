@@ -1,6 +1,6 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "0.2.13",
+  "version": "1.0.0",
   "description": "jQuery insert plugin for MediumEditor",
   "license": "MIT",
   "homepage": "https://github.com/orthes/medium-editor-insert-plugin",
@@ -23,7 +23,8 @@
     "grunt-autoprefixer": "^0.8.0",
     "grunt-sass": "~0.14.0",
     "grunt-csso": "^0.6.2",
-    "grunt-banner": "^0.2.3"
+    "grunt-banner": "^0.2.3",
+    "grunt-contrib-handlebars": "^0.8.0"
   },
   "scripts": {
     "test": "grunt test --verbose"

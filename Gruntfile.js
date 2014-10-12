@@ -4,55 +4,8 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     banner: '/*! \n * <%= pkg.name %> v<%= pkg.version %> - <%= pkg.description %>\n *\n * <%= pkg.homepage %>\n * \n * Copyright (c) 2014 <%= pkg.author.name %> (<%= pkg.author.url %>)\n * Released under the <%= pkg.license %> license\n */\n\n',
 
-    uglify: {
-      dist: {
-        options: {
-          banner: '<%= banner %>'
-        },
-        src: ['src/js/medium-editor-insert-plugin.js', 'src/js/*.js'],
-        dest: 'dist/js/<%= pkg.name %>.all.min.js'
-      },
-      addons: {
-        options: {
-          banner: '<%= banner %>'
-        },
-        files: [{
-          expand: true,
-          cwd: 'src/js',
-          src: '**/*.js',
-          dest: 'dist/js/addons',
-          ext: '.min.js'
-        }]
-      }
-    },
-
-    concat: {
-      dist: {
-        options: {
-          banner: '<%= banner %>'
-        },
-        src: ['src/js/medium-editor-insert-plugin.js', 'src/js/*.js'],
-        dest: 'dist/js/<%= pkg.name %>.all.js'
-      },
-      addons: {
-        options: {
-          banner: '<%= banner %>'
-        },
-        files: [{
-          expand: true,
-          cwd: 'src/js',
-          src: '**/*.js',
-          dest: 'dist/js/addons',
-          ext: '.js'
-        }]
-      }
-    },
-
     jshint: {
-      files: ['src/js/*.js', 'src/js/**/*.js', 'test/*.js', 'test/**/*.js'],
-      options: {
-        ignores: ['test/lib/**/*.js']
-      }
+      files: ['src/js/*.js', '!src/js/templates.js', 'test/*.js']
     },
 
     qunit: {
@@ -107,21 +60,32 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      scripts: {
-        files: ['src/js/**/*.js'],
-        tasks: ['js'],
-        options: {
-          debounceDelay: 250
-        }
-      },
       styles: {
         files: 'src/sass/**/*.scss',
         tasks: ['css'],
         options: {
           debounceDelay: 250
         }
+      },
+      templates: {
+        files: 'src/js/templates/**/*.hbs',
+        tasks: ['handlebars'],
+        options: {
+          debounceDelay: 250
+        }
       }
-    }
+    },
+
+    handlebars: {
+      compile: {
+        options: {
+          namespace: 'MediumInsert.Templates'
+        },
+        files: {
+          "src/js/templates.js": "src/js/templates/*.hbs"
+        }
+      }
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -134,9 +98,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-csso');
   grunt.loadNpmTasks('grunt-banner');
+  grunt.loadNpmTasks('grunt-contrib-handlebars');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('js', ['test', 'uglify', 'concat']);
+  grunt.registerTask('js', ['test', 'handlebars']);
   grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
   grunt.registerTask('default', ['js', 'css']);
 
