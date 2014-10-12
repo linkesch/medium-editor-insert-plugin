@@ -210,7 +210,7 @@
         // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
         // To force placeholder to appear, set <p><br></p> as content of the $el
         if (that.$el.html() === '' || this.$el.html() === '<br>') {
-            this.$el.html(this.templates['src/js/templates/empty-line.hbs']().trim());
+            this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
         // Fix #29
@@ -224,7 +224,7 @@
 
         // If last element is non-empty placeholder, add one empty line at the end to force placeholder to appear
         if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
-            that.$el.append(that.templates['src/js/templates/empty-line.hbs']().trim());
+            that.$el.append(that.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
         // Fix not deleting placeholder in Firefox by removing all empty placeholders
@@ -253,7 +253,7 @@
             });
         });
 
-        return that.templates['src/js/templates/buttons.hbs']({
+        return that.templates['src/js/templates/core-buttons.hbs']({
             addons: addons
         }).trim();
     };
@@ -285,7 +285,10 @@
         if ($current.closest('.mediumInsert-buttons').length === 0) {
             that.clean();
             
+            that.$el.find('.mediumInsert-active').removeClass('mediumInsert-active');
+
             if ($current.text().trim() === '') {
+                $current.closest('p').addClass('mediumInsert-active');
                 $buttons.css({
                     left: $current.offset().left - parseInt($buttons.find('.mediumInsert-buttonsOptions').css('left'), 10) - parseInt($buttons.find('.mediumInsert-buttonsOptions a:first').css('margin-left'), 10),
                     top: $current.offset().top

@@ -61,7 +61,7 @@ test('mediumInsert() adss plugin\'s buttons to the $el', function () {
 test('mediumInsert() shows plugin\'s buttons after clicking on empty paragraph', function () {
     var el, range, sel;
     
-    this.$el.html('<p id="paragraph">&nbsp;</p><p>test</p>');
+    this.$el.html('<p id="paragraph">&nbsp;</p><p id="paragraph2" class="mediumInsert-active">test</p>');
     
     this.$el.mediumInsert();
     
@@ -75,8 +75,10 @@ test('mediumInsert() shows plugin\'s buttons after clicking on empty paragraph',
     sel.addRange(range);
     
     this.$el.find('#paragraph').click();
-    
+
     equal(this.$el.find('.mediumInsert-buttons').css('display'), 'block', 'buttons are visible');
+    ok(this.$el.find('#paragraph').hasClass('mediumInsert-active'), 'active paragraph has mediumInsert-active class');
+    equal(this.$el.find('#paragraph2').hasClass('mediumInsert-active'), false, 'inactive paragraph does not have mediumInsert-active class');
 });
 
 test('mediumInsert() hides plugin\'s buttons after clicking on non-empty paragraph', function () {
