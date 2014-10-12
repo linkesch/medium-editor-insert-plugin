@@ -1,0 +1,34 @@
+{
+    "predef": {
+        "jQuery": false,
+        "document": false,
+        "window": false,
+        "module": false,
+        "test": false,
+        "asyncTest": false,
+        "ok": false,
+        "equal": false
+    },
+
+    "jquery" : true,
+    "browser" : true,
+
+    "boss" : false,
+    "curly": false,
+    "debug": false,
+    "devel": false,
+    "eqeqeq": true,
+    "evil": false,
+    "forin": false,
+    "immed": true,
+    "laxbreak": false,
+    "newcap": true,
+    "noarg": true,
+    "noempty": false,
+    "nonew": false,
+    "plusplus": false,
+    "undef": true,
+    "sub": true,
+    "strict": false,
+    "unused": true
+}
