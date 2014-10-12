@@ -16,8 +16,7 @@
               embeds: {
                   label: '<span class="fa fa-play"></span>'
               }
-            },
-            root: 'body'
+            }
         },
         that;
 
@@ -58,9 +57,10 @@
         if (typeof this.options.addons !== 'object' || Object.keys(this.options.addons).length === 0) {
             this.disable();
         }
-
-        this.events();
+        
         this.clean();
+        this.addButtons();
+        this.events();
     };
 
     /**
@@ -77,11 +77,10 @@
                 e.preventDefault();
             })
             .on('blur', this.addEditorPlaceholder)
-            .on('keyup click', this.addButtons)
+            .on('keyup click', this.showButtons)
             .on('selectstart mousedown', '.mediumInsert', this.disableSelection)
-            .on('keydown', this.fixSelectAll);
-            
-        $(document).on('click', '.mediumInsert-buttonsShow', this.showAddons);
+            .on('keydown', this.fixSelectAll)
+            .on('click', '.mediumInsert-buttonsShow', this.toggleAddons);
     };
 
     /**
@@ -256,47 +255,67 @@
             addons: addons
         }).trim();
     };
+    
+    /**
+     * Appends buttons at the end of the $el
+     *
+     * @return {void}
+     */
+    
+    Core.prototype.addButtons = function () {
+        var $buttons = $(that.getButtons());
+        
+        this.$el.append($buttons);
+    };
 
     /**
-     * Adds plugin's buttons to editor, if carret is in an empty paragraph
+     * Move buttons to current active, empty paragraph and show them
      *
      * @return {void}
      */
 
-    Core.prototype.addButtons = function () {
+    Core.prototype.showButtons = function () {
         var selection = window.getSelection(),
             range = selection.getRangeAt(0),
             $current = $(range.commonAncestorContainer),
-            $buttons = $(that.getButtons()),
-            id = that.getMaxId() + 1;
+            $buttons = that.$el.find('.mediumInsert-buttons');
 
-        that.clean();
-        that.removeButtons();
-        
-        if ($current.text().trim() === '') {
-            $(that.options.root).append($buttons);
-            $buttons.css({
-                left: $current.offset().left - parseInt($buttons.find('.mediumInsert-buttonsOptions').css('left')) - parseInt($buttons.find('.mediumInsert-buttonsOptions a:first').css('margin-left')),
-                top: $current.offset().top
-            });
-            $buttons.find('.mediumInsert-buttonsShow').fadeIn();
+        if ($current.closest('.mediumInsert-buttons').length === 0) {
+            that.clean();
+            
+            if ($current.text().trim() === '') {
+                $buttons.css({
+                    left: $current.offset().left - parseInt($buttons.find('.mediumInsert-buttonsOptions').css('left'), 10) - parseInt($buttons.find('.mediumInsert-buttonsOptions a:first').css('margin-left'), 10),
+                    top: $current.offset().top
+                });
+                $buttons.show();
+            } else {
+                that.hideButtons();
+            }
         }
     };
     
     /**
-     * Removes buttonsShow
+     * Hides buttons
      *
      * @returns {void}
      */
     
-    Core.prototype.removeButtons = function () {
-        $(that.options.root).find('.mediumInsert-buttons').remove();
+    Core.prototype.hideButtons = function () {
+        that.$el.find('.mediumInsert-buttons').hide();
+        that.$el.find('.mediumInsert-buttonsOptions').hide();
     };
     
-    Core.prototype.showAddons = function (e) {
+    /**
+     * Toggles addons buttons
+     *
+     * @return {void}
+     */
+    
+    Core.prototype.toggleAddons = function (e) {
         var $el = $(e.target);
-        
-        $el.siblings('.mediumInsert-buttonsOptions').fadeIn();
+
+        $el.siblings('.mediumInsert-buttonsOptions').toggle();
     };
 
     /** Plugin initialization */
