@@ -48,7 +48,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<div class=\"mediumInsert-buttons\" contenteditable=\"false\">\n    <a class=\"mediumInsert-buttonsShow\" style=\"display: none\">+</a>\n    <ul class=\"mediumInsert-buttonsOptions\" style=\"display: none\">\n        ";
+  buffer += "<div class=\"mediumInsert-buttons\" contenteditable=\"false\" style=\"display: none\">\n    <a class=\"mediumInsert-buttonsShow\">+</a>\n    <ul class=\"mediumInsert-buttonsOptions\" style=\"display: none\">\n        ";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.addons), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </ul>\n</div>\n";

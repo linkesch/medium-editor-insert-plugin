@@ -12,13 +12,21 @@
             addons: {
               images: {
                   label: '<span class="fa fa-camera"></span>'
-              },
-              embeds: {
-                  label: '<span class="fa fa-play"></span>'
               }
             }
         },
         that;
+        
+    /**
+     * Capitalize first character
+     *
+     * @param {string} str
+     * @return {string} 
+     */
+        
+    function ucfirst (str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
     /**
      * Core plugin's object
@@ -58,6 +66,7 @@
             this.disable();
         }
         
+        this.initAddons();
         this.clean();
         this.addButtons();
         this.events();
@@ -80,7 +89,8 @@
             .on('keyup click', this.showButtons)
             .on('selectstart mousedown', '.mediumInsert', this.disableSelection)
             .on('keydown', this.fixSelectAll)
-            .on('click', '.mediumInsert-buttonsShow', this.toggleAddons);
+            .on('click', '.mediumInsert-buttonsShow', this.toggleAddons)
+            .on('click', '.mediumInsert-action', this.addonAction);
     };
 
     /**
@@ -170,25 +180,17 @@
             that.$el.addClass('medium-editor-placeholder');
         }
     };
-
+    
     /**
-     * Returns max ID of #mediumInsert-ID elemets
-     *
-     * @return {integer} max - Max ID
+     * Initialize addons
+     * 
+     * @return {void}
      */
-
-    Core.prototype.getMaxId = function () {
-        var max = -1;
-
-        $('div[id^="mediumInsert-"]').each(function () {
-            var id = parseInt($(this).attr('id').split('-')[1], 10);
-
-            if (id > max) {
-                max = id;
-            }
+    
+    Core.prototype.initAddons = function () {
+        $.each(this.options.addons, function (addon, options) {
+            that.$el[pluginName + ucfirst(addon)](options); 
         });
-
-        return max;
     };
 
     /**
@@ -317,8 +319,24 @@
 
         $el.siblings('.mediumInsert-buttonsOptions').toggle();
     };
+    
+    /**
+     * Call addon's action
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+    
+    Core.prototype.addonAction = function (e) {
+        var $a = $(e.target).is('a') ? $(e.target) : $(e.target).closest('a'),
+            addon = $a.data('addon'),
+            action = $a.data('action');
+
+        that.$el.data('plugin_'+ pluginName +'_addon_'+ ucfirst(addon))[action](); 
+    };
 
     /** Plugin initialization */
+    
     $.fn[pluginName] = function (options) {
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName)) {

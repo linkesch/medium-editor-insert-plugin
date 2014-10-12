@@ -11,6 +11,16 @@ test('mediumInsert() inits the plugin', function () {
     ok(this.$el.hasClass('medium-editor-insert-plugin'), '.medium-editor-insert-plugin class added');
 });
 
+asyncTest('mediumInsert() inits addons', function () {
+    this.stub($.fn, 'mediumInsertImages', function () {
+        ok(1, 'images initialized');
+        $.fn.mediumInsertImages.restore();
+        start();
+    });
+    
+    this.$el.mediumInsert();
+});
+
 test('mediumInsert() does nothing if there is no addon selected', function () {
     this.$el.mediumInsert({
       addons: false
@@ -114,4 +124,32 @@ test('mediumInsert() toggles addons buttons after clicking on show button', func
     this.$el.find('.mediumInsert-buttonsShow').click();
 
     equal(this.$el.find('.mediumInsert-buttonsOptions').css('display'), 'none', 'addons are hidden');
+});
+
+asyncTest('mediumInsert() calls addon\'s add function if addon\'s button is clicked', function () {
+    var addonInstance, el, range, sel;
+        
+    this.$el.html('<p id="paragraph">&nbsp;</p><p>test</p>');
+        
+    this.$el.mediumInsert();
+    addonInstance = this.$el.data('plugin_mediumInsert_addon_Images');
+    
+    this.stub(addonInstance, 'add', function () {
+        ok(1, 'add() called');
+        addonInstance.add.restore();
+        start();
+    });
+    
+    // Place caret at the beginning of #paragraph
+    el = document.getElementById("paragraph");
+    range = document.createRange();
+    sel = window.getSelection();
+    range.setStart(el.childNodes[0], 0);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    
+    this.$el.find('#paragraph').click();
+    this.$el.find('.mediumInsert-buttonsShow').click();    
+    this.$el.find('.mediumInsert-action').click();
 });
