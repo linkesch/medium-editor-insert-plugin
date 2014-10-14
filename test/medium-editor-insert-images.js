@@ -14,7 +14,7 @@ module("images", {
     this.addon = $.fn.mediumInsert.getAddon('images');
     $.fn.mediumInsert.settings.enabled = true;
     $.fn.mediumInsert.getAddon('images').$el = $('#qunit-fixture');
-    $.fn.mediumInsert.getAddon('images').options = $.fn.mediumInsert.getAddon('images').default;
+    $.fn.mediumInsert.getAddon('images').options = $.fn.mediumInsert.getAddon('images').defaults;
     $.fn.mediumInsert.insert.$el = $('#qunit-fixture');
   }
 });
@@ -47,10 +47,11 @@ test('init calls preparePreviousImages()', function() {
 });
 
 test('init does not calls setDragAndDropEvents() when it is deactive', function() {
-  $.fn.mediumInsert.getAddon('images').options.useDragAndDrop = false;
   var stub1 = this.stub($.fn.mediumInsert.getAddon('images'), 'setDragAndDropEvents');
 
-  $.fn.mediumInsert.getAddon('images').init();
+  $.fn.mediumInsert.getAddon('images').init({
+    useDragAndDrop: false
+  });
 
   ok(!stub1.called, 'setDragAndDropEvents() called');
 });
@@ -149,7 +150,7 @@ test('uploadCompleted triggers input event', function () {
 test('uploadFiles creates progress bar', function () {
   var that = $.fn.mediumInsert.getAddon('images'),
       $el = $('#qunit-fixture').html('<div class="mediumInsert-placeholder"></div>');
-
+  
   that.uploadFiles($('.mediumInsert-placeholder', $el), [{ type: 'image/png' }], that);
 
   equal($('progress', $el).length, 1, 'progress bar created');
@@ -185,7 +186,7 @@ asyncTest('options.uploadFile make ajax call', function () {
 
 asyncTest('uploadFile calls options.uploadFile', function () {
   var that = $.fn.mediumInsert.getAddon('images');
-
+  
   this.stub(that.options, 'uploadFile', function () {
     ok(1, 'options.uploadFile call made');
     that.options.uploadFile.restore();
@@ -205,7 +206,7 @@ asyncTest('options.deleteFile make ajax call', function () {
     jQuery.ajax.restore();
     start();
   });
-
+  
   that.options.deleteFile('img.png', that);
 });
 
@@ -339,21 +340,21 @@ asyncTest('setImageEvents creates click event on imageResizeBigger', function ()
 });
 
 asyncTest('setImageEvents creates click event on imageRemove', function () {
-  var $el = $('#qunit-fixture').html('<div class="mediumInsert small" id="mediumInsert-0" contenteditable="false">'+
-    '<div class="mediumInsert-placeholder">'+
-      '<span class="mediumInsert-images">'+
-        '<img src="test/fixtures/image.png" draggable="true">'+
-        '<a class="mediumInsert-imageRemove"></a>'+
-        '<a class="mediumInsert-imageResizeBigger"></a>'+
-      '</span>'+
-    '</div>'+
-  '</div>');
-
-  $.fn.mediumInsert.getAddon('images').setImageEvents();
+  var that = $.fn.mediumInsert.getAddon('images'),
+    $el = $('#qunit-fixture').html('<div class="mediumInsert small" id="mediumInsert-0" contenteditable="false">'+
+      '<div class="mediumInsert-placeholder">'+
+        '<span class="mediumInsert-images">'+
+          '<img src="test/fixtures/image.png" draggable="true">'+
+          '<a class="mediumInsert-imageRemove"></a>'+
+          '<a class="mediumInsert-imageResizeBigger"></a>'+
+        '</span>'+
+      '</div>'+
+    '</div>');
+  
+  that.setImageEvents();
 
   $(document).one('click', '.mediumInsert-imageRemove', function () {
     equal($('.mediumInsert-image', $el).length, 0, 'image removed');
-    equal($('.mediumInsert', $el).hasClass('small'), false, 'small class removed');
     start();
   });
 
