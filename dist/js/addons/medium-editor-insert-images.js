@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.13 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.14 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -15,7 +15,7 @@
     * Images default options
     */
 
-    default: {
+    defaults: {
       /**
       * Active or inactive image's drag and drop
       */
@@ -100,7 +100,7 @@
       if (options && options.$el) {
         this.$el = options.$el;
       }
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
 
       this.setImageEvents();
 
@@ -122,13 +122,13 @@
 
     insertButton: function(buttonLabels){
       var label = 'Img';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
-
-	  if (typeof buttonLabels === 'object' && buttonLabels.img) {
-		  label = buttonLabels.img;
-	  }
+      
+      if (typeof buttonLabels === 'object' && buttonLabels.img) {
+        label = buttonLabels.img;
+      }
 
       return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
@@ -328,7 +328,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeBigger', function () {
@@ -336,7 +336,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageRemove', function () {
@@ -350,7 +350,8 @@
         that.deleteFile(img, that);
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+
+        that.$el.trigger('keyup').trigger('input');
       });
     },
 
@@ -423,7 +424,7 @@
           dropSuccessful = false;
           dropSort = false;
 
-          that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+          that.$el.trigger('keyup').trigger('input');
         }
       });
 
@@ -465,7 +466,7 @@
         dropSort = true;
         dropSortIndex = null;
 
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('drop', '.mediumInsert', function (e) {

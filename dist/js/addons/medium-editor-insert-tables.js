@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.13 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.14 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -15,7 +15,7 @@
     * Table default options
     */
 
-    default: {
+    defaults: {
       defaultRows: 2,
       defaultCols: 2
     },
@@ -25,20 +25,20 @@
      * @return {void}
      */
     init : function (options) {
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
       this.$el = $.fn.mediumInsert.insert.$el;
       this.setTableButtonEvents();
     },
 
     insertButton : function (buttonLabels) {
       var label = 'Table';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
 
-	  if (typeof buttonLabels === 'object' && buttonLabels.table) {
-		  label = buttonLabels.table;
-	  }
+      if (typeof buttonLabels === 'object' && buttonLabels.table) {
+        label = buttonLabels.table;
+      }
 
       return '<button data-addon="tables" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },

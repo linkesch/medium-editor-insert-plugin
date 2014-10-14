@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.13 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.14 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -300,8 +300,6 @@
     setPlaceholders: function () {
       var that = this,
           $el = $.fn.mediumInsert.insert.$el,
-          editor = $.fn.mediumInsert.settings.editor,
-          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
           insertBlock = this.getButtons(),
           $firstEl;
 
@@ -495,7 +493,7 @@
     * Embed default options
     */
 
-    default: {
+    defaults: {
       urlPlaceholder: 'Paste or type a link'
       //,oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
     },
@@ -505,7 +503,7 @@
      * @return {void}
      */
     init : function (options) {
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
       this.$el = $.fn.mediumInsert.insert.$el;
       this.setEmbedButtonEvents();
       this.preparePreviousEmbeds();
@@ -513,12 +511,13 @@
 
     insertButton : function (buttonLabels) {
       var label = 'Embed';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-code"></i>';
       }
-	  if (typeof buttonLabels === 'object' && buttonLabels.embed) {
-		  label = buttonLabels.embed;
-	  }
+
+      if (typeof buttonLabels === 'object' && buttonLabels.embed) {
+        label = buttonLabels.embed;
+      }
 
       return '<button data-addon="embeds" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
@@ -560,7 +559,7 @@
     setEmbedButtonEvents : function () {
       var that = this;
       $(document).on('keypress', 'input.mediumInsert-embedsText', function (e) {
-        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+        if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
           that.setEnterActionEvents();
           that.removeToolbar();
         }
@@ -603,8 +602,8 @@
                 that.currentPlaceholder.append(embed_tag);
                 that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
 
-                if(returnedTag.indexOf("facebook") != -1) {
-                  if (typeof(FB) != 'undefined') {
+                if(returnedTag.indexOf("facebook") !== -1) {
+                  if (typeof(FB) !== 'undefined') {
                     setTimeout(function() { FB.XFBML.parse();}, 2000);
                   }
                 }
@@ -644,11 +643,11 @@
                   cb(null, data, jqXHR);
               },
               error: function(jqXHR, textStatus, errorThrown) {
-                  var responseJSON = function() {
+                  var responseJSON = (function() {
                       try {
                           return JSON.parse(jqXHR.responseText);
                       } catch(e) {}
-                  }();
+                  }());
 
                   cb((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message, responseJSON, jqXHR);
               }
@@ -659,14 +658,14 @@
           // We didn't get something we expect so let's get out of here.
           if (!(new RegExp(['youtube', 'yout.be', 'vimeo', 'facebook', 'instagram'].join("|")).test(url))) return false;
 
-          var embed_tag = url.replace(/\n?/g, '').replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
+          var embed_tag = url.replace(/\n?/g, '').replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
               .replace(/^http:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
               //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
               .replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
               .replace(/^http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
 
-          return /<("[^"]*"|'[^']*'|[^'">])*>/.test(embed_tag) ? embed_tag : false;
+          return (/<("[^"]*"|'[^']*'|[^'">])*>/).test(embed_tag) ? embed_tag : false;
       }
 
   });
@@ -681,7 +680,7 @@
     * Images default options
     */
 
-    default: {
+    defaults: {
       /**
       * Active or inactive image's drag and drop
       */
@@ -766,7 +765,7 @@
       if (options && options.$el) {
         this.$el = options.$el;
       }
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
 
       this.setImageEvents();
 
@@ -788,13 +787,13 @@
 
     insertButton: function(buttonLabels){
       var label = 'Img';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
-
-	  if (typeof buttonLabels === 'object' && buttonLabels.img) {
-		  label = buttonLabels.img;
-	  }
+      
+      if (typeof buttonLabels === 'object' && buttonLabels.img) {
+        label = buttonLabels.img;
+      }
 
       return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
@@ -994,7 +993,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeBigger', function () {
@@ -1002,7 +1001,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageRemove', function () {
@@ -1016,7 +1015,8 @@
         that.deleteFile(img, that);
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+
+        that.$el.trigger('keyup').trigger('input');
       });
     },
 
@@ -1089,7 +1089,7 @@
           dropSuccessful = false;
           dropSort = false;
 
-          that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+          that.$el.trigger('keyup').trigger('input');
         }
       });
 
@@ -1131,7 +1131,7 @@
         dropSort = true;
         dropSortIndex = null;
 
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('drop', '.mediumInsert', function (e) {
@@ -1179,12 +1179,13 @@
 
     insertButton: function(buttonLabels){
       var label = 'Map';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
-	  if (typeof buttonLabels === 'object' && buttonLabels.map) {
-		  label = buttonLabels.map;
-	  }
+      
+      if (typeof buttonLabels === 'object' && buttonLabels.map) {
+        label = buttonLabels.map;
+      }
 
       return '<button data-addon="maps" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
@@ -1213,7 +1214,7 @@
     * Table default options
     */
 
-    default: {
+    defaults: {
       defaultRows: 2,
       defaultCols: 2
     },
@@ -1223,20 +1224,20 @@
      * @return {void}
      */
     init : function (options) {
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
       this.$el = $.fn.mediumInsert.insert.$el;
       this.setTableButtonEvents();
     },
 
     insertButton : function (buttonLabels) {
       var label = 'Table';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
 
-	  if (typeof buttonLabels === 'object' && buttonLabels.table) {
-		  label = buttonLabels.table;
-	  }
+      if (typeof buttonLabels === 'object' && buttonLabels.table) {
+        label = buttonLabels.table;
+      }
 
       return '<button data-addon="tables" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },

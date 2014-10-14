@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.13 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.14 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -300,8 +300,6 @@
     setPlaceholders: function () {
       var that = this,
           $el = $.fn.mediumInsert.insert.$el,
-          editor = $.fn.mediumInsert.settings.editor,
-          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
           insertBlock = this.getButtons(),
           $firstEl;
 

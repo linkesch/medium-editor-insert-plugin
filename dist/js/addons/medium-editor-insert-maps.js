@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.13 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.14 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -22,12 +22,13 @@
 
     insertButton: function(buttonLabels){
       var label = 'Map';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
-	  if (typeof buttonLabels === 'object' && buttonLabels.map) {
-		  label = buttonLabels.map;
-	  }
+      
+      if (typeof buttonLabels === 'object' && buttonLabels.map) {
+        label = buttonLabels.map;
+      }
 
       return '<button data-addon="maps" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
