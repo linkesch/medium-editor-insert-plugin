@@ -319,7 +319,7 @@
       $el.keyup(function () {
         var $lastChild = $el.children(':last'),
             i;
-
+        
         // Fix #39
         // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
         // To force placeholder to appear, set <p><br></p> as content of the $el
@@ -333,7 +333,7 @@
 
         // Fix not deleting placeholder in Firefox
         // by removing all empty placeholders
-        if (this.isFirefox){
+        if (that.isFirefox){
           $('.mediumInsert .mediumInsert-placeholder:empty', $el).each(function () {
             $(this).parent().remove();
           });
@@ -359,7 +359,7 @@
           }
           i++;
         });
-
+          
       }).keyup();
     },
 
@@ -402,17 +402,19 @@
             //wrap content text in p to avoid firefox problems
             $el.contents().each((function() {
               return function(index, field) {
-                if (field.nodeName === '#text') {
+                if (field.nodeName === '#text' && field.textContent.trim() !== '') {
                   document.execCommand('insertHTML', false, "<p>" + field.data + "</p>");
                   return field.remove();
                 }
               };
             })(this));
-            //Firefox add extra br tag inside p tag
-            var latestPTag = $el.find('p').last();
-            if (latestPTag.text().length > 0) {
-              latestPTag.find('br').remove();
-            }
+            // Removed because of #94 issue
+            //
+            // Firefox add extra br tag inside p tag
+            // var latestPTag = $el.find('p').last();
+            // if (latestPTag.text().length > 0) {
+            //   latestPTag.find('br').remove();
+            // }
           }
         }
       });
