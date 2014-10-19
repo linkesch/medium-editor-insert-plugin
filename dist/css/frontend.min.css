@@ -1,0 +1,10 @@
+/*! 
+ * medium-editor-insert-plugin v1.0.0 - jQuery insert plugin for MediumEditor
+ *
+ * https://github.com/orthes/medium-editor-insert-plugin
+ * 
+ * Copyright (c) 2014 Pavel Linkesch (http://linkesch.sk)
+ * Released under the MIT license
+ */
+
+.mediumInsert-images figure{margin:0;display:inline-block}.mediumInsert-images figure img{max-width:100%;margin-top:1em;vertical-align:top}.mediumInsert-images figure:first-child img{margin-top:0}
