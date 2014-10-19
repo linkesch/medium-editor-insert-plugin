@@ -14,8 +14,7 @@
                   label: '<span class="fa fa-camera"></span>'
               }
             }
-        },
-        that;
+        };
         
     /**
      * Capitalize first character
@@ -40,7 +39,6 @@
      */
 
     function Core (el, options) {
-        that = this;
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
@@ -85,12 +83,12 @@
             .on('dragover drop', 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote', function (e) {
                 e.preventDefault();
             })
-            .on('blur', this.addEditorPlaceholder)
-            .on('keyup click', this.showButtons)
-            .on('selectstart mousedown', '.mediumInsert', this.disableSelection)
-            .on('keydown', this.fixSelectAll)
-            .on('click', '.mediumInsert-buttonsShow', this.toggleAddons)
-            .on('click', '.mediumInsert-action', this.addonAction);
+            .on('blur', $.proxy(this, 'addEditorPlaceholder'))
+            .on('keyup click', $.proxy(this, 'showButtons'))
+            .on('selectstart mousedown', '.mediumInsert', $.proxy(this, 'disableSelection'))
+            .on('keydown', $.proxy(this, 'fixSelectAll'))
+            .on('click', '.mediumInsert-buttonsShow', $.proxy(this, 'toggleAddons'))
+            .on('click', '.mediumInsert-action', $.proxy(this, 'addonAction'));
     };
 
     /**
@@ -148,16 +146,16 @@
      */
 
     Core.prototype.fixSelectAll = function (e) {
-        that.$el.children().last().removeClass('hide');
+        this.$el.children().last().removeClass('hide');
 
          if ((e.ctrlKey || e.metaKey) && e.which === 65) {
             e.preventDefault();
 
-            if(that.$el.find('p').text().trim().length === 0) {
+            if(this.$el.find('p').text().trim().length === 0) {
               return false;
             }
 
-            that.$el.children().last().addClass('hide');
+            this.$el.children().last().addClass('hide');
 
             return document.execCommand('selectAll', false, null);
         }
@@ -170,14 +168,14 @@
      */
 
     Core.prototype.addEditorPlaceholder = function () {
-        var $clone = that.$el.clone(),
+        var $clone = this.$el.clone(),
             cloneHtml;
 
         $clone.find('.mediumInsert').remove();
         cloneHtml = $clone.html().replace(/^\s+|\s+$/g, '');
 
         if (cloneHtml === '' || cloneHtml === '<p><br></p>') {
-            that.$el.addClass('medium-editor-placeholder');
+            this.$el.addClass('medium-editor-placeholder');
         }
     };
     
@@ -188,6 +186,8 @@
      */
     
     Core.prototype.initAddons = function () {
+        var that = this;
+        
         $.each(this.options.addons, function (addon, options) {
             that.$el[pluginName + ucfirst(addon)](options); 
         });
@@ -200,16 +200,16 @@
      */
 
     Core.prototype.clean = function () {
-        var $lastChild = that.$el.children(':last');
+        var $lastChild = this.$el.children(':last');
 
-        if (that.options.enabled === false) {
+        if (this.options.enabled === false) {
             return;
         }
 
         // Fix #39
         // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
         // To force placeholder to appear, set <p><br></p> as content of the $el
-        if (that.$el.html() === '' || this.$el.html() === '<br>') {
+        if (this.$el.html() === '' || this.$el.html() === '<br>') {
             this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
@@ -224,11 +224,11 @@
 
         // If last element is non-empty placeholder, add one empty line at the end to force placeholder to appear
         if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
-            that.$el.append(that.templates['src/js/templates/core-empty-line.hbs']().trim());
+            this.$el.append(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
         // Fix not deleting placeholder in Firefox by removing all empty placeholders
-        that.$el.find('.mediumInsert-placeholder:empty').each(function () {
+        this.$el.find('.mediumInsert-placeholder:empty').each(function () {
             $(this).parent().remove();
         });
     };
@@ -242,18 +242,18 @@
     Core.prototype.getButtons = function () {
         var addons = [];
 
-        if (that.options.enabled === false) {
+        if (this.options.enabled === false) {
             return;
         }
 
-        $.each(that.options.addons, function (key, addon) {
+        $.each(this.options.addons, function (key, addon) {
             addons.push({
                 name: key,
                 label: addon.label
             });
         });
 
-        return that.templates['src/js/templates/core-buttons.hbs']({
+        return this.templates['src/js/templates/core-buttons.hbs']({
             addons: addons
         }).trim();
     };
@@ -265,7 +265,7 @@
      */
     
     Core.prototype.addButtons = function () {
-        var $buttons = $(that.getButtons());
+        var $buttons = $(this.getButtons());
         
         this.$el.append($buttons);
     };
@@ -280,12 +280,12 @@
         var selection = window.getSelection(),
             range = selection.getRangeAt(0),
             $current = $(range.commonAncestorContainer),
-            $buttons = that.$el.find('.mediumInsert-buttons');
+            $buttons = this.$el.find('.mediumInsert-buttons');
 
         if ($current.closest('.mediumInsert-buttons').length === 0) {
-            that.clean();
+            this.clean();
             
-            that.$el.find('.mediumInsert-active').removeClass('mediumInsert-active');
+            this.$el.find('.mediumInsert-active').removeClass('mediumInsert-active');
 
             if ($current.text().trim() === '') {
                 $current.closest('p').addClass('mediumInsert-active');
@@ -295,7 +295,7 @@
                 });
                 $buttons.show();
             } else {
-                that.hideButtons();
+                this.hideButtons();
             }
         }
     };
@@ -307,8 +307,8 @@
      */
     
     Core.prototype.hideButtons = function () {
-        that.$el.find('.mediumInsert-buttons').hide();
-        that.$el.find('.mediumInsert-buttonsOptions').hide();
+        this.$el.find('.mediumInsert-buttons').hide();
+        this.$el.find('.mediumInsert-buttonsOptions').hide();
     };
     
     /**
@@ -335,7 +335,7 @@
             addon = $a.data('addon'),
             action = $a.data('action');
 
-        that.$el.data('plugin_'+ pluginName +'_addon_'+ ucfirst(addon))[action](); 
+        this.$el.data('plugin_'+ pluginName +'_addon_'+ ucfirst(addon))[action](); 
     };
 
     /** Plugin initialization */

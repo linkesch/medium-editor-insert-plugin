@@ -8,8 +8,7 @@
         defaults = {
             label: '<span class="fa fa-camera"></span>',
             uploadScript: 'upload.php'
-        },
-        that;
+        };
 
     /**
      * Images object
@@ -23,7 +22,6 @@
      */
 
     function Images (el, options) {
-        that = this;
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
@@ -63,14 +61,21 @@
      */
     
     Images.prototype.add = function () {
-        var $file = $(that.templates['src/js/templates/images-fileupload.hbs']());
+        var that = this,
+            $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
         
         $file.fileupload({
-            url: that.options.uploadScript,
+            url: this.options.uploadScript,
             dataType: 'json',
-            add: that.uploadAdd,
-            progressall: that.uploadProgressall,
-            done: that.uploadDone
+            add: function (e, data) {
+                $.proxy(that, 'uploadAdd', e, data)();
+            },
+            progressall: function (e, data) {
+                $.proxy(that, 'uploadProgressall', e, data)();
+            },
+            done: function (e, data) {
+                $.proxy(that, 'uploadDone', e, data)();
+            }
         });
         
         $file.click();
@@ -86,11 +91,11 @@
      */
     
     Images.prototype.uploadAdd = function (e, data) {
-        if (that.$el.find('.mediumInsert-active progress').length === 0) {
-            that.$el.find('.mediumInsert-active').append(that.templates['src/js/templates/images-progressbar.hbs']());
+        if (this.$el.find('.mediumInsert-active progress').length === 0) {
+            this.$el.find('.mediumInsert-active').append(this.templates['src/js/templates/images-progressbar.hbs']());
         }
-        
-        if (data.autoUpload || (data.autoUpload !== false && $(this).fileupload('option', 'autoUpload'))) {
+
+        if (data.autoUpload || (data.autoUpload !== false && $(e.target).fileupload('option', 'autoUpload'))) {
             data.process().done(function () {
                 data.submit();
             });
@@ -108,7 +113,8 @@
     
     Images.prototype.uploadProgressall = function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10),
-            $progressbar = that.$el.find('.mediumInsert-active progress');
+            $progressbar = this.$el.find('.mediumInsert-active progress');
+
         $progressbar
             .attr('value', progress)
             .text(progress);
@@ -128,7 +134,8 @@
      */
     
     Images.prototype.uploadDone = function (e, data) {
-        var $place = that.$el.find('.mediumInsert-active');
+        var that = this,
+            $place = this.$el.find('.mediumInsert-active');
         
         $.each(data.result.files, function (index, file) {
             $place.append(that.templates['src/js/templates/images-image.hbs']({
