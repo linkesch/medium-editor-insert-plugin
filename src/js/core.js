@@ -7,7 +7,6 @@
         defaults = {
             editor: null,
             enabled: true,
-            beginning: false,
             blocks: 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote',
             addons: {
               images: {
@@ -276,23 +275,42 @@
      * @return {void}
      */
 
-    Core.prototype.showButtons = function () {
-        var selection = window.getSelection(),
+    Core.prototype.showButtons = function (e) {
+        var $el = $(e.target),
+            selection = window.getSelection(),
             range = selection.getRangeAt(0),
             $current = $(range.commonAncestorContainer),
-            $buttons = this.$el.find('.mediumInsert-buttons');
+            $buttons = this.$el.find('.mediumInsert-buttons'),
+            isAddon = false,
+            $p;
 
         if ($current.closest('.mediumInsert-buttons').length === 0) {
             this.clean();
             
             this.$el.find('.mediumInsert-active').removeClass('mediumInsert-active');
 
+            $.each(this.options.addons, function (key) {
+                if ($el.closest('.mediumInsert-'+ key).length === 1) {
+                    $current = $el;
+                    isAddon = true;
+                    return;
+                } 
+            });
+
             if ($current.text().trim() === '') {
-                $current.closest('p').addClass('mediumInsert-active');
+                $p = $current.closest('p');
+                $p.addClass('mediumInsert-active');
+                
+                $buttons.removeClass('mediumInsert-buttons-vertical');
                 $buttons.css({
                     left: $current.offset().left - parseInt($buttons.find('.mediumInsert-buttonsOptions').css('left'), 10) - parseInt($buttons.find('.mediumInsert-buttonsOptions a:first').css('margin-left'), 10),
                     top: $current.offset().top
                 });
+                
+                if (isAddon) {
+                    $buttons.addClass('mediumInsert-buttons-vertical');
+                }
+                
                 $buttons.show();
             } else {
                 this.hideButtons();

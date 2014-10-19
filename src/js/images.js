@@ -137,6 +137,13 @@
         var that = this,
             $place = this.$el.find('.mediumInsert-active');
         
+        $place
+            .addClass('mediumInsert-images')
+            .find('br')
+            .remove();
+        
+        this.$el.find('.mediumInsert-buttons').addClass('mediumInsert-buttons-vertical');
+            
         $.each(data.result.files, function (index, file) {
             $place.append(that.templates['src/js/templates/images-image.hbs']({
                 img: file.url
