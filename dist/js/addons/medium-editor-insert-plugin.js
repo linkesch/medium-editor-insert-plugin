@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.16 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.3.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -145,9 +145,11 @@
         $.fn.mediumInsert.insert.init($(this));
 
         $.each($.fn.mediumInsert.settings.addons, function (i) {
-          var addonOptions = $.fn.mediumInsert.settings.addons[i];
-          addonOptions.$el = $.fn.mediumInsert.insert.$el;
-          addons[i].init(addonOptions);
+          if (typeof addons[i] !== 'undefined') {
+            var addonOptions = $.fn.mediumInsert.settings.addons[i];
+            addonOptions.$el = $.fn.mediumInsert.insert.$el;
+            addons[i].init(addonOptions);
+          }
         });
       });
     }
@@ -280,7 +282,11 @@
 
       if (typeof addon === 'undefined') {
         $.each($.fn.mediumInsert.settings.addons, function (i) {
-          buttons += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
+          if (typeof addons[i] === 'undefined') {
+            console.log('Addon "' + i + '" is not available. Did you forgot to include the related file?');
+          } else {
+            buttons += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
+          }
         });
       } else {
         buttons += '<li>' + addons[addon].insertButton(buttonLabels) + '</li>';
@@ -319,7 +325,7 @@
       $el.keyup(function () {
         var $lastChild = $el.children(':last'),
             i;
-        
+
         // Fix #39
         // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
         // To force placeholder to appear, set <p><br></p> as content of the $el
@@ -359,7 +365,7 @@
           }
           i++;
         });
-          
+
       }).keyup();
     },
 
