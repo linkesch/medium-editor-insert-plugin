@@ -64,6 +64,7 @@ test('existing images have an edit menu after init', function() {
   $(document).one('mouseenter', '.mediumInsert-images', function() {
     ok($('.mediumInsert-imageRemove', $el).length > 0, 'remove icon showed on mouseenter');
     ok($('.mediumInsert-imageResizeSmaller', $el).length > 0, 'resize smaller icon showed on mouseenter');
+    ok($('.mediumInsert-imageLink', $el).length > 0, 'link icon showed on mouseenter');
   });
 
   $('.mediumInsert-images', $el).mouseenter();
@@ -237,19 +238,7 @@ asyncTest('setImageEvents creates mouseenter event on image', function () {
   $(document).one('mouseenter', '.mediumInsert-images', function () {
     ok($('.mediumInsert-imageRemove', $el).length > 0, 'remove icon showed on mouseenter');
     ok($('.mediumInsert-imageResizeSmaller', $el).length > 0, 'resize smaller icon showed on mouseenter');
-  });
-
-  $('.mediumInsert-images', $el).mouseenter();
-
-  $el = $('#qunit-fixture').html('<div class="mediumInsert small" id="mediumInsert-0" contenteditable="false">'+
-    '<div class="mediumInsert-placeholder">'+
-      '<span class="mediumInsert-images"><img src="test/fixtures/image.png" draggable="true"></span>'+
-    '</div>'+
-  '</div>');
-
-  $(document).one('mouseenter', '.mediumInsert-images', function () {
-    ok($('.mediumInsert-imageRemove', $el).length > 0, 'remove icon showed on mouseenter');
-    ok($('.mediumInsert-imageResizeBigger', $el).length > 0, 'resize bigger icon showed on mouseenter');
+    ok($('.mediumInsert-imageLink', $el).length > 0, 'link icon showed on mouseenter');
     start();
   });
 
@@ -280,8 +269,9 @@ asyncTest('setImageEvents creates mouseleave event on image', function () {
     '<div class="mediumInsert-placeholder">'+
       '<span class="mediumInsert-images">'+
         '<img src="test/fixtures/image.png" draggable="true">'+
-        '<a class="mediumInsert-imageRemove"></a>'+
-        '<a class="mediumInsert-imageResizeSmaller"></a>'+
+        '<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>'+
+        '<a class="mediumInsert-imageIcon mediumInsert-imageResizeSmaller"></a>'+
+        '<a class="mediumInsert-imageIcon mediumInsert-imageLink"></a>'+
       '</span>'+
     '</div>'+
   '</div>');
@@ -291,6 +281,7 @@ asyncTest('setImageEvents creates mouseleave event on image', function () {
   $(document).one('mouseleave', '.mediumInsert-images', function () {
     equal($('.mediumInsert-imageRemove', $el).length, 0, 'remove icon remoaved on mouseleave');
     equal($('.mediumInsert-imageResizeSmaller', $el).length, 0, 'resize smaller icon removed on mouseleave');
+    equal($('.mediumInsert-imageLink', $el).length, 0, 'link icon removed on mouseleave');
     start();
   });
 
@@ -302,8 +293,8 @@ asyncTest('setImageEvents creates click event on imageResizeSmaller', function (
     '<div class="mediumInsert-placeholder">'+
       '<span class="mediumInsert-images">'+
         '<img src="test/fixtures/image.png" draggable="true">'+
-        '<a class="mediumInsert-imageRemove"></a>'+
-        '<a class="mediumInsert-imageResizeSmaller"></a>'+
+        '<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>'+
+        '<a class="mediumInsert-imageIcon mediumInsert-imageResizeSmaller"></a>'+
       '</span>'+
     '</div>'+
   '</div>');
@@ -323,8 +314,8 @@ asyncTest('setImageEvents creates click event on imageResizeBigger', function ()
     '<div class="mediumInsert-placeholder">'+
       '<span class="mediumInsert-images">'+
         '<img src="test/fixtures/image.png" draggable="true">'+
-        '<a class="mediumInsert-imageRemove"></a>'+
-        '<a class="mediumInsert-imageResizeBigger"></a>'+
+        '<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>'+
+        '<a class="mediumInsert-imageIcon mediumInsert-imageResizeBigger"></a>'+
       '</span>'+
     '</div>'+
   '</div>');
@@ -345,8 +336,8 @@ asyncTest('setImageEvents creates click event on imageRemove', function () {
       '<div class="mediumInsert-placeholder">'+
         '<span class="mediumInsert-images">'+
           '<img src="test/fixtures/image.png" draggable="true">'+
-          '<a class="mediumInsert-imageRemove"></a>'+
-          '<a class="mediumInsert-imageResizeBigger"></a>'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageResizeBigger"></a>'+
         '</span>'+
       '</div>'+
     '</div>');
@@ -361,27 +352,79 @@ asyncTest('setImageEvents creates click event on imageRemove', function () {
   $('.mediumInsert-imageRemove', $el).click();
 });
 
-asyncTest('setImageEvents creates click event on imageRemove which calls delete function', function () {
+asyncTest('setImageEvents creates click event on imageLink', function () {
   var that = $.fn.mediumInsert.getAddon('images'),
-      $el = $('#qunit-fixture').html('<div class="mediumInsert small" id="mediumInsert-0" contenteditable="false">'+
-    '<div class="mediumInsert-placeholder">'+
-      '<span class="mediumInsert-images">'+
-        '<img src="test/fixtures/image.png" draggable="true">'+
-        '<a class="mediumInsert-imageRemove"></a>'+
-        '<a class="mediumInsert-imageResizeBigger"></a>'+
-      '</span>'+
-    '</div>'+
-  '</div>');
+    $el = $('#qunit-fixture').html('<div class="mediumInsert" id="mediumInsert-0" contenteditable="false">'+
+      '<div class="mediumInsert-placeholder">'+
+        '<figure class="mediumInsert-images">'+
+          '<img src="test/fixtures/image.png" draggable="true" id="image">'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageResizeBigger"></a>'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageLink"></a>'+
+        '</figure>'+
+      '</div>'+
+    '</div>');
+  
+  that.setImageEvents();
 
-  this.stub(that, 'deleteFile', function () {
-    ok(1, 'deleteFile called');
-    that.deleteFile.restore();
+  $(document).one('click', '.mediumInsert-imageLink', function () {
+    ok($el.find('.mediumInsert-placeholder .mediumInsert-imageLinkWire').length > 0, 'link popup appeared');
     start();
   });
 
+  $('.mediumInsert-imageLink', $el).click();
+});
+
+asyncTest('setImageEvents wraps an image into a link after enter in imageLinkText', function () {
+  var that = $.fn.mediumInsert.getAddon('images'),
+      $el = $('#qunit-fixture').html('<div class="mediumInsert" id="mediumInsert-0" contenteditable="false">'+
+    '<div class="mediumInsert-placeholder">'+
+      '<figure class="mediumInsert-images">'+
+        '<img src="test/fixtures/image.png" draggable="true" id="image">'+
+      '</figure>'+
+      '<div class="mediumInsert-imageLinkWire"><input type="text" class="mediumInsert-imageLinkText"></div>'+
+    '</div>'+
+  '</div>'),
+    $event = $.Event("keypress");
+
   that.setImageEvents();
 
-  $('.mediumInsert-imageRemove', $el).click();
+  $(document).on('keypress', '.mediumInsert-imageLinkText', function () {
+    ok($('#image').parent().is('a'), 'image is wraped into a link');
+    equal($('#image').parent().attr('href'), 'test', 'url is correct');
+    start();
+  });
+  
+  $event.which = 13 ;
+
+  $('.mediumInsert-imageLinkText', $el)
+    .val('test')
+    .trigger($event);
+});
+
+asyncTest('setImageEvents creates click event on imageUnlink', function () {
+  var that = $.fn.mediumInsert.getAddon('images'),
+      $el = $('#qunit-fixture').html('<div class="mediumInsert" id="mediumInsert-0" contenteditable="false">'+
+      '<div class="mediumInsert-placeholder">'+
+        '<figure class="mediumInsert-images">'+
+          '<a href="#">'+
+            '<img src="test/fixtures/image.png" draggable="true" id="image">'+
+          '</a>'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageResizeBigger"></a>'+
+          '<a class="mediumInsert-imageIcon mediumInsert-imageUnlink"></a>'+
+        '</figure>'+
+      '</div>'+
+    '</div>');
+  
+  that.setImageEvents();
+
+  $el.one('click', '.mediumInsert-imageUnlink', function () {
+    equal($('#image', $el).parent().is('a'), false, 'link is removed');
+    start();
+  });
+
+  $('.mediumInsert-imageUnlink', $el).click();
 });
 
 

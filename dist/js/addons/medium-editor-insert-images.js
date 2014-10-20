@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.15 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.16 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -30,6 +30,11 @@
       * Relative path to a script that handles file deleting
       */
       imagesDeleteScript: 'delete.php',
+      
+      /**
+      * Placeeholder text for inserting link
+      */
+      urlPlaceholder: 'Paste or type a link',
 
       /**
       * Format data before sending them to server while uploading an image
@@ -296,14 +301,24 @@
         }
 
         if ($img.length > 0) {
-          $(this).append('<a class="mediumInsert-imageRemove"></a>');
+          $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>');
 
-          if ($(this).parent().parent().hasClass('small')) {
-            $(this).append('<a class="mediumInsert-imageResizeBigger"></a>');
-          } else {
-            $(this).append('<a class="mediumInsert-imageResizeSmaller"></a>');
+          if ($(this).prevAll().length === 0) {
+            if ($(this).parent().parent().hasClass('small')) {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageResizeBigger"></a>');
+            } else {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageResizeSmaller"></a>');
+            }
           }
-
+          
+          if ($(this).siblings().length === 0) {  
+            if ($img.parent().is('a')) {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageUnlink"></a>');
+            } else {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageLink"></a>');
+            }
+          }
+          
           positionTop = $img.position().top + parseInt($img.css('margin-top'), 10);
           positionLeft = $img.position().left + $img.width() -30;
           $('.mediumInsert-imageRemove', this).css({
@@ -316,11 +331,16 @@
             'top': positionTop,
             'left': positionLeft-31
           });
+          $('.mediumInsert-imageLink', this).css({
+            'right': 'auto',
+            'top': positionTop,
+            'left': positionLeft-62
+          });
         }
       });
 
       this.$el.on('mouseleave', '.mediumInsert-images', function () {
-        $('.mediumInsert-imageRemove, .mediumInsert-imageResizeSmaller, .mediumInsert-imageResizeBigger', this).remove();
+        $('.mediumInsert-imageIcon', this).remove();
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeSmaller', function () {
@@ -353,6 +373,49 @@
 
         that.$el.trigger('keyup').trigger('input');
       });
+      
+      this.$el.on('click', '.mediumInsert-imageLink', function () {
+        var $placeholder = $(this).closest('.mediumInsert-placeholder'),
+            $formHtml = $('<div class="medium-editor-toolbar medium-editor-toolbar-active medium-editor-toolbar-form-anchor mediumInsert-imageLinkWire" style="display: block;"><input type="text" value="" placeholder="' + that.options.urlPlaceholder + '" class="mediumInsert-imageLinkText medium-editor-toolbar-anchor-input"></div>');
+        
+        $formHtml.appendTo($placeholder);
+        setTimeout(function () {
+          $formHtml.find('input').focus();
+        }, 50);
+
+        $.fn.mediumInsert.insert.deselect();
+      });
+      
+      this.$el.on('click', '.mediumInsert-imageUnlink', function () {
+        var $figure = $(this).closest('.mediumInsert-images');
+
+        $figure.find('img').unwrap();
+        
+        $(this).removeClass('mediumInsert-imageUnlink')
+          .addClass('mediumInsert-imageLink');
+      });
+      
+      this.$el
+        .on('keypress', '.mediumInsert-imageLinkText', function (e) {
+          var $placeholder = $(this).closest('.mediumInsert-placeholder');
+
+          if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+            $placeholder.find('.mediumInsert-images:first').find('img').wrap('<a href="'+ $(this).val() +'" target="_blank"></a>');            
+            $placeholder.find('.mediumInsert-imageLink')
+              .removeClass('mediumInsert-imageLink')
+              .addClass('mediumInsert-imageUnlink');
+            
+            $('.mediumInsert-imageLinkWire').remove();
+          }
+        })
+        .on('blur', '.mediumInsert-imageLinkText', function () {
+          $('.mediumInsert-imageLinkWire').remove();
+        })
+        .on('paste', '.mediumInsert-imageLinkText', function (e) {
+          if ($.fn.mediumInsert.insert.isFirefox && e.originalEvent.clipboardData) {
+            $(this).val(e.originalEvent.clipboardData.getData('text/plain'));
+          }
+        });
     },
 
     /**

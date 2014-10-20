@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.15 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.2.16 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -167,7 +167,7 @@
     position: relative;
     margin-left: 40px;
     text-align: center; }
-  .mediumInsert .mediumInsert-images a {
+  .mediumInsert .mediumInsert-images .mediumInsert-imageIcon {
     position: absolute;
     top: 1em;
     width: 30px;
@@ -184,6 +184,11 @@
     background-image: url(../images/resize-smaller.png); }
   .mediumInsert .mediumInsert-imageResizeBigger {
     background-image: url(../images/resize-bigger.png); }
+  .mediumInsert .mediumInsert-imageLink, .mediumInsert .mediumInsert-imageUnlink {
+    right: 62px;
+    background-image: url(../images/link.png); }
+  .mediumInsert .mediumInsert-imageUnlink {
+    background-image: url(../images/unlink.png); }
   .mediumInsert .mediumInsert-error {
     background-color: #f2dede;
     border: 1px solid #ebccd1;
@@ -199,6 +204,11 @@
     position: absolute;
     left: 50%;
     text-align: center; }
+  .mediumInsert .mediumInsert-imageLinkWire {
+    position: absolute;
+    top: -40px;
+    left: auto;
+    right: 0; }
   .mediumInsert .mediumInsert-embedsBox {
     position: relative;
     left: -250px; }
