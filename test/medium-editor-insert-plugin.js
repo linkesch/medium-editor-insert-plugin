@@ -40,7 +40,7 @@ test('customize editor\'s serialize function', function () {
 
 asyncTest('extend editor\'s deactivate function to call plugins\'s disable', function() {
   var editor = new MediumEditor('#qunit-fixture');
-  
+
   this.stub($.fn.mediumInsert.insert, 'disable', function () {
     $.fn.mediumInsert.insert.disable.restore();
     ok(true, 'disable() called');
@@ -67,7 +67,7 @@ test('editor\'s deactivate returns false if editor is not active', function() {
 
 asyncTest('extend editor\'s activate function to call plugins\'s enable', function() {
   var editor = new MediumEditor('#qunit-fixture');
-  
+
   this.stub($.fn.mediumInsert.insert, 'enable', function () {
     $.fn.mediumInsert.insert.enable.restore();
     ok(true, 'enable() called');
@@ -120,6 +120,21 @@ test('initial loop calls init functions', function() {
   ok(stub4.called, 'embeds.init() called');
 });
 
+test('initial loop with one missing plugin', function() {
+  var stub1 = this.stub($.fn.mediumInsert.insert, 'init'),
+      stub4 = this.stub($.fn.mediumInsert.getAddon('embeds'), 'init');
+
+  $('div').mediumInsert({
+    addons: {
+      embeds: {},
+      flash: {},
+    }
+  });
+
+  ok(stub1.called, 'insert.init() called');
+  ok(stub4.called, 'embeds.init() called');
+});
+
 
 /**
 * Insert
@@ -144,7 +159,7 @@ module("insert", {
 
 test('init sets el', function () {
   var $el = $('<div></div>');
-  
+
   this.stub($.fn.mediumInsert.insert, 'setPlaceholders');
 
   $.fn.mediumInsert.insert.init($el);
