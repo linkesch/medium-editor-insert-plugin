@@ -331,7 +331,7 @@
             'top': positionTop,
             'left': positionLeft-31
           });
-          $('.mediumInsert-imageLink', this).css({
+          $('.mediumInsert-imageLink, .mediumInsert-imageUnlink', this).css({
             'right': 'auto',
             'top': positionTop,
             'left': positionLeft-62
