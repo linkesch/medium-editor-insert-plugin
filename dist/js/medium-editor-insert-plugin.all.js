@@ -1080,17 +1080,16 @@
               .removeClass('mediumInsert-imageLink')
               .addClass('mediumInsert-imageUnlink');
             
-            that.$el.trigger('keyup').trigger('input');
-            
-            if ($('.mediumInsert-imageLinkWire').length) {
+            // Workaround for "Uncaught NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is no longer a child of this node. Perhaps it was moved in a 'blur' event handler?"
+            try {  
               $('.mediumInsert-imageLinkWire').remove();
-            }
+            } catch(err) {}
+            
+            that.$el.trigger('keyup').trigger('input');
           }
         })
         .on('blur', '.mediumInsert-imageLinkText', function () {
-          if ($('.mediumInsert-imageLinkWire').length) {
-            $('.mediumInsert-imageLinkWire').remove();
-          }
+          $('.mediumInsert-imageLinkWire').remove();
         })
         .on('paste', '.mediumInsert-imageLinkText', function (e) {
           if ($.fn.mediumInsert.insert.isFirefox && e.originalEvent.clipboardData) {
