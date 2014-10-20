@@ -393,6 +393,8 @@
         
         $(this).removeClass('mediumInsert-imageUnlink')
           .addClass('mediumInsert-imageLink');
+          
+        that.$el.trigger('keyup').trigger('input');
       });
       
       this.$el
@@ -405,11 +407,17 @@
               .removeClass('mediumInsert-imageLink')
               .addClass('mediumInsert-imageUnlink');
             
-            $('.mediumInsert-imageLinkWire').remove();
+            that.$el.trigger('keyup').trigger('input');
+            
+            if ($('.mediumInsert-imageLinkWire').length) {
+              $('.mediumInsert-imageLinkWire').remove();
+            }
           }
         })
         .on('blur', '.mediumInsert-imageLinkText', function () {
-          $('.mediumInsert-imageLinkWire').remove();
+          if ($('.mediumInsert-imageLinkWire').length) {
+            $('.mediumInsert-imageLinkWire').remove();
+          }
         })
         .on('paste', '.mediumInsert-imageLinkText', function (e) {
           if ($.fn.mediumInsert.insert.isFirefox && e.originalEvent.clipboardData) {
