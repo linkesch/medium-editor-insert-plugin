@@ -7,7 +7,8 @@
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
-            uploadScript: 'upload.php'
+            uploadScript: 'upload.php',
+            deleteScript: 'delete.php'
         };
 
     /**
@@ -203,6 +204,8 @@
             
             if ($image.length) {
                 e.preventDefault();
+                
+                this.deleteFile($image.attr('src'));
             
                 $parent = $image.closest('.mediumInsert-images');
                 $image.closest('figure').remove();
@@ -224,6 +227,19 @@
                     sel.addRange(range);
                 }
             }
+        }
+    };
+    
+    /**
+     * Makes ajax call to deleteScript
+     * 
+     * @param {String} file File name
+     * @returns {void}
+     */
+    
+    Images.prototype.deleteFile = function (file) {
+        if (this.options.deleteScript) {
+            $.post(this.options.deleteScript, { file: file });
         }
     };
     
