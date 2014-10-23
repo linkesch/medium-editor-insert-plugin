@@ -45,22 +45,21 @@
     <script src="../src/js/core.js"></script>
     <script src="../src/js/images.js"></script>
     <script>
-    var editor = new MediumEditor('.editable', {
-        excludedActions: ['u', 'h3', 'blockquote'],
-        buttonLabels: 'fontawesome'
-    });
-
-    $(function () {
-        $('.editable').mediumInsert({
-            editor: editor,
-            beginning: true
+        var editor = new MediumEditor('.editable', {
+            excludedActions: ['u', 'h3', 'blockquote'],
+            buttonLabels: 'fontawesome'
         });
-    });
-
-    var cssLink = document.getElementById('medium-editor-theme');
-    document.getElementById('sel-themes').addEventListener('change', function () {
-        cssLink.href = this.value + '.css';
-    });
+        
+        $(function () {
+            $('.editable').mediumInsert({
+                editor: editor
+            });
+        });
+        
+        var cssLink = document.getElementById('medium-editor-theme');
+        document.getElementById('sel-themes').addEventListener('change', function () {
+            cssLink.href = this.value + '.css';
+        });
     </script>
 </body>
 </html>

@@ -91,3 +91,6 @@
       .medium-editor-insert-plugin .mediumInsert-buttons.mediumInsert-buttons-vertical ul.mediumInsert-buttonsOptions li a {
         float: none;
         margin: 5px 0; }
+
+.mediumInsert-imageActive {
+  outline: 2px solid #000; }

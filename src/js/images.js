@@ -51,7 +51,11 @@
      */
 
     Images.prototype.events = function () {
-
+        $(document)
+            .on('click', $.proxy(this, 'unselectImage'));
+        
+        this.$el
+            .on('click', '.mediumInsert-images img', $.proxy(this, 'selectImage'));
     };
     
     /**
@@ -149,6 +153,38 @@
                 img: file.url
             }));
         });
+    };
+    
+    /**
+     * Select clicked image
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+    
+    Images.prototype.selectImage = function (e) {
+        var $image = $(e.target);
+                
+        $image.addClass('mediumInsert-imageActive');
+    };
+    
+    /**
+     * Unselect selected image
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+    
+    Images.prototype.unselectImage = function (e) {
+        var $el = $(e.target),
+            $image = this.$el.find('.mediumInsert-imageActive');
+        
+        if ($el.is('img') && $el.hasClass('mediumInsert-imageActive')) {
+            $image.not($el).removeClass('mediumInsert-imageActive');
+            return;
+        }
+
+        $image.removeClass('mediumInsert-imageActive');
     };
     
 
