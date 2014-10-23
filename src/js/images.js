@@ -52,7 +52,8 @@
 
     Images.prototype.events = function () {
         $(document)
-            .on('click', $.proxy(this, 'unselectImage'));
+            .on('click', $.proxy(this, 'unselectImage'))
+            .on('keydown', $.proxy(this, 'removeImage'));
         
         this.$el
             .on('click', '.mediumInsert-images img', $.proxy(this, 'selectImage'));
@@ -185,6 +186,45 @@
         }
 
         $image.removeClass('mediumInsert-imageActive');
+    };
+    
+    /**
+     * Remove image
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+    
+    Images.prototype.removeImage = function (e) {    
+        var $image, $parent, $empty, range, sel;
+                   
+        if (e.keyCode === 8 || e.keyCode === 46) {
+            $image = this.$el.find('.mediumInsert-imageActive');
+            
+            if ($image.length) {
+                e.preventDefault();
+            
+                $parent = $image.closest('.mediumInsert-images');
+                $image.closest('figure').remove();
+                
+                if ($parent.find('figure').length === 0) {
+                    $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                    $parent.before($empty);
+                    $parent.remove();
+                    
+                    // Hide addons
+                    this.$el.data('plugin_'+ pluginName).hideAddons();
+                    
+                    // Place caret at the beginning of the empty paragraph
+                    range = document.createRange();
+                    sel = window.getSelection();
+                    range.setStart($empty.get(0).childNodes[0], 0);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        }
     };
     
 

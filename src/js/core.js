@@ -284,6 +284,8 @@
             isAddon = false,
             $p;
 
+        $current = $current.is('br') ? $current.parent() : $current;
+
         if ($current.closest('.mediumInsert-buttons').length === 0) {
             this.clean();
             
@@ -335,10 +337,18 @@
      * @return {void}
      */
     
-    Core.prototype.toggleAddons = function (e) {
-        var $el = $(e.target);
-
-        $el.siblings('.mediumInsert-buttonsOptions').toggle();
+    Core.prototype.toggleAddons = function () {
+        this.$el.find('.mediumInsert-buttonsOptions').toggle();
+    };
+    
+    /**
+     * Hide addons buttons
+     *
+     * @return {void}
+     */
+    
+    Core.prototype.hideAddons = function () {
+        this.$el.find('.mediumInsert-buttonsOptions').hide();
     };
     
     /**
