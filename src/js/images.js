@@ -142,7 +142,7 @@
     Images.prototype.uploadDone = function (e, data) {
         var that = this,
             $place = this.$el.find('.mediumInsert-active');
-        
+
         $place
             .addClass('mediumInsert-images')
             .find('br')
@@ -166,7 +166,7 @@
     
     Images.prototype.selectImage = function (e) {
         var $image = $(e.target);
-                
+        
         $image.addClass('mediumInsert-imageActive');
     };
     
@@ -198,7 +198,7 @@
     
     Images.prototype.removeImage = function (e) {    
         var $image, $parent, $empty, range, sel;
-                   
+
         if (e.keyCode === 8 || e.keyCode === 46) {
             $image = this.$el.find('.mediumInsert-imageActive');
             
@@ -248,8 +248,8 @@
     
     $.fn[pluginName + addonName] = function (options) {
         return this.each(function () {
-            if (!$.data(this, 'plugin_' + pluginName + '_addon_'+ addonName)) {
-                $.data(this, 'plugin_' + pluginName + '_addon_'+ addonName, new Images(this, options));
+            if (!$.data(this, 'plugin_' + pluginName + addonName)) {
+                $.data(this, 'plugin_' + pluginName + addonName, new Images(this, options));
             }
         });
     };

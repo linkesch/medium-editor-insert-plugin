@@ -1,3 +1,23 @@
+/**
+ * Placing caret to element and selected position
+ *
+ * @param {Element} el
+ * @param {integer} position
+ * @return {void}
+ */
+
+function placeCaret (el, position) {
+    var range, sel;
+
+    range = document.createRange();
+    sel = window.getSelection();
+    range.setStart(el.childNodes[0], position);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);  
+}
+
+
 module('core', {
     setup: function () {
         $('#qunit-fixture').html('<div class="editable"></div>');
@@ -5,13 +25,13 @@ module('core', {
     }
 });
 
-test('mediumInsert() inits the plugin', function () {
+test('plugin initialization', function () {
     this.$el.mediumInsert();
 
     ok(this.$el.hasClass('medium-editor-insert-plugin'), '.medium-editor-insert-plugin class added');
 });
 
-asyncTest('mediumInsert() inits addons', function () {
+asyncTest('addons initialization', function () {
     this.stub($.fn, 'mediumInsertImages', function () {
         ok(1, 'images initialized');
         $.fn.mediumInsertImages.restore();
@@ -21,7 +41,7 @@ asyncTest('mediumInsert() inits addons', function () {
     this.$el.mediumInsert();
 });
 
-test('mediumInsert() does nothing if there is no addon selected', function () {
+test('plugin does nothing if there is no addon selected', function () {
     this.$el.mediumInsert({
       addons: false
     });
@@ -29,13 +49,13 @@ test('mediumInsert() does nothing if there is no addon selected', function () {
     equal(this.$el.html(), '', 'editor is empty');
 });
 
-test('mediumInsert() adds empty paragraph if there is no content', function () {
+test('adding empty paragraph if there is no content', function () {
     this.$el.mediumInsert();
    
     equal(this.$el.find('p').length, 1, 'paragraph created');
 });
 
-test('mediumInsert() wraps <br> into paragraph', function () {
+test('wrapping <br> into paragraph', function () {
     this.$el.html('<br>');
    
     this.$el.mediumInsert();
@@ -44,7 +64,7 @@ test('mediumInsert() wraps <br> into paragraph', function () {
     equal(this.$el.find('br').length, 1, 'only 1 br exists');
 });
 
-test('mediumInsert() wraps text content into paragraph', function () {
+test('wrapping text content into paragraph', function () {
     this.$el.html('text');
    
     this.$el.mediumInsert();
@@ -52,27 +72,19 @@ test('mediumInsert() wraps text content into paragraph', function () {
     equal(this.$el.find('p').length, 1, 'paragraph created');
 });
 
-test('mediumInsert() adss plugin\'s buttons to the $el', function () {   
+test('adding plugin\'s buttons to the $el', function () {   
     this.$el.mediumInsert();
    
     equal(this.$el.find('.mediumInsert-buttons').length, 1, 'buttons appended');
 });
 
-test('mediumInsert() shows plugin\'s buttons after clicking on empty paragraph', function () {
-    var el, range, sel;
-    
+test('showing plugin\'s buttons after clicking on empty paragraph', function () {    
     this.$el.html('<p id="paragraph">&nbsp;</p><p id="paragraph2" class="mediumInsert-active">test</p>');
     
     this.$el.mediumInsert();
     
     // Place caret at the beginning of #paragraph
-    el = document.getElementById("paragraph");
-    range = document.createRange();
-    sel = window.getSelection();
-    range.setStart(el.childNodes[0], 0);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
+    placeCaret(document.getElementById("paragraph"), 0);
     
     this.$el.find('#paragraph').click();
 
@@ -81,42 +93,26 @@ test('mediumInsert() shows plugin\'s buttons after clicking on empty paragraph',
     equal(this.$el.find('#paragraph2').hasClass('mediumInsert-active'), false, 'inactive paragraph does not have mediumInsert-active class');
 });
 
-test('mediumInsert() hides plugin\'s buttons after clicking on non-empty paragraph', function () {
-    var el, range, sel;
-    
+test('hiding plugin\'s buttons after clicking on non-empty paragraph', function () {    
     this.$el.html('<p>&nbsp;</p><p id="paragraph2">test</p>');
     
     this.$el.mediumInsert();
     
     // Place caret at the beginning of #paragraph
-    el = document.getElementById("paragraph2");
-    range = document.createRange();
-    sel = window.getSelection();
-    range.setStart(el.childNodes[0], 0);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
+    placeCaret(document.getElementById("paragraph2"), 0);
     
     this.$el.find('#paragraph2').click();
     
     equal(this.$el.find('.mediumInsert-buttons').css('display'), 'none', 'buttons are hidden');
 });
 
-test('mediumInsert() toggles addons buttons after clicking on show button', function () {
-    var el, range, sel;
-    
+test('toggling addons buttons after clicking on show button', function () {    
     this.$el.html('<p id="paragraph">&nbsp;</p><p>test</p>');
     
     this.$el.mediumInsert();
     
     // Place caret at the beginning of #paragraph
-    el = document.getElementById("paragraph");
-    range = document.createRange();
-    sel = window.getSelection();
-    range.setStart(el.childNodes[0], 0);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
+    placeCaret(document.getElementById("paragraph"), 0);
     
     this.$el.find('#paragraph').click();
     this.$el.find('.mediumInsert-buttonsShow').click();
@@ -128,13 +124,13 @@ test('mediumInsert() toggles addons buttons after clicking on show button', func
     equal(this.$el.find('.mediumInsert-buttonsOptions').css('display'), 'none', 'addons are hidden');
 });
 
-asyncTest('mediumInsert() calls addon\'s add function if addon\'s button is clicked', function () {
-    var addonInstance, el, range, sel;
+asyncTest('calling addon\'s add function if addon\'s button is clicked', function () {
+    var addonInstance;
         
     this.$el.html('<p id="paragraph">&nbsp;</p><p>test</p>');
         
     this.$el.mediumInsert();
-    addonInstance = this.$el.data('plugin_mediumInsert_addon_Images');
+    addonInstance = this.$el.data('plugin_mediumInsertImages');
     
     this.stub(addonInstance, 'add', function () {
         ok(1, 'add() called');
@@ -143,13 +139,7 @@ asyncTest('mediumInsert() calls addon\'s add function if addon\'s button is clic
     });
     
     // Place caret at the beginning of #paragraph
-    el = document.getElementById("paragraph");
-    range = document.createRange();
-    sel = window.getSelection();
-    range.setStart(el.childNodes[0], 0);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
+    placeCaret(document.getElementById("paragraph"), 0);
     
     this.$el.find('#paragraph').click();
     this.$el.find('.mediumInsert-buttonsShow').click();    

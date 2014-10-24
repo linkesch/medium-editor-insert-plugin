@@ -363,7 +363,7 @@
             addon = $a.data('addon'),
             action = $a.data('action');
 
-        this.$el.data('plugin_'+ pluginName +'_addon_'+ ucfirst(addon))[action](); 
+        this.$el.data('plugin_'+ pluginName + ucfirst(addon))[action](); 
     };
 
     /** Plugin initialization */
