@@ -38,6 +38,7 @@ test('selecting image', function () {
     this.$el.find('img').click();
     
     ok(this.$el.find('img').hasClass('mediumInsert-imageActive'), 'image is selected');
+    equal(this.$el.find('.mediumInsert-imageToolbar').length, 1, 'image toolbar added');
 });
 
 test('unselecting image', function () {
@@ -48,6 +49,7 @@ test('unselecting image', function () {
     this.$el.click();
     
     equal(this.$el.find('img').hasClass('mediumInsert-imageActive'), false, 'image is unselected');
+    equal(this.$el.find('.mediumInsert-imageToolbar').length, 0, 'image toolbar removed');
 });
 
 test('removing image', function () {

@@ -95,3 +95,12 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
   return "<progress min=\"0\" max=\"100\" value=\"0\">0</progress>";
   });
+
+this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"mediumInsert-imageToolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n        <li>\n            <button class=\"medium-editor-action\">\n                <span class=\"fa fa-align-justify\"></span>\n            </button>\n        </li>\n        <li>\n            <button class=\"medium-editor-action\">\n                <span class=\"fa fa-align-left\"></span>\n            </button>\n        </li>\n        <li>\n            <button class=\"medium-editor-action\">\n                <span class=\"fa fa-th\"></span>\n            </button>\n        </li>\n        <li>\n            <button class=\"medium-editor-action\">\n                <span class=\"fa fa-play\"></span>\n            </button>\n        </li>\n    </ul>\n</div>";
+  });

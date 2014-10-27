@@ -165,9 +165,20 @@
      */
     
     Images.prototype.selectImage = function (e) {
-        var $image = $(e.target);
+        var $image = $(e.target),
+            $toolbar;
         
         $image.addClass('mediumInsert-imageActive');
+        
+        this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']().trim());
+        $toolbar = this.$el.find('.mediumInsert-imageToolbar');
+        
+        $toolbar
+            .css({
+                top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
+                left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
+            })
+            .fadeIn();
     };
     
     /**
@@ -187,6 +198,8 @@
         }
 
         $image.removeClass('mediumInsert-imageActive');
+        
+        this.$el.find('.mediumInsert-imageToolbar').remove();
     };
     
     /**

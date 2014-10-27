@@ -96,3 +96,6 @@
 
 .mediumInsert-imageActive {
   outline: 2px solid #000; }
+
+.mediumInsert-imageToolbar {
+  display: none; }
