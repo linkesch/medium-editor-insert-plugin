@@ -7,15 +7,17 @@
  * Released under the MIT license
  */
 
-.mediumInsert-images figure {
-  margin: 0;
-  display: inline-block; }
-  .mediumInsert-images figure img {
-    max-width: 100%;
-    margin-top: 1em;
-    vertical-align: top; }
-  .mediumInsert-images figure:first-child img {
-    margin-top: 0; }
+.mediumInsert-images {
+  text-align: center; }
+  .mediumInsert-images figure {
+    margin: 0;
+    display: block; }
+    .mediumInsert-images figure img {
+      max-width: 100%;
+      margin-top: 1em;
+      vertical-align: top; }
+    .mediumInsert-images figure:first-child img {
+      margin-top: 0; }
 
 .medium-editor-insert-plugin .clearfix:before, .medium-editor-insert-plugin:before, .medium-editor-insert-plugin .clearfix:after, .medium-editor-insert-plugin:after {
   content: " ";
