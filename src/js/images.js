@@ -57,7 +57,8 @@
             .on('keydown', $.proxy(this, 'removeImage'));
         
         this.$el
-            .on('click', '.mediumInsert-images img', $.proxy(this, 'selectImage'));
+            .on('click', '.mediumInsert-images img', $.proxy(this, 'selectImage'))
+            .on('click', '.mediumInsert-imageToolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
     };
     
     /**
@@ -165,20 +166,11 @@
      */
     
     Images.prototype.selectImage = function (e) {
-        var $image = $(e.target),
-            $toolbar;
+        var $image = $(e.target);
         
         $image.addClass('mediumInsert-imageActive');
         
-        this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']().trim());
-        $toolbar = this.$el.find('.mediumInsert-imageToolbar');
-        
-        $toolbar
-            .css({
-                top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
-                left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
-            })
-            .fadeIn();
+        this.addToolbar();
     };
     
     /**
@@ -254,6 +246,68 @@
         if (this.options.deleteScript) {
             $.post(this.options.deleteScript, { file: file });
         }
+    };
+    
+    /**
+     * Adds image toolbar to editor
+     *
+     * @returns {void}
+     */
+    
+    Images.prototype.addToolbar = function () {
+        var $image = this.$el.find('.mediumInsert-imageActive'),
+            $p = $image.closest('.mediumInsert-images'),
+            active = false,
+            $toolbar;
+        
+        this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']().trim());
+        $toolbar = this.$el.find('.mediumInsert-imageToolbar');
+        
+        $toolbar
+            .css({
+                top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
+                left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
+            })
+            .fadeIn();
+            
+        $toolbar.find('button').each(function () {
+            if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {
+                $(this).addClass('medium-editor-button-active');
+                active = true;
+            } 
+        });
+        
+        if (active === false) {
+            $toolbar.find('button').first().addClass('medium-editor-button-active');
+        }
+    };
+
+    /**
+     * Fires toolbar action
+     * 
+     * @param {Event} e
+     * @returns {void}
+     */    
+    
+    Images.prototype.toolbarAction = function (e) {
+        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
+            $li = $button.closest('li'),
+            $ul = $li.closest('ul'),
+            $lis = $ul.find('li'),
+            $p = this.$el.find('.mediumInsert-active');
+
+        $button.addClass('medium-editor-button-active');
+        $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
+                
+        $lis.find('button').each(function () {
+            var className = 'medium-insert-images-'+ $(this).data('action');
+
+            if ($(this).hasClass('medium-editor-button-active')) {
+                $p.addClass(className);
+            } else {
+                $p.removeClass(className);
+            }
+        });
     };
     
 
