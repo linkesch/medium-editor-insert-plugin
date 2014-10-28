@@ -13,8 +13,11 @@
                 wide: { 
                     label: '<span class="fa fa-align-justify"></span>'
                 },
-                small: {
+                left: {
                     label: '<span class="fa fa-align-left"></span>'
+                },
+                right: {
+                    label: '<span class="fa fa-align-right"></span>'
                 },
                 grid: {
                     label: '<span class="fa fa-th"></span>'
@@ -316,7 +319,7 @@
 
         $button.addClass('medium-editor-button-active');
         $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
-                
+
         $lis.find('button').each(function () {
             var className = 'medium-insert-images-'+ $(this).data('action');
 

@@ -18,10 +18,14 @@
       vertical-align: top; }
     .mediumInsert-images figure:first-child img {
       margin-top: 0; }
-  .mediumInsert-images.medium-insert-images-small {
+  .mediumInsert-images.medium-insert-images-left {
     max-width: 33.33%;
     float: left;
     margin: 0 30px 20px 0; }
+  .mediumInsert-images.medium-insert-images-right {
+    max-width: 33.33%;
+    float: right;
+    margin: 0 0 20px 30px; }
   .mediumInsert-images.medium-insert-images-grid {
     margin: -0.5em; }
     .mediumInsert-images.medium-insert-images-grid figure {
