@@ -18,6 +18,18 @@
       vertical-align: top; }
     .mediumInsert-images figure:first-child img {
       margin-top: 0; }
+  .mediumInsert-images.medium-insert-images-small {
+    max-width: 33.33%;
+    float: left;
+    margin: 0 30px 20px 0; }
+  .mediumInsert-images.medium-insert-images-grid {
+    margin: -0.5em; }
+    .mediumInsert-images.medium-insert-images-grid figure {
+      width: 33.33%;
+      display: inline-block; }
+      .mediumInsert-images.medium-insert-images-grid figure img {
+        max-width: calc(100% - 1em);
+        margin: 0.5em; }
 
 .medium-editor-insert-plugin .clearfix:before, .medium-editor-insert-plugin:before, .medium-editor-insert-plugin .clearfix:after, .medium-editor-insert-plugin:after {
   content: " ";

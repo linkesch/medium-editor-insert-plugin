@@ -14,4 +14,20 @@
              }
          }
     }
+    &.medium-insert-images-small {
+        max-width: 33.33%;
+        float: left;
+        margin: 0 30px 20px 0;
+    }
+    &.medium-insert-images-grid {
+        margin: -0.5em;
+        figure {
+            width: 33.33%;
+            display: inline-block;
+            img {
+                max-width: calc(100% - 1em);
+                margin: 0.5em;
+            }
+        }
+    }
 }
