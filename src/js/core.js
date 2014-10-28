@@ -239,21 +239,12 @@
      */
 
     Core.prototype.getButtons = function () {
-        var addons = [];
-
         if (this.options.enabled === false) {
             return;
         }
 
-        $.each(this.options.addons, function (key, addon) {
-            addons.push({
-                name: key,
-                label: addon.label
-            });
-        });
-
         return this.templates['src/js/templates/core-buttons.hbs']({
-            addons: addons
+            addons: this.options.addons
         }).trim();
     };
     
