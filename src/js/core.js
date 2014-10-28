@@ -77,8 +77,6 @@
 
     Core.prototype.events = function () {
         this.$el
-            // Prevent dragging and dropping things into text,
-            // implicitely allow dropping only into plugin's placeholder
             .on('dragover drop', 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote', function (e) {
                 e.preventDefault();
             })
@@ -273,9 +271,7 @@
             $current = $(range.commonAncestorContainer),
             $buttons = this.$el.find('.mediumInsert-buttons'),
             isAddon = false,
-            $p;
-
-        $current = $current.is('br') ? $current.parent() : $current;
+            $p = $current.is('p') ? $current : $current.closest('p');
 
         if ($current.closest('.mediumInsert-buttons').length === 0) {
             this.clean();
@@ -285,18 +281,20 @@
             $.each(this.options.addons, function (key) {
                 if ($el.closest('.mediumInsert-'+ key).length === 1) {
                     $current = $el;
+                    $p = $current.closest('p');
                     isAddon = true;
                     return;
-                } 
+                }  
             });
 
-            if ($current.text().trim() === '') {
-                $p = $current.closest('p');
-                $p.addClass('mediumInsert-active');
-                
+            if ($p.text().trim() === '') { 
+                $p.addClass('mediumInsert-active');               
                 $buttons.removeClass('mediumInsert-buttons-vertical');
+                
+                // Left position is set according to parent paragraph
+                // Top position is set according to current active element
                 $buttons.css({
-                    left: $current.offset().left - parseInt($buttons.find('.mediumInsert-buttonsOptions').css('left'), 10) - parseInt($buttons.find('.mediumInsert-buttonsOptions a:first').css('margin-left'), 10),
+                    left: $p.offset().left - parseInt($buttons.find('.mediumInsert-buttonsOptions').css('left'), 10) - parseInt($buttons.find('.mediumInsert-buttonsOptions a:first').css('margin-left'), 10),
                     top: $current.offset().top
                 });
                 
