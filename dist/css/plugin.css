@@ -80,8 +80,7 @@
     position: absolute;
     z-index: 2;
     left: 55px;
-    top: -5px;
-    width: 300px; }
+    top: -5px; }
     .medium-editor-insert-plugin .mediumInsert-buttons ul.mediumInsert-buttonsOptions li {
       float: left; }
       .medium-editor-insert-plugin .mediumInsert-buttons ul.mediumInsert-buttonsOptions li a {
