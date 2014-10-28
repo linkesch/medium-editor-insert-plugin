@@ -36,10 +36,8 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n            <li><a data-addon=\"";
-  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
+  buffer += "\n            <li><a data-addon=\""
+    + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" data-action=\"add\" class=\"mediumInsert-action\">";
   if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.label); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
@@ -99,8 +97,23 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\n            <li>\n                <button class=\"medium-editor-action\" data-action=\""
+    + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">";
+  stack1 = (typeof depth0 === functionType ? depth0.apply(depth0) : depth0);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</button>\n            </li>\n        ";
+  return buffer;
+  }
 
-
-  return "<div class=\"mediumInsert-imageToolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n        <li>\n            <button class=\"medium-editor-action\" data-action=\"wide\">\n                <span class=\"fa fa-align-justify\"></span>\n            </button>\n        </li>\n        <li>\n            <button class=\"medium-editor-action\" data-action=\"small\">\n                <span class=\"fa fa-align-left\"></span>\n            </button>\n        </li>\n        <li>\n            <button class=\"medium-editor-action\" data-action=\"grid\">\n                <span class=\"fa fa-th\"></span>\n            </button>\n        </li>\n        <li>\n            <button class=\"medium-editor-action\" data-action=\"slideshow\">\n                <span class=\"fa fa-play\"></span>\n            </button>\n        </li>\n    </ul>\n</div>";
+  buffer += "<div class=\"mediumInsert-imageToolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n        ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.styles), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n    </ul>\n</div>";
+  return buffer;
   });

@@ -1,24 +1,9 @@
 <div class="mediumInsert-imageToolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active">
     <ul class="medium-editor-toolbar-actions clearfix">
-        <li>
-            <button class="medium-editor-action" data-action="wide">
-                <span class="fa fa-align-justify"></span>
-            </button>
-        </li>
-        <li>
-            <button class="medium-editor-action" data-action="small">
-                <span class="fa fa-align-left"></span>
-            </button>
-        </li>
-        <li>
-            <button class="medium-editor-action" data-action="grid">
-                <span class="fa fa-th"></span>
-            </button>
-        </li>
-        <li>
-            <button class="medium-editor-action" data-action="slideshow">
-                <span class="fa fa-play"></span>
-            </button>
-        </li>
+        {{#each styles}}
+            <li>
+                <button class="medium-editor-action" data-action="{{@key}}">{{{this}}}</button>
+            </li>
+        {{/each}}
     </ul>
 </div>

@@ -8,7 +8,13 @@
         defaults = {
             label: '<span class="fa fa-camera"></span>',
             uploadScript: 'upload.php',
-            deleteScript: 'delete.php'
+            deleteScript: 'delete.php',
+            styles: {
+                wide: '<span class="fa fa-align-justify"></span>',
+                small: '<span class="fa fa-align-left"></span>',
+                grid: '<span class="fa fa-th"></span>',
+                slideshow: '<span class="fa fa-play"></span>'
+            }
         };
 
     /**
@@ -260,7 +266,9 @@
             active = false,
             $toolbar;
         
-        this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']().trim());
+        this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']({
+            styles: this.options.styles
+        }).trim());
         $toolbar = this.$el.find('.mediumInsert-imageToolbar');
         
         $toolbar
