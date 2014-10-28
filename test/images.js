@@ -92,3 +92,17 @@ asyncTest('deleting file', function () {
 
     this.$el.trigger($event);
 });
+
+test('choosing image style', function () {
+    var $p = this.$el.find('p')
+        .append('<div class="mediumInsert-images">'+
+            '<figure><img src="image1.jpg" alt=""></figure>'+
+        '</div>')
+        .addClass('medium-insert-images-small');
+
+    $p.find('img').click();
+    this.$el.find('.mediumInsert-imageToolbar .medium-editor-action').first().click();
+
+    ok($p.hasClass('medium-insert-images-wide'), 'image style added');
+    equal($p.hasClass('medium-insert-images-small'), false, 'old style removed');
+});
