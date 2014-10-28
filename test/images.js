@@ -2,6 +2,8 @@
 
 module('images', {
     setup: function () {
+        this.clock = sinon.useFakeTimers();
+        
         $('#qunit-fixture').html('<div class="editable"></div>');
         this.$el = $('.editable');
         this.$el.mediumInsert();
@@ -9,6 +11,9 @@ module('images', {
         
         // Place caret into first paragraph 
         placeCaret(this.$el.find('p').get(0), 0);
+    },
+    teardown: function () {
+        this.clock.restore();
     }
 });
 
@@ -36,6 +41,7 @@ test('selecting image', function () {
     '</div>');
 
     this.$el.find('img').click();
+    this.clock.tick(50);
     
     ok(this.$el.find('img').hasClass('mediumInsert-imageActive'), 'image is selected');
     equal(this.$el.find('.mediumInsert-imageToolbar').length, 1, 'image toolbar added');
@@ -98,13 +104,15 @@ test('choosing image style', function () {
         .append('<div class="mediumInsert-images">'+
             '<figure><img src="image1.jpg" alt=""></figure>'+
         '</div>')
-        .addClass('medium-insert-images-small');
+        .addClass('medium-insert-images-left');
 
     $p.find('img').click();
+    this.clock.tick(50);
+    
     this.$el.find('.mediumInsert-imageToolbar .medium-editor-action').first().click();
 
     ok($p.hasClass('medium-insert-images-wide'), 'image style added');
-    equal($p.hasClass('medium-insert-images-small'), false, 'old style removed');
+    equal($p.hasClass('medium-insert-images-left'), false, 'old style removed');
 });
 
 asyncTest('choosing image style calls callback function', function () {  
@@ -134,5 +142,7 @@ asyncTest('choosing image style calls callback function', function () {
     placeCaret(this.$el.find('p').get(0), 0);
 
     this.$el.find('img').click();
+    this.clock.tick(50);
+    
     this.$el.find('.mediumInsert-imageToolbar .medium-editor-action').first().click();
 });
