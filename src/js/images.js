@@ -177,11 +177,14 @@
      */
     
     Images.prototype.selectImage = function (e) {
-        var $image = $(e.target);
+        var $image = $(e.target),
+            that = this;
         
         $image.addClass('mediumInsert-imageActive');
         
-        this.addToolbar();
+        setTimeout(function () {
+            that.addToolbar();
+        }, 50);
     };
     
     /**
@@ -197,6 +200,7 @@
         
         if ($el.is('img') && $el.hasClass('mediumInsert-imageActive')) {
             $image.not($el).removeClass('mediumInsert-imageActive');
+            this.$el.find('.mediumInsert-imageToolbar').remove();
             return;
         }
 
@@ -270,12 +274,12 @@
             $p = $image.closest('.mediumInsert-images'),
             active = false,
             $toolbar;
-        
+
         this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles
         }).trim());
         $toolbar = this.$el.find('.mediumInsert-imageToolbar');
-        
+
         $toolbar
             .css({
                 top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
