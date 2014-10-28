@@ -106,3 +106,33 @@ test('choosing image style', function () {
     ok($p.hasClass('medium-insert-images-wide'), 'image style added');
     equal($p.hasClass('medium-insert-images-small'), false, 'old style removed');
 });
+
+asyncTest('choosing image style calls callback function', function () {  
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+      
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                styles: {
+                    wide: {
+                        added: function () {
+                            ok(1, 'callback function called');
+                            start();
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    this.$el.find('p').append('<div class="mediumInsert-images">'+
+            '<figure><img src="image1.jpg" alt=""></figure>'+
+        '</div>');
+        
+    // Place caret into first paragraph 
+    placeCaret(this.$el.find('p').get(0), 0);
+
+    this.$el.find('img').click();
+    this.$el.find('.mediumInsert-imageToolbar .medium-editor-action').first().click();
+});
