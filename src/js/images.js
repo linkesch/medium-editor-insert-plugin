@@ -10,10 +10,15 @@
             uploadScript: 'upload.php',
             deleteScript: 'delete.php',
             styles: {
-                wide: '<span class="fa fa-align-justify"></span>',
-                small: '<span class="fa fa-align-left"></span>',
-                grid: '<span class="fa fa-th"></span>',
-                slideshow: '<span class="fa fa-play"></span>'
+                wide: { 
+                    label: '<span class="fa fa-align-justify"></span>'
+                },
+                small: {
+                    label: '<span class="fa fa-align-left"></span>'
+                },
+                grid: {
+                    label: '<span class="fa fa-th"></span>'
+                }
             }
         };
 
@@ -33,7 +38,7 @@
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
 
-        this.options = $.extend({}, defaults, options) ;
+        this.options = $.extend(true, {}, defaults, options) ;
 
         this._defaults = defaults;
         this._name = pluginName;
@@ -302,7 +307,8 @@
             $li = $button.closest('li'),
             $ul = $li.closest('ul'),
             $lis = $ul.find('li'),
-            $p = this.$el.find('.mediumInsert-active');
+            $p = this.$el.find('.mediumInsert-active'),
+            that = this;
 
         $button.addClass('medium-editor-button-active');
         $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
@@ -312,8 +318,16 @@
 
             if ($(this).hasClass('medium-editor-button-active')) {
                 $p.addClass(className);
+                
+                if (that.options.styles[$(this).data('action')].added) {
+                    that.options.styles[$(this).data('action')].added($p);
+                }
             } else {
                 $p.removeClass(className);
+                
+                if (that.options.styles[$(this).data('action')].removed) {
+                    that.options.styles[$(this).data('action')].removed($p);
+                }
             }
         });
     };

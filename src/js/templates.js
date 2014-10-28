@@ -102,12 +102,22 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n            <li>\n                <button class=\"medium-editor-action\" data-action=\""
+  buffer += "\n            ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.label), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n        ";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n                <li>\n                    <button class=\"medium-editor-action\" data-action=\""
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">";
-  stack1 = (typeof depth0 === functionType ? depth0.apply(depth0) : depth0);
+  if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.label); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "</button>\n            </li>\n        ";
+  buffer += "</button>\n                </li>\n            ";
   return buffer;
   }
 

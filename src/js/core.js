@@ -42,7 +42,7 @@
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
 
-        this.options = $.extend({}, defaults, options) ;
+        this.options = $.extend(true, {}, defaults, options);
 
         this._defaults = defaults;
         this._name = pluginName;
