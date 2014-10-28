@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="../bower_components/medium-editor/dist/css/themes/default.css" id="medium-editor-theme">
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="../dist/css/plugin.min.css">
+    
+    <style>
+        .medium-insert-images-slideshow figure img {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="top-bar">
@@ -41,6 +47,7 @@
     <script src="../bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
     <script src="../bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
     <script src="../bower_components/handlebars/handlebars.runtime.min.js"></script>
+    <script src="../bower_components/jquery-cycle2/build/jquery.cycle2.min.js"></script>
     <script src="../src/js/templates.js"></script>
     <script src="../src/js/core.js"></script>
     <script src="../src/js/images.js"></script>
@@ -52,7 +59,24 @@
         
         $(function () {
             $('.editable').mediumInsert({
-                editor: editor
+                editor: editor,
+                addons: {
+                    images: {
+                        styles: {
+                            slideshow: {
+                                label: '<span class="fa fa-play"></span>',
+                                added: function ($el) {
+                                    $el.cycle({
+                                        slides: 'figure'
+                                    });
+                                },
+                                removed: function ($el) {
+                                    $el.cycle('destroy');
+                                }
+                            }
+                        }
+                    }
+                }
             });
         });
         
