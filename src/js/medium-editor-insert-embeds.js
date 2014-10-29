@@ -65,7 +65,9 @@
     preparePreviousEmbeds: function () {
       this.$el.find('.mediumInsert-embeds').each(function() {
         var $parent = $(this).parent();
-        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        if (!$parent.hasClass('mediumInsert-placeholder')) {
+          $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        }
       });
     },
 
