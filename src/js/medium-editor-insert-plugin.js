@@ -75,7 +75,8 @@
           this.elements[i].removeAttribute('contentEditable');
         }
 
-        $.fn.mediumInsert.insert.$el.mediumInsert('disable');
+        if ($.fn.mediumInsert.insert.$el)
+          $.fn.mediumInsert.insert.$el.mediumInsert('disable');
       };
 
       /**
@@ -100,7 +101,8 @@
         }
         this.bindSelect();
 
-        $.fn.mediumInsert.insert.$el.mediumInsert('enable');
+        if ($.fn.mediumInsert.insert.$el)
+          $.fn.mediumInsert.insert.$el.mediumInsert('enable');
       };
   }
 
