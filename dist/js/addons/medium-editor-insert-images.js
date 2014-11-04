@@ -147,9 +147,11 @@
     preparePreviousImages: function () {
       this.$el.find('.mediumInsert-images').each(function() {
         var $parent = $(this).parent();
-        $parent.html($.fn.mediumInsert.insert.getButtons('images') +
-          '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
-        );
+        if (!$parent.hasClass('mediumInsert-placeholder')) {
+          $parent.html($.fn.mediumInsert.insert.getButtons('images') +
+            '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
+          );
+        }
       });
     },
 

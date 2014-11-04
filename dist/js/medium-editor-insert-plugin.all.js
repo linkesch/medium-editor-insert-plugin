@@ -84,7 +84,8 @@
           this.elements[i].removeAttribute('contentEditable');
         }
 
-        $.fn.mediumInsert.insert.$el.mediumInsert('disable');
+        if ($.fn.mediumInsert.insert.$el)
+          $.fn.mediumInsert.insert.$el.mediumInsert('disable');
       };
 
       /**
@@ -109,7 +110,8 @@
         }
         this.bindSelect();
 
-        $.fn.mediumInsert.insert.$el.mediumInsert('enable');
+        if ($.fn.mediumInsert.insert.$el)
+          $.fn.mediumInsert.insert.$el.mediumInsert('enable');
       };
   }
 
@@ -560,7 +562,9 @@
     preparePreviousEmbeds: function () {
       this.$el.find('.mediumInsert-embeds').each(function() {
         var $parent = $(this).parent();
-        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        if (!$parent.hasClass('mediumInsert-placeholder')) {
+          $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        }
       });
     },
 
@@ -820,9 +824,11 @@
     preparePreviousImages: function () {
       this.$el.find('.mediumInsert-images').each(function() {
         var $parent = $(this).parent();
-        $parent.html($.fn.mediumInsert.insert.getButtons('images') +
-          '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
-        );
+        if (!$parent.hasClass('mediumInsert-placeholder')) {
+          $parent.html($.fn.mediumInsert.insert.getButtons('images') +
+            '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
+          );
+        }
       });
     },
 
