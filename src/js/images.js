@@ -71,8 +71,8 @@
             .on('keydown', $.proxy(this, 'removeImage'));
         
         this.$el
-            .on('click', '.mediumInsert-images img', $.proxy(this, 'selectImage'))
-            .on('click', '.mediumInsert-imageToolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+            .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'))
+            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
     };
     
     /**
@@ -112,8 +112,8 @@
      */
     
     Images.prototype.uploadAdd = function (e, data) {
-        if (this.$el.find('.mediumInsert-active progress').length === 0) {
-            this.$el.find('.mediumInsert-active').append(this.templates['src/js/templates/images-progressbar.hbs']());
+        if (this.$el.find('.medium-insert-active progress').length === 0) {
+            this.$el.find('.medium-insert-active').append(this.templates['src/js/templates/images-progressbar.hbs']());
         }
 
         if (data.autoUpload || (data.autoUpload !== false && $(e.target).fileupload('option', 'autoUpload'))) {
@@ -134,7 +134,7 @@
     
     Images.prototype.uploadProgressall = function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10),
-            $progressbar = this.$el.find('.mediumInsert-active progress');
+            $progressbar = this.$el.find('.medium-insert-active progress');
 
         $progressbar
             .attr('value', progress)
@@ -156,14 +156,14 @@
     
     Images.prototype.uploadDone = function (e, data) {
         var that = this,
-            $place = this.$el.find('.mediumInsert-active');
+            $place = this.$el.find('.medium-insert-active');
 
         $place
-            .addClass('mediumInsert-images')
+            .addClass('medium-insert-images')
             .find('br')
             .remove();
         
-        this.$el.find('.mediumInsert-buttons').addClass('mediumInsert-buttons-vertical');
+        this.$el.find('.medium-insert-buttons').addClass('medium-insert-buttons-vertical');
             
         $.each(data.result.files, function (index, file) {
             $place.append(that.templates['src/js/templates/images-image.hbs']({
@@ -183,7 +183,7 @@
         var $image = $(e.target),
             that = this;
         
-        $image.addClass('mediumInsert-imageActive');
+        $image.addClass('medium-insert-image-active');
         
         setTimeout(function () {
             that.addToolbar();
@@ -199,17 +199,17 @@
     
     Images.prototype.unselectImage = function (e) {
         var $el = $(e.target),
-            $image = this.$el.find('.mediumInsert-imageActive');
+            $image = this.$el.find('.medium-insert-image-active');
         
-        if ($el.is('img') && $el.hasClass('mediumInsert-imageActive')) {
-            $image.not($el).removeClass('mediumInsert-imageActive');
-            this.$el.find('.mediumInsert-imageToolbar').remove();
+        if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
+            $image.not($el).removeClass('medium-insert-image-active');
+            this.$el.find('.medium-insert-images-toolbar').remove();
             return;
         }
 
-        $image.removeClass('mediumInsert-imageActive');
+        $image.removeClass('medium-insert-image-active');
         
-        this.$el.find('.mediumInsert-imageToolbar').remove();
+        this.$el.find('.medium-insert-images-toolbar').remove();
     };
     
     /**
@@ -223,14 +223,14 @@
         var $image, $parent, $empty, range, sel;
 
         if (e.keyCode === 8 || e.keyCode === 46) {
-            $image = this.$el.find('.mediumInsert-imageActive');
+            $image = this.$el.find('.medium-insert-image-active');
             
             if ($image.length) {
                 e.preventDefault();
                 
                 this.deleteFile($image.attr('src'));
             
-                $parent = $image.closest('.mediumInsert-images');
+                $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
                 
                 if ($parent.find('figure').length === 0) {
@@ -273,15 +273,15 @@
      */
     
     Images.prototype.addToolbar = function () {
-        var $image = this.$el.find('.mediumInsert-imageActive'),
-            $p = $image.closest('.mediumInsert-images'),
+        var $image = this.$el.find('.medium-insert-image-active'),
+            $p = $image.closest('.medium-insert-images'),
             active = false,
             $toolbar;
 
         this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles
         }).trim());
-        $toolbar = this.$el.find('.mediumInsert-imageToolbar');
+        $toolbar = this.$el.find('.medium-insert-images-toolbar');
 
         $toolbar
             .css({
@@ -314,7 +314,7 @@
             $li = $button.closest('li'),
             $ul = $li.closest('ul'),
             $lis = $ul.find('li'),
-            $p = this.$el.find('.mediumInsert-active'),
+            $p = this.$el.find('.medium-insert-active'),
             that = this;
 
         $button.addClass('medium-editor-button-active');

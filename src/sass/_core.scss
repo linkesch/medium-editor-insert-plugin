@@ -33,7 +33,7 @@
         display: none !important;
     }
     
-    .mediumInsert-buttons {
+    .medium-insert-buttons {
         position: absolute;
         color: #ddd;
         font-size: 0.9em;
@@ -42,7 +42,7 @@
             cursor: pointer;
         }
         
-        .mediumInsert-buttonsShow {
+        .medium-insert-buttons-show {
             display: block;
             width: 30px;
             height: 30px;
@@ -55,7 +55,7 @@
             text-decoration: none !important;
         }
         
-        ul.mediumInsert-buttonsOptions {
+        .medium-insert-buttons-addons {
             margin: 0;
             padding: 0;
             list-style: none;
@@ -84,8 +84,8 @@
             }
         }
         
-        &.mediumInsert-buttons-vertical {
-            ul.mediumInsert-buttonsOptions {
+        &.medium-insert-buttons-vertical {
+            ul.medium-insert-buttons-addons {
                 top: 50px;
                 left: 0;
                 li {

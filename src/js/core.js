@@ -82,10 +82,10 @@
             })
             .on('blur', $.proxy(this, 'addEditorPlaceholder'))
             .on('keyup click', $.proxy(this, 'showButtons'))
-            .on('selectstart mousedown', '.mediumInsert, .mediumInsert-buttons', $.proxy(this, 'disableSelection'))
+            .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
             .on('keydown', $.proxy(this, 'fixSelectAll'))
-            .on('click', '.mediumInsert-buttonsShow', $.proxy(this, 'toggleAddons'))
-            .on('click', '.mediumInsert-action', $.proxy(this, 'addonAction'));
+            .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
+            .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
     };
 
     /**
@@ -107,7 +107,7 @@
     Core.prototype.disable = function () {
         this.options.enabled = false;
 
-        this.$el.find('.mediumInsert-buttons').addClass('hide');
+        this.$el.find('.medium-insert-buttons').addClass('hide');
     };
 
     /**
@@ -119,7 +119,7 @@
     Core.prototype.enable = function () {
         this.settings.enabled = true;
 
-        this.$el.find('.mediumInsert-buttons').removeClass('hide');
+        this.$el.find('.medium-insert-buttons').removeClass('hide');
     };
 
     /**
@@ -131,7 +131,7 @@
     Core.prototype.disableSelection = function (e) {
         var $el = $(e.target);
         
-        if ($el.is('img') === false || $el.hasClass('mediumInsert-buttonsShow')) {
+        if ($el.is('img') === false || $el.hasClass('medium-insert-buttons-show')) {
             e.preventDefault();
         }
     };
@@ -170,7 +170,7 @@
         var $clone = this.$el.clone(),
             cloneHtml;
 
-        $clone.find('.mediumInsert').remove();
+        $clone.find('.medium-insert').remove();
         cloneHtml = $clone.html().replace(/^\s+|\s+$/g, '');
 
         if (cloneHtml === '' || cloneHtml === '<p><br></p>') {
@@ -222,12 +222,12 @@
             .wrap('<p />');
 
         // If last element is non-empty placeholder, add one empty line at the end to force placeholder to appear
-        if ($lastChild.hasClass('mediumInsert') && $lastChild.find('.mediumInsert-placeholder').children().length > 0) {
+        if ($lastChild.hasClass('medium-insert') && $lastChild.find('.medium-insert-placeholder').children().length > 0) {
             this.$el.append(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
         // Fix not deleting placeholder in Firefox by removing all empty placeholders
-        this.$el.find('.mediumInsert-placeholder:empty').each(function () {
+        this.$el.find('.medium-insert-placeholder:empty').each(function () {
             $(this).parent().remove();
         });
     };
@@ -271,36 +271,36 @@
             selection = window.getSelection(),
             range = selection.getRangeAt(0),
             $current = $(range.commonAncestorContainer),
-            $buttons = this.$el.find('.mediumInsert-buttons'),
+            $buttons = this.$el.find('.medium-insert-buttons'),
             isAddon = false,
             $p = $current.is('p') ? $current : $current.closest('p');
 
-        if ($el.closest('.mediumInsert-buttons').length === 0 && $current.closest('.mediumInsert-buttons').length === 0) {
+        if ($el.closest('.medium-insert-buttons').length === 0 && $current.closest('.medium-insert-buttons').length === 0) {
 
-            this.$el.find('.mediumInsert-active').removeClass('mediumInsert-active');
+            this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
             $.each(this.options.addons, function (addon) {
-                if ($el.closest('.mediumInsert-'+ addon).length) {
+                if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
-                    $p = $el.closest('.mediumInsert-'+ addon);
+                    $p = $el.closest('.medium-insert-'+ addon);
                     isAddon = true;
                     return;
                 }
             });
 
             if ($p.text().trim() === '') { 
-                $p.addClass('mediumInsert-active');               
-                $buttons.removeClass('mediumInsert-buttons-vertical');
+                $p.addClass('medium-insert-active');               
+                $buttons.removeClass('medium-insert-buttons-vertical');
 
                 // Left position is set according to parent paragraph
                 // Top position is set according to current active element
                 $buttons.css({
-                    left: $p.offset().left - parseInt($buttons.find('.mediumInsert-buttonsOptions').css('left'), 10) - parseInt($buttons.find('.mediumInsert-buttonsOptions a:first').css('margin-left'), 10),
+                    left: $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10),
                     top: $current.offset().top
                 });
                 
                 if (isAddon) {
-                    $buttons.addClass('mediumInsert-buttons-vertical');
+                    $buttons.addClass('medium-insert-buttons-vertical');
                 }
                 
                 $buttons.show();
@@ -317,8 +317,8 @@
      */
     
     Core.prototype.hideButtons = function () {
-        this.$el.find('.mediumInsert-buttons').hide();
-        this.$el.find('.mediumInsert-buttonsOptions').hide();
+        this.$el.find('.medium-insert-buttons').hide();
+        this.$el.find('.medium-insert-buttons-addons').hide();
     };
     
     /**
@@ -328,7 +328,7 @@
      */
     
     Core.prototype.toggleAddons = function () {
-        this.$el.find('.mediumInsert-buttonsOptions').toggle();
+        this.$el.find('.medium-insert-buttons-addons').toggle();
     };
     
     /**
@@ -338,7 +338,7 @@
      */
     
     Core.prototype.hideAddons = function () {
-        this.$el.find('.mediumInsert-buttonsOptions').hide();
+        this.$el.find('.medium-insert-buttons-addons').hide();
     };
     
     /**

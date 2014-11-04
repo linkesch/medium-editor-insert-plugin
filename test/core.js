@@ -75,11 +75,11 @@ test('wrapping text content into paragraph', function () {
 test('adding plugin\'s buttons to the $el', function () {   
     this.$el.mediumInsert();
    
-    equal(this.$el.find('.mediumInsert-buttons').length, 1, 'buttons appended');
+    equal(this.$el.find('.medium-insert-buttons').length, 1, 'buttons appended');
 });
 
 test('showing plugin\'s buttons after clicking on empty paragraph', function () {    
-    this.$el.html('<p id="paragraph">&nbsp;</p><p id="paragraph2" class="mediumInsert-active">test</p>');
+    this.$el.html('<p id="paragraph">&nbsp;</p><p id="paragraph2" class="medium-insert-active">test</p>');
     
     this.$el.mediumInsert();
     
@@ -88,9 +88,9 @@ test('showing plugin\'s buttons after clicking on empty paragraph', function () 
     
     this.$el.find('#paragraph').click();
 
-    equal(this.$el.find('.mediumInsert-buttons').css('display'), 'block', 'buttons are visible');
-    ok(this.$el.find('#paragraph').hasClass('mediumInsert-active'), 'active paragraph has mediumInsert-active class');
-    equal(this.$el.find('#paragraph2').hasClass('mediumInsert-active'), false, 'inactive paragraph does not have mediumInsert-active class');
+    equal(this.$el.find('.medium-insert-buttons').css('display'), 'block', 'buttons are visible');
+    ok(this.$el.find('#paragraph').hasClass('medium-insert-active'), 'active paragraph has medium-insert-active class');
+    equal(this.$el.find('#paragraph2').hasClass('medium-insert-active'), false, 'inactive paragraph does not have medium-insert-active class');
 });
 
 test('hiding plugin\'s buttons after clicking on non-empty paragraph', function () {    
@@ -103,7 +103,7 @@ test('hiding plugin\'s buttons after clicking on non-empty paragraph', function 
     
     this.$el.find('#paragraph2').click();
     
-    equal(this.$el.find('.mediumInsert-buttons').css('display'), 'none', 'buttons are hidden');
+    equal(this.$el.find('.medium-insert-buttons').css('display'), 'none', 'buttons are hidden');
 });
 
 test('toggling addons buttons after clicking on show button', function () {    
@@ -115,13 +115,13 @@ test('toggling addons buttons after clicking on show button', function () {
     placeCaret(document.getElementById("paragraph"), 0);
     
     this.$el.find('#paragraph').click();
-    this.$el.find('.mediumInsert-buttonsShow').click();
+    this.$el.find('.medium-insert-buttons-show').click();
 
-    equal(this.$el.find('.mediumInsert-buttonsOptions').css('display'), 'block', 'addons are visible');
+    equal(this.$el.find('.medium-insert-buttons-addons').css('display'), 'block', 'addons are visible');
     
-    this.$el.find('.mediumInsert-buttonsShow').click();
+    this.$el.find('.medium-insert-buttons-show').click();
 
-    equal(this.$el.find('.mediumInsert-buttonsOptions').css('display'), 'none', 'addons are hidden');
+    equal(this.$el.find('.medium-insert-buttons-addons').css('display'), 'none', 'addons are hidden');
 });
 
 asyncTest('calling addon\'s add function if addon\'s button is clicked', function () {
@@ -142,6 +142,6 @@ asyncTest('calling addon\'s add function if addon\'s button is clicked', functio
     placeCaret(document.getElementById("paragraph"), 0);
     
     this.$el.find('#paragraph').click();
-    this.$el.find('.mediumInsert-buttonsShow').click();    
-    this.$el.find('.mediumInsert-action').click();
+    this.$el.find('.medium-insert-buttons-show').click();    
+    this.$el.find('.medium-insert-action').click();
 });
