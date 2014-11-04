@@ -275,17 +275,17 @@
             isAddon = false,
             $p = $current.is('p') ? $current : $current.closest('p');
 
-        if ($p.length && $current.closest('.mediumInsert-buttons').length === 0) {
-                        
+        if ($el.closest('.mediumInsert-buttons').length === 0 && $current.closest('.mediumInsert-buttons').length === 0) {
+
             this.$el.find('.mediumInsert-active').removeClass('mediumInsert-active');
 
-            $.each(this.options.addons, function (key) {
-                if ($el.closest('.mediumInsert-'+ key).length === 1) {
+            $.each(this.options.addons, function (addon) {
+                if ($el.closest('.mediumInsert-'+ addon).length) {
                     $current = $el;
-                    $p = $current.closest('p');
+                    $p = $el.closest('.mediumInsert-'+ addon);
                     isAddon = true;
                     return;
-                }  
+                }
             });
 
             if ($p.text().trim() === '') { 
