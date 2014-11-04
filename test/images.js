@@ -36,9 +36,9 @@ test('image done uploading', function () {
 });
 
 test('selecting image', function () {
-    this.$el.find('p').append('<div class="mediumInsert-images">'+
-        '<figure><img src="image1.jpg" alt=""></figure>'+
-    '</div>');
+    this.$el.find('p')
+        .addClass('mediumInsert-images')
+        .append('<figure><img src="image1.jpg" alt=""></figure>');
 
     this.$el.find('img').click();
     this.clock.tick(50);
@@ -48,9 +48,9 @@ test('selecting image', function () {
 });
 
 test('unselecting image', function () {
-    this.$el.find('p').append('<div class="mediumInsert-images">'+
-        '<figure><img src="image1.jpg" alt="" class="mediumInsert-imageActive"></figure>'+
-    '</div>');
+    this.$el.find('p')
+        .addClass('mediumInsert-images')
+        .append('<figure><img src="image1.jpg" alt="" class="mediumInsert-imageActive"></figure>');
 
     this.$el.click();
     
@@ -63,10 +63,10 @@ test('removing image', function () {
     
     $event.keyCode = 8;
 
-    this.$el.find('p').append('<div class="mediumInsert-images">'+
-        '<figure><img src="image1.jpg" alt=""></figure>'+
-        '<figure><img src="image2.jpg" alt="" class="mediumInsert-imageActive"></figure>'+
-    '</div>');
+    this.$el.find('p')
+        .addClass('mediumInsert-images')
+        .append('<figure><img src="image1.jpg" alt=""></figure>'+
+            '<figure><img src="image2.jpg" alt="" class="mediumInsert-imageActive"></figure>');
 
     this.$el.trigger($event);
     
@@ -85,10 +85,10 @@ asyncTest('deleting file', function () {
     
     $event.keyCode = 8;
 
-    this.$el.find('p').append('<div class="mediumInsert-images">'+
-        '<figure><img src="image1.jpg" alt=""></figure>'+
-        '<figure><img src="image2.jpg" alt="" class="mediumInsert-imageActive"></figure>'+
-    '</div>');
+    this.$el.find('p')
+        .addClass('mediumInsert-images')
+        .append('<figure><img src="image1.jpg" alt=""></figure>'+
+            '<figure><img src="image2.jpg" alt="" class="mediumInsert-imageActive"></figure>');
 
     this.stub(jQuery, 'post', function () {
        ok(1, 'ajax call created');
@@ -101,14 +101,12 @@ asyncTest('deleting file', function () {
 
 test('choosing image style', function () {
     var $p = this.$el.find('p')
-        .append('<div class="mediumInsert-images">'+
-            '<figure><img src="image1.jpg" alt=""></figure>'+
-        '</div>')
-        .addClass('medium-insert-images-left');
-
+        .attr('class', 'mediumInsert-images mediumInsert-active medium-insert-images-left')
+        .append('<figure><img src="image1.jpg" alt=""></figure>');
+        
     $p.find('img').click();
     this.clock.tick(50);
-    
+
     this.$el.find('.mediumInsert-imageToolbar .medium-editor-action').first().click();
 
     ok($p.hasClass('medium-insert-images-wide'), 'image style added');
@@ -134,9 +132,9 @@ asyncTest('choosing image style calls callback function', function () {
         }
     });
     
-    this.$el.find('p').append('<div class="mediumInsert-images">'+
-            '<figure><img src="image1.jpg" alt=""></figure>'+
-        '</div>');
+    this.$el.find('p')
+        .addClass('mediumInsert-images')
+        .append('<figure><img src="image1.jpg" alt=""></figure>');
         
     // Place caret into first paragraph 
     placeCaret(this.$el.find('p').get(0), 0);
