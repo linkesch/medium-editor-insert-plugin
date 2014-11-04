@@ -82,7 +82,7 @@
             })
             .on('blur', $.proxy(this, 'addEditorPlaceholder'))
             .on('keyup click', $.proxy(this, 'showButtons'))
-            .on('selectstart mousedown', '.mediumInsert', $.proxy(this, 'disableSelection'))
+            .on('selectstart mousedown', '.mediumInsert, .mediumInsert-buttons', $.proxy(this, 'disableSelection'))
             .on('keydown', $.proxy(this, 'fixSelectAll'))
             .on('click', '.mediumInsert-buttonsShow', $.proxy(this, 'toggleAddons'))
             .on('click', '.mediumInsert-action', $.proxy(this, 'addonAction'));
@@ -129,7 +129,9 @@
      */
 
     Core.prototype.disableSelection = function (e) {
-        if ($(e.target).is('img') === false) {
+        var $el = $(e.target);
+        
+        if ($el.is('img') === false || $el.hasClass('mediumInsert-buttonsShow')) {
             e.preventDefault();
         }
     };
@@ -273,9 +275,8 @@
             isAddon = false,
             $p = $current.is('p') ? $current : $current.closest('p');
 
-        if ($current.closest('.mediumInsert-buttons').length === 0) {
-            this.clean();
-            
+        if ($p.length && $current.closest('.mediumInsert-buttons').length === 0) {
+                        
             this.$el.find('.mediumInsert-active').removeClass('mediumInsert-active');
 
             $.each(this.options.addons, function (key) {
@@ -290,7 +291,7 @@
             if ($p.text().trim() === '') { 
                 $p.addClass('mediumInsert-active');               
                 $buttons.removeClass('mediumInsert-buttons-vertical');
-                
+
                 // Left position is set according to parent paragraph
                 // Top position is set according to current active element
                 $buttons.css({
