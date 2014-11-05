@@ -48,13 +48,14 @@
         this._name = pluginName;
         
         // Extend editor's functions
-        options.editor._serialize = options.editor.serialize;
-        options.editor._deactivate = options.editor.deactivate;
-        options.editor._activate = options.editor.activate;
-        options.editor.serialize = this.editorSerialize;
-        options.editor.deactivate = this.editorDeactivate;
-        options.editor.activate = this.editorActivate;
-
+        if (options && options.editor) {
+            options.editor._serialize = options.editor.serialize;
+            options.editor._deactivate = options.editor.deactivate;
+            options.editor._activate = options.editor.activate;
+            options.editor.serialize = this.editorSerialize;
+            options.editor.deactivate = this.editorDeactivate;
+            options.editor.activate = this.editorActivate;
+        }
 
         this.init();
     }
