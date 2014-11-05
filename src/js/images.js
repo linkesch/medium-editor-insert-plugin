@@ -158,6 +158,11 @@
         var that = this,
             $place = this.$el.find('.medium-insert-active');
 
+        if ($place.is('p')) {
+            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place = this.$el.find('.medium-insert-active');
+        }
+
         $place
             .addClass('medium-insert-images')
             .find('br')
