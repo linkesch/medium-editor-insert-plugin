@@ -14,9 +14,27 @@
         .medium-insert-images-slideshow figure img {
             margin: 0;
         }
+        
+        .medium-insert-images.medium-insert-images-grid figure {
+            width: 10%;
+        }
+        
+        @media (max-width: 750px) {
+            .medium-insert-images.medium-insert-images-grid figure {
+                width: 20%;
+            }
+        }
+        
+        @media (max-width: 450px) {
+            .medium-insert-images.medium-insert-images-grid figure {
+                width: 25%;
+            }
+        }
     </style>
 </head>
 <body>
+    <a href="https://github.com/orthes/medium-editor-insert-plugin"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 5000;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+    
     <div class="top-bar">
         Theme:
         <select id="sel-themes">
@@ -29,15 +47,33 @@
     </div>
     <br><br>
 
-    <div id="container">
+    <div id="container">        
         <div class="editable" data-placeholder="Type some text">
-            <p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Curabitur blandit tempus porttitor. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-
-            <p>Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam quis risus eget urna mollis ornare vel eu leo. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur. Donec ullamcorper nulla non metus auctor fringilla.</p>
-
-            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec sed odio dui. Curabitur blandit tempus porttitor. Donec sed odio dui. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
-
-            <p>Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nulla vitae elit libero, a pharetra augue. Nulla vitae elit libero, a pharetra augue.</p>
+            <h3>jQuery insert plugin for MediumEditor</h3>
+            
+            <p>This is <strong>a demo</strong> of jQuery insert plugin for MediumEditor.</p>
+            
+            <blockquote>HINT: This whole website is an editable editor. You can click on text and start typing.</blockquote>
+            
+            <p>If you want to insert an image, <strong>create a new empty paragraph</strong> and the plugin's button will appear on the left. From there it's pretty self-explanatory. Have fun.</p>
+                
+            <h4>What to do next?</h4>
+                
+            <p>Please, go to <a href="https://github.com/orthes/medium-editor-insert-plugin">our GitHub repository</a> for installation and configuration info. Did you find a bug, have an idea or want to contribute? Great! Do not miss our <a href="https://github.com/orthes/medium-editor-insert-plugin/issues">issues page on GitHub</a>.</p>
+                      
+            <h4>Contributors</h4>
+            
+            <p>This plugin is brought to you thanks to these great contributors from all around the world:</p>
+            
+            <div class="medium-insert-images medium-insert-images-grid">
+                <figure contenteditable="false"><img src="uploads/312938.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/19343.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/39333.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1228229.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/594298.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1101183.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1790778.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1270102.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/93555.png" alt=""></figure><figure contenteditable="false"><img src="uploads/1891369.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1642674.png" alt=""></figure><figure contenteditable="false"><img src="uploads/431361.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/883073.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1485056.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1064889.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/62333.png" alt=""></figure><figure contenteditable="false"><img src="uploads/433501.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/714146.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/882228.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/28841.jpg" alt=""></figure>
+            </div>
+                        
+            <p><em>... And yes, you can create this nice images grid with the plugin. And much more...</em></p>
+                        
+            <h4>License</h4>
+            
+            <p>The plugin is free and released under MIT license.</p>
         </div>
     </div>
 
@@ -53,7 +89,6 @@
     <script src="../src/js/images.js"></script>
     <script>
         var editor = new MediumEditor('.editable', {
-            excludedActions: ['u', 'h3', 'blockquote'],
             buttonLabels: 'fontawesome'
         });
         

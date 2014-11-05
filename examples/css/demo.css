@@ -23,8 +23,9 @@ body {
 }
 
 #container {
-    width: 960px;
+    max-width: 960px;
     margin: 30px auto;
+    padding: 0 60px;
 }
 
 .editable {
@@ -32,7 +33,6 @@ body {
     min-height: 38px;
     margin: 0 0 20px 0;
     padding: 0 0 20px 0;
-    border-bottom: 1px solid #dbdbdb;
 }
 
 h3 {
@@ -43,4 +43,12 @@ h3 {
 h4 {
     font-size: 26px;
     line-height: 32px;
+}
+
+blockquote {
+    display: block;
+    margin: 0.5em 0 0.5em -25px;
+    border-left: 5px solid #EFEFEF;
+    padding: 0.5em 20px;
+    color: #999;
 }
