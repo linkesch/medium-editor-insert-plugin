@@ -46,6 +46,15 @@
 
         this._defaults = defaults;
         this._name = pluginName;
+        
+        // Extend editor's functions
+        options.editor._serialize = options.editor.serialize;
+        options.editor._deactivate = options.editor.deactivate;
+        options.editor._activate = options.editor.activate;
+        options.editor.serialize = this.editorSerialize;
+        options.editor.deactivate = this.editorDeactivate;
+        options.editor.activate = this.editorActivate;
+
 
         this.init();
     }
@@ -87,6 +96,54 @@
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
     };
+    
+    /**
+     * Extend editor's serialize function
+     *
+     * @return {object} Serialized data
+     */
+    
+    Core.prototype.editorSerialize = function () {
+        var data = this._serialize();
+
+        $.each(data, function (key) {
+            var $data = $('<div />').html(data[key].value);
+
+            $data.find('.medium-insert-buttons').remove();
+            
+            data[key].value = $data.html();
+        });
+        
+        return data;
+    };
+    
+    /**
+     * Extend editor's deactivate function to deactivate this plugin too
+     *
+     * @return {void} 
+     */
+    
+    Core.prototype.editorDeactivate = function () {
+        this._deactivate();
+        
+        $.each(this.elements, function (key, el) {
+            $(el).data('plugin_' + pluginName).disable();
+        });
+    };
+    
+    /**
+     * Extend editor's activate function to activate this plugin too
+     *
+     * @return {void} 
+     */
+    
+    Core.prototype.editorActivate = function () {
+        this._activate();
+        
+        $.each(this.elements, function (key, el) {
+            $(el).data('plugin_' + pluginName).enable();
+        });
+    };
 
     /**
      * Deselects selected text
@@ -117,7 +174,7 @@
      */
 
     Core.prototype.enable = function () {
-        this.settings.enabled = true;
+        this.options.enabled = true;
 
         this.$el.find('.medium-insert-buttons').removeClass('hide');
     };
