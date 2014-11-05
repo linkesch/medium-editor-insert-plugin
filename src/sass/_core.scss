@@ -10,9 +10,9 @@
     }
 
     &[contenteditable], [contenteditable] {
-        outline: 0px solid transparent;
+        outline: 0 solid transparent;
         &:focus {
-            outline: 0px solid transparent;
+            outline: 0 solid transparent;
         }
     }
     

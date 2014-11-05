@@ -59,7 +59,7 @@ test('unselecting image', function () {
 });
 
 test('removing image', function () {
-    var $event = $.Event("keydown");
+    var $event = $.Event('keydown');
     
     $event.keyCode = 8;
 
@@ -81,7 +81,7 @@ test('removing image', function () {
 });
 
 asyncTest('deleting file', function () {
-    var $event = $.Event("keydown");
+    var $event = $.Event('keydown');
     
     $event.keyCode = 8;
 

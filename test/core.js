@@ -84,7 +84,7 @@ test('showing plugin\'s buttons after clicking on empty paragraph', function () 
     this.$el.mediumInsert();
     
     // Place caret at the beginning of #paragraph
-    placeCaret(document.getElementById("paragraph"), 0);
+    placeCaret(document.getElementById('paragraph'), 0);
     
     this.$el.find('#paragraph').click();
 
@@ -99,7 +99,7 @@ test('hiding plugin\'s buttons after clicking on non-empty paragraph', function 
     this.$el.mediumInsert();
     
     // Place caret at the beginning of #paragraph
-    placeCaret(document.getElementById("paragraph2"), 0);
+    placeCaret(document.getElementById('paragraph2'), 0);
     
     this.$el.find('#paragraph2').click();
     
@@ -112,7 +112,7 @@ test('toggling addons buttons after clicking on show button', function () {
     this.$el.mediumInsert();
     
     // Place caret at the beginning of #paragraph
-    placeCaret(document.getElementById("paragraph"), 0);
+    placeCaret(document.getElementById('paragraph'), 0);
     
     this.$el.find('#paragraph').click();
     this.$el.find('.medium-insert-buttons-show').click();
@@ -139,7 +139,7 @@ asyncTest('calling addon\'s add function if addon\'s button is clicked', functio
     });
     
     // Place caret at the beginning of #paragraph
-    placeCaret(document.getElementById("paragraph"), 0);
+    placeCaret(document.getElementById('paragraph'), 0);
     
     this.$el.find('#paragraph').click();
     this.$el.find('.medium-insert-buttons-show').click();    

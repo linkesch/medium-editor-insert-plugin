@@ -85,7 +85,7 @@ module.exports = function(grunt) {
                     namespace: 'MediumInsert.Templates'
                 },
                 files: {
-                    "src/js/templates.js": "src/js/templates/*.hbs"
+                    'src/js/templates.js': 'src/js/templates/*.hbs'
                 }
             }
         }

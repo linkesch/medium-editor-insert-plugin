@@ -45,9 +45,9 @@
       -ms-user-select: none;
           user-select: none; }
 .medium-editor-insert-plugin[contenteditable], .medium-editor-insert-plugin [contenteditable] {
-  outline: 0px solid transparent; }
+  outline: 0 solid transparent; }
   .medium-editor-insert-plugin[contenteditable]:focus, .medium-editor-insert-plugin [contenteditable]:focus {
-    outline: 0px solid transparent; }
+    outline: 0 solid transparent; }
 .medium-editor-insert-plugin * {
   -moz-box-sizing: content-box;
        box-sizing: content-box; }
