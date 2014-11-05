@@ -418,7 +418,11 @@
     $.fn[pluginName] = function (options) {
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName)) {
+                // Plugin initialization
                 $.data(this, 'plugin_' + pluginName, new Core(this, options));
+            } else if (typeof options === 'string' && $.data(this, 'plugin_' + pluginName)[options]) {
+                // Method call
+                $.data(this, 'plugin_' + pluginName)[options]();
             }
         });
     };
