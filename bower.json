@@ -21,16 +21,16 @@
     "package.json"
   ],
   "dependencies": {
-    "jquery": "1.9.0 - 2.0.3",
+    "jquery": ">=1.9.0",
     "medium-editor": "~1.9",
-    "handlebars": "~1.3.0",
+    "handlebars": "~2.0.0",
     "blueimp-file-upload": "~9.8.0",
     "jquery-sortable": "~0.9.12"
   },
   "devDependencies": {
-    "qunit": "~1.12.0",
-    "sinon": "~1.7.0",
-    "sinon-qunit": "~1.0.0",
+    "qunit": "~1.15.0",
+    "sinon": "~1.10.3",
+    "sinon-qunit": "~2.0.0",
     "jquery-cycle2": "~2.1.6"
   }
 }
