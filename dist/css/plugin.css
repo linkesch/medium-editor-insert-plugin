@@ -49,8 +49,7 @@
   .medium-editor-insert-plugin[contenteditable]:focus, .medium-editor-insert-plugin [contenteditable]:focus {
     outline: 0 solid transparent; }
 .medium-editor-insert-plugin * {
-  -moz-box-sizing: content-box;
-       box-sizing: content-box; }
+  box-sizing: content-box; }
 .medium-editor-insert-plugin p {
   margin: 1em 0; }
 .medium-editor-insert-plugin progress {
