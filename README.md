@@ -16,6 +16,11 @@ More are coming soon...
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
 [![Bower version](https://badge.fury.io/bo/medium-editor-insert-plugin.svg)](http://badge.fury.io/bo/medium-editor-insert-plugin)
 
+---
+
+This is a branch for a current working 0.* version. If you want to see, test or contribute to an upcoming **version 1.0**, go to [1.0 branch](https://github.com/orthes/medium-editor-insert-plugin/tree/1.0).
+
+---
 
 ## Table of Contents
 
@@ -24,8 +29,7 @@ More are coming soon...
 - [Usage](#usage)
 - [Options](#options)
 - [Methods](#methods)
-- [Development](#development)
-- [Contributing](#contributing)
+- [Development & Contributing](#development)
 - [Author](#author)
 
 
@@ -138,7 +142,12 @@ Use example:
 $('.editable').mediumInsert('disable');
 ```
 
-## <a name="development"></a>Development
+## <a name="development"></a>Development & Contributing
+
+[![Stories in Ready](https://badge.waffle.io/orthes/medium-editor-insert-plugin.svg?label=ready&title=Ready)](http://waffle.io/orthes/medium-editor-insert-plugin)
+
+I'm happy when you not only use the plugin, but contribute your improvements, too. First of all, go to [waffle.io](http://waffle.io/orthes/medium-editor-insert-plugin) (that's the blue icon above),
+where you'll find list of all work, that need to be done. Feel free to grab one issue, assign it to yourself and start working.
 
 The plugin uses [Grunt](http://gruntjs.com/) for automating development tasks and [Bower](http://bower.io/) for package management. To install all the necessities for development run these commands:
 
@@ -154,13 +163,7 @@ These are available Grunt tasks:
 - **test**: runs jshint and qunit
 - **watch**: watches for modifications on script/scss files and runs js/css task
 
-
-## <a name="contributing"></a>Contributing
-
-I'm happy when you not only use the plugin, but contribute your improvements, too. To do that, you need to meet only two requirements:
-
-1. Use the same coding style as the plugin
-2. Write QUnit tests (if you're adding a new funcionality) and test your changes with **grunt test**
+Please, test you're code to your best knowledge, especially if you're adding new features.
 
 
 ## <a name="author"></a>Author
