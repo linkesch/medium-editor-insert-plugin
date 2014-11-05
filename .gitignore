@@ -2,6 +2,7 @@
 .sass-cache/
 bower_components/
 node_modules/
+examples/uploads/*
 .idea/
 server.js
 .tm_properties
