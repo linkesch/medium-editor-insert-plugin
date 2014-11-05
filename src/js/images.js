@@ -57,6 +57,7 @@
 
     Images.prototype.init = function () {
         this.events();
+        this.sorting();
     };
 
     /**
@@ -175,6 +176,8 @@
                 img: file.url
             }));
         });
+        
+        this.sorting();
     };
     
     /**
@@ -344,6 +347,22 @@
         });
     };
     
+    /**
+     * Initialize sorting
+     *
+     * @returns {void}
+     */
+    
+    Images.prototype.sorting = function () {
+        $('.medium-insert-images').sortable({
+            group: 'medium-insert-images',
+            containerSelector: '.medium-insert-images',
+            itemSelector: 'figure',
+            placeholder: '<figure class="placeholder">',
+            nested: false,
+            vertical: false
+        });
+    };
 
     /** Plugin initialization */
     

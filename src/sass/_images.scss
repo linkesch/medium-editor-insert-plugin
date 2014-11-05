@@ -1,7 +1,27 @@
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    top: 0;
+    opacity: .5;
+    z-index: 2000;
+}
+
 .medium-insert-image-active {
     outline: 2px solid #000;
 }
 
 .medium-insert-images-toolbar {
     display: none;
+}
+
+.medium-insert-images {
+    .placeholder {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
 }

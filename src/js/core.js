@@ -87,7 +87,7 @@
 
     Core.prototype.events = function () {
         this.$el
-            .on('dragover drop', 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote', function (e) {
+            .on('dragover drop', function (e) {
                 e.preventDefault();
             })
             .on('blur', $.proxy(this, 'addEditorPlaceholder'))
