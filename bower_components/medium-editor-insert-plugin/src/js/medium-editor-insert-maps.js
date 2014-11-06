@@ -13,9 +13,14 @@
 
     insertButton: function(buttonLabels){
       var label = 'Map';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
+      
+      if (typeof buttonLabels === 'object' && buttonLabels.map) {
+        label = buttonLabels.map;
+      }
+
       return '<button data-addon="maps" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 

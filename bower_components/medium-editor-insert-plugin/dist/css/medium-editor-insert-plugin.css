@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.10 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.3.2 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -16,7 +16,7 @@
     max-width: 100%; }
   .mediumInsert .mediumInsert-embeds {
     text-align: center;
-    padding: 15px; }
+    padding: 15px 0; }
     .mediumInsert .mediumInsert-embeds iframe {
       margin: 0px auto !important; }
     .mediumInsert .mediumInsert-embeds div {
@@ -30,7 +30,7 @@
       vertical-align: top; }
     .mediumInsert .mediumInsert-images:first-child {
       margin-right: 0;
-      width: auto; }
+      width: 100%; }
       .mediumInsert .mediumInsert-images:first-child:after {
         content: "\a";
         white-space: pre; }
@@ -47,9 +47,12 @@
       border-bottom: 2px solid #333;
       padding: 12px; }
   .mediumInsert.small {
-    width: 33.33%;
+    max-width: 33.33%;
     float: left;
-    margin-right: 30px; }
+    margin-right: 30px;
+    margin-bottom: 20px; }
+  .mediumInsert.mediumInsert-first {
+    margin-top: 0; }
 
 .medium-editor-insert-plugin {
   /* Prevent the text contents of draggable elements from being selectable. */ }
@@ -107,7 +110,7 @@
   margin-left: -40px !important;
   min-height: 18px; }
   .mediumInsert.small {
-    width: calc(33.33% + 40px); }
+    max-width: calc(33.33% + 40px); }
   .mediumInsert .mediumInsert-buttonsShow {
     opacity: 0;
     -webkit-transform: scale(0);
@@ -164,7 +167,7 @@
     position: relative;
     margin-left: 40px;
     text-align: center; }
-  .mediumInsert .mediumInsert-images a {
+  .mediumInsert .mediumInsert-images .mediumInsert-imageIcon {
     position: absolute;
     top: 1em;
     width: 30px;
@@ -181,6 +184,11 @@
     background-image: url(../images/resize-smaller.png); }
   .mediumInsert .mediumInsert-imageResizeBigger {
     background-image: url(../images/resize-bigger.png); }
+  .mediumInsert .mediumInsert-imageLink, .mediumInsert .mediumInsert-imageUnlink {
+    right: 62px;
+    background-image: url(../images/link.png); }
+  .mediumInsert .mediumInsert-imageUnlink {
+    background-image: url(../images/unlink.png); }
   .mediumInsert .mediumInsert-error {
     background-color: #f2dede;
     border: 1px solid #ebccd1;
@@ -196,6 +204,11 @@
     position: absolute;
     left: 50%;
     text-align: center; }
+  .mediumInsert .mediumInsert-imageLinkWire {
+    position: absolute;
+    top: -40px;
+    left: auto;
+    right: 0; }
   .mediumInsert .mediumInsert-embedsBox {
     position: relative;
     left: -250px; }

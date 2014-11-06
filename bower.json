@@ -9,6 +9,6 @@
   ],
   "dependencies": {
     "jquery": "~1.11.0",
-    "medium-editor-insert-plugin": "~0.2.4"
+    "medium-editor-insert-plugin": "~0.3"
   }
 }

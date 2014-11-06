@@ -66,7 +66,7 @@
   min-height: 18px;
 
   &.small {
-    width: calc(33.33% + 40px);
+    max-width: calc(33.33% + 40px);
   }
 
   .mediumInsert-buttonsShow {
@@ -137,7 +137,7 @@
     text-align: center; }
 
   .mediumInsert-images {
-    a {
+    .mediumInsert-imageIcon {
       position: absolute;
       top: 1em;
       width: 30px;
@@ -158,6 +158,13 @@
 
   .mediumInsert-imageResizeBigger {
     background-image: url(../images/resize-bigger.png); }
+    
+  .mediumInsert-imageLink, .mediumInsert-imageUnlink {
+    right: 62px;
+    background-image: url(../images/link.png); }
+    
+  .mediumInsert-imageUnlink {
+    background-image: url(../images/unlink.png); }
 
   .mediumInsert-error {
     background-color: #f2dede;
@@ -178,6 +185,12 @@
     left: 50%;
     //width: 500px;
     text-align: center; }
+    
+  .mediumInsert-imageLinkWire {
+    position: absolute;
+    top: -40px;
+    left: auto;
+    right: 0; }
 
   .mediumInsert-embedsBox {
     position: relative;

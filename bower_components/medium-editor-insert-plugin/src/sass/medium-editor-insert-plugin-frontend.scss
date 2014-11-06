@@ -10,7 +10,7 @@
 
   .mediumInsert-embeds {
     text-align: center;
-    padding: 15px;
+    padding: 15px 0;
 
     iframe {
       margin: 0px auto !important; }
@@ -30,7 +30,7 @@
 
     &:first-child {
       margin-right: 0;
-      width: auto;
+      width: 100%;
 
       &:after {
         content: "\a";
@@ -55,7 +55,12 @@
   }
 
   &.small {
-    width: 33.33%;
+    max-width: 33.33%;
     float: left;
-    margin-right: 30px; }
+    margin-right: 30px;
+    margin-bottom: 20px; }
+
+  &.mediumInsert-first {
+    margin-top: 0;
+  }
 }

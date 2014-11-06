@@ -107,6 +107,7 @@ For styling the content in frontend (where it will be read only without editing 
 ## <a name="options"></a>Options
 
 - **editor**: (MediumEditor) instance of MediumEditor
+- **beginning**: (boolean) whether inserting at the very beginning of the editor should be possible (in other words, if the first placeholder for instering should be placed as the first element of the editor, or after the first parahraph). Default: *false*
 - **addons**: (object) keys are names of used addons and values are objects of addons options. (NOTICE: Remember to use medium-editor-insert-plugin.all.min.js, which includes all addons, or separately load medium-editor-insert-plugin.min.js and medium-editor-insert-{ADDON-NAME}.min.js).
     - **images**:
         - **imagesUploadScript**: (string) relative path to a script that handles file uploads. Default: *upload.php*

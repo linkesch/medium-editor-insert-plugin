@@ -1,5 +1,6 @@
 @import "clearfix";
 @import "pop-upwards";
+@import "buttons";
 
 %medium-toolbar-arrow {
     position: absolute;
@@ -97,12 +98,13 @@
 
 .medium-editor-toolbar-form-anchor {
     display: none;
+
     input,
     a {
         font-family: HelveticaNeue, Helvetica, Arial, sans-serif;
     }
 
-    input {
+    .medium-editor-toolbar-anchor-input, label {
         margin: 0;
         padding: 6px;
         width: 316px;
@@ -116,6 +118,11 @@
             -webkit-appearance: none;
                -moz-appearance: none;
         }
+    }
+
+    label {
+        display: block;
+
     }
 
     a {

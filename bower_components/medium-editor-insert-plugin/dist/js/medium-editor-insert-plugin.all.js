@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.2.10 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v0.3.2 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -84,7 +84,8 @@
           this.elements[i].removeAttribute('contentEditable');
         }
 
-        $.fn.mediumInsert.insert.$el.mediumInsert('disable');
+        if ($.fn.mediumInsert.insert.$el)
+          $.fn.mediumInsert.insert.$el.mediumInsert('disable');
       };
 
       /**
@@ -109,7 +110,8 @@
         }
         this.bindSelect();
 
-        $.fn.mediumInsert.insert.$el.mediumInsert('enable');
+        if ($.fn.mediumInsert.insert.$el)
+          $.fn.mediumInsert.insert.$el.mediumInsert('enable');
       };
   }
 
@@ -145,9 +147,11 @@
         $.fn.mediumInsert.insert.init($(this));
 
         $.each($.fn.mediumInsert.settings.addons, function (i) {
-          var addonOptions = $.fn.mediumInsert.settings.addons[i];
-          addonOptions.$el = $.fn.mediumInsert.insert.$el;
-          addons[i].init(addonOptions);
+          if (typeof addons[i] !== 'undefined') {
+            var addonOptions = $.fn.mediumInsert.settings.addons[i];
+            addonOptions.$el = $.fn.mediumInsert.insert.$el;
+            addons[i].init(addonOptions);
+          }
         });
       });
     }
@@ -159,6 +163,7 @@
   */
   $.fn.mediumInsert.settings = {
     enabled: true,
+    beginning: false,
     addons: {
       images: {},
       embeds: {}
@@ -260,10 +265,18 @@
     */
     getButtons: function (addon) {
       var editor = $.fn.mediumInsert.settings.editor,
-          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
-          buttons = '<div class="mediumInsert-buttons">'+
+          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '';
+
+      var buttons;
+      if($.fn.mediumInsert.settings.enabled) {
+      buttons = '<div class="mediumInsert-buttons">'+
             '<a class="mediumInsert-buttonsShow">+</a>'+
             '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
+      } else {
+      buttons = '<div class="mediumInsert-buttons hide">'+
+            '<a class="mediumInsert-buttonsShow">+</a>'+
+            '<ul class="mediumInsert-buttonsOptions medium-editor-toolbar medium-editor-toolbar-active">';
+      }
 
       if (Object.keys($.fn.mediumInsert.settings.addons).length === 0) {
         return false;
@@ -271,7 +284,11 @@
 
       if (typeof addon === 'undefined') {
         $.each($.fn.mediumInsert.settings.addons, function (i) {
-          buttons += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
+          if (typeof addons[i] === 'undefined') {
+            console.log('Addon "' + i + '" is not available. Did you forgot to include the related file?');
+          } else {
+            buttons += '<li>' + addons[i].insertButton(buttonLabels) + '</li>';
+          }
         });
       } else {
         buttons += '<li>' + addons[addon].insertButton(buttonLabels) + '</li>';
@@ -291,9 +308,8 @@
     setPlaceholders: function () {
       var that = this,
           $el = $.fn.mediumInsert.insert.$el,
-          editor = $.fn.mediumInsert.settings.editor,
-          buttonLabels = (editor && editor.options) ? editor.options.buttonLabels : '',
-          insertBlock = this.getButtons();
+          insertBlock = this.getButtons(),
+          $firstEl;
 
       if (insertBlock === false) {
         return false;
@@ -325,7 +341,7 @@
 
         // Fix not deleting placeholder in Firefox
         // by removing all empty placeholders
-        if (this.isFirefox){
+        if (that.isFirefox){
           $('.mediumInsert .mediumInsert-placeholder:empty', $el).each(function () {
             $(this).parent().remove();
           });
@@ -334,6 +350,16 @@
         i = that.getMaxId() +1;
 
         var blocks = 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote';
+
+        if ($.fn.mediumInsert.settings.beginning) {
+          $firstEl = $el.children(blocks).first();
+          if ($firstEl.prev().hasClass('mediumInsert') === false) {
+            $firstEl.before(insertBlock);
+            $firstEl.prev('.mediumInsert').attr('id', 'mediumInsert-'+ i).addClass('mediumInsert-first');
+            i++;
+          }
+        }
+
         $el.children(blocks).each(function () {
           if ($(this).next().hasClass('mediumInsert') === false) {
             $(this).after(insertBlock);
@@ -356,9 +382,10 @@
       var that = this,
           $el = $.fn.mediumInsert.insert.$el;
 
-      $el.on('selectstart', '.mediumInsert', function (e) {
-        e.preventDefault();
-        return false;
+      $el.on('selectstart mousedown', '.mediumInsert', function (e) {
+        if ($(e.target).is('img') === false) {
+          e.preventDefault();
+        }
       });
 
       $el.on('blur', function () {
@@ -383,17 +410,19 @@
             //wrap content text in p to avoid firefox problems
             $el.contents().each((function() {
               return function(index, field) {
-                if (field.nodeName === '#text') {
+                if (field.nodeName === '#text' && field.textContent.trim() !== '') {
                   document.execCommand('insertHTML', false, "<p>" + field.data + "</p>");
                   return field.remove();
                 }
               };
             })(this));
-            //Firefox add extra br tag inside p tag
-            var latestPTag = $el.find('p').last();
-            if (latestPTag.text().length > 0) {
-              latestPTag.find('br').remove();
-            }
+            // Removed because of #94 issue
+            //
+            // Firefox add extra br tag inside p tag
+            // var latestPTag = $el.find('p').last();
+            // if (latestPTag.text().length > 0) {
+            //   latestPTag.find('br').remove();
+            // }
           }
         }
       });
@@ -474,7 +503,7 @@
     * Embed default options
     */
 
-    default: {
+    defaults: {
       urlPlaceholder: 'Paste or type a link'
       //,oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
     },
@@ -484,7 +513,7 @@
      * @return {void}
      */
     init : function (options) {
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
       this.$el = $.fn.mediumInsert.insert.$el;
       this.setEmbedButtonEvents();
       this.preparePreviousEmbeds();
@@ -492,9 +521,14 @@
 
     insertButton : function (buttonLabels) {
       var label = 'Embed';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-code"></i>';
       }
+
+      if (typeof buttonLabels === 'object' && buttonLabels.embed) {
+        label = buttonLabels.embed;
+      }
+
       return '<button data-addon="embeds" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
@@ -507,7 +541,7 @@
       $.fn.mediumInsert.insert.deselect();
 
 
-      var formHtml = '<div class="medium-editor-toolbar medium-editor-toolbar-active medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="' + this.options.urlPlaceholder + '" class="mediumInsert-embedsText"></div>';
+      var formHtml = '<div class="medium-editor-toolbar medium-editor-toolbar-active medium-editor-toolbar-form-anchor mediumInsert-embedsWire" style="display: block;"><input type="text" value="" placeholder="' + this.options.urlPlaceholder + '" class="mediumInsert-embedsText medium-editor-toolbar-anchor-input"></div>';
       $(formHtml).appendTo($placeholder.prev());
       setTimeout(function () {
         $placeholder.prev().find('input').focus();
@@ -528,22 +562,34 @@
     preparePreviousEmbeds: function () {
       this.$el.find('.mediumInsert-embeds').each(function() {
         var $parent = $(this).parent();
-        $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        if (!$parent.hasClass('mediumInsert-placeholder')) {
+          $parent.html('<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>');
+        }
       });
     },
 
     setEmbedButtonEvents : function () {
       var that = this;
       $(document).on('keypress', 'input.mediumInsert-embedsText', function (e) {
-        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+        if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
           that.setEnterActionEvents();
           that.removeToolbar();
         }
       });
 
-      this.$el.on('blur', '.mediumInsert-embedsText', function () {
-        that.removeToolbar();
-      });
+      this.$el
+        .on('blur', '.mediumInsert-embedsText', function () {
+          that.removeToolbar();
+        })
+        // Fix #72
+        // Workaround for CTRL+V not working in FF, when cleanPastedHTML and forcePlainText options on editor are set to true,
+        // because editor steals the event and doesn't pass it to the plugin
+        // https://github.com/orthes/medium-editor-insert-plugin/issues/72
+        .on('paste', '.mediumInsert-embedsText', function (e) {
+          if ($.fn.mediumInsert.insert.isFirefox && e.originalEvent.clipboardData) {
+            $(this).val(e.originalEvent.clipboardData.getData('text/plain'));
+          }
+        });
 
     },
     setEnterActionEvents : function () {
@@ -562,9 +608,17 @@
                 alert('Incorrect URL format specified');
                 return false;
             } else {
-                embed_tag = $('<div class="mediumInsert-embeds"></div>').append(embed_tag);
+                var returnedTag = embed_tag;
+                var tagId = new Date().getTime();
+                embed_tag = $('<div class="mediumInsert-embeds" id="' + tagId + '"></div>').append(embed_tag);
                 that.currentPlaceholder.append(embed_tag);
                 that.currentPlaceholder.closest('[data-medium-element]').trigger('keyup').trigger('input');
+
+                if(returnedTag.indexOf("facebook") !== -1) {
+                  if (typeof(FB) !== 'undefined') {
+                    setTimeout(function() { FB.XFBML.parse();}, 2000);
+                  }
+                }
             }
         }
 
@@ -601,11 +655,11 @@
                   cb(null, data, jqXHR);
               },
               error: function(jqXHR, textStatus, errorThrown) {
-                  var responseJSON = function() {
+                  var responseJSON = (function() {
                       try {
                           return JSON.parse(jqXHR.responseText);
                       } catch(e) {}
-                  }();
+                  }());
 
                   cb((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message, responseJSON, jqXHR);
               }
@@ -613,17 +667,17 @@
       },
 
       convertUrlToEmbedTag : function (url) {
-          var embed_tag = url.replace(/\n?/g, '').replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
-              .replace(/http:\/\/vimeo\.com\/(\d+)$/, '<iframe src="//player.vimeo.com/video/$1" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
+          // We didn't get something we expect so let's get out of here.
+          if (!(new RegExp(['youtube', 'yout.be', 'vimeo', 'facebook', 'instagram'].join("|")).test(url))) return false;
 
-              // TWITTER EMBEDDING NEEDS REWORK! Serialized version of embeded Twitter status is unusable because the Twitter script complitely removes blockquote element and replaces it with iframe
-              //.replace(/https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
+          var embed_tag = url.replace(/\n?/g, '').replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
+              .replace(/^http:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
+              //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
+              .replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
+              .replace(/^http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
-              // FACEBOOK EMBEDDING NEEDS REWORK! Similarly to Twitter, FB script removes .fb-post element and replaces it with iframe, which is unusable after serializing editor's content
-              //.replace(/https:\/\/www\.facebook\.com\/(\w+)\/posts\/(\d+)$/, '<div id="fb-root"></div><script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, "script", "facebook-jssdk"));</script><div class="fb-post" data-href="https://www.facebook.com/$1/posts/$2"></div>')
 
-              .replace(/http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
-          return /<("[^"]*"|'[^']*'|[^'">])*>/.test(embed_tag) ? embed_tag : false;
+          return (/<("[^"]*"|'[^']*'|[^'">])*>/).test(embed_tag) ? embed_tag : false;
       }
 
   });
@@ -638,7 +692,7 @@
     * Images default options
     */
 
-    default: {
+    defaults: {
       /**
       * Active or inactive image's drag and drop
       */
@@ -653,6 +707,11 @@
       * Relative path to a script that handles file deleting
       */
       imagesDeleteScript: 'delete.php',
+      
+      /**
+      * Placeeholder text for inserting link
+      */
+      urlPlaceholder: 'Paste or type a link',
 
       /**
       * Format data before sending them to server while uploading an image
@@ -723,7 +782,7 @@
       if (options && options.$el) {
         this.$el = options.$el;
       }
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
 
       this.setImageEvents();
 
@@ -745,9 +804,14 @@
 
     insertButton: function(buttonLabels){
       var label = 'Img';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-picture-o"></i>';
       }
+      
+      if (typeof buttonLabels === 'object' && buttonLabels.img) {
+        label = buttonLabels.img;
+      }
+
       return '<button data-addon="images" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
@@ -760,9 +824,11 @@
     preparePreviousImages: function () {
       this.$el.find('.mediumInsert-images').each(function() {
         var $parent = $(this).parent();
-        $parent.html($.fn.mediumInsert.insert.getButtons('images') +
-          '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
-        );
+        if (!$parent.hasClass('mediumInsert-placeholder')) {
+          $parent.html($.fn.mediumInsert.insert.getButtons('images') +
+            '<div class="mediumInsert-placeholder" draggable="true">' + $parent.html() + '</div>'
+          );
+        }
       });
     },
 
@@ -777,7 +843,7 @@
       var that = this,
           $selectFile, files;
 
-      $selectFile = $('<input type="file">').click();
+      $selectFile = $('<input type="file" multiple="multiple">').click();
       $selectFile.change(function () {
         files = this.files;
         that.uploadFiles($placeholder, files, that);
@@ -914,14 +980,24 @@
         }
 
         if ($img.length > 0) {
-          $(this).append('<a class="mediumInsert-imageRemove"></a>');
+          $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageRemove"></a>');
 
-          if ($(this).parent().parent().hasClass('small')) {
-            $(this).append('<a class="mediumInsert-imageResizeBigger"></a>');
-          } else {
-            $(this).append('<a class="mediumInsert-imageResizeSmaller"></a>');
+          if ($(this).prevAll().length === 0) {
+            if ($(this).parent().parent().hasClass('small')) {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageResizeBigger"></a>');
+            } else {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageResizeSmaller"></a>');
+            }
           }
-
+          
+          if ($(this).siblings().length === 0) {  
+            if ($img.parent().is('a')) {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageUnlink"></a>');
+            } else {
+              $(this).append('<a class="mediumInsert-imageIcon mediumInsert-imageLink"></a>');
+            }
+          }
+          
           positionTop = $img.position().top + parseInt($img.css('margin-top'), 10);
           positionLeft = $img.position().left + $img.width() -30;
           $('.mediumInsert-imageRemove', this).css({
@@ -934,11 +1010,16 @@
             'top': positionTop,
             'left': positionLeft-31
           });
+          $('.mediumInsert-imageLink, .mediumInsert-imageUnlink', this).css({
+            'right': 'auto',
+            'top': positionTop,
+            'left': positionLeft-62
+          });
         }
       });
 
       this.$el.on('mouseleave', '.mediumInsert-images', function () {
-        $('.mediumInsert-imageRemove, .mediumInsert-imageResizeSmaller, .mediumInsert-imageResizeBigger', this).remove();
+        $('.mediumInsert-imageIcon', this).remove();
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeSmaller', function () {
@@ -946,7 +1027,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageResizeBigger', function () {
@@ -954,7 +1035,7 @@
         $(this).parent().mouseleave().mouseleave();
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('click', '.mediumInsert-imageRemove', function () {
@@ -968,8 +1049,59 @@
         that.deleteFile(img, that);
 
         $.fn.mediumInsert.insert.deselect();
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+
+        that.$el.trigger('keyup').trigger('input');
       });
+      
+      this.$el.on('click', '.mediumInsert-imageLink', function () {
+        var $placeholder = $(this).closest('.mediumInsert-placeholder'),
+            $formHtml = $('<div class="medium-editor-toolbar medium-editor-toolbar-active medium-editor-toolbar-form-anchor mediumInsert-imageLinkWire" style="display: block;"><input type="text" value="" placeholder="' + that.options.urlPlaceholder + '" class="mediumInsert-imageLinkText medium-editor-toolbar-anchor-input"></div>');
+        
+        $formHtml.appendTo($placeholder);
+        setTimeout(function () {
+          $formHtml.find('input').focus();
+        }, 50);
+
+        $.fn.mediumInsert.insert.deselect();
+      });
+      
+      this.$el.on('click', '.mediumInsert-imageUnlink', function () {
+        var $figure = $(this).closest('.mediumInsert-images');
+
+        $figure.find('img').unwrap();
+        
+        $(this).removeClass('mediumInsert-imageUnlink')
+          .addClass('mediumInsert-imageLink');
+          
+        that.$el.trigger('keyup').trigger('input');
+      });
+      
+      this.$el
+        .on('keypress', '.mediumInsert-imageLinkText', function (e) {
+          var $placeholder = $(this).closest('.mediumInsert-placeholder');
+
+          if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+            $placeholder.find('.mediumInsert-images:first').find('img').wrap('<a href="'+ $(this).val() +'" target="_blank"></a>');            
+            $placeholder.find('.mediumInsert-imageLink')
+              .removeClass('mediumInsert-imageLink')
+              .addClass('mediumInsert-imageUnlink');
+            
+            // Workaround for "Uncaught NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is no longer a child of this node. Perhaps it was moved in a 'blur' event handler?"
+            try {  
+              $('.mediumInsert-imageLinkWire').remove();
+            } catch(err) {}
+            
+            that.$el.trigger('keyup').trigger('input');
+          }
+        })
+        .on('blur', '.mediumInsert-imageLinkText', function () {
+          $('.mediumInsert-imageLinkWire').remove();
+        })
+        .on('paste', '.mediumInsert-imageLinkText', function (e) {
+          if ($.fn.mediumInsert.insert.isFirefox && e.originalEvent.clipboardData) {
+            $(this).val(e.originalEvent.clipboardData.getData('text/plain'));
+          }
+        });
     },
 
     /**
@@ -1041,7 +1173,7 @@
           dropSuccessful = false;
           dropSort = false;
 
-          that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+          that.$el.trigger('keyup').trigger('input');
         }
       });
 
@@ -1083,7 +1215,7 @@
         dropSort = true;
         dropSortIndex = null;
 
-        that.$el.closest('[data-medium-element]').trigger('keyup').trigger('input');
+        that.$el.trigger('keyup').trigger('input');
       });
 
       this.$el.on('drop', '.mediumInsert', function (e) {
@@ -1131,9 +1263,14 @@
 
     insertButton: function(buttonLabels){
       var label = 'Map';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-map-marker"></i>';
       }
+      
+      if (typeof buttonLabels === 'object' && buttonLabels.map) {
+        label = buttonLabels.map;
+      }
+
       return '<button data-addon="maps" data-action="add" class="medium-editor-action mediumInsert-action">'+label+'</button>';
     },
 
@@ -1161,7 +1298,7 @@
     * Table default options
     */
 
-    default: {
+    defaults: {
       defaultRows: 2,
       defaultCols: 2
     },
@@ -1171,16 +1308,21 @@
      * @return {void}
      */
     init : function (options) {
-      this.options = $.extend(this.default, options);
+      this.options = $.extend(this.defaults, options);
       this.$el = $.fn.mediumInsert.insert.$el;
       this.setTableButtonEvents();
     },
 
     insertButton : function (buttonLabels) {
       var label = 'Table';
-      if (buttonLabels == 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
+      if (buttonLabels === 'fontawesome' || typeof buttonLabels === 'object' && !!(buttonLabels.fontawesome)) {
         label = '<i class="fa fa-table"></i>';
       }
+
+      if (typeof buttonLabels === 'object' && buttonLabels.table) {
+        label = buttonLabels.table;
+      }
+
       return '<button data-addon="tables" data-action="add" class="medium-editor-action mediumInsert-action">' + label + '</button>';
     },
 
