@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="../dist/css/plugin.min.css">
     
     <style>
+        .medium-insert-images-slideshow figure {
+            width: 100%;
+        }
+        
         .medium-insert-images-slideshow figure img {
             margin: 0;
         }
@@ -75,6 +79,11 @@
             
             <p>The plugin is free and released under MIT license.</p>
         </div>
+        
+        <footer>
+            <a href="https://github.com/orthes/medium-editor-insert-plugin"><span class="fa fa-github"></span></a>
+            <a href="http://twitter.com/linkesch"><span class="fa fa-twitter"></span></a>
+        </footer>
     </div>
 
     <script src="../bower_components/jquery/dist/jquery.min.js"></script>
@@ -84,6 +93,7 @@
     <script src="../bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
     <script src="../bower_components/handlebars/handlebars.runtime.min.js"></script>
     <script src="../bower_components/jquery-cycle2/build/jquery.cycle2.min.js"></script>
+    <script src="../bower_components/jquery-cycle2/build/plugin/jquery.cycle2.center.min.js"></script>
     <script src="../bower_components/jquery-sortable/source/js/jquery-sortable-min.js"></script>
     
     <script src="../src/js/templates.js"></script>
@@ -104,9 +114,11 @@
                             slideshow: {
                                 label: '<span class="fa fa-play"></span>',
                                 added: function ($el) {
-                                    $el.cycle({
-                                        slides: 'figure'
-                                    });
+                                    $el
+                                        .data('cycle-center-vert', true)
+                                        .cycle({
+                                            slides: 'figure'
+                                        });
                                 },
                                 removed: function ($el) {
                                     $el.cycle('destroy');
