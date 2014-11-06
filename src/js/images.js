@@ -9,6 +9,7 @@
             label: '<span class="fa fa-camera"></span>',
             uploadScript: 'upload.php',
             deleteScript: 'delete.php',
+            preview: true,
             styles: {
                 wide: { 
                     label: '<span class="fa fa-align-justify"></span>'
@@ -45,6 +46,11 @@
 
         this._defaults = defaults;
         this._name = pluginName;
+        
+        // Allow image preview only in browsers, that support's that
+        if (this.options.preview && !window.FileReader) {
+            this.options.preview = false;
+        }
 
         this.init();
     }
@@ -92,6 +98,9 @@
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },
+            progress: function (e, data) {
+                $.proxy(that, 'uploadProgress', e, data)();
+            },
             progressall: function (e, data) {
                 $.proxy(that, 'uploadProgressall', e, data)();
             },
@@ -113,13 +122,36 @@
      */
     
     Images.prototype.uploadAdd = function (e, data) {
-        if (this.$el.find('.medium-insert-active progress').length === 0) {
-            this.$el.find('.medium-insert-active').append(this.templates['src/js/templates/images-progressbar.hbs']());
+        var $place = this.$el.find('.medium-insert-active'),
+            that = this,
+            reader; 
+            
+        // Replace paragraph with div, because figure elements can't be inside paragraph 
+        if ($place.is('p')) {
+            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place = this.$el.find('.medium-insert-active');
         }
-
-        if (data.autoUpload || (data.autoUpload !== false && $(e.target).fileupload('option', 'autoUpload'))) {
+        
+        $place.addClass('medium-insert-images');
+                        
+        if (this.options.preview === false && $place.find('progress').length === 0) {
+            $place.append(this.templates['src/js/templates/images-progressbar.hbs']());
+        }
+        
+        if (data.autoUpload || (data.autoUpload !== false && $(e.target).fileupload('option', 'autoUpload'))) {            
             data.process().done(function () {
-                data.submit();
+                // If preview is set to true, let the showImage handle the upload start
+                if (that.options.preview) {
+                    reader = new FileReader();
+                    
+                    reader.onload = function (e) {
+                        $.proxy(that, 'showImage', e.target.result, data)();
+                    };
+
+                    reader.readAsDataURL(data.files[0]);
+                } else {
+                    data.submit();
+                }
             });
         }
     };
@@ -134,15 +166,43 @@
      */
     
     Images.prototype.uploadProgressall = function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10),
-            $progressbar = this.$el.find('.medium-insert-active progress');
-
-        $progressbar
-            .attr('value', progress)
-            .text(progress);
+        var progress, $progressbar;
+        
+        if (this.options.preview === false) {
+            progress = parseInt(data.loaded / data.total * 100, 10);
+            $progressbar = this.$el.find('.medium-insert-active').find('progress');
+                
+            $progressbar
+                .attr('value', progress)
+                .text(progress);
             
-        if (progress === 100) {
-            $progressbar.remove();
+            if (progress === 100) {
+                $progressbar.remove();
+            }
+        }
+    };
+    
+    /**
+     * Callback for upload progress events.
+     * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#progress
+     * 
+     * @param {Event} e
+     * @param {object} data
+     * @return {void}
+     */
+    
+    Images.prototype.uploadProgress = function (e, data) {
+        var progress, $progressbar;
+        
+        if (this.options.preview) {
+            progress = 100 - parseInt(data.loaded / data.total * 100, 10);
+            $progressbar = data.context.find('.medium-insert-images-progress');
+            
+            $progressbar.css('width', progress +'%');
+            
+            if (progress === 0) {
+                $progressbar.remove();
+            } 
         }
     };
     
@@ -156,28 +216,41 @@
      */
     
     Images.prototype.uploadDone = function (e, data) {
-        var that = this,
-            $place = this.$el.find('.medium-insert-active');
-
-        if ($place.is('p')) {
-            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
-            $place = this.$el.find('.medium-insert-active');
-        }
-
-        $place
-            .addClass('medium-insert-images')
-            .find('br')
-            .remove();
-        
         this.$el.find('.medium-insert-buttons').addClass('medium-insert-buttons-vertical');
-            
-        $.each(data.result.files, function (index, file) {
-            $place.append(that.templates['src/js/templates/images-image.hbs']({
-                img: file.url
-            }));
-        });
+
+        $.proxy(this, 'showImage', data.result.files[0].url, data)();
         
         this.sorting();
+    };
+    
+    /**
+     * Add uploaded / preview image to DOM
+     *
+     * @param {string} img
+     * @returns {void}
+     */
+    
+    Images.prototype.showImage = function (img, data) {
+        var $place;
+        
+        // If preview is allowed and preview image already exists,
+        // replace it with uploaded image
+        if (this.options.preview && data.context) {
+            data.context.find('img').attr('src', img);
+        } else {
+            $place = this.$el.find('.medium-insert-active');
+
+            data.context = $(this.templates['src/js/templates/images-image.hbs']({
+                img: img,
+                progress: this.options.preview
+            })).appendTo($place);
+            
+            $place.find('br').remove();
+            
+            if (this.options.preview) {
+                data.submit();
+            }
+        }
     };
     
     /**

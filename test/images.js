@@ -1,4 +1,4 @@
-/*global placeCaret: false */
+/*global placeCaret: false, Blob: false */
 
 module('images', {
     setup: function () {
@@ -17,22 +17,79 @@ module('images', {
     }
 });
 
-test('image done uploading', function () {
+asyncTest('image preview', function () {
+    var that = this;
+    
     this.$el.find('p').click();
     
+    this.addon.uploadAdd(null, { 
+        autoUpload: true,
+        files: [new Blob([''], { type: 'image/jpeg' })],
+        submit: function () {
+            equal(that.$el.find('.medium-insert-images').length, 1, '.medium-insert-images div added');
+            equal(that.$el.find('.medium-insert-images img').length, 1, 'image added');
+            equal(that.$el.find('.medium-insert-images .medium-insert-images-progress').length, 1, 'progressbar added');
+            ok(that.$el.find('.medium-insert-images img').attr('src').match(/^data:/), 'preview is displayed');
+            start();
+        },
+        process: function () {
+            return this;
+        },
+        done: function (callback) {
+            callback();
+        } 
+    });    
+});
+
+test('image preview replaced by uploaded image', function () {    
+    this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
+        '<figure><img src="data:" alt=""></figure>'+
+    '</div>');
+        
     this.addon.uploadDone(null, { 
-        result: { 
+        context: this.$el.find('figure'),
+        result: {
             files: [
-                { url: 'image1.jpg' }, 
-                { url: 'image2.jpg' }
+                { url: 'test.jpg' }
             ]
         }
-    });
-        
-    equal(this.$el.find('.medium-insert-images').length, 1, '.medium-insert-images div added');
-    equal(this.$el.find('.medium-insert-images img').length, 2, '2 images added');
-    equal(this.$el.find('.medium-insert-images img').first().attr('src'), 'image1.jpg', '1st image is correct');
-    equal(this.$el.find('.medium-insert-images img').last().attr('src'), 'image2.jpg', '2st image is correct');
+    });    
+    
+    equal(this.$el.find('.medium-insert-images img').attr('src'), 'test.jpg', 'preview replaced with uploaded image');
+});
+
+asyncTest('image upload without preview', function () {
+    var that = this;
+    
+    this.addon.options.preview = false;
+    this.$el.find('p').click();
+    
+    this.addon.uploadAdd(null, { 
+        autoUpload: true,
+        files: [new Blob([''], { type: 'image/jpeg' })],
+        submit: function () {
+            equal(that.$el.find('.medium-insert-images').length, 1, '.medium-insert-images div added');
+            equal(that.$el.find('.medium-insert-images progress').length, 1, 'progressbar added');
+            equal(that.$el.find('.medium-insert-images img').length, 0, 'no preview displayed');
+            
+            that.addon.uploadDone(null, { 
+                result: {
+                    files: [
+                        { url: 'test.jpg' }
+                    ]
+                }
+            }); 
+            
+            equal(that.$el.find('.medium-insert-images img').attr('src'), 'test.jpg', 'preview replaced with uploaded image');
+            start();
+        },
+        process: function () {
+            return this;
+        },
+        done: function (callback) {
+            callback();
+        } 
+    });    
 });
 
 test('selecting image', function () {

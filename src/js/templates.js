@@ -29,11 +29,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Ha
 
 
 
-this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<figure contenteditable=\"false\"><img src=\""
+this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  return "        <div class=\"medium-insert-images-progress\"></div>\n";
+  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<figure contenteditable=\"false\">\n    <img src=\""
     + escapeExpression(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"img","hash":{},"data":data}) : helper)))
-    + "\" alt=\"\"></figure>";
+    + "\" alt=\"\">\n";
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.progress : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "</figure>";
 },"useData":true});
 
 
