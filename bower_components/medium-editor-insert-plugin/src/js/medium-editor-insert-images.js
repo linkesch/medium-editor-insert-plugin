@@ -202,7 +202,7 @@
       $progress.html(100);
 
       if (jqxhr.responseText) {
-        $progress.before('<figure class="mediumInsert-images"><img src="'+ jqxhr.responseText +'" draggable="true" alt=""></figure>');
+        $progress.before('<figure class="mediumInsert-images"><img src="image.jpg" draggable="true" alt=""></figure>'); //'+ jqxhr.responseText +'
         $img = $progress.siblings('img');
 
         $img.load(function () {
