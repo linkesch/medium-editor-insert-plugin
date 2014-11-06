@@ -346,7 +346,7 @@
                 }
             });
 
-            if ($p.text().trim() === '') { 
+            if ($p.length && $p.text().trim() === '') { 
                 $p.addClass('medium-insert-active');               
                 $buttons.removeClass('medium-insert-buttons-vertical');
 
