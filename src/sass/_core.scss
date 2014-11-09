@@ -60,16 +60,15 @@
             padding: 0;
             list-style: none;
             display: none;
-            position: absolute;
+            position: relative;
             z-index: 2;
             left: 55px;
-            top: -5px;
+            top: -32px;
             li {
-                float: left;
+                display: inline-block;
                 a {
-                    display: block;
+                    display: inline-block;
                     margin: 0 5px;
-                    float: left;
                     width: 30px;
                     height: 30px;
                     border-radius: 20px;
@@ -86,12 +85,12 @@
         
         &.medium-insert-buttons-vertical {
             ul.medium-insert-buttons-addons {
-                top: 50px;
+                top: 23px;
                 left: 0;
                 li {
-                    float: none;
+                    display: block;
                     a {
-                        float: none;
+                        display: block;
                         margin: 5px 0;
                     }
                 }

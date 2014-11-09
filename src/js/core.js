@@ -9,9 +9,7 @@
             enabled: true,
             blocks: 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote',
             addons: {
-              images: {
-                  label: '<span class="fa fa-camera"></span>'
-              }
+              images: true // boolean or object containing configuration
             }
         };
         
@@ -246,7 +244,15 @@
         var that = this;
         
         $.each(this.options.addons, function (addon, options) {
-            that.$el[pluginName + ucfirst(addon)](options); 
+            var addonName = pluginName + ucfirst(addon);
+            
+            if (options === false) {
+                delete that.options.addons[addon];
+                return;
+            }
+            
+            that.$el[addonName](options);
+            that.options.addons[addon] = that.$el.data('plugin_'+ addonName).options;
         });
     };
 
@@ -296,7 +302,7 @@
      * @return {string} HTML template of buttons
      */
 
-    Core.prototype.getButtons = function () {
+    Core.prototype.getButtons = function () {        
         if (this.options.enabled === false) {
             return;
         }
