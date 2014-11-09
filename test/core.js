@@ -38,6 +38,9 @@ asyncTest('addons initialization', function () {
         start();
     });
     
+    this.$el.data('plugin_mediumInsertImages', {
+        options: {}
+    });
     this.$el.mediumInsert();
 });
 
@@ -129,9 +132,13 @@ asyncTest('calling addon\'s add function if addon\'s button is clicked', functio
         
     this.$el.html('<p id="paragraph">&nbsp;</p><p>test</p>');
         
-    this.$el.mediumInsert();
+    this.$el.mediumInsert({
+        addons: {
+            embeds: false
+        }
+    });
     addonInstance = this.$el.data('plugin_mediumInsertImages');
-    
+
     this.stub(addonInstance, 'add', function () {
         ok(1, 'add() called');
         addonInstance.add.restore();
