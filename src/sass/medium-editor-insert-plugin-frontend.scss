@@ -47,3 +47,18 @@
         margin: 0 auto;
     }
 }
+
+
+// Backwards copatibility with v0.*
+
+.mediumInsert {
+    @extend .medium-insert-images;
+}
+
+.mediumInsert.small {
+    @extend .medium-insert-images.medium-insert-images-left;
+}
+
+.mediumInsert-embeds {
+    @extend .medium-insert-embeds;
+}

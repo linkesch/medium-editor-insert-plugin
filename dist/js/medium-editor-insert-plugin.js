@@ -577,6 +577,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Embeds.prototype.init = function () {
         this.events();
+        this.backwardsCompatibility();
     };
 
     /**
@@ -591,6 +592,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .on('keyup click', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'));
     };    
+    
+    /**
+     * Replace v0.* class names with new ones
+     *
+     * @return {void}
+     */
+    
+    Embeds.prototype.backwardsCompatibility = function () {
+        this.$el.find('.mediumInsert-embeds')
+            .removeClass('mediumInsert-embeds')
+            .addClass('medium-insert-embeds');
+    };
     
     /**
      * Add embedded element
@@ -879,6 +892,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Images.prototype.init = function () {
         this.events();
+        this.backwardsCompatibility();
         this.sorting();
     };
 
@@ -896,6 +910,22 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.$el
             .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'))
             .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+    };
+    
+    /**
+     * Replace v0.* class names with new ones
+     *
+     * @return {void}
+     */
+    
+    Images.prototype.backwardsCompatibility = function () {
+        this.$el.find('.mediumInsert')
+            .removeClass('mediumInsert')
+            .addClass('medium-insert-images');
+            
+        this.$el.find('.medium-insert-images.small')
+            .removeClass('small')
+            .addClass('medium-insert-images-left');
     };
     
     /**

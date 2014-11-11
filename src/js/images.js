@@ -63,6 +63,7 @@
 
     Images.prototype.init = function () {
         this.events();
+        this.backwardsCompatibility();
         this.sorting();
     };
 
@@ -80,6 +81,22 @@
         this.$el
             .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'))
             .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+    };
+    
+    /**
+     * Replace v0.* class names with new ones
+     *
+     * @return {void}
+     */
+    
+    Images.prototype.backwardsCompatibility = function () {
+        this.$el.find('.mediumInsert')
+            .removeClass('mediumInsert')
+            .addClass('medium-insert-images');
+            
+        this.$el.find('.medium-insert-images.small')
+            .removeClass('small')
+            .addClass('medium-insert-images-left');
     };
     
     /**

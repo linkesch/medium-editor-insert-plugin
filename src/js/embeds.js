@@ -43,6 +43,7 @@
 
     Embeds.prototype.init = function () {
         this.events();
+        this.backwardsCompatibility();
     };
 
     /**
@@ -57,6 +58,18 @@
             .on('keyup click', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'));
     };    
+    
+    /**
+     * Replace v0.* class names with new ones
+     *
+     * @return {void}
+     */
+    
+    Embeds.prototype.backwardsCompatibility = function () {
+        this.$el.find('.mediumInsert-embeds')
+            .removeClass('mediumInsert-embeds')
+            .addClass('medium-insert-embeds');
+    };
     
     /**
      * Add embedded element
