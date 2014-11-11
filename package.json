@@ -23,7 +23,7 @@
     "grunt-sass": "~0.16.1",
     "grunt-csso": "^0.6.2",
     "grunt-banner": "^0.2.3",
-    "grunt-contrib-handlebars": "^0.9.0"
+    "grunt-contrib-handlebars": "^0.9.1"
   },
   "scripts": {
     "test": "grunt test --verbose"
