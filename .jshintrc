@@ -9,7 +9,9 @@
         "ok": false,
         "equal": false,
         "start": false,
-        "sinon": false
+        "sinon": false,
+        "alert": false,
+        "FB": false
     },
 
     "jquery" : true,

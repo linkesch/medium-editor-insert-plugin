@@ -34,3 +34,11 @@
       .medium-insert-images.medium-insert-images-grid figure img {
         max-width: calc(100% - 1em);
         margin: 0.5em; }
+
+.medium-insert-embeds {
+  text-align: center;
+  margin: 1em 0; }
+  .medium-insert-embeds iframe {
+    margin: 0px auto !important; }
+  .medium-insert-embeds div {
+    margin: 0px auto !important; }
