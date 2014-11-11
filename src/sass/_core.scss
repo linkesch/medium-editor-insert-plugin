@@ -1,23 +1,13 @@
 .medium-editor-insert-plugin {
+    outline: 0 solid transparent;
+    &:focus {
+        outline: 0 solid transparent;
+    }
+    
     .clearfix:before, &:before, .clearfix:after, &:after {
         content: " ";
         display: table;
         clear: both;
-    }
-
-    [draggable] {
-        user-select: none; 
-    }
-
-    &[contenteditable], [contenteditable] {
-        outline: 0 solid transparent;
-        &:focus {
-            outline: 0 solid transparent;
-        }
-    }
-    
-    * {
-        box-sizing: content-box;
     }
     
     p {
@@ -43,9 +33,10 @@
         }
         
         .medium-insert-buttons-show {
+            box-sizing: border-box;
             display: block;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             margin-top: -5px;
             border-radius: 20px;
             border: 1px solid;
@@ -67,10 +58,11 @@
             li {
                 display: inline-block;
                 a {
+                    box-sizing: border-box;
                     display: inline-block;
                     margin: 0 5px;
-                    width: 30px;
-                    height: 30px;
+                    width: 32px;
+                    height: 32px;
                     border-radius: 20px;
                     border: 1px solid;
                     font-size: 20px;
