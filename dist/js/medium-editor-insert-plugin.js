@@ -735,7 +735,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.getOembedHTML = function (url, callback) {        
         $.ajax({
             url: this.options.oembedProxy,
-            dataType: "json",
+            dataType: 'json',
             data: {
                 url: url
             },
@@ -762,14 +762,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
     
     Embeds.prototype.getEmbedHTML = function (url) {
-        var embed_tag;
+        var html;
         
         // We didn't get something we expect so let's get out of here.
-        if (!(new RegExp(['youtube', 'yout.be', 'vimeo', 'instagram'].join("|")).test(url))) {
+        if (!(new RegExp(['youtube', 'yout.be', 'vimeo', 'instagram'].join('|')).test(url))) {
             return false;
         }
 
-        embed_tag = url.replace(/\n?/g, '')
+        html = url.replace(/\n?/g, '')
             .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
             .replace(/^http:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
             //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
@@ -777,7 +777,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .replace(/^http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
 
-        return (/<("[^"]*"|'[^']*'|[^'">])*>/).test(embed_tag) ? embed_tag : false;
+        return (/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false;
     };
     
     /**
@@ -801,7 +801,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             
             this.$el.trigger('keyup').trigger('input');
 
-            if (html.indexOf("facebook") !== -1) {
+            if (html.indexOf('facebook') !== -1) {
                 if (typeof(FB) !== 'undefined') {
                     setTimeout(function () { 
                         FB.XFBML.parse();

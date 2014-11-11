@@ -39,6 +39,6 @@
   text-align: center;
   margin: 1em 0; }
   .medium-insert-embeds iframe {
-    margin: 0px auto !important; }
+    margin: 0 auto; }
   .medium-insert-embeds div {
-    margin: 0px auto !important; }
+    margin: 0 auto; }

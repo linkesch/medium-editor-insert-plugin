@@ -1,5 +1,5 @@
 body.dragging, body.dragging * {
-    cursor: move !important;
+    cursor: move;
 }
 
 .medium-insert-image-active {
@@ -13,13 +13,12 @@ body.dragging, body.dragging * {
 .medium-insert-images {
     figure {
         position: relative;
-        &.dragged {
-            position: absolute;
-            top: 0;
-            opacity: .5;
-            z-index: 2000;
-            margin: -50% 0 0 -50%;
-        }
+    }
+    .dragged {
+        position: absolute;
+        top: 0;
+        opacity: .5;
+        z-index: 2000;
     }
     .placeholder {
         position: relative;
