@@ -136,3 +136,13 @@ body.dragging, body.dragging * {
   top: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.4); }
+
+.medium-insert-embeds-input {
+  position: relative;
+  color: #ccc;
+  z-index: 1; }
+
+.medium-insert-embeds-placeholder {
+  position: absolute;
+  top: 0;
+  z-index: 0; }
