@@ -683,34 +683,28 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var $place = this.$el.find('.medium-insert-embeds-active'),
             re, url;
 
-        if ($place.length) {
+        if (!$place.length) {
+            return;
+        }
             
-            re = new RegExp(this.options.placeholder, 'g');
-            url = $place.text().replace(re, '').trim();
-            
-            // Backspace and delete
-            if (e.which === 8 || e.keyCode === 8 || e.which === 46 || e.keyCode === 46) {
-                if (url === '') {
-                    $place.remove();
-                }
-            // Enter
-            } else if (e.which === 13 || e.keyCode === 13) {
-                if (url === '') {
-                    $place.remove();
-                } else {
-                    
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    if (this.options.oembedProxy) {
-                        this.oembed(url);
-                    } else {
-                        this.parseUrl(url);
-                    }
-                    
-                }
+        re = new RegExp(this.options.placeholder, 'g');
+        url = $place.text().replace(re, '').trim();
+
+        // Return empty placeholder on backspace, delete or enter
+        if (url === '' && [8, 46, 13].indexOf(e.which) !== -1) {
+            $place.remove();
+            return;
+        }
+        
+        if (e.which === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+                
+            if (this.options.oembedProxy) {
+                this.oembed(url);
+            } else {
+                this.parseUrl(url);
             }
-            
         }
     };
     
@@ -1125,7 +1119,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Images.prototype.removeImage = function (e) {    
         var $image, $parent, $empty, range, sel;
 
-        if (e.keyCode === 8 || e.keyCode === 46) {
+        if (e.which === 8 || e.which === 46) {
             $image = this.$el.find('.medium-insert-image-active');
             
             if ($image.length) {

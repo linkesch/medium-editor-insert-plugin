@@ -118,7 +118,7 @@ test('unselecting image', function () {
 test('removing image', function () {
     var $event = $.Event('keydown');
     
-    $event.keyCode = 8;
+    $event.which = 8;
 
     this.$el.find('p')
         .addClass('medium-insert-images')
@@ -140,7 +140,7 @@ test('removing image', function () {
 asyncTest('deleting file', function () {
     var $event = $.Event('keydown');
     
-    $event.keyCode = 8;
+    $event.which = 8;
 
     this.$el.find('p')
         .addClass('medium-insert-images')

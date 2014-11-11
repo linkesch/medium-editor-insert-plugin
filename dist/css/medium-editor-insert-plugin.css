@@ -110,7 +110,7 @@
           display: block;
           margin: 5px 0; }
 
-body.dragging {
+.dragging {
   cursor: move; }
 
 .medium-insert-image-active {

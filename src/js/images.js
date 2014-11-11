@@ -303,7 +303,7 @@
     Images.prototype.removeImage = function (e) {    
         var $image, $parent, $empty, range, sel;
 
-        if (e.keyCode === 8 || e.keyCode === 46) {
+        if (e.which === 8 || e.which === 46) {
             $image = this.$el.find('.medium-insert-image-active');
             
             if ($image.length) {
