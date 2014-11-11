@@ -147,8 +147,7 @@
     
     Embeds.prototype.processLink = function (e) {
         var $place = this.$el.find('.medium-insert-embeds-active'),
-            that = this,
-            re, url, html;
+            re, url;
 
         if ($place.length) {
             
@@ -170,18 +169,9 @@
                     e.stopPropagation();
                     
                     if (this.options.oembedProxy) {
-                        this.getOembedHTML(url, function (error, oebmed) {
-                            var html = !error && oebmed && oebmed.html;
-
-                            if (oebmed && !oebmed.html && oebmed.type === 'photo' && oebmed.url) {
-                                html = '<img src="' + oebmed.url + '" alt="">';
-                            }
-
-                            $.proxy(that, 'embed', html)();
-                        });
+                        this.oembed(url);
                     } else {
-                        html = this.getEmbedHTML(url);
-                        this.embed(html);
+                        this.parseUrl(url);
                     }
                     
                 }
@@ -194,19 +184,26 @@
      * Get HTML via oEmbed proxy
      *
      * @param {string} url
-     * @param {function} callback
      * @return {void}
      */
     
-    Embeds.prototype.getOembedHTML = function (url, callback) {        
+    Embeds.prototype.oembed = function (url) {    
+        var that = this;
+            
         $.ajax({
             url: this.options.oembedProxy,
             dataType: 'json',
             data: {
                 url: url
             },
-            success: function(data, textStatus, jqXHR) {
-                callback(null, data, jqXHR);
+            success: function(data) {
+                var html = data && data.html;
+
+                if (data && !data.html && data.type === 'photo' && data.url) {
+                    html = '<img src="' + data.url + '" alt="">';
+                }
+
+                $.proxy(that, 'embed', html)();
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 var responseJSON = (function() {
@@ -215,7 +212,7 @@
                     } catch(e) {}
                 })();
 
-                callback((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message, responseJSON, jqXHR);
+                $.proxy(that, 'embed', (responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message)();
             }
         });        
     };
@@ -224,10 +221,10 @@
      * Get HTML using regexp
      *
      * @param {string} url
-     * @return {string}
+     * @return {void}
      */
     
-    Embeds.prototype.getEmbedHTML = function (url) {
+    Embeds.prototype.parseUrl = function (url) {
         var html;
         
         // We didn't get something we expect so let's get out of here.
@@ -243,7 +240,7 @@
             .replace(/^http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
 
-        return (/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false;
+        this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
     };
     
     /**
