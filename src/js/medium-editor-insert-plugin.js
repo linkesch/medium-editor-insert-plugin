@@ -334,7 +334,13 @@
         // by removing all empty placeholders
         if (that.isFirefox){
           $('.mediumInsert .mediumInsert-placeholder:empty', $el).each(function () {
-            $(this).parent().remove();
+            var parent = $(this).parent();
+
+            // if the parent has at least one div child it means it can be a plugin, so we don't remove it
+            // for example, embed works like that (Fix #98)
+            if (0 === parent.find('.mediumInsert-buttons div').length) {
+              parent.remove();
+            }
           });
         }
 
