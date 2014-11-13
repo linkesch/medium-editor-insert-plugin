@@ -235,7 +235,7 @@
         var html;
         
         // We didn't get something we expect so let's get out of here.
-        if (!(new RegExp(['youtube', 'yout.be', 'vimeo', 'instagram'].join('|')).test(url))) {
+        if (!(new RegExp(['youtube', 'youtu.be', 'vimeo', 'instagram'].join('|')).test(url))) {
             return false;
         }
 
