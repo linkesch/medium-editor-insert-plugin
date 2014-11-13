@@ -338,7 +338,8 @@
             $current = $(range.commonAncestorContainer),
             $buttons = this.$el.find('.medium-insert-buttons'),
             isAddon = false,
-            $p = $current.is('p') ? $current : $current.closest('p');
+            $p = $current.is('p') ? $current : $current.closest('p'),
+            left;
 
         if ($el.closest('.medium-insert-buttons').length === 0 && $current.closest('.medium-insert-buttons').length === 0) {
 
@@ -359,8 +360,10 @@
 
                 // Left position is set according to parent paragraph
                 // Top position is set according to current active element
+                left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
+                
                 $buttons.css({
-                    left: $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10),
+                    left: left < 0 ? $p.offset().left : left,
                     top: $current.offset().top
                 });
                 

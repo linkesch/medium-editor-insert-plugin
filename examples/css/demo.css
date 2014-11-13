@@ -25,7 +25,7 @@ body {
 #container {
     max-width: 960px;
     margin: 30px auto;
-    padding: 0 60px;
+    padding: 0 15px;
 }
 
 .editable {
