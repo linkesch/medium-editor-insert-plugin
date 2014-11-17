@@ -112,6 +112,7 @@
         $file.fileupload({
             url: this.options.uploadScript,
             dataType: 'json',
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },

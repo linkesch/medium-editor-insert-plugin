@@ -594,33 +594,33 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .on('selectstart mousedown', '.medium-insert-embeds-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
             .on('keyup click', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'));
-    };    
-    
+    };
+
     /**
      * Replace v0.* class names with new ones
      *
      * @return {void}
      */
-    
+
     Embeds.prototype.backwardsCompatibility = function () {
         this.$el.find('.mediumInsert-embeds')
             .removeClass('mediumInsert-embeds')
             .addClass('medium-insert-embeds');
     };
-    
+
     /**
      * Add embedded element
      *
      * @return {void}
      */
-    
-    Embeds.prototype.add = function () {   
+
+    Embeds.prototype.add = function () {
         var $place = this.$el.find('.medium-insert-active');
-                     
+
         $place.addClass('medium-insert-embeds-input medium-insert-embeds-active');
-            
+
         this.togglePlaceholder({ target: $place.get(0) });
-        
+
         $place.click();
     };
 
@@ -630,14 +630,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * @param {Event} e
      * @return {void}
      */
-    
+
     Embeds.prototype.disablePlaceholderSelection = function (e) {
         var $place = $(e.target).closest('.medium-insert-embeds-input'),
             range, sel;
-        
+
         e.preventDefault();
         e.stopPropagation();
-        
+
         $place.prepend('&nbsp;');
 
         // Place caret at the beginning of embeds
@@ -654,8 +654,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      *
      * @param {Event} e
      * @return {void}
-     */    
-    
+     */
+
     Embeds.prototype.togglePlaceholder = function (e) {
         var $place = $(e.target),
             selection = window.getSelection(),
@@ -670,7 +670,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         }
 
         if ($place.hasClass('medium-insert-embeds-active')) {
-            
+
             $placeholder = $place.find('.medium-insert-embeds-placeholder');
             re = new RegExp(this.options.placeholder, 'g');
             text = $place.text().replace(re, '').trim();
@@ -682,19 +682,19 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             } else if (text !== '' && $placeholder.length) {
                 $placeholder.remove();
             }
-            
+
         } else {
             this.$el.find('.medium-insert-embeds-active').remove();
         }
     };
-    
+
     /**
      * Process link
      *
      * @param {Event} e
      * @return {void}
      */
-    
+
     Embeds.prototype.processLink = function (e) {
         var $place = this.$el.find('.medium-insert-embeds-active'),
             re, url;
@@ -702,7 +702,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if (!$place.length) {
             return;
         }
-            
+
         re = new RegExp(this.options.placeholder, 'g');
         url = $place.text().replace(re, '').trim();
 
@@ -711,11 +711,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $place.remove();
             return;
         }
-        
+
         if (e.which === 13) {
             e.preventDefault();
             e.stopPropagation();
-                
+
             if (this.options.oembedProxy) {
                 this.oembed(url);
             } else {
@@ -723,17 +723,17 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             }
         }
     };
-    
+
     /**
      * Get HTML via oEmbed proxy
      *
      * @param {string} url
      * @return {void}
      */
-    
-    Embeds.prototype.oembed = function (url) {    
+
+    Embeds.prototype.oembed = function (url) {
         var that = this;
-            
+
         $.ajax({
             url: this.options.oembedProxy,
             dataType: 'json',
@@ -756,21 +756,23 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     } catch(e) {}
                 })();
 
-                $.proxy(that, 'embed', (responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message)();
+                window.console.log((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message);
+
+                $.proxy(that, 'convertBadEmbed', url)();
             }
-        });        
+        });
     };
-    
+
     /**
      * Get HTML using regexp
      *
      * @param {string} url
      * @return {void}
      */
-    
+
     Embeds.prototype.parseUrl = function (url) {
         var html;
-        
+
         // We didn't get something we expect so let's get out of here.
         if (!(new RegExp(['youtube', 'youtu.be', 'vimeo', 'instagram'].join('|')).test(url))) {
             return false;
@@ -786,7 +788,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
     };
-    
+
     /**
      * Add html to page
      *
@@ -796,7 +798,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Embeds.prototype.embed = function (html) {
         var $place = this.$el.find('.medium-insert-embeds-active');
-        
+
         if (!html) {
             alert('Incorrect URL format specified');
             return false;
@@ -805,12 +807,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 html: html
             }));
             $place.remove();
-            
+
             this.$el.trigger('keyup').trigger('input');
 
             if (html.indexOf('facebook') !== -1) {
                 if (typeof(FB) !== 'undefined') {
-                    setTimeout(function () { 
+                    setTimeout(function () {
                         FB.XFBML.parse();
                     }, 2000);
                 }
@@ -818,8 +820,41 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         }
     };
 
+    /**
+     * Convert bad oEmbed content to an actual line.
+     * Instead of displaying the error message we convert the bad embed
+     *
+     * @param {string} content Bad content
+     *
+     * @return {void}
+     */
+    Embeds.prototype.convertBadEmbed = function (content) {
+        var $place, $empty, $content, range, sel,
+            emptyTemplate = this.templates['src/js/templates/core-empty-line.hbs']().trim();
+
+        $place = this.$el.find('.medium-insert-embeds-active');
+
+        // convert embed node to an empty node and insert the bad embed inside
+        $content = $(emptyTemplate);
+        $place.before($content);
+        $place.remove();
+        $content.html(content);
+
+        // add an new empty node right after to simulate Enter press
+        $empty = $(emptyTemplate);
+        $content.after($empty);
+
+        // Place caret at the beginning the new line
+        range = document.createRange();
+        sel = window.getSelection();
+        range.setStart($place.get(0).childNodes[0], 0);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    };
+
     /** Plugin initialization */
-    
+
     $.fn[pluginName + addonName] = function (options) {
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName + addonName)) {
@@ -944,6 +979,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $file.fileupload({
             url: this.options.uploadScript,
             dataType: 'json',
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },
