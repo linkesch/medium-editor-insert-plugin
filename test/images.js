@@ -3,13 +3,13 @@
 module('images', {
     setup: function () {
         this.clock = sinon.useFakeTimers();
-        
+
         $('#qunit-fixture').html('<div class="editable"></div>');
         this.$el = $('.editable');
         this.$el.mediumInsert();
         this.addon = this.$el.data('plugin_mediumInsertImages');
-        
-        // Place caret into first paragraph 
+
+        // Place caret into first paragraph
         placeCaret(this.$el.find('p').get(0), 0);
     },
     teardown: function () {
@@ -19,10 +19,10 @@ module('images', {
 
 asyncTest('image preview', function () {
     var that = this;
-    
+
     this.$el.find('p').click();
-    
-    this.addon.uploadAdd(null, { 
+
+    this.addon.uploadAdd(null, {
         autoUpload: true,
         files: [new Blob([''], { type: 'image/jpeg' })],
         submit: function () {
@@ -37,49 +37,49 @@ asyncTest('image preview', function () {
         },
         done: function (callback) {
             callback();
-        } 
-    });    
+        }
+    });
 });
 
-test('image preview replaced by uploaded image', function () {    
+test('image preview replaced by uploaded image', function () {
     this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
         '<figure><img src="data:" alt=""></figure>'+
     '</div>');
-        
-    this.addon.uploadDone(null, { 
+
+    this.addon.uploadDone(null, {
         context: this.$el.find('figure'),
         result: {
             files: [
                 { url: 'test.jpg' }
             ]
         }
-    });    
-    
+    });
+
     equal(this.$el.find('.medium-insert-images img').attr('src'), 'test.jpg', 'preview replaced with uploaded image');
 });
 
 asyncTest('image upload without preview', function () {
     var that = this;
-    
+
     this.addon.options.preview = false;
     this.$el.find('p').click();
-    
-    this.addon.uploadAdd(null, { 
+
+    this.addon.uploadAdd(null, {
         autoUpload: true,
         files: [new Blob([''], { type: 'image/jpeg' })],
         submit: function () {
             equal(that.$el.find('.medium-insert-images').length, 1, '.medium-insert-images div added');
             equal(that.$el.find('.medium-insert-images progress').length, 1, 'progressbar added');
             equal(that.$el.find('.medium-insert-images img').length, 0, 'no preview displayed');
-            
-            that.addon.uploadDone(null, { 
+
+            that.addon.uploadDone(null, {
                 result: {
                     files: [
                         { url: 'test.jpg' }
                     ]
                 }
-            }); 
-            
+            });
+
             equal(that.$el.find('.medium-insert-images img').attr('src'), 'test.jpg', 'preview replaced with uploaded image');
             start();
         },
@@ -88,8 +88,8 @@ asyncTest('image upload without preview', function () {
         },
         done: function (callback) {
             callback();
-        } 
-    });    
+        }
+    });
 });
 
 test('selecting image', function () {
@@ -99,7 +99,7 @@ test('selecting image', function () {
 
     this.$el.find('img').click();
     this.clock.tick(50);
-    
+
     ok(this.$el.find('img').hasClass('medium-insert-image-active'), 'image is selected');
     equal(this.$el.find('.medium-insert-images-toolbar').length, 1, 'image toolbar added');
 });
@@ -110,14 +110,14 @@ test('unselecting image', function () {
         .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"></figure>');
 
     this.$el.click();
-    
+
     equal(this.$el.find('img').hasClass('medium-insert-image-active'), false, 'image is unselected');
     equal(this.$el.find('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
 });
 
 test('removing image', function () {
     var $event = $.Event('keydown');
-    
+
     $event.which = 8;
 
     this.$el.find('p')
@@ -126,20 +126,21 @@ test('removing image', function () {
             '<figure><img src="image2.jpg" alt="" class="medium-insert-image-active"></figure>');
 
     this.$el.trigger($event);
-    
+
     equal(this.$el.find('img').length, 1, 'image deleted');
     equal(this.$el.find('img').attr('src'), 'image1.jpg', 'not selected image was not deleted');
-    
-    
+
+
     this.$el.find('img').addClass('medium-insert-image-active');
     this.$el.trigger($event);
-    
-    equal(this.$el.find('.medium-insert-images').length, 0, 'whole .medium-insert-images was delated');
+
+    equal(this.$el.find('.medium-insert-images').length, 0, 'whole .medium-insert-images was deleted');
+    equal(this.$el.find('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
 });
 
 asyncTest('deleting file', function () {
     var $event = $.Event('keydown');
-    
+
     $event.which = 8;
 
     this.$el.find('p')
@@ -150,7 +151,7 @@ asyncTest('deleting file', function () {
     this.stub(jQuery, 'post', function () {
        ok(1, 'ajax call created');
        jQuery.post.restore();
-       start(); 
+       start();
     });
 
     this.$el.trigger($event);
@@ -160,7 +161,7 @@ test('choosing image style', function () {
     var $p = this.$el.find('p')
         .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
         .append('<figure><img src="image1.jpg" alt=""></figure>');
-        
+
     $p.find('img').click();
     this.clock.tick(50);
 
@@ -170,10 +171,10 @@ test('choosing image style', function () {
     equal($p.hasClass('medium-insert-images-left'), false, 'old style removed');
 });
 
-asyncTest('choosing image style calls callback function', function () {  
+asyncTest('choosing image style calls callback function', function () {
     $('#qunit-fixture').html('<div class="editable"></div>');
     this.$el = $('.editable');
-      
+
     this.$el.mediumInsert({
         addons: {
             images: {
@@ -188,16 +189,16 @@ asyncTest('choosing image style calls callback function', function () {
             }
         }
     });
-    
+
     this.$el.find('p')
         .addClass('medium-insert-images')
         .append('<figure><img src="image1.jpg" alt=""></figure>');
-        
-    // Place caret into first paragraph 
+
+    // Place caret into first paragraph
     placeCaret(this.$el.find('p').get(0), 0);
 
     this.$el.find('img').click();
     this.clock.tick(50);
-    
+
     this.$el.find('.medium-insert-images-toolbar .medium-editor-action').first().click();
 });

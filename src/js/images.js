@@ -332,6 +332,8 @@
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
                 
+                this.$el.find('.medium-insert-images-toolbar').remove();
+
                 if ($parent.find('figure').length === 0) {
                     $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
                     $parent.before($empty);
