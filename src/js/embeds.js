@@ -27,7 +27,7 @@
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
 
-        this.options = $.extend(true, {}, defaults, options) ;
+        this.options = $.extend(true, {}, defaults, options);
 
         this._defaults = defaults;
         this._name = pluginName;
@@ -72,6 +72,19 @@
     };
 
     /**
+     * Get the Core object
+     *
+     * @return {object} Core object
+     */
+    Embeds.prototype.getCore = function () {
+        if (typeof(this.core) === 'undefined') {
+            this.core = this.$el.data('plugin_'+ pluginName);
+        }
+
+        return this.core;
+    };
+
+    /**
      * Add embedded element
      *
      * @return {void}
@@ -95,21 +108,14 @@
      */
 
     Embeds.prototype.disablePlaceholderSelection = function (e) {
-        var $place = $(e.target).closest('.medium-insert-embeds-input'),
-            range, sel;
+        var $place = $(e.target).closest('.medium-insert-embeds-input');
 
         e.preventDefault();
         e.stopPropagation();
 
         $place.prepend('&nbsp;');
 
-        // Place caret at the beginning of embeds
-        range = document.createRange();
-        sel = window.getSelection();
-        range.setStart($place.get(0).childNodes[0], 0);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
+        this.getCore().moveCaret($place);
     };
 
     /**
@@ -292,7 +298,7 @@
      * @return {void}
      */
     Embeds.prototype.convertBadEmbed = function (content) {
-        var $place, $empty, $content, range, sel,
+        var $place, $empty, $content,
             emptyTemplate = this.templates['src/js/templates/core-empty-line.hbs']().trim();
 
         $place = this.$el.find('.medium-insert-embeds-active');
@@ -307,13 +313,7 @@
         $empty = $(emptyTemplate);
         $content.after($empty);
 
-        // Place caret at the beginning the new line
-        range = document.createRange();
-        sel = window.getSelection();
-        range.setStart($place.get(0).childNodes[0], 0);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
+        this.getCore().moveCaret($place);
     };
 
     /** Plugin initialization */
