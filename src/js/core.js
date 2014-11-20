@@ -13,14 +13,14 @@
               embeds: true
             }
         };
-        
+
     /**
      * Capitalize first character
      *
      * @param {string} str
-     * @return {string} 
+     * @return {string}
      */
-        
+
     function ucfirst (str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
@@ -45,7 +45,7 @@
 
         this._defaults = defaults;
         this._name = pluginName;
-        
+
         // Extend editor's functions
         if (options && options.editor) {
             options.editor._serialize = options.editor.serialize;
@@ -71,7 +71,7 @@
         if (typeof this.options.addons !== 'object' || Object.keys(this.options.addons).length === 0) {
             this.disable();
         }
-        
+
         this.initAddons();
         this.clean();
         this.addButtons();
@@ -96,13 +96,13 @@
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
     };
-    
+
     /**
      * Extend editor's serialize function
      *
      * @return {object} Serialized data
      */
-    
+
     Core.prototype.editorSerialize = function () {
         var data = this._serialize();
 
@@ -110,36 +110,36 @@
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-buttons').remove();
-            
+
             data[key].value = $data.html();
         });
-        
+
         return data;
     };
-    
+
     /**
      * Extend editor's deactivate function to deactivate this plugin too
      *
-     * @return {void} 
+     * @return {void}
      */
-    
+
     Core.prototype.editorDeactivate = function () {
         this._deactivate();
-        
+
         $.each(this.elements, function (key, el) {
             $(el).data('plugin_' + pluginName).disable();
         });
     };
-    
+
     /**
      * Extend editor's activate function to activate this plugin too
      *
-     * @return {void} 
+     * @return {void}
      */
-    
+
     Core.prototype.editorActivate = function () {
         this._activate();
-        
+
         $.each(this.elements, function (key, el) {
             $(el).data('plugin_' + pluginName).enable();
         });
@@ -187,7 +187,7 @@
 
     Core.prototype.disableSelection = function (e) {
         var $el = $(e.target);
-        
+
         if ($el.is('img') === false || $el.hasClass('medium-insert-buttons-show')) {
             e.preventDefault();
         }
@@ -234,24 +234,24 @@
             this.$el.addClass('medium-editor-placeholder');
         }
     };
-    
+
     /**
      * Initialize addons
-     * 
+     *
      * @return {void}
      */
-    
+
     Core.prototype.initAddons = function () {
         var that = this;
-        
+
         $.each(this.options.addons, function (addon, options) {
             var addonName = pluginName + ucfirst(addon);
-            
+
             if (options === false) {
                 delete that.options.addons[addon];
                 return;
             }
-            
+
             that.$el[addonName](options);
             that.options.addons[addon] = that.$el.data('plugin_'+ addonName).options;
         });
@@ -303,7 +303,7 @@
      * @return {string} HTML template of buttons
      */
 
-    Core.prototype.getButtons = function () {        
+    Core.prototype.getButtons = function () {
         if (this.options.enabled === false) {
             return;
         }
@@ -312,16 +312,16 @@
             addons: this.options.addons
         }).trim();
     };
-    
+
     /**
      * Appends buttons at the end of the $el
      *
      * @return {void}
      */
-    
+
     Core.prototype.addButtons = function () {
         var $buttons = $(this.getButtons());
-        
+
         this.$el.append($buttons);
     };
 
@@ -354,78 +354,97 @@
                 }
             });
 
-            if ($p.length && $p.text().trim() === '') { 
-                $p.addClass('medium-insert-active');               
+            if ($p.length && $p.text().trim() === '') {
+                $p.addClass('medium-insert-active');
                 $buttons.removeClass('medium-insert-buttons-vertical');
 
                 // Left position is set according to parent paragraph
                 // Top position is set according to current active element
                 left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-                
+
                 $buttons.css({
                     left: left < 0 ? $p.offset().left : left,
                     top: $current.offset().top
                 });
-                
+
                 if (isAddon) {
                     $buttons.addClass('medium-insert-buttons-vertical');
                 }
-                
+
                 $buttons.show();
             } else {
                 this.hideButtons();
             }
         }
     };
-    
+
     /**
      * Hides buttons
      *
      * @returns {void}
      */
-    
+
     Core.prototype.hideButtons = function () {
         this.$el.find('.medium-insert-buttons').hide();
         this.$el.find('.medium-insert-buttons-addons').hide();
     };
-    
+
     /**
      * Toggles addons buttons
      *
      * @return {void}
      */
-    
+
     Core.prototype.toggleAddons = function () {
         this.$el.find('.medium-insert-buttons-addons').toggle();
     };
-    
+
     /**
      * Hide addons buttons
      *
      * @return {void}
      */
-    
+
     Core.prototype.hideAddons = function () {
         this.$el.find('.medium-insert-buttons-addons').hide();
     };
-    
+
     /**
      * Call addon's action
      *
      * @param {Event} e
      * @return {void}
      */
-    
+
     Core.prototype.addonAction = function (e) {
         var $a = $(e.target).is('a') ? $(e.target) : $(e.target).closest('a'),
             addon = $a.data('addon'),
             action = $a.data('action');
 
-        this.$el.data('plugin_'+ pluginName + ucfirst(addon))[action](); 
+        this.$el.data('plugin_'+ pluginName + ucfirst(addon))[action]();
+    };
+
+    /**
+     * Move caret at the beginning of the empty paragraph
+     *
+     * @param {DOM} element Element where to place the caret
+     *
+     * @return {void}
+     */
+
+    Core.prototype.moveCaret = function (element) {
+        var range, sel;
+
+        range = document.createRange();
+        sel = window.getSelection();
+        range.setStart(element.get(0).childNodes[0], 0);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
     };
 
     /** Plugin initialization */
-    
+
     $.fn[pluginName] = function (options) {
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName)) {

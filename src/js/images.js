@@ -11,7 +11,7 @@
             deleteScript: 'delete.php',
             preview: true,
             styles: {
-                wide: { 
+                wide: {
                     label: '<span class="fa fa-align-justify"></span>'
                 },
                 left: {
@@ -42,11 +42,11 @@
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
 
-        this.options = $.extend(true, {}, defaults, options) ;
+        this.options = $.extend(true, {}, defaults, options);
 
         this._defaults = defaults;
         this._name = pluginName;
-        
+
         // Allow image preview only in browsers, that support's that
         if (this.options.preview && !window.FileReader) {
             this.options.preview = false;
@@ -77,38 +77,51 @@
         $(document)
             .on('click', $.proxy(this, 'unselectImage'))
             .on('keydown', $.proxy(this, 'removeImage'));
-        
+
         this.$el
             .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'))
             .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
     };
-    
+
     /**
      * Replace v0.* class names with new ones
      *
      * @return {void}
      */
-    
+
     Images.prototype.backwardsCompatibility = function () {
         this.$el.find('.mediumInsert')
             .removeClass('mediumInsert')
             .addClass('medium-insert-images');
-            
+
         this.$el.find('.medium-insert-images.small')
             .removeClass('small')
             .addClass('medium-insert-images-left');
     };
-    
+
+    /**
+     * Get the Core object
+     *
+     * @return {object} Core object
+     */
+    Images.prototype.getCore = function () {
+        if (typeof(this.core) === 'undefined') {
+            this.core = this.$el.data('plugin_'+ pluginName);
+        }
+
+        return this.core;
+    };
+
     /**
      * Add image
-     * 
+     *
      * @return {void}
      */
-    
+
     Images.prototype.add = function () {
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
-        
+
         $file.fileupload({
             url: this.options.uploadScript,
             dataType: 'json',
@@ -126,10 +139,10 @@
                 $.proxy(that, 'uploadDone', e, data)();
             }
         });
-        
+
         $file.click();
     };
-    
+
     /**
      * Callback invoked as soon as files are added to the fileupload widget - via file input selection, drag & drop or add API call.
      * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#add
@@ -138,30 +151,30 @@
      * @param {object} data
      * @return {void}
      */
-    
+
     Images.prototype.uploadAdd = function (e, data) {
         var $place = this.$el.find('.medium-insert-active'),
             that = this,
-            reader; 
-            
-        // Replace paragraph with div, because figure elements can't be inside paragraph 
+            reader;
+
+        // Replace paragraph with div, because figure elements can't be inside paragraph
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
         }
-        
+
         $place.addClass('medium-insert-images');
-                        
+
         if (this.options.preview === false && $place.find('progress').length === 0) {
             $place.append(this.templates['src/js/templates/images-progressbar.hbs']());
         }
-        
-        if (data.autoUpload || (data.autoUpload !== false && $(e.target).fileupload('option', 'autoUpload'))) {            
+
+        if (data.autoUpload || (data.autoUpload !== false && $(e.target).fileupload('option', 'autoUpload'))) {
             data.process().done(function () {
                 // If preview is set to true, let the showImage handle the upload start
                 if (that.options.preview) {
                     reader = new FileReader();
-                    
+
                     reader.onload = function (e) {
                         $.proxy(that, 'showImage', e.target.result, data)();
                     };
@@ -173,84 +186,84 @@
             });
         }
     };
-    
+
     /**
      * Callback for global upload progress events
      * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#progressall
-     * 
+     *
      * @param {Event} e
      * @param {object} data
      * @return {void}
      */
-    
+
     Images.prototype.uploadProgressall = function (e, data) {
         var progress, $progressbar;
-        
+
         if (this.options.preview === false) {
             progress = parseInt(data.loaded / data.total * 100, 10);
             $progressbar = this.$el.find('.medium-insert-active').find('progress');
-                
+
             $progressbar
                 .attr('value', progress)
                 .text(progress);
-            
+
             if (progress === 100) {
                 $progressbar.remove();
             }
         }
     };
-    
+
     /**
      * Callback for upload progress events.
      * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#progress
-     * 
+     *
      * @param {Event} e
      * @param {object} data
      * @return {void}
      */
-    
+
     Images.prototype.uploadProgress = function (e, data) {
         var progress, $progressbar;
-        
+
         if (this.options.preview) {
             progress = 100 - parseInt(data.loaded / data.total * 100, 10);
             $progressbar = data.context.find('.medium-insert-images-progress');
-            
+
             $progressbar.css('width', progress +'%');
-            
+
             if (progress === 0) {
                 $progressbar.remove();
-            } 
+            }
         }
     };
-    
+
     /**
      * Callback for successful upload requests.
      * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#done
-     * 
+     *
      * @param {Event} e
      * @param {object} data
      * @return {void}
      */
-    
+
     Images.prototype.uploadDone = function (e, data) {
         this.$el.find('.medium-insert-buttons').addClass('medium-insert-buttons-vertical');
 
         $.proxy(this, 'showImage', data.result.files[0].url, data)();
-        
+
         this.sorting();
     };
-    
+
     /**
      * Add uploaded / preview image to DOM
      *
      * @param {string} img
      * @returns {void}
      */
-    
+
     Images.prototype.showImage = function (img, data) {
         var $place;
-        
+
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
         if (this.options.preview && data.context) {
@@ -262,44 +275,44 @@
                 img: img,
                 progress: this.options.preview
             })).appendTo($place);
-            
+
             $place.find('br').remove();
-            
+
             if (this.options.preview) {
                 data.submit();
             }
         }
     };
-    
+
     /**
      * Select clicked image
      *
      * @param {Event} e
      * @returns {void}
      */
-    
+
     Images.prototype.selectImage = function (e) {
         var $image = $(e.target),
             that = this;
-        
+
         $image.addClass('medium-insert-image-active');
-        
+
         setTimeout(function () {
             that.addToolbar();
         }, 50);
     };
-    
+
     /**
      * Unselect selected image
      *
      * @param {Event} e
      * @returns {void}
      */
-    
+
     Images.prototype.unselectImage = function (e) {
         var $el = $(e.target),
             $image = this.$el.find('.medium-insert-image-active');
-        
+
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
             this.$el.find('.medium-insert-images-toolbar').remove();
@@ -307,72 +320,66 @@
         }
 
         $image.removeClass('medium-insert-image-active');
-        
+
         this.$el.find('.medium-insert-images-toolbar').remove();
     };
-    
+
     /**
      * Remove image
      *
      * @param {Event} e
      * @returns {void}
      */
-    
-    Images.prototype.removeImage = function (e) {    
-        var $image, $parent, $empty, range, sel;
+
+    Images.prototype.removeImage = function (e) {
+        var $image, $parent, $empty;
 
         if (e.which === 8 || e.which === 46) {
             $image = this.$el.find('.medium-insert-image-active');
-            
+
             if ($image.length) {
                 e.preventDefault();
-                
+
                 this.deleteFile($image.attr('src'));
-            
+
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
-                
+
                 this.$el.find('.medium-insert-images-toolbar').remove();
 
                 if ($parent.find('figure').length === 0) {
                     $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
                     $parent.before($empty);
                     $parent.remove();
-                    
+
                     // Hide addons
-                    this.$el.data('plugin_'+ pluginName).hideAddons();
-                    
-                    // Place caret at the beginning of the empty paragraph
-                    range = document.createRange();
-                    sel = window.getSelection();
-                    range.setStart($empty.get(0).childNodes[0], 0);
-                    range.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
+                    this.getCore().hideAddons();
+
+                    this.getCore().moveCaret($empty);
                 }
             }
         }
     };
-    
+
     /**
      * Makes ajax call to deleteScript
-     * 
+     *
      * @param {String} file File name
      * @returns {void}
      */
-    
+
     Images.prototype.deleteFile = function (file) {
         if (this.options.deleteScript) {
             $.post(this.options.deleteScript, { file: file });
         }
     };
-    
+
     /**
      * Adds image toolbar to editor
      *
      * @returns {void}
      */
-    
+
     Images.prototype.addToolbar = function () {
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
@@ -390,14 +397,14 @@
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
             })
             .fadeIn();
-            
+
         $toolbar.find('button').each(function () {
             if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
                 active = true;
-            } 
+            }
         });
-        
+
         if (active === false) {
             $toolbar.find('button').first().addClass('medium-editor-button-active');
         }
@@ -405,11 +412,11 @@
 
     /**
      * Fires toolbar action
-     * 
+     *
      * @param {Event} e
      * @returns {void}
-     */    
-    
+     */
+
     Images.prototype.toolbarAction = function (e) {
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             $li = $button.closest('li'),
@@ -426,26 +433,26 @@
 
             if ($(this).hasClass('medium-editor-button-active')) {
                 $p.addClass(className);
-                
+
                 if (that.options.styles[$(this).data('action')].added) {
                     that.options.styles[$(this).data('action')].added($p);
                 }
             } else {
                 $p.removeClass(className);
-                
+
                 if (that.options.styles[$(this).data('action')].removed) {
                     that.options.styles[$(this).data('action')].removed($p);
                 }
             }
         });
     };
-    
+
     /**
      * Initialize sorting
      *
      * @returns {void}
      */
-    
+
     Images.prototype.sorting = function () {
         $('.medium-insert-images').sortable({
             group: 'medium-insert-images',
@@ -458,7 +465,7 @@
     };
 
     /** Plugin initialization */
-    
+
     $.fn[pluginName + addonName] = function (options) {
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName + addonName)) {
