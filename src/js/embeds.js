@@ -113,8 +113,6 @@
         e.preventDefault();
         e.stopPropagation();
 
-        $place.prepend('&nbsp;');
-
         this.getCore().moveCaret($place);
     };
 
