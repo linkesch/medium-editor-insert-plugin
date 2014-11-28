@@ -397,6 +397,10 @@
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
             })
             .fadeIn();
+            
+        $toolbar.offset({
+            top: $image.offset().top - $toolbar.height() - 8 - 2 - 5
+        });
 
         $toolbar.find('button').each(function () {
             if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {

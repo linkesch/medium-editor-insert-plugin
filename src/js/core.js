@@ -360,12 +360,18 @@
 
                 // Left position is set according to parent paragraph
                 // Top position is set according to current active element
-                left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
+                left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
 
                 $buttons.css({
-                    left: left < 0 ? $p.offset().left : left,
-                    top: $current.offset().top
+                    left: left,
+                    top: $current.position().top + parseInt($current.css('margin-top'), 10)
                 });
+                
+                if ($current.closest('.medium-insert-image-active').length === 1) {
+                    $buttons.offset({
+                        top: $current.offset().top
+                    });
+                }
 
                 if (isAddon) {
                     $buttons.addClass('medium-insert-buttons-vertical');
