@@ -399,7 +399,7 @@
             .fadeIn();
             
         $toolbar.offset({
-            top: $image.offset().top - $toolbar.height() - 8 - 2 - 5
+            top: $image.offset().top - $toolbar.height() - 8 - 2 - 5 // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
         });
 
         $toolbar.find('button').each(function () {
