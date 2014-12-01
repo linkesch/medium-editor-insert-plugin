@@ -366,6 +366,12 @@
                     left: left,
                     top: $current.position().top + parseInt($current.css('margin-top'), 10)
                 });
+                
+                if ($current.closest('.medium-insert-image-active').length === 1) {
+                    $buttons.offset({
+                        top: $current.offset().top
+                    });
+                }
 
                 if (isAddon) {
                     $buttons.addClass('medium-insert-buttons-vertical');
