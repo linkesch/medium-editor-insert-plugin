@@ -58,6 +58,8 @@
     margin: 1em auto; }
   .medium-editor-insert-plugin .hide {
     display: none; }
+  .medium-editor-insert-plugin.medium-editor-placeholder:after {
+    padding: 1em 0; }
   .medium-editor-insert-plugin .medium-insert-buttons {
     position: absolute;
     color: #ddd;

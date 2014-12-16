@@ -169,7 +169,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         this.initAddons();
         this.clean();
-        this.addButtons();
         this.events();
     };
 
@@ -359,8 +358,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.clean = function () {
-        var $lastChild = this.$el.children(':last');
-
         if (this.options.enabled === false) {
             return;
         }
@@ -368,7 +365,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         // Fix #39
         // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
         // To force placeholder to appear, set <p><br></p> as content of the $el
-        if (this.$el.html() === '' || this.$el.html() === '<br>') {
+        if (this.$el.html().trim() === '' || this.$el.html().trim() === '<br>') {
             this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
@@ -381,15 +378,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             })
             .wrap('<p />');
 
-        // If last element is non-empty placeholder, add one empty line at the end to force placeholder to appear
-        if ($lastChild.hasClass('medium-insert') && $lastChild.find('.medium-insert-placeholder').children().length > 0) {
-            this.$el.append(this.templates['src/js/templates/core-empty-line.hbs']().trim());
-        }
 
-        // Fix not deleting placeholder in Firefox by removing all empty placeholders
-        this.$el.find('.medium-insert-placeholder:empty').each(function () {
-            $(this).parent().remove();
-        });
+        this.addButtons();
     };
 
     /**
@@ -415,9 +405,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.addButtons = function () {
-        var $buttons = $(this.getButtons());
-
-        this.$el.append($buttons);
+        if (this.$el.find('.medium-insert-buttons').length === 0) {
+            this.$el.append(this.getButtons());
+        }
     };
 
     /**

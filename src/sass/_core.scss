@@ -23,6 +23,10 @@
         display: none;
     }
     
+    &.medium-editor-placeholder:after {
+        padding: 1em 0;
+    }
+    
     .medium-insert-buttons {
         position: absolute;
         color: #ddd;
