@@ -659,10 +659,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
+            this.getCore().moveCaret($place);
         }
 
         $place.addClass('medium-insert-embeds-input medium-insert-embeds-active');
-        this.getCore().moveCaret($place);
 
         this.togglePlaceholder({ target: $place.get(0) });
 
@@ -1058,6 +1058,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
+            this.getCore().moveCaret($place);
         }
 
         $place.addClass('medium-insert-images');
