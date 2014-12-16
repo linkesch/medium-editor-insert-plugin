@@ -654,7 +654,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.add = function () {
         var $place = this.$el.find('.medium-insert-active');
 
+        // Replace paragraph with div to prevent #124 issue with pasting in Chrome,
+        // because medium editor wraps inserted content into paragraph and paragraphs can't be nested
+        if ($place.is('p')) {
+            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place = this.$el.find('.medium-insert-active');
+        }
+
         $place.addClass('medium-insert-embeds-input medium-insert-embeds-active');
+        this.getCore().moveCaret($place);
 
         this.togglePlaceholder({ target: $place.get(0) });
 
