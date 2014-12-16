@@ -52,6 +52,7 @@ test('removing empty placeholder on backspace', function () {
     equal(this.$el.find('.medium-insert-embeds-input').length, 0, 'placeholder removed');
 });
 /** /
+// These tests doesn't work in PhantomJS
 test('embedding youtube', function () {
     var $event = $.Event('keydown');
 
@@ -89,5 +90,33 @@ test('embedding instagram', function () {
     equal(this.$el.find('.medium-insert-embeds').length, 1, 'embed added');
     equal(this.$el.find('.medium-insert-embeds iframe').length, 1, 'iframe added');
     equal(this.$el.find('.medium-insert-embeds-input').length, 0, 'placeholder removed');
+});
+
+asyncTest('embedding triggers input event', function () {
+    var $event = $.Event('keydown');
+
+    this.$el.one('input', function () {
+        ok(1, 'input triggered');
+        start();
+    });
+
+    $event.which = 13;
+    this.$el.prepend('<p class="medium-insert-embeds-input medium-insert-embeds-active">https://www.youtube.com/watch?v=BROWqjuTM0g</p>');
+
+    this.$el.trigger($event);
+});
+
+asyncTest('embedding wront link triggers input event', function () {
+    var $event = $.Event('keydown');
+
+    this.$el.one('input', function () {
+        ok(1, 'input triggered');
+        start();
+    });
+
+    $event.which = 13;
+    this.$el.prepend('<p class="medium-insert-embeds-input medium-insert-embeds-active">asd</p>');
+
+    this.$el.trigger($event);
 });
 /**/

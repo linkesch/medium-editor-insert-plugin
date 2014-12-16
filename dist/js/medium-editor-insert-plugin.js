@@ -844,7 +844,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             }));
             $place.remove();
 
-            this.$el.trigger('keyup').trigger('input');
+            this.$el.trigger('input');
 
             if (html.indexOf('facebook') !== -1) {
                 if (typeof(FB) !== 'undefined') {
@@ -879,6 +879,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         // add an new empty node right after to simulate Enter press
         $empty = $(emptyTemplate);
         $content.after($empty);
+
+        this.$el.trigger('input');
 
         this.getCore().moveCaret($place);
     };
