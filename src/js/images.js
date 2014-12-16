@@ -161,6 +161,7 @@
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
+            this.getCore().moveCaret($place);
         }
 
         $place.addClass('medium-insert-images');
