@@ -75,6 +75,14 @@ test('wrapping text content into paragraph', function () {
     equal(this.$el.find('p').length, 1, 'paragraph created');
 });
 
+test('adding empty paragraph at the end if the last element is an addon element', function () {
+    this.$el.html('<div class="medium-insert-images"></div>');
+   
+    this.$el.mediumInsert();
+   
+    ok(this.$el.find('.medium-insert-images').next().is('p'), 'paragraph created');
+});
+
 test('adding plugin\'s buttons to the $el', function () {   
     this.$el.mediumInsert();
    

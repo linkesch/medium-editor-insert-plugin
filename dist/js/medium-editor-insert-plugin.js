@@ -358,6 +358,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.clean = function () {
+        var $buttons, $lastEl;
+
         if (this.options.enabled === false) {
             return;
         }
@@ -378,8 +380,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             })
             .wrap('<p />');
 
-
         this.addButtons();
+
+        $buttons = this.$el.find('.medium-insert-buttons');
+        $lastEl = $buttons.prev();
+        if ($lastEl.attr('class') && $lastEl.attr('class').match(/medium\-insert(?!\-active)/)) {
+            $buttons.before(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+        }
     };
 
     /**
@@ -426,7 +433,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $p = $current.is('p') ? $current : $current.closest('p'),
             left;
 
-        if ($el.closest('.medium-insert-buttons').length === 0 && $current.closest('.medium-insert-buttons').length === 0) {
+        this.clean();
+
+        if ($el.hasClass('medium-editor-placeholder') === false && $el.closest('.medium-insert-buttons').length === 0 && $current.closest('.medium-insert-buttons').length === 0) {
 
             this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
@@ -451,7 +460,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     left: left,
                     top: $current.position().top + parseInt($current.css('margin-top'), 10)
                 });
-                
+
                 if ($current.closest('.medium-insert-image-active').length === 1) {
                     $buttons.offset({
                         top: $current.offset().top
@@ -1131,6 +1140,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
+        this.getCore().clean();
         this.sorting();
     };
 
@@ -1277,7 +1287,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
             })
             .fadeIn();
-            
+
         $toolbar.offset({
             top: $image.offset().top - $toolbar.height() - 8 - 2 - 5 // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
         });

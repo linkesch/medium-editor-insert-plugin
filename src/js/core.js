@@ -263,6 +263,8 @@
      */
 
     Core.prototype.clean = function () {
+        var $buttons, $lastEl;
+
         if (this.options.enabled === false) {
             return;
         }
@@ -283,8 +285,13 @@
             })
             .wrap('<p />');
 
-
         this.addButtons();
+
+        $buttons = this.$el.find('.medium-insert-buttons');
+        $lastEl = $buttons.prev();
+        if ($lastEl.attr('class') && $lastEl.attr('class').match(/medium\-insert(?!\-active)/)) {
+            $buttons.before(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+        }
     };
 
     /**
@@ -330,10 +337,10 @@
             isAddon = false,
             $p = $current.is('p') ? $current : $current.closest('p'),
             left;
-        
+
         this.clean();
 
-        if ($el.closest('.medium-insert-buttons').length === 0 && $current.closest('.medium-insert-buttons').length === 0) {
+        if ($el.hasClass('medium-editor-placeholder') === false && $el.closest('.medium-insert-buttons').length === 0 && $current.closest('.medium-insert-buttons').length === 0) {
 
             this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
@@ -358,7 +365,7 @@
                     left: left,
                     top: $current.position().top + parseInt($current.css('margin-top'), 10)
                 });
-                
+
                 if ($current.closest('.medium-insert-image-active').length === 1) {
                     $buttons.offset({
                         top: $current.offset().top
