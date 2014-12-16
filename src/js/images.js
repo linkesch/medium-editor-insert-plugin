@@ -253,6 +253,8 @@
         $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();
+        this.$el.trigger('input');
+
         this.sorting();
     };
 
@@ -359,6 +361,8 @@
 
                     this.getCore().moveCaret($empty);
                 }
+
+                this.$el.trigger('input');
             }
         }
     };
@@ -451,6 +455,8 @@
                 }
             }
         });
+
+        this.$el.trigger('input');
     };
 
     /**
@@ -460,13 +466,18 @@
      */
 
     Images.prototype.sorting = function () {
+        var that = this;
+
         $('.medium-insert-images').sortable({
             group: 'medium-insert-images',
             containerSelector: '.medium-insert-images',
             itemSelector: 'figure',
             placeholder: '<figure class="placeholder">',
             nested: false,
-            vertical: false
+            vertical: false,
+            afterMove: function () {
+                that.$el.trigger('input');
+            }
         });
     };
 

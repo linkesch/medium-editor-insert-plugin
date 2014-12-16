@@ -92,6 +92,27 @@ asyncTest('image upload without preview', function () {
     });
 });
 
+asyncTest('triggering input event on uploadDone', function () {
+    var that = this;
+
+    this.$el.one('input', function () {
+        ok(1, 'input triggered');
+        start();
+    });
+
+    this.stub(this.addon, 'showImage', function () {
+        that.addon.showImage.restore();
+    });
+
+    this.addon.uploadDone(null, {
+        result: {
+            files: [
+                { url: 'test.jpg' }
+            ]
+        }
+    });
+});
+
 test('selecting image', function () {
     this.$el.find('p')
         .addClass('medium-insert-images')
@@ -136,6 +157,24 @@ test('removing image', function () {
 
     equal(this.$el.find('.medium-insert-images').length, 0, 'whole .medium-insert-images was deleted');
     equal(this.$el.find('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
+});
+
+asyncTest('removing image triggers input event', function () {
+   var $event = $.Event('keydown');
+
+   this.$el.one('input', function () {
+       ok(1, 'input triggered');
+       start();
+   });
+
+   $event.which = 8;
+
+   this.$el.find('p')
+       .addClass('medium-insert-images')
+       .append('<figure><img src="image1.jpg" alt=""></figure>'+
+           '<figure><img src="image2.jpg" alt="" class="medium-insert-image-active"></figure>');
+
+   this.$el.trigger($event);
 });
 
 asyncTest('deleting file', function () {
@@ -198,6 +237,22 @@ asyncTest('choosing image style calls callback function', function () {
     placeCaret(this.$el.find('p').get(0), 0);
 
     this.$el.find('img').click();
+    this.clock.tick(50);
+
+    this.$el.find('.medium-insert-images-toolbar .medium-editor-action').first().click();
+});
+
+asyncTest('choosing image style triggers input event', function () {
+    var $p = this.$el.find('p')
+        .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
+        .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+    this.$el.one('input', function () {
+        ok(1, 'input triggered');
+        start();
+    });
+
+    $p.find('img').click();
     this.clock.tick(50);
 
     this.$el.find('.medium-insert-images-toolbar .medium-editor-action').first().click();
