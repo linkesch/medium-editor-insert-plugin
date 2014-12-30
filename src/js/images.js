@@ -157,6 +157,8 @@
             that = this,
             reader;
 
+        this.getCore().hideButtons();
+
         // Replace paragraph with div, because figure elements can't be inside paragraph
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
@@ -248,8 +250,6 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        this.$el.find('.medium-insert-buttons').addClass('medium-insert-buttons-vertical');
-
         $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();

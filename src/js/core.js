@@ -355,28 +355,19 @@
 
             if ($p.length && $p.text().trim() === '') {
                 $p.addClass('medium-insert-active');
-                $buttons.removeClass('medium-insert-buttons-vertical');
 
-                // Left position is set according to parent paragraph
-                // Top position is set according to current active element
-                left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
+                if (isAddon === false) {
+                    // Left position is set according to parent paragraph
+                    // Top position is set according to current active element
+                    left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
 
-                $buttons.css({
-                    left: left,
-                    top: $current.position().top + parseInt($current.css('margin-top'), 10)
-                });
-
-                if ($current.closest('.medium-insert-image-active').length === 1) {
-                    $buttons.offset({
-                        top: $current.offset().top
+                    $buttons.css({
+                        left: left,
+                        top: $current.position().top + parseInt($current.css('margin-top'), 10)
                     });
-                }
 
-                if (isAddon) {
-                    $buttons.addClass('medium-insert-buttons-vertical');
+                    $buttons.show();
                 }
-
-                $buttons.show();
             } else {
                 this.hideButtons();
             }
