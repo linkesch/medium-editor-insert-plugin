@@ -362,7 +362,7 @@
                     left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
 
                     $buttons.css({
-                        left: left,
+                        left: left < 0 ? $p.offset().left : left,
                         top: $current.position().top + parseInt($current.css('margin-top'), 10)
                     });
 
