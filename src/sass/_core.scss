@@ -3,30 +3,30 @@
     &:focus {
         outline: 0 solid transparent;
     }
-    
+
     .clearfix:before, &:before, .clearfix:after, &:after {
         content: " ";
         display: table;
         clear: both;
     }
-    
+
     p {
         margin: 1em 0;
     }
-    
+
     progress {
         display: block;
         margin: 1em auto;
     }
-    
+
     .hide {
         display: none;
     }
-    
+
     &.medium-editor-placeholder:after {
         padding: 1em 0;
     }
-    
+
     .medium-insert-buttons {
         position: absolute;
         color: #ddd;
@@ -35,7 +35,7 @@
             text-decoration: underline;
             cursor: pointer;
         }
-        
+
         .medium-insert-buttons-show {
             box-sizing: border-box;
             display: block;
@@ -49,7 +49,7 @@
             text-align: center;
             text-decoration: none;
         }
-        
+
         .medium-insert-buttons-addons {
             margin: 0;
             padding: 0;
@@ -74,20 +74,6 @@
                     text-align: center;
                     .fa {
                         font-size: 15px;
-                    }
-                }
-            }
-        }
-        
-        &.medium-insert-buttons-vertical {
-            ul.medium-insert-buttons-addons {
-                top: 23px;
-                left: 0;
-                li {
-                    display: block;
-                    a {
-                        display: block;
-                        margin: 5px 0;
                     }
                 }
             }
