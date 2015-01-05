@@ -80,7 +80,8 @@
 
         this.$el
             .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'))
-            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
+            .on('paste', $.proxy(this, 'checkPaste'));
     };
 
     /**
@@ -113,14 +114,45 @@
     };
 
     /**
-     * Add image
+     * Check if pasted content is an image to add it (only working on Chrome)
+     *
+     * @param {Event} e paste event
      *
      * @return {void}
      */
 
-    Images.prototype.add = function () {
+    Images.prototype.checkPaste = function (e) {
+        var that = this,
+            pastedItems = (e.clipboardData || e.originalEvent.clipboardData).items,
+            blob = 0;
+
+        if (typeof pastedItems !== 'undefined') {   
+            $.each(pastedItems, function (key) {
+                if (pastedItems[key].type.indexOf('image') > -1) {
+                    blob = pastedItems[key].getAsFile();
+                }
+            });
+            
+            if (blob) {
+                e.preventDefault();
+                $.proxy(that, 'add', blob)();
+            }
+        }
+
+    };
+
+    /**
+     * Add image
+     *
+     * @param {Blob} blob with image (optional)
+     *
+     * @return {void}
+     */
+
+    Images.prototype.add = function (blob) {
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
+        blob = (typeof blob === "undefined") ? 0 : blob;
 
         $file.fileupload({
             url: this.options.uploadScript,
@@ -140,7 +172,14 @@
             }
         });
 
-        $file.click();
+        if (blob) {
+            setTimeout(function() {
+                $file.fileupload('add', { files: [ blob ] });
+            },0);
+        } else {
+            $file.click();
+        }
+        
     };
 
     /**
