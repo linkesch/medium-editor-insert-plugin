@@ -122,7 +122,7 @@ test('selecting image', function () {
     this.clock.tick(50);
 
     ok(this.$el.find('img').hasClass('medium-insert-image-active'), 'image is selected');
-    equal(this.$el.find('.medium-insert-images-toolbar').length, 1, 'image toolbar added');
+    equal($('.medium-insert-images-toolbar').length, 1, 'image toolbar added');
 });
 
 test('unselecting image', function () {
@@ -133,7 +133,7 @@ test('unselecting image', function () {
     this.$el.click();
 
     equal(this.$el.find('img').hasClass('medium-insert-image-active'), false, 'image is unselected');
-    equal(this.$el.find('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
+    equal($('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
 });
 
 test('removing image', function () {
@@ -156,7 +156,7 @@ test('removing image', function () {
     this.$el.trigger($event);
 
     equal(this.$el.find('.medium-insert-images').length, 0, 'whole .medium-insert-images was deleted');
-    equal(this.$el.find('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
+    equal($('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
 });
 
 asyncTest('removing image triggers input event', function () {
@@ -204,10 +204,26 @@ test('choosing image style', function () {
     $p.find('img').click();
     this.clock.tick(50);
 
-    this.$el.find('.medium-insert-images-toolbar .medium-editor-action').first().click();
+    $('.medium-insert-images-toolbar .medium-editor-action').first().click();
 
     ok($p.hasClass('medium-insert-images-wide'), 'image style added');
     equal($p.hasClass('medium-insert-images-left'), false, 'old style removed');
+});
+
+asyncTest('choosing image style triggers input event', function () {
+    var $p = this.$el.find('p')
+        .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
+        .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+    this.$el.one('input', function () {
+        ok(1, 'input triggered');
+        start();
+    });
+
+    $p.find('img').click();
+    this.clock.tick(50);
+
+    $('.medium-insert-images-toolbar .medium-editor-action').first().click();
 });
 
 asyncTest('choosing image style calls callback function', function () {
@@ -239,21 +255,5 @@ asyncTest('choosing image style calls callback function', function () {
     this.$el.find('img').click();
     this.clock.tick(50);
 
-    this.$el.find('.medium-insert-images-toolbar .medium-editor-action').first().click();
-});
-
-asyncTest('choosing image style triggers input event', function () {
-    var $p = this.$el.find('p')
-        .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
-        .append('<figure><img src="image1.jpg" alt=""></figure>');
-
-    this.$el.one('input', function () {
-        ok(1, 'input triggered');
-        start();
-    });
-
-    $p.find('img').click();
-    this.clock.tick(50);
-
-    this.$el.find('.medium-insert-images-toolbar .medium-editor-action').first().click();
+    $('.medium-insert-images-toolbar .medium-editor-action').first().click();
 });

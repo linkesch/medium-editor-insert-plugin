@@ -76,11 +76,11 @@
     Images.prototype.events = function () {
         $(document)
             .on('click', $.proxy(this, 'unselectImage'))
-            .on('keydown', $.proxy(this, 'removeImage'));
+            .on('keydown', $.proxy(this, 'removeImage'))
+            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
 
         this.$el
-            .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'))
-            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+            .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'));
     };
 
     /**
@@ -319,13 +319,13 @@
 
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
-            this.$el.find('.medium-insert-images-toolbar').remove();
+            $('.medium-insert-images-toolbar').remove();
             return;
         }
 
         $image.removeClass('medium-insert-image-active');
 
-        this.$el.find('.medium-insert-images-toolbar').remove();
+        $('.medium-insert-images-toolbar').remove();
     };
 
     /**
@@ -349,7 +349,7 @@
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
 
-                this.$el.find('.medium-insert-images-toolbar').remove();
+                $('.medium-insert-images-toolbar').remove();
 
                 if ($parent.find('figure').length === 0) {
                     $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
@@ -392,10 +392,11 @@
             active = false,
             $toolbar;
 
-        this.$el.append(this.templates['src/js/templates/images-toolbar.hbs']({
+        $toolbar = $(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles
         }).trim());
-        $toolbar = this.$el.find('.medium-insert-images-toolbar');
+
+        $('body').append($toolbar);
 
         $toolbar
             .css({
@@ -403,10 +404,6 @@
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
             })
             .fadeIn();
-
-        $toolbar.offset({
-            top: $image.offset().top - $toolbar.height() - 8 - 2 - 5 // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
-        });
 
         $toolbar.find('button').each(function () {
             if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {
