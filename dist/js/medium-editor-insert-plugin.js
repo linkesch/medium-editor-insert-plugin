@@ -189,6 +189,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .on('keydown', $.proxy(this, 'fixSelectAll'))
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
+
+        $(window).on('resize', $.proxy(this, 'positionButtons', null));
     };
 
     /**
@@ -430,8 +432,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $current = $(range.commonAncestorContainer),
             $buttons = this.$el.find('.medium-insert-buttons'),
             isAddon = false,
-            $p = $current.is('p') ? $current : $current.closest('p'),
-            left;
+            $p = $current.is('p') ? $current : $current.closest('p');
 
         this.clean();
 
@@ -452,14 +453,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 $p.addClass('medium-insert-active');
 
                 if (isAddon === false) {
-                    // Left position is set according to parent paragraph
-                    // Top position is set according to current active element
-                    left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-
-                    $buttons.css({
-                        left: left < 0 ? $p.position().left : left,
-                        top: $current.position().top + parseInt($current.css('margin-top'), 10)
-                    });
+                    this.positionButtons($current);
 
                     $buttons.show();
                 }
@@ -478,6 +472,30 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Core.prototype.hideButtons = function () {
         this.$el.find('.medium-insert-buttons').hide();
         this.$el.find('.medium-insert-buttons-addons').hide();
+    };
+
+    /**
+     * Position buttons
+     *
+     * @param {jQuery} $current - Current active element
+     * @return {void}
+     */
+
+    Core.prototype.positionButtons = function ($current) {
+        var $buttons = this.$el.find('.medium-insert-buttons'),
+            $p = this.$el.find('.medium-insert-active'),
+            left, top;
+
+        // Left position is set according to an active paragraph
+        left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
+        left = left < 0 ? $p.position().left : left;
+        $buttons.css('left', left);
+
+        if ($current) {
+            // Top position is set according to a current active element
+            top = $current.position().top + parseInt($current.css('margin-top'), 10);
+            $buttons.css('top', top);
+        }
     };
 
     /**
