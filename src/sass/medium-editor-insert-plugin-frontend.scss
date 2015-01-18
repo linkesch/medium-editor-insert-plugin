@@ -1,12 +1,14 @@
+@import "columns";
+
 .medium-insert-images {
     text-align: center;
     figure {
          margin: 0;
-         display: block; 
+         display: block;
          img {
              max-width: 100%;
              margin-top: 1em;
-             vertical-align: top; 
+             vertical-align: top;
          }
          &:first-child {
              img {

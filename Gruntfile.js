@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                 dest: 'dist/js/<%= pkg.name %>.min.js'
             }
         },
-        
+
         concat: {
             dist: {
                 options: {
@@ -86,6 +86,13 @@ module.exports = function(grunt) {
             styles: {
                 files: 'src/sass/**/*.scss',
                 tasks: ['css'],
+                options: {
+                    debounceDelay: 250
+                }
+            },
+            javascripts: {
+                files: 'src/js/**/*.js',
+                tasks: ['js'],
                 options: {
                     debounceDelay: 250
                 }

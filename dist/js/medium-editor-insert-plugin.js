@@ -10,6 +10,21 @@
 this["MediumInsert"] = this["MediumInsert"] || {};
 this["MediumInsert"]["Templates"] = this["MediumInsert"]["Templates"] || {};
 
+this["MediumInsert"]["Templates"]["src/js/templates/columns-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"medium-insert-column-placeholder\" contenteditable=\"false\">"
+    + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
+    + "</div>";
+},"useData":true});
+
+
+
+this["MediumInsert"]["Templates"]["src/js/templates/columns.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"medium-insert-column\">\n    <p><br></p>\n</div>\n<div class=\"medium-insert-column\">\n    <p><br></p>\n</div>\n<div class=\"medium-insert-column\">\n    <p><br></p>\n</div>";
+  },"useData":true});
+
+
+
 this["MediumInsert"]["Templates"]["src/js/templates/core-buttons.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, functionType="function", helperMissing=helpers.helperMissing, buffer = "            <li><a data-addon=\""
     + escapeExpression(lambda((data && data.key), depth0))
@@ -34,7 +49,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Hand
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"medium-insert-embeds-placeholder\" contenteditable=\"false\">"
+  return "<div class=\"medium-insert-columns-placeholder\" contenteditable=\"false\">"
     + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
     + "</div>";
 },"useData":true});
@@ -561,6 +576,159 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             } else if (typeof options === 'string' && $.data(this, 'plugin_' + pluginName)[options]) {
                 // Method call
                 $.data(this, 'plugin_' + pluginName)[options]();
+            }
+        });
+    };
+
+})(jQuery, window, document);
+
+;(function ($, window, document, undefined) {
+
+    'use strict';
+
+    /** Default values */
+    var pluginName = 'mediumInsert',
+        addonName = 'Columns', // first char is uppercase
+        defaults = {
+            label: '<span class="fa fa-columns"></span>',
+            placeholder: 'Column'
+        };
+
+    /**
+     * Columns object
+     *
+     * Sets options, variables and calls init() function
+     *
+     * @constructor
+     * @param {DOM} el - DOM element to init the plugin on
+     * @param {object} options - Options to override defaults
+     * @return {void}
+     */
+
+    function Columns (el, options) {
+        this.el = el;
+        this.$el = $(el);
+        this.templates = window.MediumInsert.Templates;
+
+        this.options = $.extend(true, {}, defaults, options);
+
+        this._defaults = defaults;
+        this._name = pluginName;
+
+        this.init();
+    }
+
+    /**
+     * Initialization
+     *
+     * @return {void}
+     */
+
+    Columns.prototype.init = function () {
+        this.events();
+    };
+
+    /**
+     * Event listeners
+     *
+     * @return {void}
+     */
+
+    Columns.prototype.events = function () {
+        this.$el
+            .on('keyup click', $.proxy(this, 'togglePlaceholders'));
+    };
+
+    /**
+     * Get the Core object
+     *
+     * @return {object} Core object
+     */
+    Columns.prototype.getCore = function () {
+        if (typeof(this.core) === 'undefined') {
+            this.core = this.$el.data('plugin_'+ pluginName);
+        }
+
+        return this.core;
+    };
+
+    /**
+     * Add columns
+     *
+     * @return {void}
+     */
+
+    Columns.prototype.add = function () {
+        var $place = this.$el.find('.medium-insert-active');
+
+        if ($place.is('p')) {
+            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place = this.$el.find('.medium-insert-active');
+        }
+
+        $place.addClass('medium-insert-columns medium-insert-columns-3');
+        $place.html(this.templates['src/js/templates/columns.hbs']());
+        this.getCore().moveCaret($place);
+
+        this.togglePlaceholders();
+
+        $place.click();
+    };
+
+   /**
+    * Toggles placeholders
+    *
+    * @return {void}
+    */
+
+    Columns.prototype.togglePlaceholders = function () {
+        var $columns = this.$el.find('.medium-insert-column'),
+            that = this;
+
+        $columns.each(function () {
+            var $parent = $(this).closest('.medium-insert-columns'),
+                children = $parent.children().length,
+                $placeholder, re, text;
+
+            if ($(this).find('p').length === 0) {
+                $(this).remove();
+
+                children--;
+                if (children === 0) {
+                    $parent.remove();
+                } else {
+                    $parent
+                        .removeClass('medium-insert-columns-3')
+                        .removeClass('medium-insert-columns-'+ children);
+                }
+
+                return;
+            }
+
+            $parent
+                .removeClass('medium-insert-columns-3')
+                .removeClass('medium-insert-columns-'+ children);
+
+            $placeholder = $('.medium-insert-column-placeholder', this);
+            re =new RegExp(that.options.placeholder, 'g');
+            text = $(this).text().replace(re, '').trim();
+
+            if (text === '' && $placeholder.length === 0) {
+                $(this).append(that.templates['src/js/templates/columns-placeholder.hbs']({
+                    placeholder: that.options.placeholder
+                }));
+            } else if (text !== '' && $placeholder.length) {
+                $placeholder.remove();
+            }
+        });
+    };
+
+    /** Plugin initialization */
+
+    $.fn[pluginName + addonName] = function (options) {
+        return this.each(function () {
+            if (!$.data(this, 'plugin_' + pluginName + addonName)) {
+                $.data(this, 'plugin_' + pluginName + addonName, new Columns(this, options));
             }
         });
     };
@@ -1207,9 +1375,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             that = this;
 
         $image.addClass('medium-insert-image-active');
-        $image.closest('.medium-insert-images').addClass('medium-insert-active');
 
         setTimeout(function () {
+            $image.closest('.medium-insert-images').addClass('medium-insert-active');
             that.addToolbar();
         }, 50);
     };

@@ -1,6 +1,21 @@
 this["MediumInsert"] = this["MediumInsert"] || {};
 this["MediumInsert"]["Templates"] = this["MediumInsert"]["Templates"] || {};
 
+this["MediumInsert"]["Templates"]["src/js/templates/columns-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"medium-insert-column-placeholder\" contenteditable=\"false\">"
+    + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
+    + "</div>";
+},"useData":true});
+
+
+
+this["MediumInsert"]["Templates"]["src/js/templates/columns.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"medium-insert-column\">\n    <p><br></p>\n</div>\n<div class=\"medium-insert-column\">\n    <p><br></p>\n</div>\n<div class=\"medium-insert-column\">\n    <p><br></p>\n</div>";
+  },"useData":true});
+
+
+
 this["MediumInsert"]["Templates"]["src/js/templates/core-buttons.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, functionType="function", helperMissing=helpers.helperMissing, buffer = "            <li><a data-addon=\""
     + escapeExpression(lambda((data && data.key), depth0))
@@ -25,7 +40,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Hand
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"medium-insert-embeds-placeholder\" contenteditable=\"false\">"
+  return "<div class=\"medium-insert-columns-placeholder\" contenteditable=\"false\">"
     + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
     + "</div>";
 },"useData":true});

@@ -300,9 +300,9 @@
             that = this;
 
         $image.addClass('medium-insert-image-active');
-        $image.closest('.medium-insert-images').addClass('medium-insert-active');
 
         setTimeout(function () {
+            $image.closest('.medium-insert-images').addClass('medium-insert-active');
             that.addToolbar();
         }, 50);
     };
