@@ -1310,7 +1310,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
             })
-            .fadeIn();
+            .show();
 
         $toolbar.find('button').each(function () {
             if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {
