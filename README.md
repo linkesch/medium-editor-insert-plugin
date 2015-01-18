@@ -16,13 +16,13 @@
 
 ## Usage
 
-Version 1.0 has a little more dependencies than previous one. If you downloaded the plugin via Bower, all dependencies were downloaded automatically for you. If you prefer manual download, please, remember to download and the dependencies too.
+Version 1.0 has a little more dependencies than the previous one. If you downloaded the plugin via Bower, all dependencies were downloaded automatically for you. If you prefer manual download, please, remember to download the dependencies, too.
 
 List of dependencies:
 - [jQuery](http://jquery.com): >=1.9.0
-- [MediumEditor](https://github.com/daviferreira/medium-editor): ~1.9
+- [MediumEditor](https://github.com/daviferreira/medium-editor): ~2.0
 - [Handlebars](http://handlebarsjs.com): ~2.0.0
-- [jQuery File Upload Plugin](https://github.com/blueimp/jQuery-File-Upload): ~9.8.0
+- [jQuery File Upload Plugin](https://github.com/blueimp/jQuery-File-Upload): ~9.9.0
 - [jQuery Sortable](https://github.com/johnny/jquery-sortable): ~0.9.12
 
 The first step is to include all the dependencies to your code:
@@ -101,10 +101,10 @@ $('.editable').mediumInsert({
             deleteScript: 'delete.php', // (string) A relative path to a delete script
             preview: true, // (boolean) Show an image before it is uploaded (only in browsers that support this feature)
             styles: { // (object) Available image styles configuration
-                wide: { // (object) Image style configuration. Key is used as a class name added to an image, when the style is selected (.medium-insert-images-*wide*)
+                wide: { // (object) Image style configuration. Key is used as a class name added to an image, when the style is selected (.medium-insert-images-wide)
                     label: '<span class="fa fa-align-justify"></span>', // (string) A label for a style
-                    added: function ($el) {}, // (function) Callback function called after the style was selected. A parameter *$el* is a current active paragraph (.medium-insert-active)
-                    removed: function ($el) {} // (function) Callback function called after a different style was selected and this one was removed. A parameter *$el* is a current active paragraph (.medium-insert-active)
+                    added: function ($el) {}, // (function) Callback function called after the style was selected. A parameter $el is a current active paragraph (.medium-insert-active)
+                    removed: function ($el) {} // (function) Callback function called after a different style was selected and this one was removed. A parameter $el is a current active paragraph (.medium-insert-active)
                 },
                 left: {
                     label: '<span class="fa fa-align-left"></span>'
@@ -154,8 +154,8 @@ $('.editable').mediumInsert({
 
 ## Methods
 
-* enable: Enables the plugin. It's connected to Medium Editor's own activate function, so if the editor is activated, so is the plugin. (The plugin is enabled automatically. Use it only if you previously disabled the plugin.)
-* disable: Disables the plugin. It's connected to Medium Editor's own deactivate function, so if the editor is deactivated, so is the plugin.
+- **enable**: Enables the plugin. It's connected to Medium Editor's own activate function, so if the editor is activated, so is the plugin. (The plugin is enabled automatically. Use it only if you previously disabled the plugin.)
+- **disable**: Disables the plugin. It's connected to Medium Editor's own deactivate function, so if the editor is deactivated, so is the plugin.
 
 Usage:
 
