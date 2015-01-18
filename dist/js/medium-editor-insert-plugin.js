@@ -502,7 +502,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         // Left position is set according to an active paragraph
         left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-        left = left < 0 ? $p.position().left : left;
+        left = (left < 0 || $p.parent().hasClass('medium-insert-column')) ? $p.position().left : left;
         $buttons.css('left', left);
 
         if ($current) {

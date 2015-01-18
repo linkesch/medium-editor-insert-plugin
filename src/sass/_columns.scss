@@ -4,7 +4,6 @@
 }
 
 .medium-insert-column {
-    position: relative;
     width: 100%;
     margin-right: 1em;
     &:last-child {
@@ -25,8 +24,8 @@
 }
 
 .medium-insert-column-placeholder {
-    position: absolute;
-    top: 1em;
+    position: relative;
+    top: -2.2em;
     z-index: -1;
     color: #ccc;
 }
