@@ -15,24 +15,6 @@ Current available addons:
 - **embeds** (either through oEmbed proxy, such as [Iframely](https://iframely.com/), or pre-defined parsers such as - Youtube, Vimeo, Twitter, Facebook, Instagram)
 
 
-## Screenshots
-
-![jQuery insert plugin for MediumEditor - #1 screenshot](http://i.imgur.com/K2TckTM.png)
-
-The plugin is responsive. If there is no place on the left, it will move to the text.
-
-![jQuery insert plugin for MediumEditor - #6 screenshot](http://i.imgur.com/uJkBT0z.png)
-
-The image addon allows you to choose image styles and even to create custom ones.
-
-![jQuery insert plugin for MediumEditor - #2 screenshot](http://i.imgur.com/1Rpw0Wo.png)
-![jQuery insert plugin for MediumEditor - #3 screenshot](http://i.imgur.com/e0WbMPy.png)
-
-The embeds addon support content from various sources:
-
-![jQuery insert plugin for MediumEditor - #4 screenshot](http://i.imgur.com/97Z9MPV.png)
-
-
 ## Download
 
 * Bower (recommended): ```bower install medium-editor-insert-plugin#1.0 --save```
