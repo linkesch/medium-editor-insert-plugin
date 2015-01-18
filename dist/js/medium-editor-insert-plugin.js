@@ -1207,6 +1207,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             that = this;
 
         $image.addClass('medium-insert-image-active');
+        $image.closest('.medium-insert-images').addClass('medium-insert-active');
 
         setTimeout(function () {
             that.addToolbar();
