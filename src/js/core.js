@@ -7,10 +7,9 @@
         defaults = {
             editor: null,
             enabled: true,
-            blocks: 'p, h1, h2, h3, h4, h5, h6, ol, ul, blockquote',
             addons: {
-              images: true, // boolean or object containing configuration
-              embeds: true
+                images: true, // boolean or object containing configuration
+                embeds: true
             }
         };
 
