@@ -21,7 +21,7 @@
     "grunt-contrib-concat": "^0.4.0",
     "grunt-autoprefixer": "^1.0.1",
     "grunt-sass": "~0.16.1",
-    "grunt-csso": "^0.6.2",
+    "grunt-csso": "^0.7.0",
     "grunt-banner": "^0.2.3",
     "grunt-contrib-handlebars": "^0.9.1"
   },
