@@ -15,7 +15,7 @@ Current available addons:
 
 ## Download
 
-* Bower (recommended): ```bower install medium-editor-insert-plugin --save```
+* Bower (recommended): ```bower install medium-editor-insert-plugin#~1.0 --save```
 * Manual: [Download the latest release](https://github.com/orthes/medium-editor-insert-plugin/releases)
 
 
@@ -66,6 +66,7 @@ $(function () {
 - [Getting Started](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Getting-Started)
 - [Configuration](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Configuration)
 - [Upgrading from v0.3](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Upgrading-from-v0.3)
+- [Versioning](https://github.com/orthes/medium-editor-insert-plugin/wiki/Versioning)
 - [Development & Contributing](https://github.com/orthes/medium-editor-insert-plugin/wiki/Development-&-Contributing)
 - [License](https://github.com/orthes/medium-editor-insert-plugin/wiki/License)
 - [Author & Contributors](https://github.com/orthes/medium-editor-insert-plugin/wiki/Author-&-Contributors)
