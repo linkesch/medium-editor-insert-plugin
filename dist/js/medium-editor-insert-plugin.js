@@ -662,6 +662,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.add = function () {
         var $place = this.$el.find('.medium-insert-active');
 
+        // Fix #132
+        // Make sure that the content of the paragraph is empty and <br> is wrapped in <p></p> to avoid Firefox problems
+        $place.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+
         // Replace paragraph with div to prevent #124 issue with pasting in Chrome,
         // because medium editor wraps inserted content into paragraph and paragraphs can't be nested
         if ($place.is('p')) {
