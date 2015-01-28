@@ -1,67 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>medium editor | example</title>
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/demo.css">
-  <link rel="stylesheet" href="../bower_components/medium-editor/dist/css/medium-editor.min.css">
-  <link rel="stylesheet" href="../bower_components/medium-editor/dist/css/themes/default.css" id="medium-editor-theme">
-  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-  <link rel="stylesheet" href="../dist/css/medium-editor-insert-plugin.min.css">
+    <meta charset="UTF-8">
+    <title>medium editor | example</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="stylesheet" href="../bower_components/medium-editor/dist/css/medium-editor.min.css">
+    <link rel="stylesheet" href="../bower_components/medium-editor/dist/css/themes/default.css" id="medium-editor-theme">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="../dist/css/medium-editor-insert-plugin.min.css">
+
+    <style>
+        .medium-insert-images-slideshow figure {
+            width: 100%;
+        }
+
+        .medium-insert-images-slideshow figure img {
+            margin: 0;
+        }
+
+        .medium-insert-images.medium-insert-images-grid figure {
+            width: 10%;
+        }
+
+        @media (max-width: 750px) {
+            .medium-insert-images.medium-insert-images-grid figure {
+                width: 20%;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .medium-insert-images.medium-insert-images-grid figure {
+                width: 25%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="top-bar">
-      Theme:
-      <select id="sel-themes">
-          <option value="../bower_components/medium-editor/dist/css/themes/default" selected>default</option>
-          <option value="../bower_components/medium-editor/dist/css/themes/roman">roman</option>
-          <option value="../bower_components/medium-editor/dist/css/themes/mani">mani</option>
-          <option value="../bower_components/medium-editor/dist/css/themes/flat">flat</option>
-          <option value="../bower_components/medium-editor/dist/css/themes/bootstrap">bootstrap</option>
-      </select>
-  </div>
-  <br><br>
-  
-  <div id="container">
-    <div class="editable" data-placeholder="Type some text">
-      <p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Curabitur blandit tempus porttitor. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+    <a href="https://github.com/orthes/medium-editor-insert-plugin"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 5000;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
-      <p>Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam quis risus eget urna mollis ornare vel eu leo. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur. Donec ullamcorper nulla non metus auctor fringilla.</p>
-
-      <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec sed odio dui. Curabitur blandit tempus porttitor. Donec sed odio dui. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
-
-      <p>Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nulla vitae elit libero, a pharetra augue. Nulla vitae elit libero, a pharetra augue.</p>
+    <div class="top-bar">
+        Theme:
+        <select id="sel-themes">
+            <option value="../bower_components/medium-editor/dist/css/themes/default" selected>default</option>
+            <option value="../bower_components/medium-editor/dist/css/themes/roman">roman</option>
+            <option value="../bower_components/medium-editor/dist/css/themes/mani">mani</option>
+            <option value="../bower_components/medium-editor/dist/css/themes/flat">flat</option>
+            <option value="../bower_components/medium-editor/dist/css/themes/bootstrap">bootstrap</option>
+        </select>
     </div>
-  </div>
+    <br><br>
 
-  <script src="../bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
-  <script src="../bower_components/jquery/jquery.min.js"></script>
-  <script src="../dist/js/medium-editor-insert-plugin.all.min.js"></script>
-  <script>
-    var editor = new MediumEditor('.editable', {
-      excludedActions: ['u', 'h3', 'blockquote'],
-      buttonLabels: 'fontawesome'
-    });
+    <div id="container">
+        <div class="editable" data-placeholder="Type some text">
+            <h3>jQuery insert plugin for MediumEditor</h3>
 
-    $(function () {
-      $('.editable').mediumInsert({
-        editor: editor,
-        beginning: true,
-        addons: {
-          images: {},
-          embeds: {
-              oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
-          },
-          tables: {}
-        }
-      });
-    });
+            <p>This is <strong>a demo</strong> of jQuery insert plugin for MediumEditor.</p>
 
-    var cssLink = document.getElementById('medium-editor-theme');
-    document.getElementById('sel-themes').addEventListener('change', function () {
-      cssLink.href = this.value + '.css';
-    });
-  </script>
+            <blockquote>HINT: This whole website is an editable editor. You can click on text and start typing.</blockquote>
+
+            <p>If you want to insert an image, <strong>create a new empty paragraph</strong> and the plugin's button will appear on the left. From there it's pretty self-explanatory. Have fun.</p>
+
+            <h4>What to do next?</h4>
+
+            <p>Please, go to <a href="https://github.com/orthes/medium-editor-insert-plugin">our GitHub repository</a> for installation and configuration info. Did you find a bug, have an idea or want to contribute? Great! Do not miss our <a href="https://github.com/orthes/medium-editor-insert-plugin/issues">issues page on GitHub</a>.</p>
+
+            <h4>Contributors</h4>
+
+            <p>This plugin is brought to you thanks to these great contributors from all around the world:</p>
+
+            <div class="medium-insert-images medium-insert-images-grid">
+                <figure contenteditable="false"><img src="uploads/312938.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/19343.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/39333.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1228229.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/594298.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1101183.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1790778.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1270102.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/93555.png" alt=""></figure><figure contenteditable="false"><img src="uploads/1891369.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1642674.png" alt=""></figure><figure contenteditable="false"><img src="uploads/431361.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/883073.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1485056.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1064889.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/62333.png" alt=""></figure><figure contenteditable="false"><img src="uploads/433501.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/714146.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/882228.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/28841.jpg" alt=""></figure>
+            </div>
+
+            <p><em>... And yes, you can create this nice images grid with the plugin. And much more...</em></p>
+
+            <h4>License</h4>
+
+            <p>The plugin is free and released under MIT license.</p>
+        </div>
+
+        <footer>
+            <a href="https://github.com/orthes/medium-editor-insert-plugin"><span class="fa fa-github"></span></a>
+            <a href="http://twitter.com/linkesch"><span class="fa fa-twitter"></span></a>
+        </footer>
+    </div>
+
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="../bower_components/blueimp-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="../bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
+    <script src="../bower_components/medium-editor/dist/js/medium-editor.js"></script>
+    <script src="../bower_components/handlebars/handlebars.runtime.min.js"></script>
+    <script src="../bower_components/jquery-sortable/source/js/jquery-sortable-min.js"></script>
+
+    <script src="../bower_components/jquery-cycle2/build/jquery.cycle2.min.js"></script>
+    <script src="../bower_components/jquery-cycle2/build/plugin/jquery.cycle2.center.min.js"></script>
+
+    <!--<script src="../dist/js/medium-editor-insert-plugin.min.js"></script>-->
+    <script src="../src/js/templates.js"></script>
+    <script src="../src/js/core.js"></script>
+    <script src="../src/js/embeds.js"></script>
+    <script src="../src/js/images.js"></script>
+
+    <script>
+        var editor = new MediumEditor('.editable', {
+            buttonLabels: 'fontawesome'
+        });
+
+        $(function () {
+            $('.editable').mediumInsert({
+                editor: editor,
+                addons: {
+                    images: {
+                        styles: {
+                            slideshow: {
+                                label: '<span class="fa fa-play"></span>',
+                                added: function ($el) {
+                                    $el
+                                        .data('cycle-center-vert', true)
+                                        .cycle({
+                                            slides: 'figure'
+                                        });
+                                },
+                                removed: function ($el) {
+                                    $el.cycle('destroy');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        var cssLink = document.getElementById('medium-editor-theme');
+        document.getElementById('sel-themes').addEventListener('change', function () {
+            cssLink.href = this.value + '.css';
+        });
+    </script>
 </body>
 </html>

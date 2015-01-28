@@ -1,0 +1,9 @@
+{
+    "launch_in_dev": [
+        "Chrome",
+        "Firefox",
+        "Safari",
+        "PhantomJS"
+    ],
+    "test_page": "test.html"
+}

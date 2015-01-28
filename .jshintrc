@@ -3,15 +3,15 @@
         "jQuery": false,
         "document": false,
         "window": false,
-        "FB": false,
         "module": false,
         "test": false,
         "asyncTest": false,
         "ok": false,
         "equal": false,
-        "deepEqual": false,
         "start": false,
-        "MediumEditor": false
+        "sinon": false,
+        "alert": false,
+        "FB": false
     },
 
     "jquery" : true,
@@ -19,8 +19,8 @@
 
     "boss" : false,
     "curly": false,
-    "debug": true,
-    "devel": true,
+    "debug": false,
+    "devel": false,
     "eqeqeq": true,
     "evil": false,
     "forin": false,

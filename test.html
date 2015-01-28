@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="bower_components/qunit/qunit/qunit.css">
-  <title>Unit Tests</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bower_components/qunit/qunit/qunit.css">
+    <title>Unit Tests</title>
 </head>
 <body>
-  <div id="qunit"></div>
-  <div id="qunit-fixture"></div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
 
-  <script src="bower_components/jquery/jquery.min.js"></script>
-  <script src="bower_components//medium-editor/dist/js/medium-editor.min.js"></script>
-  <script src="src/js/medium-editor-insert-plugin.js"></script>
-  <script src="src/js/medium-editor-insert-images.js"></script>
-  <script src="src/js/medium-editor-insert-maps.js"></script>
-  <script src="src/js/medium-editor-insert-tables.js"></script>
-  <script src="src/js/medium-editor-insert-embeds.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/qunit/qunit/qunit.js"></script>
+    <script src="/testem.js"></script>
+    <script src="test/lib/Blob.js"></script>
+    <script src="test/lib/sinon/sinon.js"></script>
+    <script src="bower_components/sinon-qunit/lib/sinon-qunit.js"></script>
+    <script src="bower_components/medium-editor/dist/js/medium-editor.min.js"></script>
+    <script src="bower_components/handlebars/handlebars.runtime.min.js"></script>
+    <script src="bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="bower_components/blueimp-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
+    <script src="bower_components/jquery-sortable/source/js/jquery-sortable-min.js"></script>
+    <script src="src/js/templates.js"></script>
 
-  <script src="bower_components/qunit/qunit/qunit.js"></script>
-  <script src="test/lib/sinon/sinon.js"></script>
-  <script src="bower_components/sinon-qunit/lib/sinon-qunit.js"></script>
-  <script src="test/medium-editor-insert-plugin.js"></script>
-  <script src="test/medium-editor-insert-images.js"></script>
-  <script src="test/medium-editor-insert-maps.js"></script>
-  <script src="test/medium-editor-insert-tables.js"></script>
-  <script src="test/medium-editor-insert-embeds.js"></script>
+    <script src="src/js/core.js"></script>
+    <script src="src/js/images.js"></script>
+    <script src="src/js/embeds.js"></script>
+
+    <script src="test/core.js"></script>
+    <script src="test/images.js"></script>
+    <script src="test/embeds.js"></script>
 </body>
 </html>

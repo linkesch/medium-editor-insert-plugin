@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v0.3.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.0.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -7,271 +7,140 @@
  * Released under the MIT license
  */
 
-.mediumInsert {
-  margin: -1em 0; }
-  .mediumInsert figure {
+.medium-insert-images, .mediumInsert {
+  text-align: center; }
+  .medium-insert-images figure, .mediumInsert figure {
     margin: 0;
-    display: inline-block; }
-  .mediumInsert img {
-    max-width: 100%; }
-  .mediumInsert .mediumInsert-embeds {
-    text-align: center;
-    padding: 15px 0; }
-    .mediumInsert .mediumInsert-embeds iframe {
-      margin: 0px auto !important; }
-    .mediumInsert .mediumInsert-embeds div {
-      margin: 0px auto !important; }
-  .mediumInsert .mediumInsert-images {
-    margin-right: 10px;
-    width: 20%; }
-    .mediumInsert .mediumInsert-images img {
+    display: block; }
+    .medium-insert-images figure img, .mediumInsert figure img {
+      max-width: 100%;
       margin-top: 1em;
-      margin-bottom: 10px;
       vertical-align: top; }
-    .mediumInsert .mediumInsert-images:first-child {
-      margin-right: 0;
-      width: 100%; }
-      .mediumInsert .mediumInsert-images:first-child:after {
-        content: "\a";
-        white-space: pre; }
-  .mediumInsert .mediumInsert-maps {
-    padding: 10px;
-    background: #ccc; }
-  .mediumInsert table.mediumInsert-table {
-    border-top: 2px solid #333;
-    border-left: 2px solid #333;
-    width: 90%;
-    margin: 30px auto; }
-    .mediumInsert table.mediumInsert-table td {
-      border-right: 2px solid #333;
-      border-bottom: 2px solid #333;
-      padding: 12px; }
-  .mediumInsert.small {
+    .medium-insert-images figure:first-child img, .mediumInsert figure:first-child img {
+      margin-top: 0; }
+  .medium-insert-images.medium-insert-images-left, .medium-insert-images-left.mediumInsert, .mediumInsert.small {
     max-width: 33.33%;
     float: left;
-    margin-right: 30px;
-    margin-bottom: 20px; }
-  .mediumInsert.mediumInsert-first {
-    margin-top: 0; }
+    margin: 0 30px 20px 0; }
+  .medium-insert-images.medium-insert-images-right, .medium-insert-images-right.mediumInsert {
+    max-width: 33.33%;
+    float: right;
+    margin: 0 0 20px 30px; }
+  .medium-insert-images.medium-insert-images-grid, .medium-insert-images-grid.mediumInsert {
+    margin: -0.5em; }
+    .medium-insert-images.medium-insert-images-grid figure, .medium-insert-images-grid.mediumInsert figure {
+      width: 33.33%;
+      display: inline-block; }
+      .medium-insert-images.medium-insert-images-grid figure img, .medium-insert-images-grid.mediumInsert figure img {
+        max-width: calc(100% - 1em);
+        margin: 0.5em; }
+
+.medium-insert-embeds, .mediumInsert-embeds {
+  text-align: center;
+  margin: 1em 0; }
+  .medium-insert-embeds iframe, .mediumInsert-embeds iframe {
+    margin: 0 auto; }
+  .medium-insert-embeds div, .mediumInsert-embeds div {
+    margin: 0 auto; }
 
 .medium-editor-insert-plugin {
-  /* Prevent the text contents of draggable elements from being selectable. */ }
+  outline: 0 solid transparent; }
+  .medium-editor-insert-plugin:focus {
+    outline: 0 solid transparent; }
   .medium-editor-insert-plugin .clearfix:before, .medium-editor-insert-plugin:before, .medium-editor-insert-plugin .clearfix:after, .medium-editor-insert-plugin:after {
     content: " ";
-    /* 1 */
     display: table;
-    /* 2 */ }
-  .medium-editor-insert-plugin .clearfix:after, .medium-editor-insert-plugin:after {
     clear: both; }
-  .medium-editor-insert-plugin img {
-    max-width: 100%; }
-  .medium-editor-insert-plugin q, .medium-editor-insert-plugin blockquote {
-    display: block;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    border-left: 5px solid #efefef;
-    padding-left: 20px;
-    margin-left: -25px; }
-  .medium-editor-insert-plugin [draggable] {
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none; }
-  .medium-editor-insert-plugin[contenteditable], .medium-editor-insert-plugin [contenteditable] {
-    outline: 0px solid transparent; }
-    .medium-editor-insert-plugin[contenteditable]:focus, .medium-editor-insert-plugin [contenteditable]:focus {
-      outline: 0px solid transparent; }
-  .medium-editor-insert-plugin * {
-    -moz-box-sizing: content-box;
-         box-sizing: content-box; }
   .medium-editor-insert-plugin p {
     margin: 1em 0; }
   .medium-editor-insert-plugin progress {
     display: block;
     margin: 1em auto; }
   .medium-editor-insert-plugin .hide {
-    display: none !important; }
-  .medium-editor-insert-plugin.hover .mediumInsert-placeholder {
-    min-height: 14px;
-    border: 1px dashed #ddd;
-    margin-top: -1px;
-    margin-bottom: -1px; }
-
-.medium-editor-insert-plugin.medium-editor-placeholder {
-  padding-bottom: 0 !important;
-  min-height: 58px; }
-
-.medium-editor-insert-plugin.medium-editor-placeholder:after {
-  content: attr(data-placeholder) !important;
-  top: 1em; }
-
-.mediumInsert {
-  position: relative;
-  margin-left: -40px !important;
-  min-height: 18px; }
-  .mediumInsert.small {
-    max-width: calc(33.33% + 40px); }
-  .mediumInsert .mediumInsert-buttonsShow {
-    opacity: 0;
-    -webkit-transform: scale(0);
-        -ms-transform: scale(0);
-            transform: scale(0);
-    -webkit-transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
-            transition: all 0.08s cubic-bezier(0.2, 0.3, 0.25, 0.9);
-    display: block;
-    width: 18px;
-    height: 18px;
-    margin-top: -5px;
-    border-radius: 10px;
-    border: 2px solid;
-    font-size: 18px;
-    line-height: 18px;
-    text-align: center;
-    text-decoration: none !important; }
-    .mediumInsert .mediumInsert-buttonsShow:after {
-      left: auto;
-      right: 100%;
-      top: 50%;
-      margin-top: -4px; }
-  .mediumInsert .mediumInsert-buttons {
+    display: none; }
+  .medium-editor-insert-plugin.medium-editor-placeholder:after {
+    padding: 1em 0; }
+  .medium-editor-insert-plugin .medium-insert-buttons {
     position: absolute;
-    width: 40px;
-    bottom: 0;
-    left: 0;
     color: #ddd;
     font-size: 0.9em; }
-    .mediumInsert .mediumInsert-buttons a {
+    .medium-editor-insert-plugin .medium-insert-buttons a {
       text-decoration: underline;
       cursor: pointer; }
-      .mediumInsert .mediumInsert-buttons a.active {
-        font-weight: bold; }
-  .mediumInsert ul.mediumInsert-buttonsOptions {
+    .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show {
+      box-sizing: border-box;
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin-top: -5px;
+      border-radius: 20px;
+      border: 1px solid;
+      font-size: 25px;
+      line-height: 28px;
+      text-align: center;
+      text-decoration: none; }
+    .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: none;
+      position: relative;
+      z-index: 2;
+      left: 55px;
+      top: -32px; }
+      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li {
+        display: inline-block; }
+        .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a {
+          box-sizing: border-box;
+          display: inline-block;
+          margin: 0 5px;
+          width: 32px;
+          height: 32px;
+          border-radius: 20px;
+          border: 1px solid;
+          font-size: 20px;
+          line-height: 28px;
+          text-align: center; }
+          .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a .fa {
+            font-size: 15px; }
+
+.dragging {
+  cursor: move; }
+
+.medium-insert-image-active {
+  outline: 2px solid #000; }
+
+.medium-insert-images-toolbar {
+  display: none; }
+
+.medium-insert-images, .mediumInsert {
+  margin: 1em 0; }
+  .medium-insert-images figure, .mediumInsert figure {
+    position: relative; }
+  .medium-insert-images .dragged, .mediumInsert .dragged {
+    position: absolute;
+    top: 0;
+    opacity: 0.5;
+    z-index: 2000; }
+  .medium-insert-images .placeholder, .mediumInsert .placeholder {
+    position: relative;
     margin: 0;
     padding: 0;
-    list-style: none;
-    display: none;
+    border: none; }
+  .medium-insert-images .medium-insert-images-progress, .mediumInsert .medium-insert-images-progress {
     position: absolute;
-    z-index: 2;
-    left: 40px;
-    top: -10px;
-    border-radius: 5px; }
-    .mediumInsert ul.mediumInsert-buttonsOptions button {
-      min-height: auto;
-      height: auto;
-      padding: 5px;
-      border-left: none;
-      float: none; }
-      .mediumInsert ul.mediumInsert-buttonsOptions button .fa {
-        font-size: 20px; }
-  .mediumInsert .mediumInsert-placeholder {
-    position: relative;
-    margin-left: 40px;
-    text-align: center; }
-  .mediumInsert .mediumInsert-images .mediumInsert-imageIcon {
-    position: absolute;
-    top: 1em;
-    width: 30px;
-    height: 30px;
-    background-color: #3b3b3b;
-    background-repeat: no-repeat;
-    background-position: center center;
-    cursor: pointer; }
-  .mediumInsert .mediumInsert-imageRemove {
+    width: 100%;
+    height: 100%;
+    top: 0;
     right: 0;
-    background-image: url(../images/remove.png); }
-  .mediumInsert .mediumInsert-imageResizeSmaller, .mediumInsert .mediumInsert-imageResizeBigger, .mediumInsert .mediumInsert-imageResizeBigger {
-    right: 31px;
-    background-image: url(../images/resize-smaller.png); }
-  .mediumInsert .mediumInsert-imageResizeBigger {
-    background-image: url(../images/resize-bigger.png); }
-  .mediumInsert .mediumInsert-imageLink, .mediumInsert .mediumInsert-imageUnlink {
-    right: 62px;
-    background-image: url(../images/link.png); }
-  .mediumInsert .mediumInsert-imageUnlink {
-    background-image: url(../images/unlink.png); }
-  .mediumInsert .mediumInsert-error {
-    background-color: #f2dede;
-    border: 1px solid #ebccd1;
-    color: #a94442;
-    padding: 15px; }
-  .mediumInsert .mediumInsert-embedsPlaceholder {
-    position: relative;
-    padding: 24px;
-    height: 160px;
-    text-align: center;
-    background-color: #fff; }
-  .mediumInsert .mediumInsert-embedsWire {
-    position: absolute;
-    left: 50%;
-    text-align: center; }
-  .mediumInsert .mediumInsert-imageLinkWire {
-    position: absolute;
-    top: -40px;
-    left: auto;
-    right: 0; }
-  .mediumInsert .mediumInsert-embedsBox {
-    position: relative;
-    left: -250px; }
-    .mediumInsert .mediumInsert-embedsBox input[type="text"] {
-      margin: 0 auto;
-      padding: 10px;
-      width: 330px;
-      border: solid 3px #ccc;
-      font-size: 1em;
-      font-family: Arial, sans-serif;
-      color: #aaa; }
-      .mediumInsert .mediumInsert-embedsBox input[type="text"]:focus {
-        border: solid 1px #EEA34A; }
-    .mediumInsert .mediumInsert-embedsBox input::-webkit-input-placeholder {
-      color: #aaa; }
-    .mediumInsert .mediumInsert-embedsBox button {
-      border: solid 1px #2fbbfc;
-      padding: 11px 30px;
-      font-family: Arial, sans-serif;
-      font-size: 1.2em;
-      color: #fff;
-      cursor: pointer;
-      background-color: #2fbbfc; }
-  .mediumInsert .mediumInsert-embedsImage {
-    font-size: 100px;
-    color: #999; }
-  .mediumInsert.hover .mediumInsert-placeholder {
-    background: #f0f0f0; }
-  .mediumInsert:hover .mediumInsert-buttonsShow {
-    -webkit-transform: scale(1);
-        -ms-transform: scale(1);
-            transform: scale(1);
-    opacity: 1; }
-  .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox {
-    background-color: #fff;
-    border: 2px solid #333;
-    display: inline-block;
-    z-index: 50;
-    position: relative; }
-    .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox label, .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox button {
-      color: #333;
-      text-transform: capitalize; }
-    .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox button.mediumInsert-tableReadyButton {
-      background-color: #fff;
-      border: 1px solid #333; }
-    .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox input.mediumInsert-tableCols, .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox input.mediumInsert-tableRows {
-      width: 50px;
-      display: block;
-      height: initial;
-      background-color: inherit;
-      border: 1px solid #333;
-      color: #333;
-      margin: 0 auto;
-      text-align: center; }
-    .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox table {
-      margin: 10px; }
-      .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox table td {
-        text-align: center; }
-      .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox table.mediumInsert-demoTable {
-        border-top: 2px solid #333;
-        border-left: 2px solid #333;
-        height: 100px;
-        width: 100px; }
-        .mediumInsert .medium-editor-toolbar-form-anchor.mediumInsert-tableDemoBox table.mediumInsert-demoTable td {
-          border-bottom: 2px solid #333;
-          border-right: 2px solid #333; }
+    background: rgba(255, 255, 255, 0.4); }
+
+.medium-insert-embeds-input {
+  position: relative;
+  color: #ccc;
+  z-index: 1; }
+
+.medium-insert-embeds-placeholder {
+  position: absolute;
+  top: 0;
+  z-index: 0; }
