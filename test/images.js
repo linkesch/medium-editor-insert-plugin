@@ -42,6 +42,9 @@ asyncTest('image preview', function () {
 });
 
 test('image preview replaced by uploaded image', function () {
+    var stubbedImage;
+    stubbedImage = sinon.stub();
+    sinon.stub(this.addon, 'getDOMImage').returns(stubbedImage);
     this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
         '<figure><img src="data:" alt=""></figure>'+
     '</div>');
@@ -54,7 +57,7 @@ test('image preview replaced by uploaded image', function () {
             ]
         }
     });
-
+    stubbedImage.onload();
     equal(this.$el.find('.medium-insert-images img').attr('src'), 'test.jpg', 'preview replaced with uploaded image');
 });
 
