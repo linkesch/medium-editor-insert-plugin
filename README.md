@@ -20,7 +20,7 @@ Current available addons:
 
 ## Download
 
-* Bower (recommended): ```bower install medium-editor-insert-plugin#~1.0 --save```
+* Bower (recommended): ```bower install medium-editor-insert-plugin#^1.0 --save```
 * Manual: [Download the latest release](https://github.com/orthes/medium-editor-insert-plugin/releases)
 
 
