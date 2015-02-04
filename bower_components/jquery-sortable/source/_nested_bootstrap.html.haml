@@ -1,0 +1,50 @@
+%h2 Sorting a bootstrap menu
+.row
+  .span4
+    %ul
+      %li
+        Sort
+        %strong vertically
+      %li Define the nested containers differently
+      %li
+        %strong Exclude
+        some items from being sortable
+    %p
+      %span.label.label-info Heads Up!
+      The
+      %code itemSelector
+      should always match every sibling of any item.
+      If you want to exclude some items, use the
+      %code exclude
+      option.
+      %small
+        See the first example
+        %a(href="http://jqueryui.com/demos/sortable/#items") here
+        why this is a good idea.
+  .span8
+    %pre(lang="js")= example("nested_bootstrap")
+.row
+  .navbar-sort-container
+    .navbar
+      .navbar-inner
+        .container
+          %ol.nav.pull-left
+            = iterate(6,"Item") do |i,name|
+              - if i == 3
+                %li.dropdown.open
+                  %a(href="#")= name
+                  %ol.dropdown-menu
+                    = iterate(4,"Item") do |j, name|
+                      %li
+                        %a(href="#")= name
+              - else
+                %li
+                  %a(href="#")= name
+              - if i == 2
+                %li.divider-vertical
+          %ol.nav.pull-right
+            = iterate(6,"Item") do |i,name|
+              %li
+                %a(href="#")=name
+              - if i == 2
+                %li.divider-vertical

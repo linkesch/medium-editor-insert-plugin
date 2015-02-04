@@ -6,6 +6,13 @@ function MediumEditor(elements, options) {
 if (typeof module === 'object') {
     module.exports = MediumEditor;
 }
+// AMD support
+else if (typeof define === 'function' && define.amd) {
+    define(function () {
+        'use strict';
+        return MediumEditor;
+    });
+}
 
 (function (window, document) {
     'use strict';
@@ -40,7 +47,7 @@ if (typeof module === 'object') {
         var i,
             len,
             ranges,
-            sel = window.getSelection();
+            sel = this.options.contentWindow.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
             ranges = [];
             for (i = 0, len = sel.rangeCount; i < len; i += 1) {
@@ -54,7 +61,7 @@ if (typeof module === 'object') {
     function restoreSelection(savedSel) {
         var i,
             len,
-            sel = window.getSelection();
+            sel = this.options.contentWindow.getSelection();
         if (savedSel) {
             sel.removeAllRanges();
             for (i = 0, len = savedSel.length; i < len; i += 1) {
@@ -66,7 +73,7 @@ if (typeof module === 'object') {
     // http://stackoverflow.com/questions/1197401/how-can-i-get-the-element-the-caret-is-in-with-javascript-when-using-contentedi
     // by You
     function getSelectionStart() {
-        var node = document.getSelection().anchorNode,
+        var node = this.options.ownerDocument.getSelection().anchorNode,
             startNode = (node && node.nodeType === 3 ? node.parentNode : node);
         return startNode;
     }
@@ -79,18 +86,18 @@ if (typeof module === 'object') {
             sel,
             len,
             container;
-        if (window.getSelection !== undefined) {
-            sel = window.getSelection();
+        if (this.options.contentWindow.getSelection !== undefined) {
+            sel = this.options.contentWindow.getSelection();
             if (sel.rangeCount) {
-                container = document.createElement('div');
+                container = this.options.ownerDocument.createElement('div');
                 for (i = 0, len = sel.rangeCount; i < len; i += 1) {
                     container.appendChild(sel.getRangeAt(i).cloneContents());
                 }
                 html = container.innerHTML;
             }
-        } else if (document.selection !== undefined) {
-            if (document.selection.type === 'Text') {
-                html = document.selection.createRange().htmlText;
+        } else if (this.options.ownerDocument.selection !== undefined) {
+            if (this.options.ownerDocument.selection.type === 'Text') {
+                html = this.options.ownerDocument.selection.createRange().htmlText;
             }
         }
         return html;
@@ -99,6 +106,39 @@ if (typeof module === 'object') {
     // https://github.com/jashkenas/underscore
     function isElement(obj) {
         return !!(obj && obj.nodeType === 1);
+    }
+
+    // http://stackoverflow.com/questions/6690752/insert-html-at-caret-in-a-contenteditable-div
+    function insertHTMLCommand(doc, html) {
+        var selection, range, el, fragment, node, lastNode;
+
+        if (doc.queryCommandSupported('insertHTML')) {
+            return doc.execCommand('insertHTML', false, html);
+        }
+
+        selection = window.getSelection();
+        if (selection.getRangeAt && selection.rangeCount) {
+            range = selection.getRangeAt(0);
+            range.deleteContents();
+
+            el = doc.createElement("div");
+            el.innerHTML = html;
+            fragment = doc.createDocumentFragment();
+            while (el.firstChild) {
+                node = el.firstChild;
+                lastNode = fragment.appendChild(node);
+            }
+            range.insertNode(fragment);
+
+            // Preserve the selection:
+            if (lastNode) {
+                range = range.cloneRange();
+                range.setStartAfter(lastNode);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
     }
 
     MediumEditor.prototype = {
@@ -117,7 +157,11 @@ if (typeof module === 'object') {
             disableDoubleReturn: false,
             disableToolbar: false,
             disableEditing: false,
+            disableAnchorForm: false,
+            disablePlaceholders: false,
             elementsContainer: false,
+            contentWindow: window,
+            ownerDocument: document,
             firstHeader: 'h3',
             forcePlainText: true,
             placeholder: 'Type your text',
@@ -137,24 +181,59 @@ if (typeof module === 'object') {
         isIE: ((navigator.appName === 'Microsoft Internet Explorer') || ((navigator.appName === 'Netscape') && (new RegExp('Trident/.*rv:([0-9]{1,}[.0-9]{0,})').exec(navigator.userAgent) !== null))),
 
         init: function (elements, options) {
+            var uniqueId = 1;
+
+            this.options = extend(options, this.defaults);
             this.setElementSelection(elements);
             if (this.elements.length === 0) {
                 return;
             }
             this.parentElements = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'];
-            this.id = document.querySelectorAll('.medium-editor-toolbar').length + 1;
-            this.options = extend(options, this.defaults);
+            if (!this.options.elementsContainer) {
+                this.options.elementsContainer = document.body;
+            }
+
+            while (this.options.elementsContainer.querySelector('#medium-editor-toolbar-' + uniqueId)) {
+                uniqueId = uniqueId + 1;
+            }
+
+            this.id = uniqueId;
+
             return this.setup();
         },
 
         setup: function () {
+            this.events = [];
             this.isActive = true;
             this.initElements()
                 .bindSelect()
                 .bindPaste()
                 .setPlaceholders()
+                .bindElementActions()
                 .bindWindowActions()
                 .passInstance();
+        },
+
+        on: function(target, event, listener, useCapture) {
+            target.addEventListener(event, listener, useCapture);
+            this.events.push([target, event, listener, useCapture]);
+        },
+
+        off: function(target, event, listener, useCapture) {
+            var index = this.events.indexOf([target, event, listener, useCapture]),
+                e;
+            if(index !== -1) {
+                e = this.events.splice(index, 1);
+                e[0].removeEventListener(e[1], e[2], e[3]);
+            }
+        },
+
+        removeAllEvents: function() {
+            var e = this.events.pop();
+            while(e) {
+                e[0].removeEventListener(e[1], e[2], e[3]);
+                e = this.events.pop();
+            }
         },
 
         initElements: function () {
@@ -169,16 +248,13 @@ if (typeof module === 'object') {
                     this.elements[i].setAttribute('data-placeholder', this.options.placeholder);
                 }
                 this.elements[i].setAttribute('data-medium-element', true);
-                this.bindParagraphCreation(i).bindReturn(i).bindTab(i);
+                this.bindParagraphCreation(i);
                 if (!this.options.disableToolbar && !this.elements[i].getAttribute('data-disable-toolbar')) {
                     addToolbar = true;
                 }
             }
             // Init toolbar
             if (addToolbar) {
-                if (!this.options.elementsContainer) {
-                    this.options.elementsContainer = document.body;
-                }
                 this.initToolbar()
                     .bindButtons()
                     .bindAnchorForm()
@@ -193,9 +269,117 @@ if (typeof module === 'object') {
         },
 
         updateElementList: function () {
-            this.elements = typeof this.elementSelection === 'string' ? document.querySelectorAll(this.elementSelection) : this.elementSelection;
+            this.elements = typeof this.elementSelection === 'string' ? this.options.ownerDocument.querySelectorAll(this.elementSelection) : this.elementSelection;
             if (this.elements.nodeType === 1) {
                 this.elements = [this.elements];
+            }
+        },
+
+        bindBlur: function(i) {
+            var self = this,
+                timeout,
+                blurFunction = function(e){
+                    // If it's not part of the editor, or the toolbar
+                    if ( e.target !== self.toolbar
+                        && e.target !== self.elements[0]
+                        && !isDescendant(self.elements[0], e.target)
+                        && !isDescendant(self.toolbar, e.target)
+                        && !isDescendant(self.anchorPreview, e.target)) {
+
+                        // Activate the placeholder
+                        if (!self.options.disablePlaceholders) {
+                            self.placeholderWrapper(self.elements[0], e);
+                        }
+
+                        clearTimeout(timeout);
+                        // Hide the toolbar after a small delay so we can prevent this on toolbar click
+                        timeout = setTimeout(function(){
+                            if ( !self.keepToolbarAlive ) {
+                                self.hideToolbarActions();
+                            }
+                        }, 200);
+                    }
+                };
+
+            // Hide the toolbar when focusing outside of the editor.
+            this.on(document.body, 'click', blurFunction, true);
+            this.on(document.body, 'focus', blurFunction, true);
+
+            return this;
+        },
+
+        bindKeypress: function(i) {
+            if (this.options.disablePlaceholders) {
+                return this;
+            }
+
+            var self = this;
+
+            // Set up the keypress events
+            this.on(this.elements[i], 'keypress', function(event){
+                self.placeholderWrapper(this,event);
+            });
+
+            return this;
+        },
+
+        bindClick: function(i) {
+            var self = this;
+
+            this.on(this.elements[i], 'click', function(){
+                if (!self.options.disablePlaceholders) {
+                    // Remove placeholder
+                    this.classList.remove('medium-editor-placeholder');
+                }
+
+                if ( self.options.staticToolbar ) {
+                    self.setToolbarPosition();
+                }
+            });
+
+            return this;
+        },
+
+        /**
+         * This handles blur and keypress events on elements
+         * Including Placeholders, and tooldbar hiding on blur
+         */
+        bindElementActions: function() {
+            var i;
+
+            for (i = 0; i < this.elements.length; i += 1) {
+
+                if (!this.options.disablePlaceholders) {
+                    // Active all of the placeholders
+                    this.activatePlaceholder(this.elements[i]);
+                }
+
+                // Bind the return and tab keypress events
+                this.bindReturn(i)
+                    .bindTab(i)
+                    .bindBlur(i)
+                    .bindClick(i)
+                    .bindKeypress(i);
+
+            }
+
+            return this;
+        },
+
+        // Two functions to handle placeholders
+        activatePlaceholder:  function (el) {
+
+            if (!(el.querySelector('img')) &&
+                    !(el.querySelector('blockquote')) &&
+                    el.textContent.replace(/^\s+|\s+$/g, '') === '') {
+
+                el.classList.add('medium-editor-placeholder');
+            }
+        },
+        placeholderWrapper: function (el, e) {
+            el.classList.remove('medium-editor-placeholder');
+            if (e.type !== 'keypress') {
+                this.activatePlaceholder(el);
             }
         },
 
@@ -263,10 +447,11 @@ if (typeof module === 'object') {
 
         bindParagraphCreation: function (index) {
             var self = this;
-            this.elements[index].addEventListener('keypress', function (e) {
-                var node = getSelectionStart(),
+            this.on(this.elements[index], 'keypress', function (e) {
+                var node,
                     tagName;
                 if (e.which === 32) {
+                    node = getSelectionStart.call(self);
                     tagName = node.tagName.toLowerCase();
                     if (tagName === 'a') {
                         document.execCommand('unlink', false, null);
@@ -274,16 +459,16 @@ if (typeof module === 'object') {
                 }
             });
 
-            this.elements[index].addEventListener('keyup', function (e) {
-                var node = getSelectionStart(),
+            this.on(this.elements[index], 'keyup', function (e) {
+                var node = getSelectionStart.call(self),
                     tagName,
                     editorElement;
-                    
+
                 if (node && node.getAttribute('data-medium-element') && node.children.length === 0 && !(self.options.disableReturn || node.getAttribute('data-disable-return'))) {
                     document.execCommand('formatBlock', false, 'p');
                 }
                 if (e.which === 13) {
-                    node = getSelectionStart();
+                    node = getSelectionStart.call(self);
                     tagName = node.tagName.toLowerCase();
                     editorElement = self.getSelectionElement();
 
@@ -320,13 +505,13 @@ if (typeof module === 'object') {
 
         bindReturn: function (index) {
             var self = this;
-            this.elements[index].addEventListener('keypress', function (e) {
+            this.on(this.elements[index], 'keypress', function (e) {
                 if (e.which === 13) {
                     if (self.options.disableReturn || this.getAttribute('data-disable-return')) {
                         e.preventDefault();
                     } else if (self.options.disableDoubleReturn || this.getAttribute('data-disable-double-return')) {
-                        var node = getSelectionStart();
-                        if (node && node.innerText === '\n') {
+                        var node = getSelectionStart.call(self);
+                        if (node && node.textContent === '\n') {
                             e.preventDefault();
                         }
                     }
@@ -336,10 +521,11 @@ if (typeof module === 'object') {
         },
 
         bindTab: function (index) {
-            this.elements[index].addEventListener('keydown', function (e) {
+            var self = this;
+            this.on(this.elements[index], 'keydown', function (e) {
                 if (e.which === 9) {
                     // Override tab only for pre nodes
-                    var tag = getSelectionStart().tagName.toLowerCase();
+                    var tag = getSelectionStart.call(self).tagName.toLowerCase();
                     if (tag === 'pre') {
                         e.preventDefault();
                         document.execCommand('insertHtml', null, '    ');
@@ -367,7 +553,7 @@ if (typeof module === 'object') {
                     'bold': '<button class="medium-editor-action medium-editor-action-bold" data-action="bold" data-element="b">' + buttonLabels.bold + '</button>',
                     'italic': '<button class="medium-editor-action medium-editor-action-italic" data-action="italic" data-element="i">' + buttonLabels.italic + '</button>',
                     'underline': '<button class="medium-editor-action medium-editor-action-underline" data-action="underline" data-element="u">' + buttonLabels.underline + '</button>',
-                    'strikethrough': '<button class="medium-editor-action medium-editor-action-strikethrough" data-action="strikethrough" data-element="strike"><strike>A</strike></button>',
+                    'strikethrough': '<button class="medium-editor-action medium-editor-action-strikethrough" data-action="strikethrough" data-element="strike">' + buttonLabels.strikethrough +'</button>',
                     'superscript': '<button class="medium-editor-action medium-editor-action-superscript" data-action="superscript" data-element="sup">' + buttonLabels.superscript + '</button>',
                     'subscript': '<button class="medium-editor-action medium-editor-action-subscript" data-action="subscript" data-element="sub">' + buttonLabels.subscript + '</button>',
                     'anchor': '<button class="medium-editor-action medium-editor-action-anchor" data-action="anchor" data-element="a">' + buttonLabels.anchor + '</button>',
@@ -396,6 +582,7 @@ if (typeof module === 'object') {
                     'bold': '<b>B</b>',
                     'italic': '<b><i>I</i></b>',
                     'underline': '<b><u>U</u></b>',
+                    'strikethrough': '<s>A</s>',
                     'superscript': '<b>x<sup>1</sup></b>',
                     'subscript': '<b>x<sub>1</sub></b>',
                     'anchor': '<b>#</b>',
@@ -418,6 +605,7 @@ if (typeof module === 'object') {
                     'bold': '<i class="fa fa-bold"></i>',
                     'italic': '<i class="fa fa-italic"></i>',
                     'underline': '<i class="fa fa-underline"></i>',
+                    'strikethrough': '<i class="fa fa-strikethrough"></i>',
                     'superscript': '<i class="fa fa-superscript"></i>',
                     'subscript': '<i class="fa fa-subscript"></i>',
                     'anchor': '<i class="fa fa-link"></i>',
@@ -452,13 +640,15 @@ if (typeof module === 'object') {
             }
             this.toolbar = this.createToolbar();
             this.keepToolbarAlive = false;
-            this.anchorForm = this.toolbar.querySelector('.medium-editor-toolbar-form-anchor');
-            this.anchorInput = this.anchorForm.querySelector('input.medium-editor-toolbar-anchor-input');
-            this.anchorTarget = this.anchorForm.querySelector('input.medium-editor-toolbar-anchor-target');
-            this.anchorButton = this.anchorForm.querySelector('input.medium-editor-toolbar-anchor-button');
             this.toolbarActions = this.toolbar.querySelector('.medium-editor-toolbar-actions');
             this.anchorPreview = this.createAnchorPreview();
 
+            if (!this.options.disableAnchorForm) {
+                this.anchorForm = this.toolbar.querySelector('.medium-editor-toolbar-form-anchor');
+                this.anchorInput = this.anchorForm.querySelector('input.medium-editor-toolbar-anchor-input');
+                this.anchorTarget = this.anchorForm.querySelector('input.medium-editor-toolbar-anchor-target');
+                this.anchorButton = this.anchorForm.querySelector('input.medium-editor-toolbar-anchor-button');   
+            }
             return this;
         },
 
@@ -466,8 +656,17 @@ if (typeof module === 'object') {
             var toolbar = document.createElement('div');
             toolbar.id = 'medium-editor-toolbar-' + this.id;
             toolbar.className = 'medium-editor-toolbar';
+
+            if ( this.options.staticToolbar ) {
+                toolbar.className += " static-toolbar";
+            } else {
+                toolbar.className += " stalker-toolbar";
+            }
+
             toolbar.appendChild(this.toolbarButtons());
-            toolbar.appendChild(this.toolbarFormAnchor());
+            if (!this.options.disableAnchorForm) {
+                toolbar.appendChild(this.toolbarFormAnchor());
+            }
             this.options.elementsContainer.appendChild(toolbar);
             return toolbar;
         },
@@ -481,7 +680,7 @@ if (typeof module === 'object') {
                 btn,
                 ext;
 
-            ul.id = 'medium-editor-toolbar-actions';
+            ul.id = 'medium-editor-toolbar-actions' + this.id;
             ul.className = 'medium-editor-toolbar-actions clearfix';
 
             for (i = 0; i < btns.length; i += 1) {
@@ -541,7 +740,7 @@ if (typeof module === 'object') {
 
 
             anchor.className = 'medium-editor-toolbar-form-anchor';
-            anchor.id = 'medium-editor-toolbar-form-anchor';
+            anchor.id = 'medium-editor-toolbar-form-anchor-' + this.id;
             anchor.appendChild(input);
 
             anchor.appendChild(save);
@@ -566,7 +765,7 @@ if (typeof module === 'object') {
             this.checkSelectionWrapper = function (e) {
 
                 // Do not close the toolbar when bluring the editable area and clicking into the anchor form
-                if (e && self.clickingIntoArchorForm(e)) {
+                if (!self.options.disableAnchorForm && e && self.clickingIntoArchorForm(e)) {
                     return false;
                 }
 
@@ -576,11 +775,12 @@ if (typeof module === 'object') {
                 }, self.options.delay);
             };
 
-            document.documentElement.addEventListener('mouseup', this.checkSelectionWrapper);
+            this.on(document.documentElement, 'mouseup', this.checkSelectionWrapper);
 
             for (i = 0; i < this.elements.length; i += 1) {
-                this.elements[i].addEventListener('keyup', this.checkSelectionWrapper);
-                this.elements[i].addEventListener('blur', this.checkSelectionWrapper);
+                this.on(this.elements[i], 'keyup', this.checkSelectionWrapper);
+                this.on(this.elements[i], 'blur', this.checkSelectionWrapper);
+                this.on(this.elements[i], 'click', this.checkSelectionWrapper);
             }
             return this;
         },
@@ -591,15 +791,24 @@ if (typeof module === 'object') {
 
             if (this.keepToolbarAlive !== true && !this.options.disableToolbar) {
 
-                newSelection = window.getSelection();
-                if (newSelection.toString().trim() === '' ||
+                newSelection = this.options.contentWindow.getSelection();
+                if ((!this.options.updateOnEmptySelection && newSelection.toString().trim() === '') ||
                     (this.options.allowMultiParagraphSelection === false && this.hasMultiParagraphs()) ||
                     this.selectionInContentEditableFalse()) {
-                    this.hideToolbarActions();
+
+                    if ( !this.options.staticToolbar ) {
+                        this.hideToolbarActions();
+                    } else if (this.anchorForm && this.anchorForm.style.display === 'block') {
+                        this.setToolbarButtonStates();
+                        this.showToolbarActions();
+                    }
+
                 } else {
                     selectionElement = this.getSelectionElement();
                     if (!selectionElement || selectionElement.getAttribute('data-disable-toolbar')) {
-                        this.hideToolbarActions();
+                        if ( !this.options.staticToolbar ) {
+                            this.hideToolbarActions();
+                        }
                     } else {
                         this.checkSelectionElement(newSelection, selectionElement);
                     }
@@ -619,7 +828,7 @@ if (typeof module === 'object') {
         },
 
         hasMultiParagraphs: function () {
-            var selectionHtml = getSelectionHtml().replace(/<[\S]+><\/[\S]+>/gim, ''),
+            var selectionHtml = getSelectionHtml.call(this).replace(/<[\S]+><\/[\S]+>/gim, ''),
                 hasMultiParagraphs = selectionHtml.match(/<(p|h[0-6]|blockquote)>([\s\S]*?)<\/(p|h[0-6]|blockquote)>/g);
 
             return (hasMultiParagraphs ? hasMultiParagraphs.length : 0);
@@ -637,11 +846,14 @@ if (typeof module === 'object') {
                     return;
                 }
             }
-            this.hideToolbarActions();
+
+            if ( !this.options.staticToolbar ) {
+                this.hideToolbarActions();
+            }
         },
 
         findMatchingSelectionParent: function(testElementFunction) {
-            var selection = window.getSelection(), range, current;
+            var selection = this.options.contentWindow.getSelection(), range, current;
 
             if (selection.rangeCount === 0) {
                 return false;
@@ -681,28 +893,71 @@ if (typeof module === 'object') {
         },
 
         setToolbarPosition: function () {
-            var buttonHeight = 50,
-                selection = window.getSelection(),
-                range = selection.getRangeAt(0),
-                boundary = range.getBoundingClientRect(),
-                defaultLeft = (this.options.diffLeft) - (this.toolbar.offsetWidth / 2),
-                middleBoundary = (boundary.left + boundary.right) / 2,
-                halfOffsetWidth = this.toolbar.offsetWidth / 2;
-            if (boundary.top < buttonHeight) {
-                this.toolbar.classList.add('medium-toolbar-arrow-over');
-                this.toolbar.classList.remove('medium-toolbar-arrow-under');
-                this.toolbar.style.top = buttonHeight + boundary.bottom - this.options.diffTop + window.pageYOffset - this.toolbar.offsetHeight + 'px';
-            } else {
-                this.toolbar.classList.add('medium-toolbar-arrow-under');
-                this.toolbar.classList.remove('medium-toolbar-arrow-over');
-                this.toolbar.style.top = boundary.top + this.options.diffTop + window.pageYOffset - this.toolbar.offsetHeight + 'px';
+            // document.documentElement for IE 9
+            var scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop,
+            container = this.elements[0],
+            containerRect = container.getBoundingClientRect(),
+            containerTop = containerRect.top + scrollTop,
+            buttonHeight = 50,
+            selection = window.getSelection(),
+            range,
+            boundary,
+            middleBoundary,
+            defaultLeft = (this.options.diffLeft) - (this.toolbar.offsetWidth / 2),
+            halfOffsetWidth = this.toolbar.offsetWidth / 2;
+
+            if ( selection.focusNode === null ) {
+                return this;
             }
-            if (middleBoundary < halfOffsetWidth) {
-                this.toolbar.style.left = defaultLeft + halfOffsetWidth + 'px';
-            } else if ((window.innerWidth - middleBoundary) < halfOffsetWidth) {
-                this.toolbar.style.left = window.innerWidth + defaultLeft - halfOffsetWidth + 'px';
-            } else {
-                this.toolbar.style.left = defaultLeft + middleBoundary + 'px';
+
+            this.toolbar.classList.add('medium-editor-toolbar-active');
+
+            if ( this.options.staticToolbar ) {
+
+                if ( this.options.stickyToolbar ) {
+
+                    // If it's beyond the height of the editor, position it at the bottom of the editor
+                    if ( scrollTop > (containerTop + this.elements[0].offsetHeight - this.toolbar.offsetHeight)) {
+                        this.toolbar.style.top = (containerTop + this.elements[0].offsetHeight) + 'px';
+                    }
+                    // Stick the toolbar to the top of the window
+                    else if ( scrollTop > (containerTop - this.toolbar.offsetHeight) ) {
+                        this.toolbar.classList.add('sticky-toolbar');
+                        this.toolbar.style.top = "0px";
+                    }
+                    // Normal static toolbar position
+                    else {
+                        this.toolbar.classList.remove('sticky-toolbar');
+                        this.toolbar.style.top = containerTop - this.toolbar.offsetHeight + "px";
+                    }
+
+                } else {
+                    this.toolbar.style.top = containerTop - this.toolbar.offsetHeight + "px";
+                }
+
+                this.toolbar.style.left = containerRect.left + "px";
+
+            } else if (!selection.isCollapsed) {
+                range = selection.getRangeAt(0);
+                boundary = range.getBoundingClientRect();
+                middleBoundary = (boundary.left + boundary.right) / 2;
+
+                if (boundary.top < buttonHeight) {
+                    this.toolbar.classList.add('medium-toolbar-arrow-over');
+                    this.toolbar.classList.remove('medium-toolbar-arrow-under');
+                    this.toolbar.style.top = buttonHeight + boundary.bottom - this.options.diffTop + this.options.contentWindow.pageYOffset - this.toolbar.offsetHeight + 'px';
+                } else {
+                    this.toolbar.classList.add('medium-toolbar-arrow-under');
+                    this.toolbar.classList.remove('medium-toolbar-arrow-over');
+                    this.toolbar.style.top = boundary.top + this.options.diffTop + this.options.contentWindow.pageYOffset - this.toolbar.offsetHeight + 'px';
+                }
+                if (middleBoundary < halfOffsetWidth) {
+                    this.toolbar.style.left = defaultLeft + halfOffsetWidth + 'px';
+                } else if ((this.options.contentWindow.innerWidth - middleBoundary) < halfOffsetWidth) {
+                    this.toolbar.style.left = this.options.contentWindow.innerWidth + defaultLeft - halfOffsetWidth + 'px';
+                } else {
+                    this.toolbar.style.left = defaultLeft + middleBoundary + 'px';
+                }
             }
 
             this.hideAnchorPreview();
@@ -762,7 +1017,7 @@ if (typeof module === 'object') {
                     }
                 };
             for (i = 0; i < buttons.length; i += 1) {
-                buttons[i].addEventListener('click', triggerAction);
+                this.on(buttons[i], 'click', triggerAction);
             }
             this.setFirstAndLastItems(buttons);
             return this;
@@ -782,11 +1037,13 @@ if (typeof module === 'object') {
                 this.setToolbarPosition();
                 this.setToolbarButtonStates();
             } else if (action === 'anchor') {
-                this.triggerAnchorAction(e);
+                if (!this.options.disableAnchorForm) {
+                    this.triggerAnchorAction(e);
+                }
             } else if (action === 'image') {
-                document.execCommand('insertImage', false, window.getSelection());
+                this.options.ownerDocument.execCommand('insertImage', false, this.options.contentWindow.getSelection());
             } else {
-                document.execCommand(action, false, null);
+                this.options.ownerDocument.execCommand(action, false, null);
                 this.setToolbarPosition();
             }
         },
@@ -816,8 +1073,8 @@ if (typeof module === 'object') {
             var selectedParentElement = this.getSelectedParentElement();
             if (selectedParentElement.tagName &&
                     selectedParentElement.tagName.toLowerCase() === 'a') {
-                document.execCommand('unlink', false, null);
-            } else {
+                this.options.ownerDocument.execCommand('unlink', false, null);
+            } else if (this.anchorForm) {
                 if (this.anchorForm.style.display === 'block') {
                     this.showToolbarActions();
                 } else {
@@ -834,7 +1091,7 @@ if (typeof module === 'object') {
             // https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla
             if (el === 'blockquote' && selectionData.el &&
                 selectionData.el.parentNode.tagName.toLowerCase() === 'blockquote') {
-                return document.execCommand('outdent', false, null);
+                return this.options.ownerDocument.execCommand('outdent', false, null);
             }
             if (selectionData.tagName === el) {
                 el = 'p';
@@ -845,11 +1102,11 @@ if (typeof module === 'object') {
             // http://stackoverflow.com/questions/1816223/rich-text-editor-with-blockquote-function/1821777#1821777
             if (this.isIE) {
                 if (el === 'blockquote') {
-                    return document.execCommand('indent', false, el);
+                    return this.options.ownerDocument.execCommand('indent', false, el);
                 }
                 el = '<' + el + '>';
             }
-            return document.execCommand('formatBlock', false, el);
+            return this.options.ownerDocument.execCommand('formatBlock', false, el);
         },
 
         getSelectionData: function (el) {
@@ -882,15 +1139,20 @@ if (typeof module === 'object') {
 
         hideToolbarActions: function () {
             this.keepToolbarAlive = false;
-            if (this.toolbar !== undefined) {
+            if (this.toolbar !== undefined && this.toolbar.classList.contains('medium-editor-toolbar-active')) {
                 this.toolbar.classList.remove('medium-editor-toolbar-active');
+                if (this.onHideToolbar) {
+                    this.onHideToolbar();
+                }
             }
         },
 
         showToolbarActions: function () {
             var self = this,
                 timer;
-            this.anchorForm.style.display = 'none';
+            if (this.anchorForm) {
+                this.anchorForm.style.display = 'none';
+            }
             this.toolbarActions.style.display = 'block';
             this.keepToolbarAlive = false;
             clearTimeout(timer);
@@ -902,14 +1164,18 @@ if (typeof module === 'object') {
         },
 
         saveSelection: function() {
-            this.savedSelection = saveSelection();
+            this.savedSelection = saveSelection.call(this);
         },
 
         restoreSelection: function() {
-            restoreSelection(this.savedSelection);
+            restoreSelection.call(this, this.savedSelection);
         },
 
         showAnchorForm: function (link_value) {
+            if (!this.anchorForm) {
+                return;
+            }
+
             this.toolbarActions.style.display = 'none';
             this.saveSelection();
             this.anchorForm.style.display = 'block';
@@ -920,16 +1186,20 @@ if (typeof module === 'object') {
         },
 
         bindAnchorForm: function () {
+            if (!this.anchorForm) {
+                return this;
+            }
+
             var linkCancel = this.anchorForm.querySelector('a.medium-editor-toobar-anchor-close'),
                 linkSave = this.anchorForm.querySelector('a.medium-editor-toobar-anchor-save'),
                 self = this;
 
-            this.anchorForm.addEventListener('click', function (e) {
+            this.on(this.anchorForm, 'click', function (e) {
                 e.stopPropagation();
                 self.keepToolbarAlive = true;
             });
 
-            this.anchorInput.addEventListener('keyup', function (e) {
+            this.on(this.anchorInput, 'keyup', function (e) {
                 var button = null,
                     target;
 
@@ -950,7 +1220,7 @@ if (typeof module === 'object') {
                 }
             });
 
-            linkSave.addEventListener('click', function(e) {
+            this.on(linkSave, 'click', function(e) {
                 var button = null,
                     target;
                 e.preventDefault();
@@ -968,30 +1238,30 @@ if (typeof module === 'object') {
                 self.createLink(self.anchorInput, target, button);
             }, true);
 
-            this.anchorInput.addEventListener('click', function (e) {
+            this.on(this.anchorInput, 'click', function (e) {
                 // make sure not to hide form when cliking into the input
                 e.stopPropagation();
                 self.keepToolbarAlive = true;
             });
 
             // Hide the anchor form when focusing outside of it.
-            document.body.addEventListener('click', function (e) {
+            this.on(this.options.ownerDocument.body, 'click', function (e) {
                 if (e.target !== self.anchorForm && !isDescendant(self.anchorForm, e.target) && !isDescendant(self.toolbarActions, e.target)) {
                     self.keepToolbarAlive = false;
                     self.checkSelection();
                 }
             }, true);
-            document.body.addEventListener('focus', function (e) {
+            this.on(this.options.ownerDocument.body, 'focus', function (e) {
                 if (e.target !== self.anchorForm && !isDescendant(self.anchorForm, e.target) && !isDescendant(self.toolbarActions, e.target)) {
                     self.keepToolbarAlive = false;
                     self.checkSelection();
                 }
             }, true);
 
-            linkCancel.addEventListener('click', function (e) {
+            this.on(linkCancel, 'click', function (e) {
                 e.preventDefault();
                 self.showToolbarActions();
-                restoreSelection(self.savedSelection);
+                restoreSelection.call(self, self.savedSelection);
             });
             return this;
         },
@@ -1031,11 +1301,11 @@ if (typeof module === 'object') {
 
             self.anchorPreview.classList.add('medium-toolbar-arrow-over');
             self.anchorPreview.classList.remove('medium-toolbar-arrow-under');
-            self.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - self.options.diffTop + window.pageYOffset - self.anchorPreview.offsetHeight) + 'px';
+            self.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - self.options.diffTop + this.options.contentWindow.pageYOffset - self.anchorPreview.offsetHeight) + 'px';
             if (middleBoundary < halfOffsetWidth) {
                 self.anchorPreview.style.left = defaultLeft + halfOffsetWidth + 'px';
-            } else if ((window.innerWidth - middleBoundary) < halfOffsetWidth) {
-                self.anchorPreview.style.left = window.innerWidth + defaultLeft - halfOffsetWidth + 'px';
+            } else if ((this.options.contentWindow.innerWidth - middleBoundary) < halfOffsetWidth) {
+                self.anchorPreview.style.left = this.options.contentWindow.innerWidth + defaultLeft - halfOffsetWidth + 'px';
             } else {
                 self.anchorPreview.style.left = defaultLeft + middleBoundary + 'px';
             }
@@ -1068,30 +1338,30 @@ if (typeof module === 'object') {
 
                         // cleanup
                         clearInterval(interval_timer);
-                        self.anchorPreview.removeEventListener('mouseover', stamp);
-                        self.anchorPreview.removeEventListener('mouseout', unstamp);
-                        anchorEl.removeEventListener('mouseover', stamp);
-                        anchorEl.removeEventListener('mouseout', unstamp);
+                        self.off(self.anchorPreview, 'mouseover', stamp);
+                        self.off(self.anchorPreview, 'mouseout', unstamp);
+                        self.off(anchorEl, 'mouseover', stamp);
+                        self.off(anchorEl, 'mouseout', unstamp);
 
                     }
                 }, 200);
 
-            self.anchorPreview.addEventListener('mouseover', stamp);
-            self.anchorPreview.addEventListener('mouseout', unstamp);
-            anchorEl.addEventListener('mouseover', stamp);
-            anchorEl.addEventListener('mouseout', unstamp);
+            this.on(self.anchorPreview, 'mouseover', stamp);
+            this.on(self.anchorPreview, 'mouseout', unstamp);
+            this.on(anchorEl, 'mouseover', stamp);
+            this.on(anchorEl, 'mouseout', unstamp);
         },
 
         createAnchorPreview: function () {
             var self = this,
-                anchorPreview = document.createElement('div');
+                anchorPreview = this.options.ownerDocument.createElement('div');
 
             anchorPreview.id = 'medium-editor-anchor-preview-' + this.id;
             anchorPreview.className = 'medium-editor-anchor-preview';
             anchorPreview.innerHTML = this.anchorPreviewTemplate();
             this.options.elementsContainer.appendChild(anchorPreview);
 
-            anchorPreview.addEventListener('click', function () {
+            this.on(anchorPreview, 'click', function () {
                 self.anchorPreviewClickHandler();
             });
 
@@ -1105,11 +1375,11 @@ if (typeof module === 'object') {
         },
 
         anchorPreviewClickHandler: function (e) {
-            if (this.activeAnchor) {
+            if (!this.options.disableAnchorForm && this.activeAnchor) {
 
                 var self = this,
-                    range = document.createRange(),
-                    sel = window.getSelection();
+                    range = this.options.ownerDocument.createRange(),
+                    sel = this.options.contentWindow.getSelection();
 
                 range.selectNodeContents(self.activeAnchor);
                 sel.removeAllRanges();
@@ -1132,7 +1402,7 @@ if (typeof module === 'object') {
                 leaveAnchor = function () {
                     // mark the anchor as no longer hovered, and stop listening
                     overAnchor = false;
-                    self.activeAnchor.removeEventListener('mouseout', leaveAnchor);
+                    self.off(self.activeAnchor, 'mouseout', leaveAnchor);
                 };
 
             if (e.target && e.target.tagName.toLowerCase() === 'a') {
@@ -1150,7 +1420,7 @@ if (typeof module === 'object') {
                     return true;
                 }
                 this.activeAnchor = e.target;
-                this.activeAnchor.addEventListener('mouseout', leaveAnchor);
+                this.on(this.activeAnchor, 'mouseout', leaveAnchor);
                 // show the anchor preview according to the configured delay
                 // if the mouse has not left the anchor tag in that time
                 setTimeout(function () {
@@ -1169,7 +1439,7 @@ if (typeof module === 'object') {
                 self.editorAnchorObserver(e);
             };
             for (i = 0; i < this.elements.length; i += 1) {
-                this.elements[i].addEventListener('mouseover', this.editorAnchorObserverWrapper);
+                this.on(this.elements[i], 'mouseover', this.editorAnchorObserverWrapper);
             }
             return this;
         },
@@ -1179,13 +1449,14 @@ if (typeof module === 'object') {
             return (re.test(value) ? '' : 'http://') + value;
         },
 
-        setTargetBlank: function () {
-            var el = getSelectionStart(),
-                i;
+        setTargetBlank: function (el) {
+            var i;
+            el = el || getSelectionStart.call(this);
             if (el.tagName.toLowerCase() === 'a') {
                 el.target = '_blank';
             } else {
                 el = el.getElementsByTagName('a');
+
                 for (i = 0; i < el.length; i += 1) {
                     el[i].target = '_blank';
                 }
@@ -1193,7 +1464,7 @@ if (typeof module === 'object') {
         },
 
         setButtonClass: function (buttonClass) {
-            var el = getSelectionStart(),
+            var el = getSelectionStart.call(this),
                 classes = buttonClass.split(' '),
                 i, j;
             if (el.tagName.toLowerCase() === 'a') {
@@ -1218,13 +1489,13 @@ if (typeof module === 'object') {
                 return;
             }
 
-            restoreSelection(this.savedSelection);
+            restoreSelection.call(this, this.savedSelection);
 
             if (this.options.checkLinkFormat) {
                 input.value = this.checkLinkFormat(input.value);
             }
 
-            document.execCommand('createLink', false, input.value);
+            this.options.ownerDocument.execCommand('createLink', false, input.value);
 
             if (this.options.targetBlank || target === "_blank") {
                 this.setTargetBlank();
@@ -1235,8 +1506,8 @@ if (typeof module === 'object') {
             }
 
             if (this.options.targetBlank || target === "_blank" || buttonClass) {
-                event = document.createEvent("HTMLEvents");
-                event.initEvent("input", true, true, window);
+                event = this.options.ownerDocument.createEvent("HTMLEvents");
+                event.initEvent("input", true, true, this.options.contentWindow);
                 for (i = 0; i < this.elements.length; i += 1) {
                     this.elements[i].dispatchEvent(event);
                 }
@@ -1258,7 +1529,19 @@ if (typeof module === 'object') {
                     }
                 }, 100);
             };
-            window.addEventListener('resize', this.windowResizeHandler);
+
+            // Add a scroll event for sticky toolbar
+            if ( this.options.staticToolbar && this.options.stickyToolbar ) {
+
+                // On scroll, re-position the toolbar
+                this.on(window, 'scroll', function() {
+                    if (self.toolbar && self.toolbar.classList.contains('medium-editor-toolbar-active')) {
+                        self.setToolbarPosition();
+                    }
+                }, true);
+            }
+
+            this.on(this.options.contentWindow, 'resize', this.windowResizeHandler);
             return this;
         },
 
@@ -1285,18 +1568,12 @@ if (typeof module === 'object') {
                 delete this.anchorPreview;
             }
 
-            document.documentElement.removeEventListener('mouseup', this.checkSelectionWrapper);
-            window.removeEventListener('resize', this.windowResizeHandler);
-
             for (i = 0; i < this.elements.length; i += 1) {
-                this.elements[i].removeEventListener('mouseover', this.editorAnchorObserverWrapper);
-                this.elements[i].removeEventListener('keyup', this.checkSelectionWrapper);
-                this.elements[i].removeEventListener('blur', this.checkSelectionWrapper);
-                this.elements[i].removeEventListener('paste', this.pasteWrapper);
                 this.elements[i].removeAttribute('contentEditable');
                 this.elements[i].removeAttribute('data-medium-element');
             }
 
+            this.removeAllEvents();
         },
 
         htmlEntities: function (str) {
@@ -1310,21 +1587,34 @@ if (typeof module === 'object') {
             this.pasteWrapper = function (e) {
                 var paragraphs,
                     html = '',
-                    p;
+                    p,
+                    dataFormatHTML = 'text/html',
+                    dataFormatPlain = 'text/plain';
 
                 this.classList.remove('medium-editor-placeholder');
                 if (!self.options.forcePlainText && !self.options.cleanPastedHTML) {
                     return this;
                 }
 
+                if (window.clipboardData && e.clipboardData === undefined) {
+                    e.clipboardData = window.clipboardData;
+                    // If window.clipboardData exists, but e.clipboardData doesn't exist,
+                    // we're probably in IE. IE only has two possibilities for clipboard
+                    // data format: 'Text' and 'URL'.
+                    //
+                    // Of the two, we want 'Text':
+                    dataFormatHTML = 'Text';
+                    dataFormatPlain = 'Text';
+                }
+
                 if (e.clipboardData && e.clipboardData.getData && !e.defaultPrevented) {
                     e.preventDefault();
 
-                    if (self.options.cleanPastedHTML && e.clipboardData.getData('text/html')) {
-                        return self.cleanPaste(e.clipboardData.getData('text/html'));
+                    if (self.options.cleanPastedHTML && e.clipboardData.getData(dataFormatHTML)) {
+                        return self.cleanPaste(e.clipboardData.getData(dataFormatHTML));
                     }
                     if (!(self.options.disableReturn || this.getAttribute('data-disable-return'))) {
-                        paragraphs = e.clipboardData.getData('text/plain').split(/[\r\n]/g);
+                        paragraphs = e.clipboardData.getData(dataFormatPlain).split(/[\r\n]/g);
                         for (p = 0; p < paragraphs.length; p += 1) {
                             if (paragraphs[p] !== '') {
                                 if (navigator.userAgent.match(/firefox/i) && p === 0) {
@@ -1334,20 +1624,24 @@ if (typeof module === 'object') {
                                 }
                             }
                         }
-                        document.execCommand('insertHTML', false, html);
+                        insertHTMLCommand(self.options.ownerDocument, html);
                     } else {
-                        html = self.htmlEntities(e.clipboardData.getData('text/plain'));
-                        document.execCommand('insertHTML', false, html);
+                        html = self.htmlEntities(e.clipboardData.getData(dataFormatPlain));
+                        insertHTMLCommand(self.options.ownerDocument, html);
                     }
                 }
             };
             for (i = 0; i < this.elements.length; i += 1) {
-                this.elements[i].addEventListener('paste', this.pasteWrapper);
+                this.on(this.elements[i], 'paste', this.pasteWrapper);
             }
             return this;
         },
 
         setPlaceholders: function () {
+            if (this.options.disablePlaceholders) {
+                return this;
+            }
+
             var i,
                 activatePlaceholder = function (el) {
                     if (!(el.querySelector('img')) &&
@@ -1364,8 +1658,8 @@ if (typeof module === 'object') {
                 };
             for (i = 0; i < this.elements.length; i += 1) {
                 activatePlaceholder(this.elements[i]);
-                this.elements[i].addEventListener('blur', placeholderWrapper);
-                this.elements[i].addEventListener('keypress', placeholderWrapper);
+                this.on(this.elements[i], 'blur', placeholderWrapper);
+                this.on(this.elements[i], 'keypress', placeholderWrapper);
             }
             return this;
         },
@@ -1420,15 +1714,20 @@ if (typeof module === 'object') {
                 elList = text.split('<br><br>');
 
                 this.pasteHTML('<p>' + elList.join('</p><p>') + '</p>');
-                document.execCommand('insertText', false, "\n");
+                this.options.ownerDocument.execCommand('insertText', false, "\n");
 
                 // block element cleanup
-                elList = el.querySelectorAll('p,div,br');
+                elList = el.querySelectorAll('a,p,div,br');
                 for (i = 0; i < elList.length; i += 1) {
 
                     workEl = elList[i];
 
                     switch (workEl.tagName.toLowerCase()) {
+                    case 'a':
+                        if (this.options.targetBlank){
+                          this.setTargetBlank(workEl);
+                        }
+                        break;
                     case 'p':
                     case 'div':
                         this.filterCommonBlocks(workEl);
@@ -1450,9 +1749,9 @@ if (typeof module === 'object') {
         },
 
         pasteHTML: function (html) {
-            var elList, workEl, i, fragmentBody, pasteBlock = document.createDocumentFragment();
+            var elList, workEl, i, fragmentBody, pasteBlock = this.options.ownerDocument.createDocumentFragment();
 
-            pasteBlock.appendChild(document.createElement('body'));
+            pasteBlock.appendChild(this.options.ownerDocument.createElement('body'));
 
             fragmentBody = pasteBlock.querySelector('body');
             fragmentBody.innerHTML = html;
@@ -1474,13 +1773,13 @@ if (typeof module === 'object') {
                 }
 
             }
-            document.execCommand('insertHTML', false, fragmentBody.innerHTML.replace(/&nbsp;/g, ' '));
+            this.options.ownerDocument.execCommand('insertHTML', false, fragmentBody.innerHTML.replace(/&nbsp;/g, ' '));
         },
         isCommonBlock: function (el) {
             return (el && (el.tagName.toLowerCase() === 'p' || el.tagName.toLowerCase() === 'div'));
         },
         filterCommonBlocks: function (el) {
-            if (/^\s*$/.test(el.innerText)) {
+            if (/^\s*$/.test(el.textContent)) {
                 el.parentNode.removeChild(el);
             }
         },
@@ -1525,7 +1824,7 @@ if (typeof module === 'object') {
             for (i = 0; i < spans.length; i += 1) {
 
                 el = spans[i];
-                new_el = document.createElement(el.classList.contains('bold') ? 'b' : 'i');
+                new_el = this.options.ownerDocument.createElement(el.classList.contains('bold') ? 'b' : 'i');
 
                 if (el.classList.contains('bold') && el.classList.contains('italic')) {
 
@@ -1550,7 +1849,7 @@ if (typeof module === 'object') {
                 if (/^\s*$/.test()) {
                     el.parentNode.removeChild(el);
                 } else {
-                    el.parentNode.replaceChild(document.createTextNode(el.innerText), el);
+                    el.parentNode.replaceChild(this.options.ownerDocument.createTextNode(el.textContent), el);
                 }
 
             }

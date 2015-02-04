@@ -1,9 +1,9 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "0.3.2",
+  "version": "1.0.1",
   "description": "jQuery insert plugin for MediumEditor",
   "main": [
-    "dist/js/medium-editor-insert-plugin.all.js",
+    "dist/js/medium-editor-insert-plugin.js",
     "dist/css/medium-editor-insert-plugin.css"
   ],
   "license": "MIT",
@@ -21,22 +21,26 @@
     "package.json"
   ],
   "dependencies": {
-    "jquery": "1.9.0 - 2.0.3",
-    "medium-editor": "~1.9"
+    "jquery": ">=1.9.0",
+    "medium-editor": "~2.0",
+    "handlebars": "~2.0.0",
+    "blueimp-file-upload": "~9.9.0",
+    "jquery-sortable": "~0.9.12"
   },
   "devDependencies": {
-    "qunit": "~1.12.0",
-    "sinon": "~1.7.0",
-    "sinon-qunit": "~1.0.0"
+    "qunit": "~1.17.1",
+    "sinon": "~1.12.1",
+    "sinon-qunit": "~2.0.0",
+    "jquery-cycle2": "~2.1.6"
   },
   "homepage": "https://github.com/orthes/medium-editor-insert-plugin",
-  "_release": "0.3.2",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.2",
-    "commit": "e1a765f64af573deeae5157eb6d7ad84f98fc523"
+    "tag": "1.0.1",
+    "commit": "4671c1ea9e78f865f0b3eb2444ab529d8495fcb7"
   },
   "_source": "git://github.com/orthes/medium-editor-insert-plugin.git",
-  "_target": "~0.3",
+  "_target": "~1.0",
   "_originalSource": "medium-editor-insert-plugin"
 }

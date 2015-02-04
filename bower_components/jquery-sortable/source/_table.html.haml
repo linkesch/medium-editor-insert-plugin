@@ -1,0 +1,43 @@
+%h2
+  Sort tables
+  %small (doesn't work well in Konqueror and IE)
+.row
+  .span12.example
+    %pre(lang="js")= example("table")
+  .span4
+    %ul
+      %li
+        Sort
+        %strong tables
+      %li
+        Specify custom
+        %code placeholder
+      %li
+        Provide custom
+        %strong callbacks,
+        to change the sorting behaviour
+    %p= show_code_button
+  .span4
+    %h3 Sortable Rows
+    %table.table.table-striped.table-bordered.sorted_table
+      %thead
+        %tr
+          %th A Column
+          %th B Column
+      %tbody
+        = iterate(6) do |i, name|
+          %tr
+            %td A #{name}
+            %td B #{name}
+  .span4
+    %h3 Sortable column heads
+    %table.table.table-striped.table-bordered
+      %thead.sorted_head
+        %tr
+          %th A Column
+          %th B Column
+      %tbody
+        = iterate(6) do |i, name|
+          %tr
+            %td A #{name}
+            %td B #{name}

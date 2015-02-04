@@ -1,0 +1,11 @@
+<div class="medium-insert-images-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active">
+    <ul class="medium-editor-toolbar-actions clearfix">
+        {{#each styles}}
+            {{#if label}}
+                <li>
+                    <button class="medium-editor-action" data-action="{{@key}}">{{{label}}}</button>
+                </li>
+            {{/if}}
+        {{/each}}
+    </ul>
+</div>

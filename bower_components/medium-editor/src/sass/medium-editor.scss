@@ -1,6 +1,5 @@
 @import "clearfix";
 @import "pop-upwards";
-@import "buttons";
 
 %medium-toolbar-arrow {
     position: absolute;
@@ -80,6 +79,14 @@
 
 .medium-editor-toolbar-active, .medium-editor-anchor-preview-active {
     visibility: visible;
+}
+
+.sticky-toolbar {
+    position: fixed;
+    top: 1px;
+}
+
+.stalker-toolbar {
     -webkit-animation: pop-upwards 160ms forwards linear;
        -moz-animation: pop-upwards 160ms forwards linear;
         -ms-animation: pop-upwards 160ms forwards linear;

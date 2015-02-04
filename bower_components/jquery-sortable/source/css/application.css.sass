@@ -1,0 +1,133 @@
+@import base
+$error: red
+
+.hero-unit
+  background: white
+  text-align: center
+  margin-bottom: 0
+.example
+  display: none
+.row
+  position: relative
+.page-header h1, h2, #test
+  padding-top: 40px
+.footer
+  margin-top: 45px
+  padding: 35px 0 36px
+  border-top: 1px solid #E5E5E5
+  p
+    margin-bottom: 0
+    color: #555
+
+table.docs
+  table-layout: fixed
+
+  th:nth-child(1)
+    width: 150px
+  th:nth-child(2)
+    width: 350px
+
+@import jquery-sortable
+
+ol
+  list-style-type: none
+  i.icon-move
+    cursor: pointer
+  li.highlight
+    background: $grayDark
+    color: $grayLight
+    i.icon-move
+      background-image: url($iconWhiteSpritePath)
+
+ol.nested_with_switch, ol.nested_with_switch ol
+  border: 1px solid $grayLighter
+  &.active
+    border: 1px solid $grayDark
+
+ol.nested_with_switch, ol.simple_with_animation, ol.serialization, ol.default
+  li
+    cursor: pointer
+
+ol.simple_with_animation
+  border: 1px solid $grayLight
+
+.switch-container
+  display: block
+  margin-left: auto
+  margin-right: auto
+  width: 80px
+
+.navbar-sort-container
+  height: 200px
+
+ol.nav
+  li, li a
+    cursor: pointer
+  .divider-vertical
+    cursor: default
+
+  li.dragged
+    background-color: #2C2C2C
+  li.placeholder
+    position: relative
+    &:before
+      content: ""
+      position: absolute
+      width: 0
+      height: 0
+      border: 5px solid transparent
+      border-top-color: $error
+      top: -6px
+      margin-left: -5px
+      border-bottom: none
+  ol.dropdown-menu
+    li.placeholder:before
+      border: 5px solid transparent
+      border-left-color: $error
+      margin-top: -5px
+      margin-left: none
+      top: 0
+      left: 10px
+      border-right: none
+
+.sorted_table
+  tr
+    cursor: pointer
+  tr.placeholder
+    display: block
+    background: red
+    position: relative
+    margin: 0
+    padding: 0
+    border: none
+    &:before
+      content: ""
+      position: absolute
+      width: 0
+      height: 0
+      border: 5px solid transparent
+      border-left-color: $error
+      margin-top: -5px
+      left: -5px
+      border-right: none
+.sorted_head
+  th
+    cursor: pointer
+  th.placeholder
+    display: block
+    background: red
+    position: relative
+    width: 0
+    height: 0
+    margin: 0
+    padding: 0
+    &:before
+      content: ""
+      position: absolute
+      width: 0
+      height: 0
+      border: 5px solid transparent
+      border-top-color: $error
+      top: -6px
+      margin-left: -5px
+      border-bottom: none

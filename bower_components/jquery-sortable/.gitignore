@@ -1,0 +1,17 @@
+# dirs
+/vendor
+/bin/
+/tmp/
+/.sass-cache
+/build
+/.bundle
+
+
+# tempfiles
+*[~#]
+.#*
+*_flymake*
+/.emacs-project
+/.irbrc
+*_out
+*.gz
