@@ -13,6 +13,11 @@ Current available addons:
 - **embeds** (either through oEmbed proxy, such as [Iframely](https://iframely.com/), or pre-defined parsers such as - Youtube, Vimeo, Twitter, Facebook, Instagram)
 
 
+## Demo
+
+[http://orthes.github.io/medium-editor-insert-plugin](http://orthes.github.io/medium-editor-insert-plugin)
+
+
 ## Download
 
 * Bower (recommended): ```bower install medium-editor-insert-plugin#~1.0 --save```
