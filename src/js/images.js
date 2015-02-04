@@ -266,12 +266,16 @@
      */
 
     Images.prototype.showImage = function (img, data) {
-        var $place;
+        var $place, domImage;
 
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
         if (this.options.preview && data.context) {
-            data.context.find('img').attr('src', img);
+            domImage = this.getDOMImage();
+            domImage.onload = function () {
+                data.context.find('img').attr('src', domImage.src);
+            };
+            domImage.src = img;
         } else {
             $place = this.$el.find('.medium-insert-active');
 
@@ -286,6 +290,10 @@
                 data.submit();
             }
         }
+    };
+
+    Images.prototype.getDOMImage = function () {
+        return new window.Image();
     };
 
     /**
