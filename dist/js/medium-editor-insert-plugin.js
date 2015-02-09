@@ -24,13 +24,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-buttons.hbs"] = Handleb
   return buffer + "    </ul>\n</div>\n";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<p><br></p>\n";
   },"useData":true});
-
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
@@ -39,8 +35,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = H
     + "</div>";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, buffer = "<div class=\"medium-insert-embeds\">";
   stack1 = ((helper = (helper = helpers.html || (depth0 != null ? depth0.html : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"html","hash":{},"data":data}) : helper));
@@ -48,13 +42,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handl
   return buffer + "</div>";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<input type=\"file\" multiple>";
   },"useData":true});
-
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   return "        <div class=\"medium-insert-images-progress\"></div>\n";
@@ -67,13 +57,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handleb
   return buffer + "</figure>";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<progress min=\"0\" max=\"100\" value=\"0\">0</progress>";
   },"useData":true});
-
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, buffer = "";
@@ -92,6 +78,31 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.styles : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "    </ul>\n</div>";
+},"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"medium-insert-products-placeholder\" contenteditable=\"false\">"
+    + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
+    + "</div>";
+},"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-product.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  return "        <div class=\"medium-insert-images-progress\"></div>\n";
+  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div contenteditable=\"false\">\n    <div class=\"medium-hubrick-product-block\">\n\n    	Hi! I'm a Hubrick product. The data here needs to be pretty JSON from an API.\n\n";
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.progress : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "    </div>\n</div>";
+},"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  return "	        <div class=\"medium-insert-images-progress\"></div>\n";
+  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div class=\"medium-insert-products\">\n	<div contenteditable=\"false\">\n	    <div class=\"medium-hubrick-product-block\">\n\n	    	Hi! I'm a Hubrick product. This data right here needs to be pretty JSON from an API.\n\n";
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.progress : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "	    </div>\n	</div>\n</div>";
 },"useData":true});
 ;(function ($, window, document, undefined) {
 
@@ -1404,6 +1415,238 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName + addonName)) {
                 $.data(this, 'plugin_' + pluginName + addonName, new Images(this, options));
+            }
+        });
+    };
+
+})(jQuery, window, document);
+
+;(function ($, window, document, undefined) {
+
+    'use strict';
+
+    /** Default values */
+    var pluginName = 'mediumInsert',
+        addonName = 'Products', // first char is uppercase
+        defaults = {
+            label: '<span class="fa fa-shopping-cart"></span>',
+            placeholder: 'Search for a product on Hubrick'
+            //oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
+        };
+
+    /**
+     * Embeds object
+     *
+     * Sets options, variables and calls init() function
+     *
+     * @constructor
+     * @param {DOM} el - DOM element to init the plugin on
+     * @param {object} options - Options to override defaults
+     * @return {void}
+     */
+
+    function Products (el, options) {
+        this.el = el;
+        this.$el = $(el);
+        this.templates = window.MediumInsert.Templates;
+
+        this.options = $.extend(true, {}, defaults, options);
+
+        this._defaults = defaults;
+        this._name = pluginName;
+
+        this.init();
+    }
+
+    /**
+     * Initialization
+     *
+     * @return {void}
+     */
+
+    Products.prototype.init = function () {
+        this.events();
+    };
+
+    /**
+     * Event listeners
+     *
+     * @return {void}
+     */
+
+    Products.prototype.events = function () {
+        this.$el
+            .on('selectstart mousedown', '.medium-insert-products-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
+            .on('keyup click', $.proxy(this, 'togglePlaceholder'))
+            .on('keydown', $.proxy(this, 'search'));
+    };
+
+    /**
+     * Get the Core object
+     *
+     * @return {object} Core object
+     */
+    Products.prototype.getCore = function () {
+        if (typeof(this.core) === 'undefined') {
+            this.core = this.$el.data('plugin_'+ pluginName);
+        }
+
+        return this.core;
+    };
+
+    /**
+     * Add embedded element
+     *
+     * @return {void}
+     */
+
+    Products.prototype.add = function () {
+        console.log("add()");
+        var $place = this.$el.find('.medium-insert-active');
+
+        // Fix #132
+        // Make sure that the content of the paragraph is empty and <br> is wrapped in <p></p> to avoid Firefox problems
+        $place.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+
+        // Replace paragraph with div to prevent #124 issue with pasting in Chrome,
+        // because medium editor wraps inserted content into paragraph and paragraphs can't be nested
+        if ($place.is('p')) {
+            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place = this.$el.find('.medium-insert-active');
+            this.getCore().moveCaret($place);
+        }
+
+        $place.addClass('medium-insert-products-input medium-insert-products-active');
+
+        this.togglePlaceholder({ target: $place.get(0) });
+
+        $place.click();
+    };
+
+    /**
+     * Search Hubrick Products endpoint for 
+     *
+     * @param {event} e
+     * @return {void}
+     */
+    Products.prototype.search = function (e) {
+        console.log('search');
+        var $place = this.$el.find('.medium-insert-products-active'),
+            re, url;
+
+        if (!$place.length) {
+            return;
+        }
+
+        re = new RegExp(this.options.placeholder, 'g');
+        url = $place.text().replace(re, '').trim();
+
+        // Return empty placeholder on backspace, delete or enter
+        if (url === '' && [8, 46, 13].indexOf(e.which) !== -1) {
+            $place.remove();
+            return;
+        }
+
+        if (e.which === 13) {
+            console.log('insert the product');
+            e.preventDefault();
+            e.stopPropagation();
+
+            var html = '<div class="medium-product-block">This is a test product block</div>';
+            this.insertProduct((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
+
+        }
+    },
+
+    /**
+     * Disable placeholder selection, instead move cursor to input
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Products.prototype.disablePlaceholderSelection = function (e) {
+        var $place = $(e.target).closest('.medium-insert-products-input');
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.getCore().moveCaret($place);
+    };
+
+    /**
+     * Toggles placeholder
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Products.prototype.togglePlaceholder = function (e) {
+        console.log("togglePlaceholder");
+        var $place = $(e.target),
+            selection = window.getSelection(),
+            range = selection.getRangeAt(0),
+            $current = $(range.commonAncestorContainer),
+            $placeholder, re, text;
+
+        if ($current.hasClass('medium-insert-products-active')) {
+            $place = $current;
+        } else if ($current.closest('.medium-insert-products-active').length) {
+            $place = $current.closest('.medium-insert-products-active');
+        }
+
+        if ($place.hasClass('medium-insert-products-active')) {
+            console.log("placeholder is active");
+            $placeholder = $place.find('.medium-insert-products-placeholder');
+            re = new RegExp(this.options.placeholder, 'g');
+            text = $place.text().replace(re, '').trim();
+
+            if (text === '' && $placeholder.length === 0) {
+                console.log('appending placeholder');
+                $place.append(this.templates['src/js/templates/products-placeholder.hbs']({
+                    placeholder: this.options.placeholder
+                }));
+            } else if (text !== '' && $placeholder.length) {
+                console.log('removing placeholder');
+                $placeholder.remove();
+            }
+
+        } else {
+            this.$el.find('.medium-insert-products-active').remove();
+        }
+    };
+
+    /**
+     * Add product HTML to page
+     *
+     * @param {string} html
+     * @return {void}
+     */
+
+    Products.prototype.insertProduct = function (html) {
+        console.log('insertProduct');
+        var $place = this.$el.find('.medium-insert-products-active');
+
+        if (!html) {
+            alert('Incorrect URL format specified');
+            return false;
+        } else {
+            $place.after(this.templates['src/js/templates/products-wrapper.hbs']({
+                html: html
+            }));
+            $place.remove();
+
+            this.$el.trigger('input');
+        }
+    };
+
+    /** Plugin initialization */
+
+    $.fn[pluginName + addonName] = function (options) {
+        console.log('Initializing ' + pluginName + ' ' + addonName);
+        return this.each(function () {
+            if (!$.data(this, 'plugin_' + pluginName + addonName)) {
+                $.data(this, 'plugin_' + pluginName + addonName, new Products(this, options));
             }
         });
     };

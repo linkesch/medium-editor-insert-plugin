@@ -144,3 +144,19 @@
   position: absolute;
   top: 0;
   z-index: 0; }
+
+.medium-insert-products {
+  position: relative;
+  width: 300px; }
+  .medium-insert-products .hubrick-product-block {
+    border: 1px solid #dbdbdb; }
+
+.medium-insert-products-input {
+  position: relative;
+  color: #ccc;
+  z-index: 1; }
+
+.medium-insert-products-placeholder {
+  position: absolute;
+  top: 0;
+  z-index: 0; }
