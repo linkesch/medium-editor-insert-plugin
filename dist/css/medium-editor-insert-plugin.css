@@ -149,7 +149,8 @@
   position: relative;
   width: 300px; }
   .medium-insert-products .hubrick-product-block {
-    border: 1px solid #dbdbdb; }
+    border: 1px solid #dbdbdb;
+    padding: 8px; }
 
 .medium-insert-products-input {
   position: relative;

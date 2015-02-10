@@ -96,14 +96,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-product.hbs"] = Han
   return buffer + "    </div>\n</div>";
 },"useData":true});
 
-this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  return "	        <div class=\"medium-insert-images-progress\"></div>\n";
-  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<div class=\"medium-insert-products\">\n	<div contenteditable=\"false\">\n	    <div class=\"medium-hubrick-product-block\">\n\n	    	Hi! I'm a Hubrick product. This data right here needs to be pretty JSON from an API.\n\n";
-  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.progress : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
-  if (stack1 != null) { buffer += stack1; }
-  return buffer + "	    </div>\n	</div>\n</div>";
-},"useData":true});
+this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"medium-insert-products\">\n	<div contenteditable=\"false\">\n	    <div class=\"hubrick-product-block centered\">\n	    	<h3>Nike Foobar</h3>\n	    	Hi! I'm a Hubrick product. This data right here needs to be pretty JSON from an API.\n	    </div>\n	</div>\n</div>";
+  },"useData":true});
 ;(function ($, window, document, undefined) {
 
     'use strict';
@@ -1427,11 +1422,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
 
     /** Default values */
     var pluginName = 'mediumInsert',
-        addonName = 'Products', // first char is uppercase
+        
+        // first char is uppercase
+        addonName = 'Products', 
         defaults = {
             label: '<span class="fa fa-shopping-cart"></span>',
             placeholder: 'Search for a product on Hubrick'
-            //oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
         };
 
     /**
@@ -1628,7 +1624,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
         var $place = this.$el.find('.medium-insert-products-active');
 
         if (!html) {
-            alert('Incorrect URL format specified');
             return false;
         } else {
             $place.after(this.templates['src/js/templates/products-wrapper.hbs']({
