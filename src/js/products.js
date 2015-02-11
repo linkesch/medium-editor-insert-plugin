@@ -79,7 +79,6 @@
      */
 
     Products.prototype.add = function () {
-        console.log("add()");
         var $place = this.$el.find('.medium-insert-active');
 
         // Fix #132
@@ -108,7 +107,6 @@
      * @return {void}
      */
     Products.prototype.search = function (e) {
-        console.log('search');
         var $place = this.$el.find('.medium-insert-products-active'),
             re, url;
 
@@ -202,7 +200,6 @@
      */
 
     Products.prototype.insertProduct = function (html) {
-        console.log('insertProduct');
         var $place = this.$el.find('.medium-insert-products-active');
 
         if (!html) {
@@ -220,7 +217,6 @@
     /** Plugin initialization */
 
     $.fn[pluginName + addonName] = function (options) {
-        console.log('Initializing ' + pluginName + ' ' + addonName);
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName + addonName)) {
                 $.data(this, 'plugin_' + pluginName + addonName, new Products(this, options));

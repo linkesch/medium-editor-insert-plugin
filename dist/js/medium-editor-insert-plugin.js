@@ -1497,7 +1497,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
      */
 
     Products.prototype.add = function () {
-        console.log("add()");
         var $place = this.$el.find('.medium-insert-active');
 
         // Fix #132
@@ -1526,7 +1525,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
      * @return {void}
      */
     Products.prototype.search = function (e) {
-        console.log('search');
         var $place = this.$el.find('.medium-insert-products-active'),
             re, url;
 
@@ -1620,7 +1618,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
      */
 
     Products.prototype.insertProduct = function (html) {
-        console.log('insertProduct');
         var $place = this.$el.find('.medium-insert-products-active');
 
         if (!html) {
@@ -1638,7 +1635,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
     /** Plugin initialization */
 
     $.fn[pluginName + addonName] = function (options) {
-        console.log('Initializing ' + pluginName + ' ' + addonName);
         return this.each(function () {
             if (!$.data(this, 'plugin_' + pluginName + addonName)) {
                 $.data(this, 'plugin_' + pluginName + addonName, new Products(this, options));
