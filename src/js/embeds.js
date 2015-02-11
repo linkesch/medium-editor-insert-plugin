@@ -213,7 +213,11 @@
     Embeds.prototype.oembed = function (url) {
         var that = this;
 
+        $.support.cors = true;
+
         $.ajax({
+            crossDomain: true,
+            cache: false,
             url: this.options.oembedProxy,
             dataType: 'json',
             data: {
