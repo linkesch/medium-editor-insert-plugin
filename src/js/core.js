@@ -391,9 +391,11 @@
             left, top;
 
         // Left position is set according to an active paragraph
-        left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-        left = left < 0 ? $p.position().left : left;
-        $buttons.css('left', left);
+        if ($p.length) {
+            left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($bu
+            left = left < 0 ? $p.position().left : left;
+            $buttons.css('left', left);
+        }
 
         if ($current) {
             // Top position is set according to a current active element
