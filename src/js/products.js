@@ -124,7 +124,6 @@
         }
 
         if (e.which === 13) {
-            console.log('insert the product');
             e.preventDefault();
             e.stopPropagation();
 
@@ -158,7 +157,6 @@
      */
 
     Products.prototype.togglePlaceholder = function (e) {
-        console.log("togglePlaceholder");
         var $place = $(e.target),
             selection = window.getSelection(),
             range = selection.getRangeAt(0),
@@ -172,18 +170,15 @@
         }
 
         if ($place.hasClass('medium-insert-products-active')) {
-            console.log("placeholder is active");
             $placeholder = $place.find('.medium-insert-products-placeholder');
             re = new RegExp(this.options.placeholder, 'g');
             text = $place.text().replace(re, '').trim();
 
             if (text === '' && $placeholder.length === 0) {
-                console.log('appending placeholder');
                 $place.append(this.templates['src/js/templates/products-placeholder.hbs']({
                     placeholder: this.options.placeholder
                 }));
             } else if (text !== '' && $placeholder.length) {
-                console.log('removing placeholder');
                 $placeholder.remove();
             }
 
