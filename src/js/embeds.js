@@ -235,7 +235,11 @@
                     } catch(e) {}
                 })();
 
-                window.console.log((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message);
+                if (typeof window.console !== 'undefined') {
+                    window.console.log((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message);
+                } else {
+                    window.alert('Error requesting media from ' + that.options.oembedProxy + ' to insert: ' + errorThrown + ' (
+                }
 
                 $.proxy(that, 'convertBadEmbed', url)();
             }
