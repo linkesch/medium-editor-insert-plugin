@@ -22,7 +22,7 @@
   ],
   "dependencies": {
     "jquery": ">=1.9.0",
-    "medium-editor": "~2.0",
+    "medium-editor": "~2.3.0",
     "handlebars": "~2.0.0",
     "blueimp-file-upload": "~9.9.0",
     "jquery-sortable": "~0.9.12"
