@@ -367,7 +367,7 @@
                 $p.addClass('medium-insert-active');
 
                 if (isAddon === false) {
-                    this.positionButtons($current);
+                    this.positionButtons($p);
 
                     $buttons.show();
                 }
