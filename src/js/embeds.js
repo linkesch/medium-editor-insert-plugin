@@ -239,7 +239,11 @@
                     } catch(e) {}
                 })();
 
-                window.console.log((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message);
+                if (typeof window.console !== 'undefined') {
+                    window.console.log((responseJSON && responseJSON.error) || jqXHR.status || errorThrown.message);
+                } else {
+                    window.alert('Error requesting media from ' + that.options.oembedProxy + ' to insert: ' + errorThrown + ' (response status: ' + jqXHR.status + ')');
+                }
 
                 $.proxy(that, 'convertBadEmbed', url)();
             }
