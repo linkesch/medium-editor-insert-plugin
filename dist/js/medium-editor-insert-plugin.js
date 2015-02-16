@@ -46,15 +46,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Ha
   return "<input type=\"file\" multiple>";
   },"useData":true});
 
-this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  return "        <div class=\"medium-insert-images-progress\"></div>\n";
-  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<figure contenteditable=\"false\">\n    <img src=\""
+this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<figure contenteditable=\"false\">\n    <img src=\""
     + escapeExpression(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"img","hash":{},"data":data}) : helper)))
-    + "\" alt=\"\">\n";
-  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.progress : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
-  if (stack1 != null) { buffer += stack1; }
-  return buffer + "</figure>";
+    + "\" alt=\"\">\n</figure>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -87,13 +83,27 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-placeholder.hbs"] =
     + "</div>";
 },"useData":true});
 
-this["MediumInsert"]["Templates"]["src/js/templates/products-product.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  return "        <div class=\"medium-insert-images-progress\"></div>\n";
-  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<div contenteditable=\"false\">\n    <div class=\"medium-hubrick-product-block\">\n\n    	Hi! I'm a Hubrick product. The data here needs to be pretty JSON from an API.\n\n";
-  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.progress : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+this["MediumInsert"]["Templates"]["src/js/templates/products-product.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div contenteditable=\"false\">\n    <div class=\"hubrick-product-block\">\n    	Hi! I'm a Hubrick product. The data here needs to be pretty JSON from an API.\n    </div>\n</div>";
+  },"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-toolbar.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "";
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.label : depth0), {"name":"if","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "    </div>\n</div>";
+  return buffer;
+},"2":function(depth0,helpers,partials,data) {
+  var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, functionType="function", helperMissing=helpers.helperMissing, buffer = "                <li>\n                    <button class=\"medium-editor-action\" data-action=\""
+    + escapeExpression(lambda((data && data.key), depth0))
+    + "\">";
+  stack1 = ((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper));
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "</button>\n                </li>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div class=\"medium-insert-products-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.styles : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "    </ul>\n</div>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -1427,7 +1437,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
         addonName = 'Products', 
         defaults = {
             label: '<span class="fa fa-shopping-cart"></span>',
-            placeholder: 'Search for a product on Hubrick'
+            placeholder: 'Search for a product on Hubrick',
+            styles: {
+                wide: {
+                    label: '<span class="fa fa-align-justify"></span>'
+                },
+                left: {
+                    label: '<span class="fa fa-align-left"></span>'
+                },
+                right: {
+                    label: '<span class="fa fa-align-right"></span>'
+                }
+            }
         };
 
     /**
@@ -1474,7 +1495,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
         this.$el
             .on('selectstart mousedown', '.medium-insert-products-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
             .on('keyup click', $.proxy(this, 'togglePlaceholder'))
+            .on('keydown', $.proxy(this, 'removeProduct'))
             .on('keydown', $.proxy(this, 'search'));
+
+        $(document)
+            .on('click', $.proxy(this, 'unselectProduct'))
+            .on('click', '.medium-insert-products > div', $.proxy(this, 'selectProduct'))
+            .on('click', '.medium-insert-products-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
     };
 
     /**
@@ -1491,7 +1518,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
     };
 
     /**
-     * Add embedded element
+     * Add product element
      *
      * @return {void}
      */
@@ -1519,7 +1546,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
     };
 
     /**
-     * Search Hubrick Products endpoint for 
+     * Search Hubrick Products endpoint for products
      *
      * @param {event} e
      * @return {void}
@@ -1541,13 +1568,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             return;
         }
 
+
         if (e.which === 13) {
             e.preventDefault();
             e.stopPropagation();
 
             var html = '<div class="medium-product-block">This is a test product block</div>';
             this.insertProduct((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
-
+            //this.getCore().moveCaret($place);
         }
     },
 
@@ -1587,7 +1615,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             $place = $current.closest('.medium-insert-products-active');
         }
 
+
         if ($place.hasClass('medium-insert-products-active')) {
+
             $placeholder = $place.find('.medium-insert-products-placeholder');
             re = new RegExp(this.options.placeholder, 'g');
             text = $place.text().replace(re, '').trim();
@@ -1601,8 +1631,85 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             }
 
         } else {
-            this.$el.find('.medium-insert-products-active').remove();
+            //console.log('removing product');
+            //this.$el.find('.medium-insert-products-active').remove();
         }
+    };
+
+    /**
+     * Adds product toolbar to editor
+     *
+     * @returns {void}
+     */
+
+    Products.prototype.addToolbar = function () {
+        var $productBlock = this.$el.find('.hubrick-product-block'),
+            $div = $productBlock.closest('.medium-insert-products'),
+            active = false,
+            $toolbar;
+
+        $toolbar = $(this.templates['src/js/templates/products-toolbar.hbs']({
+            styles: this.options.styles
+        }).trim());
+
+        $('body').append($toolbar);
+
+        $toolbar
+            .css({
+                top: $productBlock.offset().top  - $toolbar.height() - 8 - 2 - 5, 
+                left: $productBlock.offset().left + $productBlock.width() / 2 - $toolbar.width() / 2
+            })
+            .show();
+
+        $toolbar.find('button').each(function () {
+            if ($div.hasClass('medium-insert-products-'+ $(this).data('action'))) {
+                $(this).addClass('medium-editor-button-active');
+                active = true;
+            }
+        });
+
+        if (active === false) {
+            $toolbar.find('button').first().addClass('medium-editor-button-active');
+        }
+    };
+
+    /**
+     * Fires product action
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Products.prototype.toolbarAction = function (e) {
+        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
+            $li = $button.closest('li'),
+            $ul = $li.closest('ul'),
+            $lis = $ul.find('li'),
+            $p = this.$el.find('.medium-insert-active'),
+            that = this;
+
+        $button.addClass('medium-editor-button-active');
+        $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
+
+        $lis.find('button').each(function () {
+            var className = 'medium-insert-products-'+ $(this).data('action');
+
+            if ($(this).hasClass('medium-editor-button-active')) {
+                $p.addClass(className);
+
+                if (that.options.styles[$(this).data('action')].added) {
+                    that.options.styles[$(this).data('action')].added($p);
+                }
+            } else {
+                $p.removeClass(className);
+
+                if (that.options.styles[$(this).data('action')].removed) {
+                    that.options.styles[$(this).data('action')].removed($p);
+                }
+            }
+        });
+
+        this.$el.trigger('input');
     };
 
     /**
@@ -1626,6 +1733,110 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             this.$el.trigger('input');
         }
     };
+
+    /**
+     * Select clicked product
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Products.prototype.selectProduct = function (e) {
+        var $product = $(e.target).closest('.medium-insert-products'),        
+            that = this;
+        $product.addClass('medium-insert-products-active');
+        $product.closest('.medium-insert-products').addClass('medium-insert-active');
+
+        setTimeout(function () {
+            that.addToolbar();
+        }, 50);
+    };
+
+    /**
+     * Unselect selected product
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Products.prototype.unselectProduct = function (e) {
+        var $el = $(e.target),
+            $product = this.$el.find('.hubrick-product-block');
+
+        if ($el.is('.hubrick-product-block') || $el.closest('.hubrick-product-block').length) {
+            return;
+        }
+
+        $product
+            .closest('.medium-insert-products-active')
+            .removeClass('medium-insert-products-active');
+        $('.medium-insert-products-toolbar').remove();
+    };
+
+
+    Products.prototype.removeProduct = function (e) {
+
+        var $product, $parent, $empty;
+
+        // if backspace or delete have been pressed
+        if (e.which === 8 || e.which === 46) {
+
+            // there should only be one active product at any given time
+            $product = this.$el.find('.medium-insert-products-active');
+
+            if ($product.length) {
+                e.preventDefault();
+                $parent = $product.closest('.medium-insert-products');
+                $('.medium-insert-products-toolbar').remove();
+
+                if ($parent.length) {
+                    $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                    $parent.before($empty);
+                    $parent.remove();
+
+                    // Hide addons
+                    this.getCore().hideAddons();
+
+                    this.getCore().moveCaret($empty);
+                }
+
+                this.$el.trigger('input');
+            }
+        }
+    };
+
+    // Images.prototype.removeImage = function (e) {
+    //     var $image, $parent, $empty;
+
+    //     if (e.which === 8 || e.which === 46) {
+    //         $image = this.$el.find('.medium-insert-image-active');
+
+    //         if ($image.length) {
+    //             e.preventDefault();
+
+    //             this.deleteFile($image.attr('src'));
+
+    //             $parent = $image.closest('.medium-insert-images');
+    //             $image.closest('figure').remove();
+
+    //             $('.medium-insert-images-toolbar').remove();
+
+    //             if ($parent.find('figure').length === 0) {
+    //                 $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+    //                 $parent.before($empty);
+    //                 $parent.remove();
+
+    //                 // Hide addons
+    //                 this.getCore().hideAddons();
+
+    //                 this.getCore().moveCaret($empty);
+    //             }
+
+    //             this.$el.trigger('input');
+    //         }
+    //     }
+    // };
+
 
     /** Plugin initialization */
 

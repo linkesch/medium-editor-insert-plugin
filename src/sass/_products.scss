@@ -1,10 +1,22 @@
 .medium-insert-products {
 	position: relative;
+	height: 250px;
 	width: 300px;
-	.hubrick-product-block {
-		border: 1px solid #dbdbdb;
-		padding: 8px;
-	}
+	margin-bottom: 25px;
+}
+
+.hubrick-product-block {
+	position: absolute;
+	height: 250px;
+	border: 1px solid #dbdbdb;
+	padding: 8px;
+}
+
+.medium-insert-products-active {
+    outline: 2px solid #000;
+    .hubrick-product-block {
+    	border: none;
+    }
 }
 
 .medium-insert-products-input {
@@ -17,4 +29,15 @@
     position: absolute;
     top: 0;
     z-index: 0;
+}
+
+&.medium-insert-products-left {
+    max-width: 33.33%;
+    float: left;
+    margin: 0 40px 20px 0;
+}
+&.medium-insert-products-right {
+    max-width: 33.33%;
+    float: right;
+    margin: 0 0 20px 40px;
 }
