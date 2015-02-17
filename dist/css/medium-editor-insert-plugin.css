@@ -120,7 +120,7 @@
   .medium-insert-images .dragged, .mediumInsert .dragged {
     position: absolute;
     top: 0;
-    opacity: 0.5;
+    opacity: .5;
     z-index: 2000; }
   .medium-insert-images .placeholder, .mediumInsert .placeholder {
     position: relative;

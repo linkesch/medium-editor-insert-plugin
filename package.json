@@ -20,7 +20,7 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-concat": "^0.4.0",
     "grunt-autoprefixer": "^2.1.0",
-    "grunt-sass": "~0.17.0",
+    "grunt-sass": "~0.18.0",
     "grunt-csso": "^0.7.0",
     "grunt-banner": "^0.2.3",
     "grunt-contrib-handlebars": "^0.9.1"
