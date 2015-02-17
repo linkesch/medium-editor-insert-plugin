@@ -11,20 +11,14 @@ Current available addons:
 - embeds (either through oEmbed proxy, such as [Iframely](https://iframely.com), or pre-defined parsers such as - Youtube, Vimeo, Twitter, Facebook, Instagram)
 - tables (basic table creating)
 
-More are coming soon...
-
-[![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
-[![Bower version](https://badge.fury.io/bo/medium-editor-insert-plugin.svg)](http://badge.fury.io/bo/medium-editor-insert-plugin)
-
 ---
 
-This is a branch for a current working 0.* version. If you want to see, test or contribute to an upcoming **version 1.0**, go to [1.0 branch](https://github.com/orthes/medium-editor-insert-plugin/tree/1.0).
+This is a legacy version of the plugin. To see the current **1.0 version** go to [master branch](https://github.com/orthes/medium-editor-insert-plugin).
 
 ---
 
 ## Table of Contents
 
-- [Demo](#demo)
 - [Download](#download)
 - [Usage](#usage)
 - [Options](#options)
@@ -33,15 +27,10 @@ This is a branch for a current working 0.* version. If you want to see, test or 
 - [Author](#author)
 
 
-## <a name="demo"></a>Demo
-
-http://orthes.github.io/medium-editor-insert-plugin
-
-
 ## <a name="download"></a>Download
 
-- Bower: ```bower install medium-editor-insert-plugin --save```
-- Manual: [Download the latest release](https://github.com/orthes/medium-editor-insert-plugin/archive/master.zip)
+- Bower: ```bower install medium-editor-insert-plugin#^0.3 --save```
+- Manual: [Download as ZIP](https://github.com/orthes/medium-editor-insert-plugin/archive/0.3.2.zip)
 
 
 ## <a name="usage"></a>Usage
