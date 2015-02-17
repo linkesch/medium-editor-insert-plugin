@@ -382,7 +382,10 @@
             $.each(this.options.addons, function (addon) {
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
-                    $p = $el.closest('.medium-insert-'+ addon);
+                }
+                
+                if ($current.closest('.medium-insert-'+ addon).length) {
+                    $p = $current.closest('.medium-insert-'+ addon);
                     isAddon = true;
                     return;
                 }

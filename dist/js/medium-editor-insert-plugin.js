@@ -477,7 +477,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $.each(this.options.addons, function (addon) {
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
-                    $p = $el.closest('.medium-insert-'+ addon);
+                }
+                
+                if ($current.closest('.medium-insert-'+ addon).length) {
+                    $p = $current.closest('.medium-insert-'+ addon);
                     isAddon = true;
                     return;
                 }
@@ -723,11 +726,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             this.getCore().moveCaret($place);
         }
 
-        $place.addClass('medium-insert-embeds-input medium-insert-embeds-active');
+        $place.addClass('medium-insert-embeds medium-insert-embeds-input medium-insert-embeds-active');
 
         this.togglePlaceholder({ target: $place.get(0) });
 
         $place.click();
+        this.getCore().hideButtons();
     };
 
     /**

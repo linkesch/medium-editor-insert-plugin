@@ -105,11 +105,12 @@
             this.getCore().moveCaret($place);
         }
 
-        $place.addClass('medium-insert-embeds-input medium-insert-embeds-active');
+        $place.addClass('medium-insert-embeds medium-insert-embeds-input medium-insert-embeds-active');
 
         this.togglePlaceholder({ target: $place.get(0) });
 
         $place.click();
+        this.getCore().hideButtons();
     };
 
     /**
