@@ -402,7 +402,7 @@
 
     Core.prototype.hideButtons = function ($el) {
         $el = $el || this.$el;
-        
+
         $el.find('.medium-insert-buttons').hide();
         $el.find('.medium-insert-buttons-addons').hide();
     };
@@ -477,11 +477,18 @@
      */
 
     Core.prototype.moveCaret = function (element) {
-        var range, sel;
+        var range, sel, el;
 
         range = document.createRange();
         sel = window.getSelection();
-        range.setStart(element.get(0).childNodes[0], 0);
+        el = element.get(0);
+
+        if (!el.childNodes.length) {
+            var textEl = document.createTextNode(' ');
+            el.appendChild(textEl);
+        }
+
+        range.setStart(el.childNodes[0], 0);
         range.collapse(true);
         sel.removeAllRanges();
         sel.addRange(range);
