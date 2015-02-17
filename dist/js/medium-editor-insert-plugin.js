@@ -497,7 +497,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Core.prototype.hideButtons = function ($el) {
         $el = $el || this.$el;
-        
+
         $el.find('.medium-insert-buttons').hide();
         $el.find('.medium-insert-buttons-addons').hide();
     };
@@ -572,11 +572,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.moveCaret = function (element) {
-        var range, sel;
+        var range, sel, el;
 
         range = document.createRange();
         sel = window.getSelection();
-        range.setStart(element.get(0).childNodes[0], 0);
+        el = element.get(0);
+
+        if (!el.childNodes.length) {
+            var textEl = document.createTextNode(' ');
+            el.appendChild(textEl);
+        }
+
+        range.setStart(el.childNodes[0], 0);
         range.collapse(true);
         sel.removeAllRanges();
         sel.addRange(range);
@@ -1072,23 +1079,33 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
 
-        $file.fileupload({
+        var fileUploadOptions = {
             url: this.options.uploadScript,
             dataType: 'json',
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },
-            progress: function (e, data) {
-                $.proxy(that, 'uploadProgress', e, data)();
-            },
-            progressall: function (e, data) {
-                $.proxy(that, 'uploadProgressall', e, data)();
-            },
             done: function (e, data) {
                 $.proxy(that, 'uploadDone', e, data)();
             }
-        });
+        };
+
+        // Only add progress callbacks for browsers that support XHR2,
+        // and test for XHR2 per:
+        // http://stackoverflow.com/questions/6767887/
+        // what-is-the-best-way-to-check-for-xhr2-file-upload-support
+        if (new XMLHttpRequest().upload) {
+            fileUploadOptions.progress = function (e, data) {
+                $.proxy(that, 'uploadProgress', e, data)();
+            };
+
+            fileUploadOptions.progressall = function (e, data) {
+                $.proxy(that, 'uploadProgressall', e, data)();
+            };
+        }
+
+        $file.fileupload(fileUploadOptions);
 
         $file.click();
     };
@@ -1118,7 +1135,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         $place.addClass('medium-insert-images');
 
-        if (this.options.preview === false && $place.find('progress').length === 0) {
+        if (this.options.preview === false && $place.find('progress').length === 0 && (new XMLHttpRequest().upload)) {
             $place.append(this.templates['src/js/templates/images-progressbar.hbs']());
         }
 
