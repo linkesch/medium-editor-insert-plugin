@@ -1,0 +1,38 @@
+.dragging {
+    cursor: move;
+}
+
+.medium-insert-image-active {
+    outline: 2px solid #000;
+}
+
+.medium-insert-images-toolbar {
+    display: none;
+}
+
+.medium-insert-images {
+    margin: 1em 0;
+    figure {
+        position: relative;
+    }
+    .dragged {
+        position: absolute;
+        top: 0;
+        opacity: .5;
+        z-index: 2000;
+    }
+    .placeholder {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+    .medium-insert-images-progress {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.4);
+    }
+}

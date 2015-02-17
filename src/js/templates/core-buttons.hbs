@@ -1,0 +1,8 @@
+<div class="medium-insert-buttons" contenteditable="false" style="display: none">
+    <a class="medium-insert-buttons-show">+</a>
+    <ul class="medium-insert-buttons-addons" style="display: none">
+        {{#each addons}}
+            <li><a data-addon="{{@key}}" data-action="add" class="medium-insert-action">{{{label}}}</a></li>
+        {{/each}}
+    </ul>
+</div>

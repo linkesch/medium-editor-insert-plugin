@@ -1,18 +1,18 @@
 <?php
-
-/**
- * WARNING!
+/*
+ * jQuery File Upload Plugin PHP Example 5.14
+ * https://github.com/blueimp/jQuery-File-Upload
  *
- * This file serves only for demonstration purposes. For using in production, please remember to think about security.
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
  */
 
-if(empty($_FILES['file']))
-{
-  exit();
-}
-
-$destination = 'uploads/'. $_FILES['file']['name'];
-
-move_uploaded_file($_FILES['file']['tmp_name'], $destination);
-
-echo $destination;
+error_reporting(E_ALL | E_STRICT);
+require('UploadHandler.php');
+$upload_handler = new UploadHandler(array(
+    'upload_dir' => 'uploads/',
+    'upload_url' => 'uploads/',
+));

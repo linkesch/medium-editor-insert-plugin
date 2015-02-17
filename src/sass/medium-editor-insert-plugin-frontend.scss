@@ -1,66 +1,64 @@
-.mediumInsert {
-  margin: -1em 0;
-
-  figure {
-    margin: 0;
-    display: inline-block; }
-
-  img {
-    max-width: 100%; }
-
-  .mediumInsert-embeds {
+.medium-insert-images {
     text-align: center;
-    padding: 15px 0;
-
-    iframe {
-      margin: 0px auto !important; }
-
-    div {
-      margin: 0px auto !important; }
-  }
-
-  .mediumInsert-images {
-    margin-right: 10px;
-    width: 20%;
-
-    img {
-      margin-top: 1em;
-      margin-bottom: 10px;
-      vertical-align: top; }
-
-    &:first-child {
-      margin-right: 0;
-      width: 100%;
-
-      &:after {
-        content: "\a";
-        white-space: pre; }
+    figure {
+         margin: 0;
+         display: block; 
+         img {
+             max-width: 100%;
+             margin-top: 1em;
+             vertical-align: top; 
+         }
+         &:first-child {
+             img {
+                 margin-top: 0;
+             }
+         }
     }
-  }
+    &.medium-insert-images-left {
+        max-width: 33.33%;
+        float: left;
+        margin: 0 30px 20px 0;
+    }
+    &.medium-insert-images-right {
+        max-width: 33.33%;
+        float: right;
+        margin: 0 0 20px 30px;
+    }
+    &.medium-insert-images-grid {
+        margin: -0.5em;
+        figure {
+            width: 33.33%;
+            display: inline-block;
+            img {
+                max-width: calc(100% - 1em);
+                margin: 0.5em;
+            }
+        }
+    }
+}
 
-  .mediumInsert-maps {
-    padding: 10px;
-    background: #ccc; }
+.medium-insert-embeds {
+    text-align: center;
+    margin: 1em 0;
+    iframe {
+        margin: 0 auto;
+    }
+    div {
+        margin: 0 auto;
+    }
+}
 
-  table.mediumInsert-table {
-    border-top: 2px solid #333;
-    border-left: 2px solid #333;
-    width: 90%;
-    margin: 30px auto;
 
-    td {
-      border-right: 2px solid #333;
-      border-bottom: 2px solid #333;
-      padding: 12px; }
-  }
+// Backwards copatibility with v0.*
 
-  &.small {
-    max-width: 33.33%;
-    float: left;
-    margin-right: 30px;
-    margin-bottom: 20px; }
+.mediumInsert {
+    @extend .medium-insert-images;
+}
 
-  &.mediumInsert-first {
-    margin-top: 0;
-  }
+.mediumInsert.small {
+    @extend .medium-insert-images.medium-insert-images-left;
+}
+
+.mediumInsert-embeds {
+    @extend .medium-insert-embeds;
 }

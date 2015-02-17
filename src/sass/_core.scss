@@ -1,0 +1,82 @@
+.medium-editor-insert-plugin {
+    outline: 0 solid transparent;
+    &:focus {
+        outline: 0 solid transparent;
+    }
+
+    .clearfix:before, &:before, .clearfix:after, &:after {
+        content: " ";
+        display: table;
+        clear: both;
+    }
+
+    p {
+        margin: 1em 0;
+    }
+
+    progress {
+        display: block;
+        margin: 1em auto;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    &.medium-editor-placeholder:after {
+        padding: 1em 0;
+    }
+
+    .medium-insert-buttons {
+        position: absolute;
+        color: #ddd;
+        font-size: 0.9em;
+        a {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .medium-insert-buttons-show {
+            box-sizing: border-box;
+            display: block;
+            width: 32px;
+            height: 32px;
+            margin-top: -5px;
+            border-radius: 20px;
+            border: 1px solid;
+            font-size: 25px;
+            line-height: 28px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .medium-insert-buttons-addons {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: none;
+            position: relative;
+            z-index: 2;
+            left: 55px;
+            top: -32px;
+            li {
+                display: inline-block;
+                a {
+                    box-sizing: border-box;
+                    display: inline-block;
+                    margin: 0 5px;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 20px;
+                    border: 1px solid;
+                    font-size: 20px;
+                    line-height: 28px;
+                    text-align: center;
+                    .fa {
+                        font-size: 15px;
+                    }
+                }
+            }
+        }
+    }
+}
