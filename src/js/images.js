@@ -122,23 +122,33 @@
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
 
-        $file.fileupload({
+        var fileUploadOptions = {
             url: this.options.uploadScript,
             dataType: 'json',
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },
-            progress: function (e, data) {
-                $.proxy(that, 'uploadProgress', e, data)();
-            },
-            progressall: function (e, data) {
-                $.proxy(that, 'uploadProgressall', e, data)();
-            },
             done: function (e, data) {
                 $.proxy(that, 'uploadDone', e, data)();
             }
-        });
+        };
+
+        // Only add progress callbacks for browsers that support XHR2,
+        // and test for XHR2 per:
+        // http://stackoverflow.com/questions/6767887/
+        // what-is-the-best-way-to-check-for-xhr2-file-upload-support
+        if (new XMLHttpRequest().upload) {
+            fileUploadOptions.progress = function (e, data) {
+                $.proxy(that, 'uploadProgress', e, data)();
+            };
+
+            fileUploadOptions.progressall = function (e, data) {
+                $.proxy(that, 'uploadProgressall', e, data)();
+            };
+        }
+
+        $file.fileupload(fileUploadOptions);
 
         $file.click();
     };
@@ -168,7 +178,7 @@
 
         $place.addClass('medium-insert-images');
 
-        if (this.options.preview === false && $place.find('progress').length === 0) {
+        if (this.options.preview === false && $place.find('progress').length === 0 && (new XMLHttpRequest().upload)) {
             $place.append(this.templates['src/js/templates/images-progressbar.hbs']());
         }
 
