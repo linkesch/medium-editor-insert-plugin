@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.1.0 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.1.1 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -760,15 +760,26 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     };
 
     /**
-     * Replace v0.* class names with new ones
+     * Replace v0.* class names with new ones, wrap embedded content to new structure
      *
      * @return {void}
      */
 
     Embeds.prototype.backwardsCompatibility = function () {
+        var that = this;
+
         this.$el.find('.mediumInsert-embeds')
             .removeClass('mediumInsert-embeds')
             .addClass('medium-insert-embeds');
+
+        this.$el.find('.medium-insert-embeds').each(function () {
+            if ($(this).find('.medium-insert-embed').length === 0) {
+                $(this).after(that.templates['src/js/templates/embeds-wrapper.hbs']({
+                    html: $(this).html()
+                }));    
+                $(this).remove(); 
+            }
+        });
     };
 
     /**
