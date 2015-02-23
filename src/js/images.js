@@ -42,6 +42,7 @@
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
+        this.core = this.$el.data('plugin_'+ pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -106,10 +107,6 @@
      * @return {object} Core object
      */
     Images.prototype.getCore = function () {
-        if (typeof(this.core) === 'undefined') {
-            this.core = this.$el.data('plugin_'+ pluginName);
-        }
-
         return this.core;
     };
 
@@ -323,7 +320,7 @@
 
         setTimeout(function () {
             that.addToolbar();
-            that.addCaption();
+            that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
         }, 50);
     };
 
@@ -341,17 +338,17 @@
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
             $('.medium-insert-images-toolbar').remove();
-            this.removeCaptions($el);
+            this.getCore().removeCaptions($el);
             return;
         }
 
         $image.removeClass('medium-insert-image-active');
         $('.medium-insert-images-toolbar').remove();
 
-        if ($el.is('.medium-insert-images-caption-placeholder')) {
-            this.removeCaptionPlaceholder($image);
+        if ($el.is('.medium-insert-caption-placeholder')) {
+            this.getCore().removeCaptionPlaceholder($image.closest('figure'));
         } else if ($el.is('figcaption') === false) {
-            this.removeCaptions();
+            this.getCore().removeCaptions();
         }
     };
 
@@ -505,59 +502,6 @@
             }
         });
     };
-
-    /**
-     * Add caption
-     *
-     * @return {void}
-     */
-
-    Images.prototype.addCaption = function () {
-        var $image = this.$el.find('.medium-insert-image-active'),
-            $caption = $image.siblings('figcaption');
-
-        if ($caption.length === 0) {
-            $image.after(this.templates['src/js/templates/images-caption.hbs']({
-                placeholder: this.options.captionPlaceholder
-            }));
-        }
-    };
-
-    /**
-     * Remove captions
-     *
-     * @param {jQuery Element} $ignore
-     * @return {void}
-     */
-
-    Images.prototype.removeCaptions = function ($ignore) {
-        var $captions = this.$el.find('figcaption');
-
-        if ($ignore) {
-            $captions.not($ignore);
-        }
-
-        $captions.each(function () {
-            if ($(this).find('.medium-insert-images-caption-placeholder').length || $(this).text() === '') {
-                $(this).remove();
-            }
-        });
-    };
-
-    /**
-     * Remove caption placeholder
-     *
-     * @param {jQuery Element} $image
-     * @return {void}
-     */
-
-    Images.prototype.removeCaptionPlaceholder = function ($image) {
-        var $caption = $image.siblings('figcaption'),
-            $placeholder = $caption.find('.medium-insert-images-caption-placeholder');
-
-        $placeholder.remove();
-    };
-
 
     /** Plugin initialization */
 

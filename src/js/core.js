@@ -66,8 +66,6 @@
             this.options.editor.activate = this.editorActivate;
             this.options.editor.activatePlaceholder = this.editorActivatePlaceholder;
         }
-
-        this.init();
     }
 
     /**
@@ -507,6 +505,56 @@
         sel.addRange(range);
     };
 
+    /**
+     * Add caption
+     *
+     * @param {jQuery Element} $el
+     * @param {string} placeholder
+     * @return {void}
+     */
+
+    Core.prototype.addCaption = function ($el, placeholder) {
+        var $caption = $el.find('figcaption');
+
+        if ($caption.length === 0) {
+            $el.append(this.templates['src/js/templates/core-caption.hbs']({
+                placeholder: placeholder
+            }));
+        }
+    };
+
+    /**
+     * Remove captions
+     *
+     * @param {jQuery Element} $ignore
+     * @return {void}
+     */
+
+    Core.prototype.removeCaptions = function ($ignore) {
+        var $captions = this.$el.find('figcaption');
+
+        if ($ignore) {
+            $captions.not($ignore);
+        }
+
+        $captions.each(function () {
+            if ($(this).find('.medium-insert-caption-placeholder').length || $(this).text() === '') {
+                $(this).remove();
+            }
+        });
+    };
+
+    /**
+     * Remove caption placeholder
+     *
+     * @param {jQuery Element} $el
+     * @return {void}
+     */
+
+    Core.prototype.removeCaptionPlaceholder = function ($el) {
+        $el.find('.medium-insert-caption-placeholder').remove();
+    };
+
     /** Plugin initialization */
 
     $.fn[pluginName] = function (options) {
@@ -514,6 +562,7 @@
             if (!$.data(this, 'plugin_' + pluginName)) {
                 // Plugin initialization
                 $.data(this, 'plugin_' + pluginName, new Core(this, options));
+                $.data(this, 'plugin_' + pluginName).init();
             } else if (typeof options === 'string' && $.data(this, 'plugin_' + pluginName)[options]) {
                 // Method call
                 $.data(this, 'plugin_' + pluginName)[options]();

@@ -132,12 +132,12 @@ test('selecting image', function () {
 test('clicking on caption removes placeholder', function () {
     this.$el.find('p')
         .addClass('medium-insert-images')
-        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption><div class="medium-insert-images-caption-placeholder"></div></figcaption></figure>');
+        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption><div class="medium-insert-caption-placeholder"></div></figcaption></figure>');
 
-    this.$el.find('.medium-insert-images-caption-placeholder').click();
+    this.$el.find('.medium-insert-caption-placeholder').click();
     this.clock.tick(50);
 
-    equal(this.$el.find('figcaption .medium-insert-images-caption-placeholder').length, 0, 'caption placeholder removed');
+    equal(this.$el.find('figcaption .medium-insert-caption-placeholder').length, 0, 'caption placeholder removed');
 });
 
 test('unselecting image', function () {

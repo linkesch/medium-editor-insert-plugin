@@ -12,23 +12,6 @@
 
 .medium-insert-images {
     margin: 1em 0;
-    figure {
-        position: relative;
-        figcaption {
-            position: relative;
-            z-index: 1;
-            display: block;
-            text-align: center;
-            margin: 10px 0;
-            color: #ccc;
-            font-size: 0.8em;
-            font-style: italic;
-            outline: 0 solid transparent;
-            &:focus {
-                outline: 0 solid transparent;
-            }
-        }
-    }
     .dragged {
         position: absolute;
         top: 0;
@@ -49,12 +32,4 @@
         right: 0;
         background: rgba(255, 255, 255, 0.4);
     }
-}
-
-.medium-insert-images-caption-placeholder {
-    position: absolute;
-    top: 0;
-    z-index: 0;
-    width: 100%;
-    text-align: center;
 }
