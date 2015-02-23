@@ -19,7 +19,8 @@
                 right: {
                     label: '<span class="fa fa-align-right"></span>'
                 }
-            }
+            },
+            captionPlaceholder: 'Type caption (optional)'
         };
 
     /**
@@ -37,6 +38,7 @@
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
+        this.core = this.$el.data('plugin_'+ pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -94,10 +96,6 @@
      * @return {object} Core object
      */
     Embeds.prototype.getCore = function () {
-        if (typeof(this.core) === 'undefined') {
-            this.core = this.$el.data('plugin_'+ pluginName);
-        }
-
         return this.core;
     };
 
@@ -369,6 +367,7 @@
 
         setTimeout(function () {
             that.addToolbar();
+            that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
         }, 50);
     };
 
@@ -386,11 +385,23 @@
         if ($el.hasClass('medium-insert-embeds-selected')) {
             $embed.not($el).removeClass('medium-insert-embeds-selected');
             $('.medium-insert-embeds-toolbar').remove();
+            this.getCore().removeCaptions($el.find('figcaption'));
+
+            if ($(e.target).is('.medium-insert-caption-placeholder') || $(e.target).is('figcaption')) {
+                $el.removeClass('medium-insert-embeds-selected');
+                this.getCore().removeCaptionPlaceholder($el.find('figure'));
+            }
             return;
         }
 
         $embed.removeClass('medium-insert-embeds-selected');
         $('.medium-insert-embeds-toolbar').remove();
+
+        if ($(e.target).is('.medium-insert-caption-placeholder')) {
+            this.getCore().removeCaptionPlaceholder($el.find('figure'));
+        } else if ($el.is('figcaption') === false) {
+            this.getCore().removeCaptions();
+        }
     };
 
     /**
@@ -400,7 +411,7 @@
      * @returns {void}
      */
 
-    Embeds.prototype.removeEmbed= function (e) {
+    Embeds.prototype.removeEmbed = function (e) {
         var $embed, $empty;
 
         if (e.which === 8 || e.which === 46) {

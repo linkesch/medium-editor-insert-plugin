@@ -52,3 +52,18 @@
     float: right;
     margin: 0 0 20px 30px; }
 
+.medium-insert-images figure, .mediumInsert figure, .medium-insert-embeds figure, .mediumInsert-embeds figure {
+  position: relative; }
+  .medium-insert-images figure figcaption, .mediumInsert figure figcaption, .medium-insert-embeds figure figcaption, .mediumInsert-embeds figure figcaption {
+    position: relative;
+    z-index: 1;
+    display: block;
+    text-align: center;
+    margin: 10px 0;
+    color: #ccc;
+    font-size: 0.8em;
+    font-style: italic;
+    outline: 0 solid transparent; }
+    .medium-insert-images figure figcaption:focus, .mediumInsert figure figcaption:focus, .medium-insert-embeds figure figcaption:focus, .mediumInsert-embeds figure figcaption:focus {
+      outline: 0 solid transparent; }
+

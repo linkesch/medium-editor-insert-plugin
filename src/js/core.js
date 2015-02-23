@@ -534,11 +534,11 @@
         var $captions = this.$el.find('figcaption');
 
         if ($ignore) {
-            $captions.not($ignore);
+            $captions = $captions.not($ignore);
         }
 
         $captions.each(function () {
-            if ($(this).find('.medium-insert-caption-placeholder').length || $(this).text() === '') {
+            if ($(this).find('.medium-insert-caption-placeholder').length || $(this).text().trim() === '') {
                 $(this).remove();
             }
         });

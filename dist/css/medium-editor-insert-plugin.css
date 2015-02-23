@@ -52,6 +52,21 @@
     float: right;
     margin: 0 0 20px 30px; }
 
+.medium-insert-images figure, .mediumInsert figure, .medium-insert-embeds figure, .mediumInsert-embeds figure {
+  position: relative; }
+  .medium-insert-images figure figcaption, .mediumInsert figure figcaption, .medium-insert-embeds figure figcaption, .mediumInsert-embeds figure figcaption {
+    position: relative;
+    z-index: 1;
+    display: block;
+    text-align: center;
+    margin: 10px 0;
+    color: #ccc;
+    font-size: 0.8em;
+    font-style: italic;
+    outline: 0 solid transparent; }
+    .medium-insert-images figure figcaption:focus, .mediumInsert figure figcaption:focus, .medium-insert-embeds figure figcaption:focus, .mediumInsert-embeds figure figcaption:focus {
+      outline: 0 solid transparent; }
+
 .medium-editor-insert-plugin {
   outline: 0 solid transparent; }
   .medium-editor-insert-plugin:focus {
@@ -113,6 +128,13 @@
           .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a .fa {
             font-size: 15px; }
 
+.medium-insert-caption-placeholder {
+  position: absolute;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  text-align: center; }
+
 .dragging {
   cursor: move; }
 
@@ -124,20 +146,6 @@
 
 .medium-insert-images, .mediumInsert {
   margin: 1em 0; }
-  .medium-insert-images figure, .mediumInsert figure {
-    position: relative; }
-    .medium-insert-images figure figcaption, .mediumInsert figure figcaption {
-      position: relative;
-      z-index: 1;
-      display: block;
-      text-align: center;
-      margin: 10px 0;
-      color: #ccc;
-      font-size: 0.8em;
-      font-style: italic;
-      outline: 0 solid transparent; }
-      .medium-insert-images figure figcaption:focus, .mediumInsert figure figcaption:focus {
-        outline: 0 solid transparent; }
   .medium-insert-images .dragged, .mediumInsert .dragged {
     position: absolute;
     top: 0;
@@ -156,13 +164,6 @@
     right: 0;
     background: rgba(255, 255, 255, 0.4); }
 
-.medium-insert-images-caption-placeholder {
-  position: absolute;
-  top: 0;
-  z-index: 0;
-  width: 100%;
-  text-align: center; }
-
 .medium-insert-embeds-input {
   position: relative;
   color: #ccc;
@@ -174,7 +175,7 @@
   top: 0;
   z-index: 0; }
 
-.medium-insert-embeds-selected {
+.medium-insert-embeds-selected .medium-insert-embed {
   outline: 2px solid #000; }
 
 .medium-insert-embeds-toolbar {

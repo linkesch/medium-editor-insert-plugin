@@ -53,21 +53,36 @@ test('removing empty placeholder on backspace', function () {
 });
 
 test('selecting embed', function () {
-    this.$el.prepend('<div class="medium-insert-embeds"><div class="medium-insert-embeds-overlay"></div></div>');
+    this.$el.prepend('<div class="medium-insert-embeds"><figure></figure><div class="medium-insert-embeds-overlay"></div></div>');
 
     this.$el.find('.medium-insert-embeds-overlay').click();
     this.clock.tick(50);
 
     ok(this.$el.find('.medium-insert-embeds').hasClass('medium-insert-embeds-selected'), 'embed is selected');
     equal($('.medium-insert-embeds-toolbar').length, 1, 'embed toolbar added');
+    ok(this.$el.find('figcaption').length, 'caption added');
+});
+
+
+test('clicking on caption removes placeholder', function () {
+    this.$el.prepend('<div class="medium-insert-embeds">'+
+        '<figure><figcaption><div class="medium-insert-caption-placeholder"></div></figcaption></figure>'+
+        '<div class="medium-insert-embeds-overlay"></div>'+
+    '</div>');
+
+    this.$el.find('.medium-insert-caption-placeholder').click();
+    this.clock.tick(50);
+
+    equal(this.$el.find('figcaption .medium-insert-caption-placeholder').length, 0, 'caption placeholder removed');
 });
 
 test('unselecting embed', function () {
-    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-selected"></div><div class="medium-insert-embeds-toolbar"></div>');
+    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-selected"><figure><figcaption></figcaption></figure></div><div class="medium-insert-embeds-toolbar"></div>');
     this.$el.click();
 
     equal(this.$el.find('.medium-insert-embeds').hasClass('medium-insert-embeds-selected'), false, 'embed is unselected');
     equal($('.medium-insert-embeds-toolbar').length, 0, 'embed toolbar removed');
+    equal(this.$el.find('figcaption').length, 0, 'caption removed');
 });
 
 test('removing embed', function () {
