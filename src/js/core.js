@@ -391,14 +391,13 @@
                 }
             });
 
-            if ($p.length && $p.text().trim() === '') {
+            if (isAddon) {
+                $p.addClass('medium-insert-active');
+            } else if ($p.length && $p.text().trim() === '') {
                 $p.addClass('medium-insert-active');
 
-                if (isAddon === false) {
-                    this.positionButtons($p);
-
-                    $buttons.show();
-                }
+                this.positionButtons($p);
+                $buttons.show();
             } else {
                 this.hideButtons();
             }

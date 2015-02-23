@@ -23,7 +23,8 @@
                 grid: {
                     label: '<span class="fa fa-th"></span>'
                 }
-            }
+            },
+            captionPlaceholder: 'Type caption for image (optional)'
         };
 
     /**
@@ -322,6 +323,7 @@
 
         setTimeout(function () {
             that.addToolbar();
+            that.addCaption();
         }, 50);
     };
 
@@ -339,12 +341,18 @@
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
             $('.medium-insert-images-toolbar').remove();
+            this.removeCaptions($el);
             return;
         }
 
         $image.removeClass('medium-insert-image-active');
-
         $('.medium-insert-images-toolbar').remove();
+
+        if ($el.is('.medium-insert-images-caption-placeholder')) {
+            this.removeCaptionPlaceholder($image);
+        } else if ($el.is('figcaption') === false) {
+            this.removeCaptions();
+        }
     };
 
     /**
@@ -489,6 +497,7 @@
             containerSelector: '.medium-insert-images',
             itemSelector: 'figure',
             placeholder: '<figure class="placeholder">',
+            handle: 'img',
             nested: false,
             vertical: false,
             afterMove: function () {
@@ -496,6 +505,59 @@
             }
         });
     };
+
+    /**
+     * Add caption
+     *
+     * @return {void}
+     */
+
+    Images.prototype.addCaption = function () {
+        var $image = this.$el.find('.medium-insert-image-active'),
+            $caption = $image.siblings('figcaption');
+
+        if ($caption.length === 0) {
+            $image.after(this.templates['src/js/templates/images-caption.hbs']({
+                placeholder: this.options.captionPlaceholder
+            }));
+        }
+    };
+
+    /**
+     * Remove captions
+     *
+     * @param {jQuery Element} $ignore
+     * @return {void}
+     */
+
+    Images.prototype.removeCaptions = function ($ignore) {
+        var $captions = this.$el.find('figcaption');
+
+        if ($ignore) {
+            $captions.not($ignore);
+        }
+
+        $captions.each(function () {
+            if ($(this).find('.medium-insert-images-caption-placeholder').length || $(this).text() === '') {
+                $(this).remove();
+            }
+        });
+    };
+
+    /**
+     * Remove caption placeholder
+     *
+     * @param {jQuery Element} $image
+     * @return {void}
+     */
+
+    Images.prototype.removeCaptionPlaceholder = function ($image) {
+        var $caption = $image.siblings('figcaption'),
+            $placeholder = $caption.find('.medium-insert-images-caption-placeholder');
+
+        $placeholder.remove();
+    };
+
 
     /** Plugin initialization */
 

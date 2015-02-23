@@ -126,17 +126,30 @@ test('selecting image', function () {
 
     ok(this.$el.find('img').hasClass('medium-insert-image-active'), 'image is selected');
     equal($('.medium-insert-images-toolbar').length, 1, 'image toolbar added');
+    ok(this.$el.find('figcaption').length, 'caption added');
+});
+
+test('clicking on caption removes placeholder', function () {
+    this.$el.find('p')
+        .addClass('medium-insert-images')
+        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption><div class="medium-insert-images-caption-placeholder"></div></figcaption></figure>');
+
+    this.$el.find('.medium-insert-images-caption-placeholder').click();
+    this.clock.tick(50);
+
+    equal(this.$el.find('figcaption .medium-insert-images-caption-placeholder').length, 0, 'caption placeholder removed');
 });
 
 test('unselecting image', function () {
     this.$el.find('p')
         .addClass('medium-insert-images')
-        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"></figure>');
+        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption></figcaption></figure>');
 
     this.$el.click();
 
     equal(this.$el.find('img').hasClass('medium-insert-image-active'), false, 'image is unselected');
     equal($('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
+    equal(this.$el.find('figcaption').length, 0, 'caption removed');
 });
 
 test('removing image', function () {
