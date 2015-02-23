@@ -51,8 +51,27 @@ test('removing empty placeholder on backspace', function () {
 
     equal(this.$el.find('.medium-insert-embeds-input').length, 0, 'placeholder removed');
 });
+
+test('selecting embed', function () {
+    this.$el.prepend('<div class="medium-insert-embeds"><div class="medium-insert-embeds-overlay"></div></div>');
+
+    this.$el.find('.medium-insert-embeds-overlay').click();
+    this.clock.tick(50);
+
+    ok(this.$el.find('.medium-insert-embeds').hasClass('medium-insert-embeds-selected'), 'embed is selected');
+    equal($('.medium-insert-embeds-toolbar').length, 1, 'embed toolbar added');
+});
+
+test('unselecting embed', function () {
+    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-selected"></div><div class="medium-insert-embeds-toolbar"></div>');
+    this.$el.click();
+
+    equal(this.$el.find('.medium-insert-embeds').hasClass('medium-insert-embeds-selected'), false, 'embed is unselected');
+    equal($('.medium-insert-embeds-toolbar').length, 0, 'embed toolbar removed');
+});
+
 /** /
-// These tests doesn't work in PhantomJS
+// These tests don't work in PhantomJS
 test('embedding youtube', function () {
     var $event = $.Event('keydown');
 

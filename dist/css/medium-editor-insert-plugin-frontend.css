@@ -37,9 +37,16 @@
 
 .medium-insert-embeds, .mediumInsert-embeds {
   text-align: center;
-  margin: 1em 0; }
+  margin: 1em 0;
+  position: relative; }
   .medium-insert-embeds iframe, .mediumInsert-embeds iframe {
     margin: 0 auto; }
   .medium-insert-embeds div, .mediumInsert-embeds div {
     margin: 0 auto; }
+  .medium-insert-embeds .medium-insert-embeds-overlay, .mediumInsert-embeds .medium-insert-embeds-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0; }
 
