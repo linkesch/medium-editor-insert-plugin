@@ -97,6 +97,64 @@ asyncTest('removing embed triggers input event', function () {
    this.$el.trigger($event);
 });
 
+test('choosing embed style', function () {
+    var $embed;
+
+    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-left"><div class="medium-insert-embeds-overlay"></div></div>');
+    $embed = this.$el.find('.medium-insert-embeds');
+
+    $embed.find('.medium-insert-embeds-overlay').click();
+    this.clock.tick(50);
+
+    $('.medium-insert-embeds-toolbar .medium-editor-action').first().click();
+
+    ok($embed.hasClass('medium-insert-embeds-wide'), 'new style added');
+    equal($embed.hasClass('medium-insert-embeds-left'), false, 'old style removed');
+});
+
+asyncTest('choosing embed style triggers input event', function () {
+    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-left"><div class="medium-insert-embeds-overlay"></div></div>');
+
+    this.$el.one('input', function () {
+        ok(1, 'input triggered');
+        start();
+    });
+
+    this.$el.find('.medium-insert-embeds-overlay').click();
+    this.clock.tick(50);
+
+    $('.medium-insert-embeds-toolbar .medium-editor-action').first().click();
+});
+
+asyncTest('choosing embed style calls callback function', function () {
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                styles: {
+                    wide: {
+                        added: function () {
+                            ok(1, 'callback function called');
+                            start();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-left"><div class="medium-insert-embeds-overlay"></div></div>');
+
+    // Place caret into first paragraph
+    placeCaret(this.$el.find('p').get(0), 0);
+
+    this.$el.find('.medium-insert-embeds-overlay').click();
+    this.clock.tick(50);
+
+    $('.medium-insert-embeds-toolbar .medium-editor-action').first().click();
+});
 
 /** /
 // These tests don't work in PhantomJS

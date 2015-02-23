@@ -42,10 +42,10 @@
     margin: 1em 0;
     position: relative;
     iframe {
-        margin: 0 auto;
+        margin: 0 auto !important;
     }
     div {
-        margin: 0 auto;
+        margin: 0 auto !important;
     }
     .medium-insert-embeds-overlay {
         position: absolute;
@@ -53,6 +53,16 @@
         height: 100%;
         top: 0;
         left: 0;
+    }
+    &.medium-insert-embeds-left {
+        width: 33.33%;
+        float: left;
+        margin: 0 30px 20px 0;
+    }
+    &.medium-insert-embeds-right {
+        width: 33.33%;
+        float: right;
+        margin: 0 0 20px 30px;
     }
 }
 
