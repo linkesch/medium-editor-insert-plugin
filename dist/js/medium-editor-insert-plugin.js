@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.0.3 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.1.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -24,6 +24,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-buttons.hbs"] = Handleb
   return buffer + "    </ul>\n</div>\n";
 },"useData":true});
 
+this["MediumInsert"]["Templates"]["src/js/templates/core-caption.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<figcaption contenteditable=\"true\">\n	<div class=\"medium-insert-caption-placeholder\" contenteditable=\"false\">"
+    + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
+    + "</div>\n</figcaption>";
+},"useData":true});
+
 this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<p><br></p>\n";
   },"useData":true});
@@ -35,11 +42,30 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = H
     + "</div>";
 },"useData":true});
 
+this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "";
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.label : depth0), {"name":"if","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer;
+},"2":function(depth0,helpers,partials,data) {
+  var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, functionType="function", helperMissing=helpers.helperMissing, buffer = "                <li>\n                    <button class=\"medium-editor-action\" data-action=\""
+    + escapeExpression(lambda((data && data.key), depth0))
+    + "\">";
+  stack1 = ((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"label","hash":{},"data":data}) : helper));
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "</button>\n                </li>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div class=\"medium-insert-embeds-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.styles : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "    </ul>\n</div>";
+},"useData":true});
+
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, buffer = "<div class=\"medium-insert-embeds\">";
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, buffer = "<div class=\"medium-insert-embeds\" contenteditable=\"false\">\n	<figure>\n		<div class=\"medium-insert-embed\">\n			";
   stack1 = ((helper = (helper = helpers.html || (depth0 != null ? depth0.html : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"html","hash":{},"data":data}) : helper));
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "</div>";
+  return buffer + "\n		</div>\n	</figure>\n	<div class=\"medium-insert-embeds-overlay\"></div>\n</div>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -147,8 +173,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             this.options.editor.activate = this.editorActivate;
             this.options.editor.activatePlaceholder = this.editorActivatePlaceholder;
         }
-
-        this.init();
     }
 
     /**
@@ -472,14 +496,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 }
             });
 
-            if ($p.length && $p.text().trim() === '') {
+            if (isAddon) {
+                $p.addClass('medium-insert-active');
+            } else if ($p.length && $p.text().trim() === '') {
                 $p.addClass('medium-insert-active');
 
-                if (isAddon === false) {
-                    this.positionButtons($p);
-
-                    $buttons.show();
-                }
+                this.positionButtons($p);
+                $buttons.show();
             } else {
                 this.hideButtons();
             }
@@ -589,6 +612,56 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         sel.addRange(range);
     };
 
+    /**
+     * Add caption
+     *
+     * @param {jQuery Element} $el
+     * @param {string} placeholder
+     * @return {void}
+     */
+
+    Core.prototype.addCaption = function ($el, placeholder) {
+        var $caption = $el.find('figcaption');
+
+        if ($caption.length === 0) {
+            $el.append(this.templates['src/js/templates/core-caption.hbs']({
+                placeholder: placeholder
+            }));
+        }
+    };
+
+    /**
+     * Remove captions
+     *
+     * @param {jQuery Element} $ignore
+     * @return {void}
+     */
+
+    Core.prototype.removeCaptions = function ($ignore) {
+        var $captions = this.$el.find('figcaption');
+
+        if ($ignore) {
+            $captions = $captions.not($ignore);
+        }
+
+        $captions.each(function () {
+            if ($(this).find('.medium-insert-caption-placeholder').length || $(this).text().trim() === '') {
+                $(this).remove();
+            }
+        });
+    };
+
+    /**
+     * Remove caption placeholder
+     *
+     * @param {jQuery Element} $el
+     * @return {void}
+     */
+
+    Core.prototype.removeCaptionPlaceholder = function ($el) {
+        $el.find('.medium-insert-caption-placeholder').remove();
+    };
+
     /** Plugin initialization */
 
     $.fn[pluginName] = function (options) {
@@ -596,6 +669,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             if (!$.data(this, 'plugin_' + pluginName)) {
                 // Plugin initialization
                 $.data(this, 'plugin_' + pluginName, new Core(this, options));
+                $.data(this, 'plugin_' + pluginName).init();
             } else if (typeof options === 'string' && $.data(this, 'plugin_' + pluginName)[options]) {
                 // Method call
                 $.data(this, 'plugin_' + pluginName)[options]();
@@ -615,7 +689,19 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         defaults = {
             label: '<span class="fa fa-youtube-play"></span>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
-            oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1'
+            oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
+            styles: {
+                wide: {
+                    label: '<span class="fa fa-align-justify"></span>'
+                },
+                left: {
+                    label: '<span class="fa fa-align-left"></span>'
+                },
+                right: {
+                    label: '<span class="fa fa-align-right"></span>'
+                }
+            },
+            captionPlaceholder: 'Type caption (optional)'
         };
 
     /**
@@ -633,6 +719,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
+        this.core = this.$el.data('plugin_'+ pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -660,10 +747,16 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Embeds.prototype.events = function () {
+        $(document)
+            .on('click', $.proxy(this, 'unselectEmbed'))
+            .on('keydown', $.proxy(this, 'removeEmbed'))
+            .on('click', '.medium-insert-embeds-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+
         this.$el
             .on('selectstart mousedown', '.medium-insert-embeds-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
             .on('keyup click', $.proxy(this, 'togglePlaceholder'))
-            .on('keydown', $.proxy(this, 'processLink'));
+            .on('keydown', $.proxy(this, 'processLink'))
+            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'));
     };
 
     /**
@@ -684,10 +777,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * @return {object} Core object
      */
     Embeds.prototype.getCore = function () {
-        if (typeof(this.core) === 'undefined') {
-            this.core = this.$el.data('plugin_'+ pluginName);
-        }
-
         return this.core;
     };
 
@@ -944,6 +1033,168 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.getCore().moveCaret($place);
     };
 
+    /**
+     * Select clicked embed
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Embeds.prototype.selectEmbed = function (e) {
+        var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
+            that = this;
+
+        $embed.addClass('medium-insert-embeds-selected');
+
+        setTimeout(function () {
+            that.addToolbar();
+            that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+        }, 50);
+    };
+
+    /**
+     * Unselect selected embed
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Embeds.prototype.unselectEmbed = function (e) {
+        var $el = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
+            $embed = this.$el.find('.medium-insert-embeds-selected');
+
+        if ($el.hasClass('medium-insert-embeds-selected')) {
+            $embed.not($el).removeClass('medium-insert-embeds-selected');
+            $('.medium-insert-embeds-toolbar').remove();
+            this.getCore().removeCaptions($el.find('figcaption'));
+
+            if ($(e.target).is('.medium-insert-caption-placeholder') || $(e.target).is('figcaption')) {
+                $el.removeClass('medium-insert-embeds-selected');
+                this.getCore().removeCaptionPlaceholder($el.find('figure'));
+            }
+            return;
+        }
+
+        $embed.removeClass('medium-insert-embeds-selected');
+        $('.medium-insert-embeds-toolbar').remove();
+
+        if ($(e.target).is('.medium-insert-caption-placeholder')) {
+            this.getCore().removeCaptionPlaceholder($el.find('figure'));
+        } else if ($el.is('figcaption') === false) {
+            this.getCore().removeCaptions();
+        }
+    };
+
+    /**
+     * Remove embed
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Embeds.prototype.removeEmbed = function (e) {
+        var $embed, $empty;
+
+        if (e.which === 8 || e.which === 46) {
+            $embed = this.$el.find('.medium-insert-embeds-selected');
+
+            if ($embed.length) {
+                e.preventDefault();
+
+                $('.medium-insert-embeds-toolbar').remove();
+
+                $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                $embed.before($empty);
+                $embed.remove();
+
+                // Hide addons
+                this.getCore().hideAddons();
+
+                this.getCore().moveCaret($empty);
+                this.$el.trigger('input');
+            }
+        }
+    };
+
+    /**
+     * Adds embed toolbar to editor
+     *
+     * @returns {void}
+     */
+
+    Embeds.prototype.addToolbar = function () {
+        var $embed = this.$el.find('.medium-insert-embeds-selected'),
+            active = false,
+            $toolbar;
+
+        if ($embed.length === 0) {
+            return;
+        }
+
+        $toolbar = $(this.templates['src/js/templates/embeds-toolbar.hbs']({
+            styles: this.options.styles
+        }).trim());
+
+        $('body').append($toolbar);
+
+        $toolbar
+            .css({
+                top: $embed.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+                left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
+            })
+            .show();
+
+        $toolbar.find('button').each(function () {
+            if ($embed.hasClass('medium-insert-embeds-'+ $(this).data('action'))) {
+                $(this).addClass('medium-editor-button-active');
+                active = true;
+            }
+        });
+
+        if (active === false) {
+            $toolbar.find('button').first().addClass('medium-editor-button-active');
+        }
+    };
+
+    /**
+     * Fires toolbar action
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Embeds.prototype.toolbarAction = function (e) {
+        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
+            $li = $button.closest('li'),
+            $ul = $li.closest('ul'),
+            $lis = $ul.find('li'),
+            $embed = this.$el.find('.medium-insert-embeds-selected'),
+            that = this;
+
+        $button.addClass('medium-editor-button-active');
+        $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
+
+        $lis.find('button').each(function () {
+            var className = 'medium-insert-embeds-'+ $(this).data('action');
+
+            if ($(this).hasClass('medium-editor-button-active')) {
+                $embed.addClass(className);
+
+                if (that.options.styles[$(this).data('action')].added) {
+                    that.options.styles[$(this).data('action')].added($embed);
+                }
+            } else {
+                $embed.removeClass(className);
+
+                if (that.options.styles[$(this).data('action')].removed) {
+                    that.options.styles[$(this).data('action')].removed($embed);
+                }
+            }
+        });
+
+        this.$el.trigger('input');
+    };
+
     /** Plugin initialization */
 
     $.fn[pluginName + addonName] = function (options) {
@@ -981,7 +1232,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 grid: {
                     label: '<span class="fa fa-th"></span>'
                 }
-            }
+            },
+            captionPlaceholder: 'Type caption for image (optional)'
         };
 
     /**
@@ -999,6 +1251,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
+        this.core = this.$el.data('plugin_'+ pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -1063,10 +1316,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * @return {object} Core object
      */
     Images.prototype.getCore = function () {
-        if (typeof(this.core) === 'undefined') {
-            this.core = this.$el.data('plugin_'+ pluginName);
-        }
-
         return this.core;
     };
 
@@ -1280,6 +1529,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         setTimeout(function () {
             that.addToolbar();
+            that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
         }, 50);
     };
 
@@ -1297,12 +1547,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
             $('.medium-insert-images-toolbar').remove();
+            this.getCore().removeCaptions($el);
             return;
         }
 
         $image.removeClass('medium-insert-image-active');
-
         $('.medium-insert-images-toolbar').remove();
+
+        if ($el.is('.medium-insert-caption-placeholder')) {
+            this.getCore().removeCaptionPlaceholder($image.closest('figure'));
+        } else if ($el.is('figcaption') === false) {
+            this.getCore().removeCaptions();
+        }
     };
 
     /**
@@ -1447,6 +1703,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             containerSelector: '.medium-insert-images',
             itemSelector: 'figure',
             placeholder: '<figure class="placeholder">',
+            handle: 'img',
             nested: false,
             vertical: false,
             afterMove: function () {
