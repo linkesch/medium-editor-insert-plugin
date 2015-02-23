@@ -70,6 +70,34 @@ test('unselecting embed', function () {
     equal($('.medium-insert-embeds-toolbar').length, 0, 'embed toolbar removed');
 });
 
+test('removing embed', function () {
+    var $event = $.Event('keydown');
+
+    $event.which = 8;
+
+    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-selected"></div><div class="medium-insert-embeds-toolbar"></div>');
+    this.$el.trigger($event);
+
+    equal(this.$el.find('.medium-insert-embeds').length, 0, 'embed deleted');
+    equal($('.medium-insert-embeds-toolbar').length, 0, 'embed toolbar removed');
+});
+
+asyncTest('removing embed triggers input event', function () {
+   var $event = $.Event('keydown');
+
+   this.$el.one('input', function () {
+       ok(1, 'input triggered');
+       start();
+   });
+
+   $event.which = 8;
+
+   this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-selected"></div><div class="medium-insert-embeds-toolbar"></div>');
+
+   this.$el.trigger($event);
+});
+
+
 /** /
 // These tests don't work in PhantomJS
 test('embedding youtube', function () {

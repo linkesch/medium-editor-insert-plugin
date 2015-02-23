@@ -65,7 +65,8 @@
 
     Embeds.prototype.events = function () {
         $(document)
-            .on('click', $.proxy(this, 'unselectEmbed'));
+            .on('click', $.proxy(this, 'unselectEmbed'))
+            .on('keydown', $.proxy(this, 'removeEmbed'));
 
         this.$el
             .on('selectstart mousedown', '.medium-insert-embeds-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
@@ -389,6 +390,37 @@
 
         $embed.removeClass('medium-insert-embeds-selected');
         $('.medium-insert-embeds-toolbar').remove();
+    };
+
+    /**
+     * Remove embed
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Embeds.prototype.removeEmbed= function (e) {
+        var $embed, $empty;
+
+        if (e.which === 8 || e.which === 46) {
+            $embed = this.$el.find('.medium-insert-embeds-selected');
+
+            if ($embed.length) {
+                e.preventDefault();
+
+                $('.medium-insert-embeds-toolbar').remove();
+
+                $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                $embed.before($empty);
+                $embed.remove();
+
+                // Hide addons
+                this.getCore().hideAddons();
+
+                this.getCore().moveCaret($empty);
+                this.$el.trigger('input');
+            }
+        }
     };
 
     /**
