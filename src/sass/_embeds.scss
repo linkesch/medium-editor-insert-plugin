@@ -18,3 +18,13 @@
 .medium-insert-embeds-toolbar {
     display: none;
 }
+
+.medium-insert-embeds {
+    .medium-insert-embeds-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+}
