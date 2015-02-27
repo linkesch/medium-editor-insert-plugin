@@ -1,6 +1,6 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "jQuery insert plugin for MediumEditor",
   "main": [
     "dist/js/medium-editor-insert-plugin.js",
@@ -22,8 +22,8 @@
   ],
   "dependencies": {
     "jquery": ">=1.9.0",
-    "medium-editor": "~2.4.0",
-    "handlebars": "~2.0.0",
+    "medium-editor": "~3.0.7",
+    "handlebars": "~3.0.0",
     "blueimp-file-upload": "~9.9.0",
     "jquery-sortable": "~0.9.12"
   },
