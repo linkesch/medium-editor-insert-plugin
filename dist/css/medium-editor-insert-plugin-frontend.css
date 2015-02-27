@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.1.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.2.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -27,7 +27,18 @@
     float: right;
     margin: 0 0 20px 30px; }
   .medium-insert-images.medium-insert-images-grid, .medium-insert-images-grid.mediumInsert {
-    margin: -0.5em; }
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+    -webkit-box-align: start;
+    -webkit-align-items: flex-start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    margin: 0.5em -0.5em; }
     .medium-insert-images.medium-insert-images-grid figure, .medium-insert-images-grid.mediumInsert figure {
       width: 33.33%;
       display: inline-block; }

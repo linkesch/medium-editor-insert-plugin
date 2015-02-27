@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.1.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.2.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -514,9 +514,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             selection = window.getSelection(),
             range = selection.getRangeAt(0),
             $current = $(range.commonAncestorContainer),
-            $buttons = this.$el.find('.medium-insert-buttons'),
-            isAddon = false,
-            $p = $current.is('p') ? $current : $current.closest('p');
+            $p = $current.is('p') ? $current : $current.closest('p'),
+            that = this,
+            activeAddon;
 
         this.clean();
 
@@ -531,21 +531,41 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 
                 if ($current.closest('.medium-insert-'+ addon).length) {
                     $p = $current.closest('.medium-insert-'+ addon);
-                    isAddon = true;
+                    activeAddon = addon;
                     return;
                 }
             });
 
-            if (isAddon) {
-                $p.addClass('medium-insert-active');
-            } else if ($p.length && $p.text().trim() === '') {
+            if ($p.length && (($p.text().trim() === '' && !activeAddon) || activeAddon === 'images')) {
                 $p.addClass('medium-insert-active');
 
-                this.positionButtons($p);
-                $buttons.show();
+                // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
+                setTimeout(function () {
+                    that.positionButtons(activeAddon);
+                    that.showButtons(activeAddon);
+                }, activeAddon ? 100 : 0);
             } else {
                 this.hideButtons();
             }
+        }
+    };
+
+    /**
+     * Show buttons
+     *
+     * @param {string} activeAddon - Name of active addon
+     * @returns {void}
+     */
+
+    Core.prototype.showButtons = function (activeAddon) {
+        var $buttons = this.$el.find('.medium-insert-buttons');
+
+        $buttons.show();
+        $buttons.find('li').show();
+
+        if (activeAddon) {
+            $buttons.find('li').hide();
+            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();   
         }
     };
 
@@ -566,26 +586,41 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     /**
      * Position buttons
      *
-     * @param {jQuery} $current - Current active element
+     * @param {string} activeAddon - Name of active addon
      * @return {void}
      */
 
-    Core.prototype.positionButtons = function ($current) {
+    Core.prototype.positionButtons = function (activeAddon) {
         var $buttons = this.$el.find('.medium-insert-buttons'),
             $p = this.$el.find('.medium-insert-active'),
-            left, top;
+            $last = $p.find('figure:last').length ? $p.find('figure:last') : $p,
+            $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
+            left, top, $caption;
 
-        // Left position is set according to an active paragraph
         if ($p.length) {
+
             left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
             left = left < 0 ? $p.position().left : left;
-            $buttons.css('left', left);
-        }
 
-        if ($current) {
-            // Top position is set according to a current active element
-            top = $current.position().top + parseInt($current.css('margin-top'), 10);
-            $buttons.css('top', top);
+            if (activeAddon) {
+                if ($p.position().left !== $first.position().left) {
+                    left = $first.position().left;
+                }
+
+                top = $last.position().top + $last.height() + parseInt($p.css('margin-bottom'), 10) - 5; // 5px - adjustment
+
+                $caption = $last.find('figcaption');
+                if ($caption.length) {
+                    top -= $caption.height() + parseInt($caption.css('margin-top'), 10);
+                }
+            } else {
+                top = $p.position().top + parseInt($p.css('margin-top'), 10);
+            }
+
+            $buttons.css({
+                left: left,
+                top: top
+            });
         }
     };
 
@@ -1796,6 +1831,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 }
             }
         });
+
+        this.getCore().positionButtons('images');
 
         this.$el.trigger('input');
     };
