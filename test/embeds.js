@@ -60,6 +60,7 @@ test('selecting embed', function () {
 
     ok(this.$el.find('.medium-insert-embeds').hasClass('medium-insert-embeds-selected'), 'embed is selected');
     equal($('.medium-insert-embeds-toolbar').length, 1, 'embed toolbar added');
+    ok($('.medium-insert-embeds-toolbar2').length, '2nd toolbar added');
     ok(this.$el.find('figcaption').length, 'caption added');
 });
 
@@ -82,6 +83,7 @@ test('unselecting embed', function () {
 
     equal(this.$el.find('.medium-insert-embeds').hasClass('medium-insert-embeds-selected'), false, 'embed is unselected');
     equal($('.medium-insert-embeds-toolbar').length, 0, 'embed toolbar removed');
+    equal($('.medium-insert-embeds-toolbar2').length, 0, '2nd toolbar removed');
     equal(this.$el.find('figcaption').length, 0, 'caption removed');
 });
 
@@ -169,6 +171,36 @@ asyncTest('choosing embed style calls callback function', function () {
     this.clock.tick(50);
 
     $('.medium-insert-embeds-toolbar .medium-editor-action').first().click();
+});
+
+asyncTest('clicking embed action calls callback function', function () {
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                actions: {
+                    remove: {
+                        clicked: function () {
+                            ok(1, 'callback function called');
+                            start();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-left"><div class="medium-insert-embeds-overlay"></div></div>');
+
+    // Place caret into first paragraph
+    placeCaret(this.$el.find('p').get(0), 0);
+
+    this.$el.find('.medium-insert-embeds-overlay').click();
+    this.clock.tick(50);
+
+    $('.medium-insert-embeds-toolbar2 .medium-editor-action').first().click();
 });
 
 /** /

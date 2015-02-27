@@ -20,7 +20,18 @@
                     label: '<span class="fa fa-align-right"></span>'
                 }
             },
-            captionPlaceholder: 'Type caption (optional)'
+            captionPlaceholder: 'Type caption (optional)',
+            actions: {
+                remove: {
+                    label: '<span class="fa fa-times"></span>',
+                    clicked: function () {
+                        var $event = $.Event('keydown');
+                        
+                        $event.which = 8;
+                        $(document).trigger($event);   
+                    }
+                }
+            }
         };
 
     /**
@@ -69,7 +80,8 @@
         $(document)
             .on('click', $.proxy(this, 'unselectEmbed'))
             .on('keydown', $.proxy(this, 'removeEmbed'))
-            .on('click', '.medium-insert-embeds-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+            .on('click', '.medium-insert-embeds-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
+            .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
         this.$el
             .on('selectstart mousedown', '.medium-insert-embeds-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
@@ -395,7 +407,7 @@
 
         if ($el.hasClass('medium-insert-embeds-selected')) {
             $embed.not($el).removeClass('medium-insert-embeds-selected');
-            $('.medium-insert-embeds-toolbar').remove();
+            $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
             this.getCore().removeCaptions($el.find('figcaption'));
 
             if ($(e.target).is('.medium-insert-caption-placeholder') || $(e.target).is('figcaption')) {
@@ -406,7 +418,7 @@
         }
 
         $embed.removeClass('medium-insert-embeds-selected');
-        $('.medium-insert-embeds-toolbar').remove();
+        $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
 
         if ($(e.target).is('.medium-insert-caption-placeholder')) {
             this.getCore().removeCaptionPlaceholder($el.find('figure'));
@@ -431,7 +443,7 @@
             if ($embed.length) {
                 e.preventDefault();
 
-                $('.medium-insert-embeds-toolbar').remove();
+                $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
 
                 $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
                 $embed.before($empty);
@@ -455,22 +467,31 @@
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar;
+            $toolbar, $toolbar2;
 
         if ($embed.length === 0) {
             return;
         }
 
-        $toolbar = $(this.templates['src/js/templates/embeds-toolbar.hbs']({
-            styles: this.options.styles
+        $('body').append(this.templates['src/js/templates/embeds-toolbar.hbs']({
+            styles: this.options.styles,
+            actions: this.options.actions
         }).trim());
 
-        $('body').append($toolbar);
+        $toolbar = $('.medium-insert-embeds-toolbar');
+        $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
         $toolbar
             .css({
                 top: $embed.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
                 left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
+            })
+            .show();
+
+        $toolbar2
+            .css({
+                top: $embed.offset().top + 2, // 2px - distance from a border
+                left: $embed.offset().left + $embed.width() - $toolbar2.width() - 4 // 4px - distance from a border
             })
             .show();
 
@@ -521,6 +542,24 @@
                 }
             }
         });
+
+        this.$el.trigger('input');
+    };
+
+    /**
+     * Fires toolbar2 action
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Embeds.prototype.toolbar2Action = function (e) {
+        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
+            callback = this.options.actions[$button.data('action')].clicked;
+
+        if (callback) {
+            callback(this.$el.find('.medium-insert-embeds-selected'));
+        }
 
         this.$el.trigger('input');
     };
