@@ -498,6 +498,8 @@
             }
         });
 
+        this.getCore().positionButtons('images');
+
         this.$el.trigger('input');
     };
 

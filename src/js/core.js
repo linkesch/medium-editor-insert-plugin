@@ -447,6 +447,7 @@
         var $buttons = this.$el.find('.medium-insert-buttons'),
             $p = this.$el.find('.medium-insert-active'),
             $last = $p.find('figure:last').length ? $p.find('figure:last') : $p,
+            $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
             left, top, $caption;
 
         if ($p.length) {
@@ -455,6 +456,10 @@
             left = left < 0 ? $p.position().left : left;
 
             if (activeAddon) {
+                if ($p.position().left !== $first.position().left) {
+                    left = $first.position().left;
+                }
+
                 top = $last.position().top + $last.height() + parseInt($p.css('margin-bottom'), 10) - 5; // 5px - adjustment
 
                 $caption = $last.find('figcaption');
