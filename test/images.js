@@ -125,7 +125,8 @@ test('selecting image', function () {
     this.clock.tick(50);
 
     ok(this.$el.find('img').hasClass('medium-insert-image-active'), 'image is selected');
-    equal($('.medium-insert-images-toolbar').length, 1, 'image toolbar added');
+    ok($('.medium-insert-images-toolbar').length, 'image toolbar added');
+    ok($('.medium-insert-images-toolbar2').length, '2nd toolbar added');
     ok(this.$el.find('figcaption').length, 'caption added');
 });
 
@@ -149,6 +150,7 @@ test('unselecting image', function () {
 
     equal(this.$el.find('img').hasClass('medium-insert-image-active'), false, 'image is unselected');
     equal($('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
+    equal($('.medium-insert-images-toolbar2').length, 0, '2nd toolbar removed');
     equal(this.$el.find('figcaption').length, 0, 'caption removed');
 });
 
@@ -272,4 +274,36 @@ asyncTest('choosing image style calls callback function', function () {
     this.clock.tick(50);
 
     $('.medium-insert-images-toolbar .medium-editor-action').first().click();
+});
+
+asyncTest('clicking image action calls callback function', function () {
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                actions: {
+                    remove: {
+                        clicked: function () {
+                            ok(1, 'callback function called');
+                            start();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    this.$el.find('p')
+        .addClass('medium-insert-images')
+        .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+    // Place caret into first paragraph
+    placeCaret(this.$el.find('p').get(0), 0);
+
+    this.$el.find('img').click();
+    this.clock.tick(50);
+
+    $('.medium-insert-images-toolbar2 .medium-editor-action').first().click();
 });
