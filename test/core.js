@@ -20,8 +20,13 @@ function placeCaret (el, position) {
 
 module('core', {
     setup: function () {
+        this.clock = sinon.useFakeTimers();
+
         $('#qunit-fixture').html('<div class="editable"></div>');
         this.$el = $('.editable');
+    },
+    teardown: function () {
+        this.clock.restore();
     }
 });
 
@@ -98,10 +103,26 @@ test('showing plugin\'s buttons after clicking on empty paragraph', function () 
     placeCaret(document.getElementById('paragraph'), 0);
 
     this.$el.find('#paragraph').click();
+    this.clock.tick(1);
 
     equal(this.$el.find('.medium-insert-buttons').css('display'), 'block', 'buttons are visible');
     ok(this.$el.find('#paragraph').hasClass('medium-insert-active'), 'active paragraph has medium-insert-active class');
     equal(this.$el.find('#paragraph2').hasClass('medium-insert-active'), false, 'inactive paragraph does not have medium-insert-active class');
+});
+
+test('showing only addon button after clicking on addon paragraph', function () {
+    this.$el.html('<p id="paragraph" class="medium-insert-images">&nbsp;</p><p id="paragraph2" class="medium-insert-active">test</p>');
+
+    this.$el.mediumInsert();
+
+    // Place caret at the beginning of #paragraph
+    placeCaret(document.getElementById('paragraph'), 0);
+
+    this.$el.find('#paragraph').click();
+    this.clock.tick(101);
+
+    equal(this.$el.find('.medium-insert-buttons').css('display'), 'block', 'buttons are visible');
+    equal(this.$el.find('.medium-insert-buttons a[data-addon="embeds"]').parent().css('display'), 'none', 'inactive addon is not visible');
 });
 
 test('hiding plugin\'s buttons after clicking on non-empty paragraph', function () {
