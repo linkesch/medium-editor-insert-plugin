@@ -75,3 +75,10 @@ $(function () {
 - [Development & Contributing](https://github.com/orthes/medium-editor-insert-plugin/wiki/Development-&-Contributing)
 - [License](https://github.com/orthes/medium-editor-insert-plugin/wiki/License)
 - [Author & Contributors](https://github.com/orthes/medium-editor-insert-plugin/wiki/Author-&-Contributors)
+
+
+## Sponsors
+
+[creator5](http://www.creator5.com) | [Maker](http://maker.me) | [Nusii](http://nusii.com)
+-------- | ----- | -----
+[![creator5](http://i.imgur.com/K9uiIuT.png)](http://www.creator5.com) | [![Maker](http://i.imgur.com/8t8wsM8.png)](http://maker.me) | [![nusii](http://i.imgur.com/tvdJ249.png)](http://nusii.com)
