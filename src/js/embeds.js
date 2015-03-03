@@ -177,9 +177,14 @@
     Embeds.prototype.togglePlaceholder = function (e) {
         var $place = $(e.target),
             selection = window.getSelection(),
-            range = selection.getRangeAt(0),
-            $current = $(range.commonAncestorContainer),
-            $placeholder, re, text;
+            range, $current, $placeholder, re, text;
+
+        if (!selection || selection.rangeCount === 0) {
+            return;
+        }
+
+        range = selection.getRangeAt(0);
+        $current = $(range.commonAncestorContainer);
 
         if ($current.hasClass('medium-insert-embeds-active')) {
             $place = $current;

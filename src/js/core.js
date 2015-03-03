@@ -365,11 +365,16 @@
     Core.prototype.toggleButtons = function (e) {
         var $el = $(e.target),
             selection = window.getSelection(),
-            range = selection.getRangeAt(0),
-            $current = $(range.commonAncestorContainer),
-            $p = $current.is('p') ? $current : $current.closest('p'),
             that = this,
-            activeAddon;
+            range, $current, $p, activeAddon;
+
+        if (!selection || selection.rangeCount === 0) {
+            return;
+        }
+
+        range = selection.getRangeAt(0);
+        $current = $(range.commonAncestorContainer);
+        $p = $current.is('p') ? $current : $current.closest('p');
 
         this.clean();
 

@@ -512,11 +512,16 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Core.prototype.toggleButtons = function (e) {
         var $el = $(e.target),
             selection = window.getSelection(),
-            range = selection.getRangeAt(0),
-            $current = $(range.commonAncestorContainer),
-            $p = $current.is('p') ? $current : $current.closest('p'),
             that = this,
-            activeAddon;
+            range, $current, $p, activeAddon;
+
+        if (!selection || selection.rangeCount === 0) {
+            return;
+        }
+
+        range = selection.getRangeAt(0);
+        $current = $(range.commonAncestorContainer);
+        $p = $current.is('p') ? $current : $current.closest('p');
 
         this.clean();
 
@@ -933,9 +938,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.togglePlaceholder = function (e) {
         var $place = $(e.target),
             selection = window.getSelection(),
-            range = selection.getRangeAt(0),
-            $current = $(range.commonAncestorContainer),
-            $placeholder, re, text;
+            range, $current, $placeholder, re, text;
+
+        if (!selection || selection.rangeCount === 0) {
+            return;
+        }
+
+        range = selection.getRangeAt(0);
+        $current = $(range.commonAncestorContainer);
 
         if ($current.hasClass('medium-insert-embeds-active')) {
             $place = $current;
