@@ -516,11 +516,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             range, $current, $p, activeAddon;
 
         if (!selection || selection.rangeCount === 0) {
-            return;
+            $current = $el;
+        } else {
+            range = selection.getRangeAt(0);
+            $current = $(range.commonAncestorContainer);
         }
 
-        range = selection.getRangeAt(0);
-        $current = $(range.commonAncestorContainer);
         $p = $current.is('p') ? $current : $current.closest('p');
 
         this.clean();
