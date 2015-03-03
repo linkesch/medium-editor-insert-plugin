@@ -336,6 +336,9 @@
         var $image = $(e.target),
             that = this;
 
+        // Hide keyboard on mobile devices
+        this.$el.blur();
+
         $image.addClass('medium-insert-image-active');
         $image.closest('.medium-insert-images').addClass('medium-insert-active');
 
