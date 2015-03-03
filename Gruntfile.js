@@ -31,8 +31,12 @@ module.exports = function(grunt) {
             files: ['src/js/*.js', '!src/js/templates.js', 'test/*.js']
         },
 
-        qunit: {
-            unit: 'test.html'
+        blanket_qunit: {
+          options: {
+              urls: ['test.html?coverage=true&gruntReport'],
+              threshold: 70
+          },
+          unit: {}
         },
 
         sass: {
@@ -113,7 +117,6 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-autoprefixer');
@@ -121,8 +124,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-csso');
     grunt.loadNpmTasks('grunt-banner');
     grunt.loadNpmTasks('grunt-contrib-handlebars');
+    grunt.loadNpmTasks('grunt-blanket-qunit');
 
-    grunt.registerTask('test', ['jshint', 'qunit']);
+    grunt.registerTask('test', ['jshint', 'blanket_qunit']);
     grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
     grunt.registerTask('default', ['js', 'css']);

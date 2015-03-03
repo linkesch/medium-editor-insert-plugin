@@ -203,14 +203,29 @@ asyncTest('clicking embed action calls callback function', function () {
     $('.medium-insert-embeds-toolbar2 .medium-editor-action').first().click();
 });
 
-/** /
+test('backwards compatibility', function () {
+    $('#qunit-fixture').html('<div class="editable"><div class="medium-insert-embeds"><iframe></iframe></div></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert();
+
+    ok(this.$el.find('.medium-insert-embeds .medium-insert-embed iframe').length, 'old embed structure was wrapped into new one');
+});
+
 // These tests don't work in PhantomJS
 test('embedding youtube', function () {
     var $event = $.Event('keydown');
 
     $event.which = 13;
-    this.$el.prepend('<p class="medium-insert-embeds-input medium-insert-embeds-active">https://www.youtube.com/watch?v=BROWqjuTM0g</p>');
-
+    $('#qunit-fixture').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">https://www.youtube.com/watch?v=BROWqjuTM0g</p></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                oembedProxy: false
+            }
+        }
+    });
     this.$el.trigger($event);
 
     equal(this.$el.find('.medium-insert-embeds').length, 1, 'embed added');
@@ -222,8 +237,15 @@ test('embedding vimeo', function () {
     var $event = $.Event('keydown');
 
     $event.which = 13;
-    this.$el.prepend('<p class="medium-insert-embeds-input medium-insert-embeds-active">http://vimeo.com/2619976</p>');
-
+    $('#qunit-fixture').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">http://vimeo.com/2619976</p></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                oembedProxy: false
+            }
+        }
+    });
     this.$el.trigger($event);
 
     equal(this.$el.find('.medium-insert-embeds').length, 1, 'embed added');
@@ -235,8 +257,15 @@ test('embedding instagram', function () {
     var $event = $.Event('keydown');
 
     $event.which = 13;
-    this.$el.prepend('<p class="medium-insert-embeds-input medium-insert-embeds-active">http://instagram.com/p/u7PiWCsGxj</p>');
-
+    $('#qunit-fixture').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">http://instagram.com/p/u7PiWCsGxj</p></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                oembedProxy: false
+            }
+        }
+    });
     this.$el.trigger($event);
 
     equal(this.$el.find('.medium-insert-embeds').length, 1, 'embed added');
@@ -244,31 +273,21 @@ test('embedding instagram', function () {
     equal(this.$el.find('.medium-insert-embeds-input').length, 0, 'placeholder removed');
 });
 
-asyncTest('embedding triggers input event', function () {
+test('converting bad embed into text', function () {
     var $event = $.Event('keydown');
 
-    this.$el.one('input', function () {
-        ok(1, 'input triggered');
-        start();
-    });
-
     $event.which = 13;
-    this.$el.prepend('<p class="medium-insert-embeds-input medium-insert-embeds-active">https://www.youtube.com/watch?v=BROWqjuTM0g</p>');
-
-    this.$el.trigger($event);
-});
-
-asyncTest('embedding wront link triggers input event', function () {
-    var $event = $.Event('keydown');
-
-    this.$el.one('input', function () {
-        ok(1, 'input triggered');
-        start();
+    $('#qunit-fixture').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">test</p></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                oembedProxy: false
+            }
+        }
     });
-
-    $event.which = 13;
-    this.$el.prepend('<p class="medium-insert-embeds-input medium-insert-embeds-active">asd</p>');
-
     this.$el.trigger($event);
+
+    equal(this.$el.find('.medium-insert-embeds-input').length, 0, 'embed removed');
+    equal(this.$el.find('p:first').html(), 'test', 'content converted into text');
 });
-/**/
