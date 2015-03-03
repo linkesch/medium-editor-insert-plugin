@@ -1,6 +1,6 @@
 /*!
 
- handlebars v2.0.0
+ handlebars v3.0.0
 
 Copyright (C) 2011-2014 by Yehuda Katz
 
@@ -31,33 +31,14 @@ THE SOFTWARE.
   } else if (typeof exports === 'object') {
     module.exports = factory();
   } else {
-    root.Handlebars = root.Handlebars || factory();
+    root.Handlebars = factory();
   }
 }(this, function () {
-// handlebars/safe-string.js
-var __module3__ = (function() {
-  "use strict";
-  var __exports__;
-  // Build out our basic SafeString type
-  function SafeString(string) {
-    this.string = string;
-  }
-
-  SafeString.prototype.toString = function() {
-    return "" + this.string;
-  };
-
-  __exports__ = SafeString;
-  return __exports__;
-})();
-
 // handlebars/utils.js
-var __module2__ = (function(__dependency1__) {
+var __module2__ = (function() {
   "use strict";
   var __exports__ = {};
   /*jshint -W004 */
-  var SafeString = __dependency1__;
-
   var escape = {
     "&": "&amp;",
     "<": "&lt;",
@@ -107,11 +88,21 @@ var __module2__ = (function(__dependency1__) {
     return (value && typeof value === 'object') ? toString.call(value) === '[object Array]' : false;
   };
   __exports__.isArray = isArray;
+  // Older IE versions do not directly support indexOf so we must implement our own, sadly.
+  function indexOf(array, value) {
+    for (var i = 0, len = array.length; i < len; i++) {
+      if (array[i] === value) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
+  __exports__.indexOf = indexOf;
   function escapeExpression(string) {
     // don't escape SafeStrings, since they're already safe
-    if (string instanceof SafeString) {
-      return string.toString();
+    if (string && string.toHTML) {
+      return string.toHTML();
     } else if (string == null) {
       return "";
     } else if (!string) {
@@ -137,27 +128,35 @@ var __module2__ = (function(__dependency1__) {
     }
   }
 
-  __exports__.isEmpty = isEmpty;function appendContextPath(contextPath, id) {
+  __exports__.isEmpty = isEmpty;function blockParams(params, ids) {
+    params.path = ids;
+    return params;
+  }
+
+  __exports__.blockParams = blockParams;function appendContextPath(contextPath, id) {
     return (contextPath ? contextPath + '.' : '') + id;
   }
 
   __exports__.appendContextPath = appendContextPath;
   return __exports__;
-})(__module3__);
+})();
 
 // handlebars/exception.js
-var __module4__ = (function() {
+var __module3__ = (function() {
   "use strict";
   var __exports__;
 
   var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
 
   function Exception(message, node) {
-    var line;
-    if (node && node.firstLine) {
-      line = node.firstLine;
+    var loc = node && node.loc,
+        line,
+        column;
+    if (loc) {
+      line = loc.start.line;
+      column = loc.start.column;
 
-      message += ' - ' + line + ':' + node.firstColumn;
+      message += ' - ' + line + ':' + column;
     }
 
     var tmp = Error.prototype.constructor.call(this, message);
@@ -167,9 +166,9 @@ var __module4__ = (function() {
       this[errorProps[idx]] = tmp[errorProps[idx]];
     }
 
-    if (line) {
+    if (loc) {
       this.lineNumber = line;
-      this.column = node.firstColumn;
+      this.column = column;
     }
   }
 
@@ -186,7 +185,7 @@ var __module1__ = (function(__dependency1__, __dependency2__) {
   var Utils = __dependency1__;
   var Exception = __dependency2__;
 
-  var VERSION = "2.0.0";
+  var VERSION = "3.0.0";
   __exports__.VERSION = VERSION;var COMPILER_REVISION = 6;
   __exports__.COMPILER_REVISION = COMPILER_REVISION;
   var REVISION_CHANGES = {
@@ -232,6 +231,9 @@ var __module1__ = (function(__dependency1__, __dependency2__) {
       if (toString.call(name) === objectType) {
         Utils.extend(this.partials,  name);
       } else {
+        if (typeof partial === 'undefined') {
+          throw new Exception('Attempting to register a partial as undefined');
+        }
         this.partials[name] = partial;
       }
     },
@@ -299,35 +301,46 @@ var __module1__ = (function(__dependency1__, __dependency2__) {
         data = createFrame(options.data);
       }
 
+      function execIteration(key, i, last) {
+        if (data) {
+          data.key = key;
+          data.index = i;
+          data.first = i === 0;
+          data.last  = !!last;
+
+          if (contextPath) {
+            data.contextPath = contextPath + key;
+          }
+        }
+
+        ret = ret + fn(context[key], {
+          data: data,
+          blockParams: Utils.blockParams([context[key], key], [contextPath + key, null])
+        });
+      }
+
       if(context && typeof context === 'object') {
         if (isArray(context)) {
           for(var j = context.length; i<j; i++) {
-            if (data) {
-              data.index = i;
-              data.first = (i === 0);
-              data.last  = (i === (context.length-1));
-
-              if (contextPath) {
-                data.contextPath = contextPath + i;
-              }
-            }
-            ret = ret + fn(context[i], { data: data });
+            execIteration(i, i, i === context.length-1);
           }
         } else {
+          var priorKey;
+
           for(var key in context) {
             if(context.hasOwnProperty(key)) {
-              if(data) {
-                data.key = key;
-                data.index = i;
-                data.first = (i === 0);
-
-                if (contextPath) {
-                  data.contextPath = contextPath + key;
-                }
+              // We're running the iterations one step out of sync so we can detect
+              // the last iteration without have to scan the object twice and create
+              // an itermediate keys array. 
+              if (priorKey) {
+                execIteration(priorKey, i-1);
               }
-              ret = ret + fn(context[key], {data: data});
+              priorKey = key;
               i++;
             }
+          }
+          if (priorKey) {
+            execIteration(priorKey, i-1, true);
           }
         }
       }
@@ -392,15 +405,13 @@ var __module1__ = (function(__dependency1__, __dependency2__) {
     INFO: 1,
     WARN: 2,
     ERROR: 3,
-    level: 3,
+    level: 1,
 
-    // can be overridden in the host environment
+    // Can be overridden in the host environment
     log: function(level, message) {
-      if (logger.level <= level) {
+      if (typeof console !== 'undefined' && logger.level <= level) {
         var method = logger.methodMap[level];
-        if (typeof console !== 'undefined' && console[method]) {
-          console[method].call(console, message);
-        }
+        (console[method] || console.log).call(console, message);
       }
     }
   };
@@ -414,7 +425,24 @@ var __module1__ = (function(__dependency1__, __dependency2__) {
   };
   __exports__.createFrame = createFrame;
   return __exports__;
-})(__module2__, __module4__);
+})(__module2__, __module3__);
+
+// handlebars/safe-string.js
+var __module4__ = (function() {
+  "use strict";
+  var __exports__;
+  // Build out our basic SafeString type
+  function SafeString(string) {
+    this.string = string;
+  }
+
+  SafeString.prototype.toString = SafeString.prototype.toHTML = function() {
+    return "" + this.string;
+  };
+
+  __exports__ = SafeString;
+  return __exports__;
+})();
 
 // handlebars/runtime.js
 var __module5__ = (function(__dependency1__, __dependency2__, __dependency3__) {
@@ -459,38 +487,44 @@ var __module5__ = (function(__dependency1__, __dependency2__, __dependency3__) {
     // for external users to override these as psuedo-supported APIs.
     env.VM.checkRevision(templateSpec.compiler);
 
-    var invokePartialWrapper = function(partial, indent, name, context, hash, helpers, partials, data, depths) {
-      if (hash) {
-        context = Utils.extend({}, context, hash);
+    var invokePartialWrapper = function(partial, context, options) {
+      if (options.hash) {
+        context = Utils.extend({}, context, options.hash);
       }
 
-      var result = env.VM.invokePartial.call(this, partial, name, context, helpers, partials, data, depths);
+      partial = env.VM.resolvePartial.call(this, partial, context, options);
+      var result = env.VM.invokePartial.call(this, partial, context, options);
 
       if (result == null && env.compile) {
-        var options = { helpers: helpers, partials: partials, data: data, depths: depths };
-        partials[name] = env.compile(partial, { data: data !== undefined, compat: templateSpec.compat }, env);
-        result = partials[name](context, options);
+        options.partials[options.name] = env.compile(partial, templateSpec.compilerOptions, env);
+        result = options.partials[options.name](context, options);
       }
       if (result != null) {
-        if (indent) {
+        if (options.indent) {
           var lines = result.split('\n');
           for (var i = 0, l = lines.length; i < l; i++) {
             if (!lines[i] && i + 1 === l) {
               break;
             }
 
-            lines[i] = indent + lines[i];
+            lines[i] = options.indent + lines[i];
           }
           result = lines.join('\n');
         }
         return result;
       } else {
-        throw new Exception("The partial " + name + " could not be compiled when running in runtime-only mode");
+        throw new Exception("The partial " + options.name + " could not be compiled when running in runtime-only mode");
       }
     };
 
     // Just add water
     var container = {
+      strict: function(obj, name) {
+        if (!(name in obj)) {
+          throw new Exception('"' + name + '" not defined in ' + obj);
+        }
+        return obj[name];
+      },
       lookup: function(depths, name) {
         var len = depths.length;
         for (var i = 0; i < len; i++) {
@@ -511,11 +545,11 @@ var __module5__ = (function(__dependency1__, __dependency2__, __dependency3__) {
       },
 
       programs: [],
-      program: function(i, data, depths) {
+      program: function(i, data, declaredBlockParams, blockParams, depths) {
         var programWrapper = this.programs[i],
             fn = this.fn(i);
-        if (data || depths) {
-          programWrapper = program(this, i, fn, data, depths);
+        if (data || depths || blockParams || declaredBlockParams) {
+          programWrapper = program(this, i, fn, data, declaredBlockParams, blockParams, depths);
         } else if (!programWrapper) {
           programWrapper = this.programs[i] = program(this, i, fn);
         }
@@ -550,12 +584,13 @@ var __module5__ = (function(__dependency1__, __dependency2__, __dependency3__) {
       if (!options.partial && templateSpec.useData) {
         data = initData(context, data);
       }
-      var depths;
+      var depths,
+          blockParams = templateSpec.useBlockParams ? [] : undefined;
       if (templateSpec.useDepths) {
         depths = options.depths ? [context].concat(options.depths) : [context];
       }
 
-      return templateSpec.main.call(container, context, container.helpers, container.partials, data, depths);
+      return templateSpec.main.call(container, context, container.helpers, container.partials, data, blockParams, depths);
     };
     ret.isTop = true;
 
@@ -572,32 +607,52 @@ var __module5__ = (function(__dependency1__, __dependency2__, __dependency3__) {
       }
     };
 
-    ret._child = function(i, data, depths) {
+    ret._child = function(i, data, blockParams, depths) {
+      if (templateSpec.useBlockParams && !blockParams) {
+        throw new Exception('must pass block params');
+      }
       if (templateSpec.useDepths && !depths) {
         throw new Exception('must pass parent depths');
       }
 
-      return program(container, i, templateSpec[i], data, depths);
+      return program(container, i, templateSpec[i], data, 0, blockParams, depths);
     };
     return ret;
   }
 
-  __exports__.template = template;function program(container, i, fn, data, depths) {
+  __exports__.template = template;function program(container, i, fn, data, declaredBlockParams, blockParams, depths) {
     var prog = function(context, options) {
       options = options || {};
 
-      return fn.call(container, context, container.helpers, container.partials, options.data || data, depths && [context].concat(depths));
+      return fn.call(container,
+          context,
+          container.helpers, container.partials,
+          options.data || data,
+          blockParams && [options.blockParams].concat(blockParams),
+          depths && [context].concat(depths));
     };
     prog.program = i;
     prog.depth = depths ? depths.length : 0;
+    prog.blockParams = declaredBlockParams || 0;
     return prog;
   }
 
-  __exports__.program = program;function invokePartial(partial, name, context, helpers, partials, data, depths) {
-    var options = { partial: true, helpers: helpers, partials: partials, data: data, depths: depths };
+  __exports__.program = program;function resolvePartial(partial, context, options) {
+    if (!partial) {
+      partial = options.partials[options.name];
+    } else if (!partial.call && !options.name) {
+      // This is a dynamic partial that returned a string
+      options.name = partial;
+      partial = options.partials[partial];
+    }
+    return partial;
+  }
+
+  __exports__.resolvePartial = resolvePartial;function invokePartial(partial, context, options) {
+    options.partial = true;
 
     if(partial === undefined) {
-      throw new Exception("The partial " + name + " could not be found");
+      throw new Exception("The partial " + options.name + " could not be found");
     } else if(partial instanceof Function) {
       return partial(context, options);
     }
@@ -613,7 +668,7 @@ var __module5__ = (function(__dependency1__, __dependency2__, __dependency3__) {
     return data;
   }
   return __exports__;
-})(__module2__, __module4__, __module1__);
+})(__module2__, __module3__, __module1__);
 
 // handlebars.runtime.js
 var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__) {
@@ -650,11 +705,22 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
   var Handlebars = create();
   Handlebars.create = create;
 
+  /*jshint -W040 */
+  /* istanbul ignore next */
+  var root = typeof global !== 'undefined' ? global : window,
+      $Handlebars = root.Handlebars;
+  /* istanbul ignore next */
+  Handlebars.noConflict = function() {
+    if (root.Handlebars === Handlebars) {
+      root.Handlebars = $Handlebars;
+    }
+  };
+
   Handlebars['default'] = Handlebars;
 
   __exports__ = Handlebars;
   return __exports__;
-})(__module1__, __module3__, __module4__, __module2__, __module5__);
+})(__module1__, __module4__, __module3__, __module2__, __module5__);
 
   return __module0__;
 }));

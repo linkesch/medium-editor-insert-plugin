@@ -10,6 +10,8 @@
             uploadScript: 'upload.php',
             deleteScript: 'delete.php',
             preview: true,
+            captionPlaceholder: 'Type caption for image (optional)',
+            autoGrid: 3,
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>'
@@ -22,6 +24,17 @@
                 },
                 grid: {
                     label: '<span class="fa fa-th"></span>'
+                }
+            },
+            actions: {
+                remove: {
+                    label: '<span class="fa fa-times"></span>',
+                    clicked: function () {
+                        var $event = $.Event('keydown');
+                        
+                        $event.which = 8;
+                        $(document).trigger($event);   
+                    }
                 }
             }
         };
@@ -41,6 +54,7 @@
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
+        this.core = this.$el.data('plugin_'+ pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -77,7 +91,8 @@
         $(document)
             .on('click', $.proxy(this, 'unselectImage'))
             .on('keydown', $.proxy(this, 'removeImage'))
-            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
+            .on('click', '.medium-insert-images-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
         this.$el
             .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'));
@@ -105,10 +120,6 @@
      * @return {object} Core object
      */
     Images.prototype.getCore = function () {
-        if (typeof(this.core) === 'undefined') {
-            this.core = this.$el.data('plugin_'+ pluginName);
-        }
-
         return this.core;
     };
 
@@ -122,23 +133,33 @@
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
 
-        $file.fileupload({
+        var fileUploadOptions = {
             url: this.options.uploadScript,
             dataType: 'json',
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },
-            progress: function (e, data) {
-                $.proxy(that, 'uploadProgress', e, data)();
-            },
-            progressall: function (e, data) {
-                $.proxy(that, 'uploadProgressall', e, data)();
-            },
             done: function (e, data) {
                 $.proxy(that, 'uploadDone', e, data)();
             }
-        });
+        };
+
+        // Only add progress callbacks for browsers that support XHR2,
+        // and test for XHR2 per:
+        // http://stackoverflow.com/questions/6767887/
+        // what-is-the-best-way-to-check-for-xhr2-file-upload-support
+        if (new XMLHttpRequest().upload) {
+            fileUploadOptions.progress = function (e, data) {
+                $.proxy(that, 'uploadProgress', e, data)();
+            };
+
+            fileUploadOptions.progressall = function (e, data) {
+                $.proxy(that, 'uploadProgressall', e, data)();
+            };
+        }
+
+        $file.fileupload(fileUploadOptions);
 
         $file.click();
     };
@@ -168,7 +189,7 @@
 
         $place.addClass('medium-insert-images');
 
-        if (this.options.preview === false && $place.find('progress').length === 0) {
+        if (this.options.preview === false && $place.find('progress').length === 0 && (new XMLHttpRequest().upload)) {
             $place.append(this.templates['src/js/templates/images-progressbar.hbs']());
         }
 
@@ -286,6 +307,10 @@
 
             $place.find('br').remove();
 
+            if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
+                $place.addClass('medium-insert-images-grid');
+            }
+
             if (this.options.preview) {
                 data.submit();
             }
@@ -312,6 +337,7 @@
 
         setTimeout(function () {
             that.addToolbar();
+            that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
         }, 50);
     };
 
@@ -328,13 +354,19 @@
 
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
-            $('.medium-insert-images-toolbar').remove();
+            $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
+            this.getCore().removeCaptions($el);
             return;
         }
 
         $image.removeClass('medium-insert-image-active');
+        $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
-        $('.medium-insert-images-toolbar').remove();
+        if ($el.is('.medium-insert-caption-placeholder')) {
+            this.getCore().removeCaptionPlaceholder($image.closest('figure'));
+        } else if ($el.is('figcaption') === false) {
+            this.getCore().removeCaptions();
+        }
     };
 
     /**
@@ -358,7 +390,11 @@
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
 
-                $('.medium-insert-images-toolbar').remove();
+                if (this.options.autoGrid && $parent.find('figure').length < this.options.autoGrid) {
+                    $parent.removeClass('medium-insert-images-grid');
+                }
+
+                $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
                 if ($parent.find('figure').length === 0) {
                     $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
@@ -399,18 +435,27 @@
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar;
+            $toolbar, $toolbar2;
 
-        $toolbar = $(this.templates['src/js/templates/images-toolbar.hbs']({
-            styles: this.options.styles
+        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+            styles: this.options.styles,
+            actions: this.options.actions
         }).trim());
 
-        $('body').append($toolbar);
+        $toolbar = $('.medium-insert-images-toolbar');
+        $toolbar2 = $('.medium-insert-images-toolbar2');
 
         $toolbar
             .css({
                 top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
+            })
+            .show();
+
+        $toolbar2
+            .css({
+                top: $image.offset().top + 2, // 2px - distance from a border
+                left: $image.offset().left + $image.width() - $toolbar2.width() - 4 // 4px - distance from a border
             })
             .show();
 
@@ -462,6 +507,26 @@
             }
         });
 
+        this.getCore().positionButtons('images');
+
+        this.$el.trigger('input');
+    };
+
+    /**
+     * Fires toolbar2 action
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Images.prototype.toolbar2Action = function (e) {
+        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
+            callback = this.options.actions[$button.data('action')].clicked;
+
+        if (callback) {
+            callback(this.$el.find('.medium-insert-image-active'));
+        }
+
         this.$el.trigger('input');
     };
 
@@ -479,6 +544,7 @@
             containerSelector: '.medium-insert-images',
             itemSelector: 'figure',
             placeholder: '<figure class="placeholder">',
+            handle: 'img',
             nested: false,
             vertical: false,
             afterMove: function () {

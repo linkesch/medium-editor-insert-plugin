@@ -5,7 +5,7 @@
 [![Dependency Status](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f)
 [![Codacy Badge](https://www.codacy.com/project/badge/1f8565ed2e554e4fa952ec4da6a2080b)](https://www.codacy.com/public/orthes/mediumeditorinsertplugin)
 
-This plugin expands capabilities of [MediumEditor](https://github.com/orthes/medium-editor-insert-plugin/wiki/github.com/daviferreira/medium-editor) (a clone of medium.com WYSIWYG editor) and it enables users to insert into the editor various types of content (depending on available addons).
+This plugin expands capabilities of [MediumEditor](https://github.com/daviferreira/medium-editor) (a clone of medium.com WYSIWYG editor) and it enables users to insert into the editor various types of content (depending on available addons).
 
 Current available addons:
 
@@ -13,9 +13,14 @@ Current available addons:
 - **embeds** (either through oEmbed proxy, such as [Iframely](https://iframely.com/), or pre-defined parsers such as - Youtube, Vimeo, Twitter, Facebook, Instagram)
 
 
+## Demo
+
+[http://orthes.github.io/medium-editor-insert-plugin](http://orthes.github.io/medium-editor-insert-plugin)
+
+
 ## Download
 
-* Bower (recommended): ```bower install medium-editor-insert-plugin#~1.0 --save```
+* Bower (recommended): ```bower install medium-editor-insert-plugin#^1.0 --save```
 * Manual: [Download the latest release](https://github.com/orthes/medium-editor-insert-plugin/releases)
 
 
@@ -70,3 +75,10 @@ $(function () {
 - [Development & Contributing](https://github.com/orthes/medium-editor-insert-plugin/wiki/Development-&-Contributing)
 - [License](https://github.com/orthes/medium-editor-insert-plugin/wiki/License)
 - [Author & Contributors](https://github.com/orthes/medium-editor-insert-plugin/wiki/Author-&-Contributors)
+
+
+## Sponsors
+
+[creator5](http://www.creator5.com) | [Maker](http://maker.me) | [Nusii](http://nusii.com)
+-------- | ----- | -----
+[![creator5](http://i.imgur.com/K9uiIuT.png)](http://www.creator5.com) | [![Maker](http://i.imgur.com/8t8wsM8.png)](http://maker.me) | [![nusii](http://i.imgur.com/tvdJ249.png)](http://nusii.com)
