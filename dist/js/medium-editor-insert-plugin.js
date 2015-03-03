@@ -1643,6 +1643,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
                 $place.addClass('medium-insert-images-grid');
+
+                if (this.options.styles.grid.added) {
+                    this.options.styles.grid.added($place);
+                }
             }
 
             if (this.options.preview) {
@@ -1726,6 +1730,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
                 if (this.options.autoGrid && $parent.find('figure').length < this.options.autoGrid) {
                     $parent.removeClass('medium-insert-images-grid');
+
+                    if (this.options.styles.grid.removed) {
+                        this.options.styles.grid.removed($parent);
+                    }
                 }
 
                 $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
