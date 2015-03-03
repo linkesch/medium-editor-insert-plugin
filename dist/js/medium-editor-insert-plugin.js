@@ -1344,6 +1344,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             uploadScript: 'upload.php',
             deleteScript: 'delete.php',
             preview: true,
+            captionPlaceholder: 'Type caption for image (optional)',
+            autoGrid: 3,
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>'
@@ -1358,7 +1360,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     label: '<span class="fa fa-th"></span>'
                 }
             },
-            captionPlaceholder: 'Type caption for image (optional)',
             actions: {
                 remove: {
                     label: '<span class="fa fa-times"></span>',
@@ -1640,6 +1641,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             $place.find('br').remove();
 
+            if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
+                $place.addClass('medium-insert-images-grid');
+            }
+
             if (this.options.preview) {
                 data.submit();
             }
@@ -1718,6 +1723,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
+
+                if (this.options.autoGrid && $parent.find('figure').length < this.options.autoGrid) {
+                    $parent.removeClass('medium-insert-images-grid');
+                }
 
                 $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 

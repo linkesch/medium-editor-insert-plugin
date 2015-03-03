@@ -38,6 +38,10 @@
     -webkit-align-items: flex-start;
         -ms-flex-align: start;
             align-items: flex-start;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin: 0.5em -0.5em; }
     .medium-insert-images.medium-insert-images-grid figure, .medium-insert-images-grid.mediumInsert figure {
       width: 33.33%;

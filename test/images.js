@@ -95,6 +95,71 @@ asyncTest('image upload without preview', function () {
     });
 });
 
+asyncTest('automatically adding grid when multiple images are in a set', function () {
+    var that = this;
+
+    this.addon.options.preview = false;
+    this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
+        '<figure></figure>'+
+        '<figure></figure>'+
+    '</div>');
+
+    this.addon.uploadAdd(null, {
+        autoUpload: true,
+        files: [new Blob([''], { type: 'image/jpeg' })],
+        submit: function () {
+            that.addon.uploadDone(null, {
+                result: {
+                    files: [
+                        { url: 'test.jpg' }
+                    ]
+                }
+            });
+
+            ok(that.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), '.medium-insert-images-grid class added');
+            start();
+        },
+        process: function () {
+            return this;
+        },
+        done: function (callback) {
+            callback();
+        }
+    });
+});
+
+asyncTest('not adding grid when not enough images are in a set', function () {
+    var that = this;
+
+    this.addon.options.preview = false;
+    this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
+        '<figure></figure>'+
+    '</div>');
+
+    this.addon.uploadAdd(null, {
+        autoUpload: true,
+        files: [new Blob([''], { type: 'image/jpeg' })],
+        submit: function () {
+            that.addon.uploadDone(null, {
+                result: {
+                    files: [
+                        { url: 'test.jpg' }
+                    ]
+                }
+            });
+
+            equal(that.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), false, '.medium-insert-images-grid class was not added');
+            start();
+        },
+        process: function () {
+            return this;
+        },
+        done: function (callback) {
+            callback();
+        }
+    });
+});
+
 asyncTest('triggering input event on uploadDone', function () {
     var that = this;
 
@@ -160,15 +225,22 @@ test('removing image', function () {
     $event.which = 8;
 
     this.$el.find('p')
-        .addClass('medium-insert-images')
+        .addClass('medium-insert-images medium-insert-images-grid')
         .append('<figure><img src="image1.jpg" alt=""></figure>'+
-            '<figure><img src="image2.jpg" alt="" class="medium-insert-image-active"></figure>');
+            '<figure><img src="image2.jpg" alt=""></figure>'+
+            '<figure><img src="image3.jpg" alt=""></figure>'+
+            '<figure><img src="image4.jpg" alt="" class="medium-insert-image-active"></figure>');
 
     this.$el.trigger($event);
 
-    equal(this.$el.find('img').length, 1, 'image deleted');
-    equal(this.$el.find('img').attr('src'), 'image1.jpg', 'not selected image was not deleted');
+    equal(this.$el.find('img').length, 3, 'image deleted');
+    equal(this.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), true, '.medium-insert-images-grid class remains');
 
+    this.$el.find('img').last().addClass('medium-insert-image-active');
+    this.$el.trigger($event);
+
+    equal(this.$el.find('img').length, 2, 'image deleted');
+    equal(this.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), false, '.medium-insert-images-grid class was removed');
 
     this.$el.find('img').addClass('medium-insert-image-active');
     this.$el.trigger($event);
