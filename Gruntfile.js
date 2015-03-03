@@ -1,4 +1,10 @@
 module.exports = function(grunt) {
+    // show elapsed time at the end
+    require('time-grunt')(grunt);
+    // load grunt tasks just in time
+    require('jit-grunt')(grunt, {
+        usebanner: 'grunt-banner'
+    });
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -114,17 +120,6 @@ module.exports = function(grunt) {
             }
         }
     });
-
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-autoprefixer');
-    grunt.loadNpmTasks('grunt-sass');
-    grunt.loadNpmTasks('grunt-csso');
-    grunt.loadNpmTasks('grunt-banner');
-    grunt.loadNpmTasks('grunt-contrib-handlebars');
-    grunt.loadNpmTasks('grunt-blanket-qunit');
 
     grunt.registerTask('test', ['jshint', 'blanket_qunit']);
     grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
