@@ -97,7 +97,6 @@
             .on('dragover drop', function (e) {
                 e.preventDefault();
             })
-            .on('blur', $.proxy(this, 'activatePlaceholder'))
             .on('keyup click', $.proxy(this, 'toggleButtons'))
             .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
             .on('keydown', $.proxy(this, 'fixSelectAll'))
@@ -175,16 +174,6 @@
             el.classList.add('medium-editor-placeholder');
             this._hideInsertButtons($(el));
         }
-    };
-
-    /**
-     * Activate placeholder
-     *
-     * @return {void}
-     */
-
-    Core.prototype.activatePlaceholder = function () {
-        this.editorActivatePlaceholder(this.$el.get(0));
     };
 
     /**
