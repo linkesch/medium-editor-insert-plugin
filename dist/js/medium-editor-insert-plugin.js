@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.4.1 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.4.2 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -244,7 +244,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .on('dragover drop', function (e) {
                 e.preventDefault();
             })
-            .on('blur', $.proxy(this, 'activatePlaceholder'))
             .on('keyup click', $.proxy(this, 'toggleButtons'))
             .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
             .on('keydown', $.proxy(this, 'fixSelectAll'))
@@ -322,16 +321,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             el.classList.add('medium-editor-placeholder');
             this._hideInsertButtons($(el));
         }
-    };
-
-    /**
-     * Activate placeholder
-     *
-     * @return {void}
-     */
-
-    Core.prototype.activatePlaceholder = function () {
-        this.editorActivatePlaceholder(this.$el.get(0));
     };
 
     /**
@@ -1234,7 +1223,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2;
+            $toolbar, $toolbar2, top;
 
         if ($embed.length === 0) {
             return;
@@ -1248,9 +1237,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $toolbar = $('.medium-insert-embeds-toolbar');
         $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
+        top = $embed.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+        if (top < 0) {
+            top = 0;
+        }
+
         $toolbar
             .css({
-                top: $embed.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+                top: top,
                 left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
             })
             .show();
@@ -1807,7 +1801,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar, $toolbar2;
+            $toolbar, $toolbar2, top;
 
         $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
@@ -1817,9 +1811,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $toolbar = $('.medium-insert-images-toolbar');
         $toolbar2 = $('.medium-insert-images-toolbar2');
 
+        top = $image.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
+        if (top < 0) {
+            top = 0;
+        }
+
         $toolbar
             .css({
-                top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
+                top: top,
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
             })
             .show();

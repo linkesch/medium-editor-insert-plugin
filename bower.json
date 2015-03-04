@@ -1,6 +1,6 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "jQuery insert plugin for MediumEditor",
   "main": [
     "dist/js/medium-editor-insert-plugin.js",

@@ -472,7 +472,7 @@
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2;
+            $toolbar, $toolbar2, top;
 
         if ($embed.length === 0) {
             return;
@@ -486,9 +486,14 @@
         $toolbar = $('.medium-insert-embeds-toolbar');
         $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
+        top = $embed.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+        if (top < 0) {
+            top = 0;
+        }
+
         $toolbar
             .css({
-                top: $embed.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+                top: top,
                 left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
             })
             .show();
