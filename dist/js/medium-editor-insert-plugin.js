@@ -1878,7 +1878,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             }
         });
 
-        this.getCore().positionButtons('images');
+        this.getCore().hideButtons();
 
         this.$el.trigger('input');
     };
@@ -1898,6 +1898,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             callback(this.$el.find('.medium-insert-image-active'));
         }
 
+        this.getCore().hideButtons();
+        
         this.$el.trigger('input');
     };
 

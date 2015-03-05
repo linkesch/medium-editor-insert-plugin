@@ -539,7 +539,7 @@
             }
         });
 
-        this.getCore().positionButtons('images');
+        this.getCore().hideButtons();
 
         this.$el.trigger('input');
     };
@@ -559,6 +559,8 @@
             callback(this.$el.find('.medium-insert-image-active'));
         }
 
+        this.getCore().hideButtons();
+        
         this.$el.trigger('input');
     };
 
