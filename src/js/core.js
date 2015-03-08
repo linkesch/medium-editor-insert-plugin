@@ -582,7 +582,12 @@
      */
 
     Core.prototype.removeCaptionPlaceholder = function ($el) {
-        $el.find('.medium-insert-caption-placeholder').remove();
+        var $caption = $el.find('figcaption');
+
+        if ($caption.length) {
+            $caption.find('.medium-insert-caption-placeholder').remove();
+            this.moveCaret($caption);
+        }
     };
 
     /** Plugin initialization */
