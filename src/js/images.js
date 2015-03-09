@@ -324,6 +324,16 @@
             $place.find('br').remove();
 
             if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
+                $.each(this.options.styles, function (style, options) {
+                    var className = 'medium-insert-images-'+ style;
+        
+                    $place.removeClass(className);
+        
+                    if (options.removed) {
+                        options.removed($place);
+                    }
+                });
+
                 $place.addClass('medium-insert-images-grid');
 
                 if (this.options.styles.grid.added) {
