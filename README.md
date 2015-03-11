@@ -70,6 +70,7 @@ $(function () {
 
 - [Getting Started](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Getting-Started)
 - [Configuration](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Configuration)
+- [Server response](https://github.com/orthes/medium-editor-insert-plugin/wiki/Server-response)
 - [Upgrading from v0.3](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Upgrading-from-v0.3)
 - [Versioning](https://github.com/orthes/medium-editor-insert-plugin/wiki/Versioning)
 - [Development & Contributing](https://github.com/orthes/medium-editor-insert-plugin/wiki/Development-&-Contributing)
