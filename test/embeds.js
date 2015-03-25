@@ -64,7 +64,6 @@ test('selecting embed', function () {
     ok(this.$el.find('figcaption').length, 'caption added');
 });
 
-
 test('clicking on caption removes placeholder', function () {
     this.$el.prepend('<div class="medium-insert-embeds">'+
         '<figure><figcaption><div class="medium-insert-caption-placeholder"></div></figcaption></figure>'+
@@ -290,4 +289,46 @@ test('converting bad embed into text', function () {
 
     equal(this.$el.find('.medium-insert-embeds-input').length, 0, 'embed removed');
     equal(this.$el.find('p:first').html(), 'test', 'content converted into text');
+});
+
+test('disabled embed first toolbar', function () {
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                oembedProxy: false,
+                styles: false
+            }
+        }
+    });
+
+    this.$el.prepend('<div class="medium-insert-embeds"><figure></figure><div class="medium-insert-embeds-overlay"></div></div>');
+
+    this.$el.find('.medium-insert-embeds-overlay').click();
+    this.clock.tick(50);
+
+    equal($('.medium-insert-embeds-toolbar').length, 0, 'first toolbar not added');
+    equal($('.medium-insert-embeds-toolbar2').length, 1, '2nd toolbar added');
+});
+
+test('disabled embed toolbar2', function () {
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                oembedProxy: false,
+                actions: false
+            }
+        }
+    });
+
+    this.$el.prepend('<div class="medium-insert-embeds"><figure></figure><div class="medium-insert-embeds-overlay"></div></div>');
+
+    this.$el.find('.medium-insert-embeds-overlay').click();
+    this.clock.tick(50);
+
+    equal($('.medium-insert-embeds-toolbar').length, 1, 'first toolbar added');
+    equal($('.medium-insert-embeds-toolbar2').length, 0, '2nd toolbar not added');
 });
