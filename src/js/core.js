@@ -57,13 +57,19 @@
 
         // Extend editor's functions
         if (this.options && this.options.editor) {
-            this.options.editor._serialize = this.options.editor.serialize;
+            // Deprecated in editor
             this.options.editor._deactivate = this.options.editor.deactivate;
             this.options.editor._activate = this.options.editor.activate;
-            this.options.editor._hideInsertButtons = this.hideButtons;
-            this.options.editor.serialize = this.editorSerialize;
             this.options.editor.deactivate = this.editorDeactivate;
             this.options.editor.activate = this.editorActivate;
+
+            this.options.editor._serialize = this.options.editor.serialize;
+            this.options.editor._destroy = this.options.editor.destroy;
+            this.options.editor._setup = this.options.editor.setup;
+            this.options.editor._hideInsertButtons = this.hideButtons;
+            this.options.editor.serialize = this.editorSerialize;
+            this.options.editor.destroy = this.editorDestroy;
+            this.options.editor.setup = this.editorSetup;
             this.options.editor.activatePlaceholder = this.editorActivatePlaceholder;
         }
     }
@@ -129,25 +135,55 @@
     /**
      * Extend editor's deactivate function to deactivate this plugin too
      *
+     * @deprecated
      * @return {void}
      */
 
     Core.prototype.editorDeactivate = function () {
-        this._deactivate();
-
         $.each(this.elements, function (key, el) {
             $(el).data('plugin_' + pluginName).disable();
         });
+
+        this._deactivate();
     };
 
     /**
      * Extend editor's activate function to activate this plugin too
      *
+     * @deprecated
      * @return {void}
      */
 
     Core.prototype.editorActivate = function () {
         this._activate();
+
+        $.each(this.elements, function (key, el) {
+            $(el).data('plugin_' + pluginName).enable();
+        });
+    };
+
+    /**
+     * Extend editor's destroy function to deactivate this plugin too
+     *
+     * @return {void}
+     */
+
+    Core.prototype.editorDestroy = function () {
+        $.each(this.elements, function (key, el) {
+            $(el).data('plugin_' + pluginName).disable();
+        });
+
+        this._destroy();
+    };
+
+    /**
+     * Extend editor's setup function to activate this plugin too
+     *
+     * @return {void}
+     */
+
+    Core.prototype.editorSetup = function () {
+        this._setup();
 
         $.each(this.elements, function (key, el) {
             $(el).data('plugin_' + pluginName).enable();
@@ -356,6 +392,10 @@
             selection = window.getSelection(),
             that = this,
             range, $current, $p, activeAddon;
+
+        if (this.options.enabled === false) {
+            return;
+        }
 
         if (!selection || selection.rangeCount === 0) {
             $current = $el;
