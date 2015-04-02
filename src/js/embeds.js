@@ -26,9 +26,9 @@
                     label: '<span class="fa fa-times"></span>',
                     clicked: function () {
                         var $event = $.Event('keydown');
-                        
+
                         $event.which = 8;
-                        $(document).trigger($event);   
+                        $(document).trigger($event);
                     }
                 }
             }
@@ -107,8 +107,8 @@
             if ($(this).find('.medium-insert-embed').length === 0) {
                 $(this).after(that.templates['src/js/templates/embeds-wrapper.hbs']({
                     html: $(this).html()
-                }));    
-                $(this).remove(); 
+                }));
+                $(this).remove();
             }
         });
     };
