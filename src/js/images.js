@@ -14,16 +14,24 @@
             autoGrid: 3,
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>'
+                    label: '<span class="fa fa-align-justify"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>'
+                    label: '<span class="fa fa-align-left"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>'
+                    label: '<span class="fa fa-align-right"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>'
+                    label: '<span class="fa fa-th"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 }
             },
             actions: {
@@ -52,7 +60,8 @@
                         that.$el.trigger('input');
                     }
                 });
-            }
+            },
+            // uploadCompleted: function ($el, data) {}
         };
 
     /**
@@ -287,11 +296,15 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();
 
         this.sorting();
+
+        if (this.options.uploadCompleted) {
+            this.options.uploadCompleted($el, data);
+        }
     };
 
     /**
@@ -346,6 +359,8 @@
         }
 
         this.$el.trigger('input');
+
+        return data.context;
     };
 
     Images.prototype.getDOMImage = function () {

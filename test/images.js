@@ -369,3 +369,34 @@ asyncTest('clicking image action calls callback function', function () {
 
     $('.medium-insert-images-toolbar2 .medium-editor-action').first().click();
 });
+
+asyncTest('uploadDone calls uploadCompleted callback', function () {
+    var that = this;
+
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                uploadCompleted: function () {
+                    ok(1, 'uploadCompleted callback called');
+                    start();
+                }
+            }
+        }
+    });
+    this.addon = this.$el.data('plugin_mediumInsertImages');
+
+
+    this.stub(this.addon, 'showImage', function () {
+        that.addon.showImage.restore();
+    });
+
+    this.addon.uploadDone(null, {
+        result: {
+            files: [
+                { url: 'test.jpg' }
+            ]
+        }
+    });
+});
