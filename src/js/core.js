@@ -70,7 +70,7 @@
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
-            this.options.editor.activatePlaceholder = this.editorActivatePlaceholder;
+            this.options.editor.placeholders.updatePlaceholder = this.editorUpdatePlaceholder;
         }
     }
 
@@ -191,12 +191,12 @@
     };
 
     /**
-     * Extend editor's activatePlaceholder function to activate placeholder dispite of the plugin buttons
+     * Extend editor's placeholder.updatePlaceholder function to show placeholder dispite of the plugin buttons
      *
      * @return {void}
      */
 
-    Core.prototype.editorActivatePlaceholder = function (el) {
+    Core.prototype.editorUpdatePlaceholder = function (el) {
         var $clone = $(el).clone(),
             cloneHtml;
 
@@ -207,8 +207,10 @@
             !(el.querySelector('blockquote')) &&
             cloneHtml === '') {
 
-            el.classList.add('medium-editor-placeholder');
-            this._hideInsertButtons($(el));
+            this.showPlaceholder(el);
+            this.base._hideInsertButtons($(el));
+        } else {
+            this.hidePlaceholder(el);
         }
     };
 
