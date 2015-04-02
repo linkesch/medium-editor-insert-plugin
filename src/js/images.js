@@ -290,7 +290,6 @@
         $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();
-        this.$el.trigger('input');
 
         this.sorting();
     };
@@ -345,6 +344,8 @@
                 data.submit();
             }
         }
+
+        this.$el.trigger('input');
     };
 
     Images.prototype.getDOMImage = function () {

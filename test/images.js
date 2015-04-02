@@ -160,24 +160,14 @@ asyncTest('not adding grid when not enough images are in a set', function () {
     });
 });
 
-asyncTest('triggering input event on uploadDone', function () {
-    var that = this;
-
+asyncTest('triggering input event on showImage', function () {
     this.$el.one('input', function () {
         ok(1, 'input triggered');
         start();
     });
 
-    this.stub(this.addon, 'showImage', function () {
-        that.addon.showImage.restore();
-    });
-
-    this.addon.uploadDone(null, {
-        result: {
-            files: [
-                { url: 'test.jpg' }
-            ]
-        }
+    this.addon.showImage(null, {
+        submit: function () {}
     });
 });
 
