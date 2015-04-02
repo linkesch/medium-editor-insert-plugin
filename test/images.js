@@ -230,7 +230,6 @@ test('removing image', function () {
     this.$el.trigger($event);
 
     equal(this.$el.find('img').length, 2, 'image deleted');
-    equal(this.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), false, '.medium-insert-images-grid class was removed');
 
     this.$el.find('img').addClass('medium-insert-image-active');
     this.$el.trigger($event);

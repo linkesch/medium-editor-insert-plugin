@@ -441,14 +441,6 @@
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
 
-                if (this.options.autoGrid && $parent.find('figure').length < this.options.autoGrid) {
-                    $parent.removeClass('medium-insert-images-grid');
-
-                    if (this.options.styles.grid.removed) {
-                        this.options.styles.grid.removed($parent);
-                    }
-                }
-
                 $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
                 if ($parent.find('figure').length === 0) {
