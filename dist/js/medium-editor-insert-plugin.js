@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.4.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.5.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -24,8 +24,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-buttons.hbs"] = Handleb
   return buffer + "    </ul>\n</div>\n";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/core-caption.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<figcaption contenteditable=\"true\">\n	<div class=\"medium-insert-caption-placeholder\" contenteditable=\"false\">"
@@ -33,13 +31,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-caption.hbs"] = Handleb
     + "</div>\n</figcaption>";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<p><br></p>\n";
   },"useData":true});
-
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
@@ -47,8 +41,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = H
     + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
     + "</div>";
 },"useData":true});
-
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, buffer = "    <div class=\"medium-insert-embeds-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n        <ul class=\"medium-editor-toolbar-actions clearfix\">\n";
@@ -82,8 +74,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handl
   return buffer;
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, buffer = "<div class=\"medium-insert-embeds\" contenteditable=\"false\">\n	<figure>\n		<div class=\"medium-insert-embed\">\n			";
   stack1 = ((helper = (helper = helpers.html || (depth0 != null ? depth0.html : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"html","hash":{},"data":data}) : helper));
@@ -91,13 +81,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handl
   return buffer + "\n		</div>\n	</figure>\n	<div class=\"medium-insert-embeds-overlay\"></div>\n</div>";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<input type=\"file\" multiple>";
   },"useData":true});
-
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   return "        <div class=\"medium-insert-images-progress\"></div>\n";
@@ -110,13 +96,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handleb
   return buffer + "</figure>";
 },"useData":true});
 
-
-
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<progress min=\"0\" max=\"100\" value=\"0\">0</progress>";
   },"useData":true});
-
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, buffer = "";
@@ -215,14 +197,20 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         // Extend editor's functions
         if (this.options && this.options.editor) {
-            this.options.editor._serialize = this.options.editor.serialize;
+            // Deprecated in editor
             this.options.editor._deactivate = this.options.editor.deactivate;
             this.options.editor._activate = this.options.editor.activate;
-            this.options.editor._hideInsertButtons = this.hideButtons;
-            this.options.editor.serialize = this.editorSerialize;
             this.options.editor.deactivate = this.editorDeactivate;
             this.options.editor.activate = this.editorActivate;
-            this.options.editor.activatePlaceholder = this.editorActivatePlaceholder;
+
+            this.options.editor._serialize = this.options.editor.serialize;
+            this.options.editor._destroy = this.options.editor.destroy;
+            this.options.editor._setup = this.options.editor.setup;
+            this.options.editor._hideInsertButtons = this.hideButtons;
+            this.options.editor.serialize = this.editorSerialize;
+            this.options.editor.destroy = this.editorDestroy;
+            this.options.editor.setup = this.editorSetup;
+            this.options.editor.placeholders.updatePlaceholder = this.editorUpdatePlaceholder;
         }
     }
 
@@ -287,20 +275,22 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     /**
      * Extend editor's deactivate function to deactivate this plugin too
      *
+     * @deprecated
      * @return {void}
      */
 
     Core.prototype.editorDeactivate = function () {
-        this._deactivate();
-
         $.each(this.elements, function (key, el) {
             $(el).data('plugin_' + pluginName).disable();
         });
+
+        this._deactivate();
     };
 
     /**
      * Extend editor's activate function to activate this plugin too
      *
+     * @deprecated
      * @return {void}
      */
 
@@ -313,12 +303,40 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     };
 
     /**
-     * Extend editor's activatePlaceholder function to activate placeholder dispite of the plugin buttons
+     * Extend editor's destroy function to deactivate this plugin too
      *
      * @return {void}
      */
 
-    Core.prototype.editorActivatePlaceholder = function (el) {
+    Core.prototype.editorDestroy = function () {
+        $.each(this.elements, function (key, el) {
+            $(el).data('plugin_' + pluginName).disable();
+        });
+
+        this._destroy();
+    };
+
+    /**
+     * Extend editor's setup function to activate this plugin too
+     *
+     * @return {void}
+     */
+
+    Core.prototype.editorSetup = function () {
+        this._setup();
+
+        $.each(this.elements, function (key, el) {
+            $(el).data('plugin_' + pluginName).enable();
+        });
+    };
+
+    /**
+     * Extend editor's placeholder.updatePlaceholder function to show placeholder dispite of the plugin buttons
+     *
+     * @return {void}
+     */
+
+    Core.prototype.editorUpdatePlaceholder = function (el) {
         var $clone = $(el).clone(),
             cloneHtml;
 
@@ -329,8 +347,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             !(el.querySelector('blockquote')) &&
             cloneHtml === '') {
 
-            el.classList.add('medium-editor-placeholder');
-            this._hideInsertButtons($(el));
+            this.showPlaceholder(el);
+            this.base._hideInsertButtons($(el));
+        } else {
+            this.hidePlaceholder(el);
         }
     };
 
@@ -514,6 +534,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             selection = window.getSelection(),
             that = this,
             range, $current, $p, activeAddon;
+
+        if (this.options.enabled === false) {
+            return;
+        }
 
         if (!selection || selection.rangeCount === 0) {
             $current = $el;
@@ -778,13 +802,19 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>'
+                    label: '<span class="fa fa-align-justify"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>'
+                    label: '<span class="fa fa-align-left"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>'
+                    label: '<span class="fa fa-align-right"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 }
             },
             captionPlaceholder: 'Type caption (optional)',
@@ -1367,18 +1397,27 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             preview: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+            formData: {},
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>'
+                    label: '<span class="fa fa-align-justify"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>'
+                    label: '<span class="fa fa-align-left"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>'
+                    label: '<span class="fa fa-align-right"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>'
+                    label: '<span class="fa fa-th"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 }
             },
             actions: {
@@ -1407,7 +1446,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                         that.$el.trigger('input');
                     }
                 });
-            }
+            },
+            // uploadCompleted: function ($el, data) {}
         };
 
     /**
@@ -1508,6 +1548,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             url: this.options.uploadScript,
             dataType: 'json',
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            formData: this.options.formData,
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },
@@ -1642,12 +1683,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();
-        this.$el.trigger('input');
 
         this.sorting();
+
+        if (this.options.uploadCompleted) {
+            this.options.uploadCompleted($el, data);
+        }
     };
 
     /**
@@ -1700,6 +1744,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 data.submit();
             }
         }
+
+        this.$el.trigger('input');
+
+        return data.context;
     };
 
     Images.prototype.getDOMImage = function () {
@@ -1777,14 +1825,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
-
-                if (this.options.autoGrid && $parent.find('figure').length < this.options.autoGrid) {
-                    $parent.removeClass('medium-insert-images-grid');
-
-                    if (this.options.styles.grid.removed) {
-                        this.options.styles.grid.removed($parent);
-                    }
-                }
 
                 $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
