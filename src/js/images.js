@@ -12,6 +12,7 @@
             preview: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+            formData: {},
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -162,6 +163,7 @@
             url: this.options.uploadScript,
             dataType: 'json',
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            formData: this.options.formData,
             add: function (e, data) {
                 $.proxy(that, 'uploadAdd', e, data)();
             },
