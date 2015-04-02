@@ -12,7 +12,7 @@
             preview: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: {},
+            formData: {}, // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#formdata
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
