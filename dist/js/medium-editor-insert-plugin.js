@@ -628,28 +628,21 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Core.prototype.positionButtons = function (activeAddon) {
         var $buttons = this.$el.find('.medium-insert-buttons'),
             $p = this.$el.find('.medium-insert-active'),
-            $last = $p.find('figure:last').length ? $p.find('figure:last') : $p,
             $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
-            left, top, $caption;
+            left, top;
 
         if ($p.length) {
 
             left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
             left = left < 0 ? $p.position().left : left;
+            top = $p.position().top + parseInt($p.css('margin-top'), 10);
 
             if (activeAddon) {
                 if ($p.position().left !== $first.position().left) {
                     left = $first.position().left;
                 }
 
-                top = $last.position().top + $last.height() + parseInt($p.css('margin-bottom'), 10) - 5; // 5px - adjustment
-
-                $caption = $last.find('figcaption');
-                if ($caption.length) {
-                    top -= $caption.height() + parseInt($caption.css('margin-top'), 10);
-                }
-            } else {
-                top = $p.position().top + parseInt($p.css('margin-top'), 10);
+                top += $p.height() + 15; // 15px offset
             }
 
             $buttons.css({
