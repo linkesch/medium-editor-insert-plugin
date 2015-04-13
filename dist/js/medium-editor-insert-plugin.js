@@ -1108,10 +1108,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         html = url.replace(/\n?/g, '')
             .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
-            .replace(/^http:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
+            .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
             //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
             //.replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
-            .replace(/^http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
+            .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
 
         this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
@@ -1185,15 +1185,17 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Embeds.prototype.selectEmbed = function (e) {
-        var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
-            that = this;
-
-        $embed.addClass('medium-insert-embeds-selected');
-
-        setTimeout(function () {
-            that.addToolbar();
-            that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
-        }, 50);
+        if(this.getCore().options.enabled) {
+            var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
+                that = this;
+    
+            $embed.addClass('medium-insert-embeds-selected');
+    
+            setTimeout(function () {
+                that.addToolbar();
+                that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+            }, 50);
+        }
     };
 
     /**
@@ -1397,7 +1399,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             preview: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: {},
+            formData: {}, // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#formdata
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -1762,19 +1764,21 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.selectImage = function (e) {
-        var $image = $(e.target),
-            that = this;
-
-        // Hide keyboard on mobile devices
-        this.$el.blur();
-
-        $image.addClass('medium-insert-image-active');
-        $image.closest('.medium-insert-images').addClass('medium-insert-active');
-
-        setTimeout(function () {
-            that.addToolbar();
-            that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
-        }, 50);
+        if(this.getCore().options.enabled) {
+            var $image = $(e.target),
+                that = this;
+    
+            // Hide keyboard on mobile devices
+            this.$el.blur();
+    
+            $image.addClass('medium-insert-image-active');
+            $image.closest('.medium-insert-images').addClass('medium-insert-active');
+    
+            setTimeout(function () {
+                that.addToolbar();
+                that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+            }, 50);
+        }
     };
 
     /**

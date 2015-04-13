@@ -28,8 +28,8 @@
     "jquery-sortable": "~0.9.12"
   },
   "devDependencies": {
-    "qunit": "~1.17.1",
-    "sinon": "~1.12.1",
+    "qunit": "~1.18.0",
+    "sinon": "~1.14.1",
     "sinon-qunit": "~2.0.0",
     "jquery-cycle2": "~2.1.6",
     "blanket": "~1.1.5"
