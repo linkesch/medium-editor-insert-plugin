@@ -406,6 +406,11 @@
             $current = $(range.commonAncestorContainer);
         }
 
+        // When user clicks on  editor's placeholder in FF, $current el is editor itself, not the first paragraph as it should
+        if ($current.hasClass('medium-editor-insert-plugin')) {
+            $current = $current.find('p:first');
+        }
+
         $p = $current.is('p') ? $current : $current.closest('p');
 
         this.clean();
