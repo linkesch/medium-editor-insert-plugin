@@ -418,7 +418,7 @@
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
                 }
-                
+
                 if ($current.closest('.medium-insert-'+ addon).length) {
                     $p = $current.closest('.medium-insert-'+ addon);
                     activeAddon = addon;
@@ -455,7 +455,7 @@
 
         if (activeAddon) {
             $buttons.find('li').hide();
-            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();   
+            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();
         }
     };
 

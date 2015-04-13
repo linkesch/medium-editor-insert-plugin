@@ -40,9 +40,9 @@
                     label: '<span class="fa fa-times"></span>',
                     clicked: function () {
                         var $event = $.Event('keydown');
-                        
+
                         $event.which = 8;
-                        $(document).trigger($event);   
+                        $(document).trigger($event);
                     }
                 }
             },
@@ -337,13 +337,13 @@
             })).appendTo($place);
 
             $place.find('br').remove();
-   
+
             if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
                 $.each(this.options.styles, function (style, options) {
                     var className = 'medium-insert-images-'+ style;
-        
+
                     $place.removeClass(className);
-        
+
                     if (options.removed) {
                         options.removed($place);
                     }
@@ -381,13 +381,13 @@
         if(this.getCore().options.enabled) {
             var $image = $(e.target),
                 that = this;
-    
+
             // Hide keyboard on mobile devices
             this.$el.blur();
-    
+
             $image.addClass('medium-insert-image-active');
             $image.closest('.medium-insert-images').addClass('medium-insert-active');
-    
+
             setTimeout(function () {
                 that.addToolbar();
                 that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
@@ -586,7 +586,7 @@
         }
 
         this.getCore().hideButtons();
-        
+
         this.$el.trigger('input');
     };
 

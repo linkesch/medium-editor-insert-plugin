@@ -397,9 +397,9 @@
         if(this.getCore().options.enabled) {
             var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
                 that = this;
-    
+
             $embed.addClass('medium-insert-embeds-selected');
-    
+
             setTimeout(function () {
                 that.addToolbar();
                 that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
