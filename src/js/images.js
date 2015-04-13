@@ -301,7 +301,6 @@
         var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();
-
         this.sorting();
 
         if (this.options.uploadCompleted) {
@@ -318,6 +317,9 @@
 
     Images.prototype.showImage = function (img, data) {
         var $place, domImage;
+
+        // Hide editor's placeholder
+        this.$el.click();
 
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
