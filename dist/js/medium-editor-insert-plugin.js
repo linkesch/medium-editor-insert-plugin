@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.5.0 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.5.1 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -546,6 +546,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $current = $(range.commonAncestorContainer);
         }
 
+        // When user clicks on  editor's placeholder in FF, $current el is editor itself, not the first paragraph as it should
+        if ($current.hasClass('medium-editor-insert-plugin')) {
+            $current = $current.find('p:first');
+        }
+
         $p = $current.is('p') ? $current : $current.closest('p');
 
         this.clean();
@@ -558,7 +563,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
                 }
-                
+
                 if ($current.closest('.medium-insert-'+ addon).length) {
                     $p = $current.closest('.medium-insert-'+ addon);
                     activeAddon = addon;
@@ -595,7 +600,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if (activeAddon) {
             $buttons.find('li').hide();
-            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();   
+            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();
         }
     };
 
@@ -1188,9 +1193,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if(this.getCore().options.enabled) {
             var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
                 that = this;
-    
+
             $embed.addClass('medium-insert-embeds-selected');
-    
+
             setTimeout(function () {
                 that.addToolbar();
                 that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
@@ -1427,9 +1432,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     label: '<span class="fa fa-times"></span>',
                     clicked: function () {
                         var $event = $.Event('keydown');
-                        
+
                         $event.which = 8;
-                        $(document).trigger($event);   
+                        $(document).trigger($event);
                     }
                 }
             },
@@ -1688,7 +1693,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();
-
         this.sorting();
 
         if (this.options.uploadCompleted) {
@@ -1704,7 +1708,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.showImage = function (img, data) {
-        var $place, domImage;
+        var $place = this.$el.find('.medium-insert-active'),
+            domImage;
+
+        // Hide editor's placeholder
+        $place.click();
 
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
@@ -1715,8 +1723,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             };
             domImage.src = img;
         } else {
-            $place = this.$el.find('.medium-insert-active');
-
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
                 img: img,
                 progress: this.options.preview
@@ -1727,9 +1733,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
                 $.each(this.options.styles, function (style, options) {
                     var className = 'medium-insert-images-'+ style;
-        
+
                     $place.removeClass(className);
-        
+
                     if (options.removed) {
                         options.removed($place);
                     }
@@ -1767,13 +1773,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if(this.getCore().options.enabled) {
             var $image = $(e.target),
                 that = this;
-    
+
             // Hide keyboard on mobile devices
             this.$el.blur();
-    
+
             $image.addClass('medium-insert-image-active');
             $image.closest('.medium-insert-images').addClass('medium-insert-active');
-    
+
             setTimeout(function () {
                 that.addToolbar();
                 that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
@@ -1833,8 +1839,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
                 if ($parent.find('figure').length === 0) {
-                    $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
-                    $parent.before($empty);
+                    $empty = $parent.next();
+                    if ($empty.is('p') === false || $empty.text() !== '') {
+                        $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                        $parent.before($empty);
+                    }
                     $parent.remove();
 
                     // Hide addons
@@ -1969,7 +1978,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         }
 
         this.getCore().hideButtons();
-        
+
         this.$el.trigger('input');
     };
 

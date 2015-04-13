@@ -1,4 +1,13 @@
 
+1.5.1 / 2015-04-13
+==================
+
+  * Don't add empty paragraph on image deletion, when empty paragraph already exists
+  * Fix clicking on placeholder in FF
+  * Hide editor's placeholder on image upload
+  * Use https for instagram and vimeo
+  * Ensure core is ```enabled``` when ```selectEmbed``` or ```selectImage``` are called
+
 1.5.0 / 2015-04-02
 ==================
 
