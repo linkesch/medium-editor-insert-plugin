@@ -316,10 +316,11 @@
      */
 
     Images.prototype.showImage = function (img, data) {
-        var $place, domImage;
+        var $place = this.$el.find('.medium-insert-active'),
+            domImage;
 
         // Hide editor's placeholder
-        this.$el.click();
+        $place.click();
 
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
@@ -330,15 +331,13 @@
             };
             domImage.src = img;
         } else {
-            $place = this.$el.find('.medium-insert-active');
-
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
                 img: img,
                 progress: this.options.preview
             })).appendTo($place);
 
             $place.find('br').remove();
-
+   
             if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
                 $.each(this.options.styles, function (style, options) {
                     var className = 'medium-insert-images-'+ style;
@@ -448,8 +447,11 @@
                 $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
                 if ($parent.find('figure').length === 0) {
-                    $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
-                    $parent.before($empty);
+                    $empty = $parent.next();
+                    if ($empty.is('p') === false || $empty.text() !== '') {
+                        $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                        $parent.before($empty);
+                    }
                     $parent.remove();
 
                     // Hide addons
