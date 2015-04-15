@@ -92,6 +92,9 @@
             this.options.preview = false;
         }
 
+        this.core.getEditor()._serializeCore = this.core.getEditor().serialize;
+        this.core.getEditor().serialize = this.editorSerialize;
+
         this.init();
     }
 
@@ -102,6 +105,9 @@
      */
 
     Images.prototype.init = function () {
+        this.$el.find('figcaption').attr('contenteditable', true);
+        this.$el.find('figure').attr('contenteditable', false);
+
         this.events();
         this.backwardsCompatibility();
         this.sorting();
@@ -147,6 +153,26 @@
      */
     Images.prototype.getCore = function () {
         return this.core;
+    };
+
+    /**
+     * Extend editor's serialize function
+     *
+     * @return {object} Serialized data
+     */
+
+    Images.prototype.editorSerialize = function () {
+        var data = this._serializeCore();
+
+        $.each(data, function (key) {
+            var $data = $('<div />').html(data[key].value);
+
+            $data.find('figcaption, figure').removeAttr('contenteditable');
+
+            data[key].value = $data.html();
+        });
+
+        return data;
     };
 
     /**

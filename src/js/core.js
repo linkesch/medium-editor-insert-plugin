@@ -113,6 +113,16 @@
     };
 
     /**
+     * Return editor instance
+     *
+     * @return {object} MediumEditor
+     */
+
+    Core.prototype.getEditor = function () {
+        return this.options.editor;
+    };
+
+    /**
      * Extend editor's serialize function
      *
      * @return {object} Serialized data
