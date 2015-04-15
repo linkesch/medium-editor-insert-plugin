@@ -105,8 +105,10 @@
      */
 
     Images.prototype.init = function () {
-        this.$el.find('figcaption').attr('contenteditable', true);
-        this.$el.find('figure').attr('contenteditable', false);
+        var $images = this.$el.find('.medium-insert-images');
+
+        $images.find('figcaption').attr('contenteditable', true);
+        $images.find('figure').attr('contenteditable', false);
 
         this.events();
         this.backwardsCompatibility();
@@ -167,7 +169,7 @@
         $.each(data, function (key) {
             var $data = $('<div />').html(data[key].value);
 
-            $data.find('figcaption, figure').removeAttr('contenteditable');
+            $data.find('.medium-insert-images').find('figcaption, figure').removeAttr('contenteditable');
 
             data[key].value = $data.html();
         });
