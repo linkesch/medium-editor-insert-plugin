@@ -62,8 +62,11 @@
         this._defaults = defaults;
         this._name = pluginName;
 
-        this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
-        this.core.getEditor().serialize = this.editorSerialize;
+        // Extend editor's functions
+        if (this.core.getEditor()) {
+            this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
+            this.core.getEditor().serialize = this.editorSerialize;
+        }
 
         this.init();
     }

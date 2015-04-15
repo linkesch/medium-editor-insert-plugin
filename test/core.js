@@ -181,3 +181,13 @@ asyncTest('calling addon\'s add function if addon\'s button is clicked', functio
     this.$el.find('.medium-insert-buttons-show').click();
     this.$el.find('.medium-insert-action').click();
 });
+
+test('editor\'s serialize removes also plugin buttons', function () {
+    var editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor
+    });
+
+    equal(editor.serialize()['element-0'].value, '<p><br></p>', 'plugin buttons are removed');
+});

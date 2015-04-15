@@ -332,3 +332,38 @@ test('disabled embed toolbar2', function () {
     equal($('.medium-insert-embeds-toolbar').length, 1, 'first toolbar added');
     equal($('.medium-insert-embeds-toolbar2').length, 0, '2nd toolbar not added');
 });
+
+test('contentediable attr and overlay are added on initialization', function () {
+    $('#qunit-fixture').html('<div class="editable"><div class="medium-insert-embeds"><figure class="medium-insert-embed"></figure></div></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {}
+        }
+    });
+
+    equal(this.$el.find('.medium-insert-embeds').attr('contenteditable'), 'false', 'contenteditable attr was added to embeds');
+    ok(this.$el.find('.medium-insert-embeds .medium-insert-embeds-overlay').length, 1, 'overlay added');
+});
+
+test('editor\'s serialize removes also contenteditable attr and ovelay', function () {
+    var html = '<div class="medium-insert-embeds"><figure class="medium-insert-embed"></figure></div>',
+        editor, $serialized;
+
+    $('#qunit-fixture').html('<div class="editable">'+ html +'</div>');
+    this.$el = $('.editable');
+
+    editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor,
+        addons: {
+            embeds: {}
+        }
+    });
+
+    $serialized = $(editor.serialize()['element-0'].value);
+    equal($serialized.find('.medium-insert-embeds').attr('contenteditable'), undefined, 'contenteditable attr was removed');
+    equal($serialized.find('.medium-insert-embeds-overlay').length, 0, 'overlay was removed');
+});

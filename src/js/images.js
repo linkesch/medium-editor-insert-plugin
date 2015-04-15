@@ -92,8 +92,11 @@
             this.options.preview = false;
         }
 
-        this.core.getEditor()._serializePreImages = this.core.getEditor().serialize;
-        this.core.getEditor().serialize = this.editorSerialize;
+        // Extend editor's functions
+        if (this.core.getEditor()) {
+            this.core.getEditor()._serializePreImages = this.core.getEditor().serialize;
+            this.core.getEditor().serialize = this.editorSerialize;
+        }
 
         this.init();
     }

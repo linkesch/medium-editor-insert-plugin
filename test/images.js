@@ -399,3 +399,36 @@ asyncTest('uploadDone calls uploadCompleted callback', function () {
         }
     });
 });
+
+test('contentediable attr are added on initialization', function () {
+    $('#qunit-fixture').html('<div class="editable"><div class="medium-insert-images"><figure><img src="image1.jpg" alt=""><figcaption></figcaption></figure></div></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert({
+        addons: {
+            images: {}
+        }
+    });
+
+    equal(this.$el.find('.medium-insert-images figure').attr('contenteditable'), 'false', 'contenteditable attr was added to figure');
+    equal(this.$el.find('.medium-insert-images figcaption').attr('contenteditable'), 'true', 'contenteditable attr was added to figcaption');
+});
+
+test('editor\'s serialize removes also contenteditable attr', function () {
+    var html = '<div class="medium-insert-images"><figure><img src="image1.jpg" alt=""></figure></div><p><br></p>',
+        editor;
+
+    $('#qunit-fixture').html('<div class="editable">'+ html +'</div>');
+    this.$el = $('.editable');
+
+    editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor,
+        addons: {
+            images: {}
+        }
+    });
+
+    equal(editor.serialize()['element-0'].value, html, 'contenteditable attr were removed');
+});
