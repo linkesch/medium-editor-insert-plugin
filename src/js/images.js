@@ -92,7 +92,7 @@
             this.options.preview = false;
         }
 
-        this.core.getEditor()._serializeCore = this.core.getEditor().serialize;
+        this.core.getEditor()._serializePreImages = this.core.getEditor().serialize;
         this.core.getEditor().serialize = this.editorSerialize;
 
         this.init();
@@ -162,7 +162,7 @@
      */
 
     Images.prototype.editorSerialize = function () {
-        var data = this._serializeCore();
+        var data = this._serializePreImages();
 
         $.each(data, function (key) {
             var $data = $('<div />').html(data[key].value);

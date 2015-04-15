@@ -62,6 +62,9 @@
         this._defaults = defaults;
         this._name = pluginName;
 
+        this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
+        this.core.getEditor().serialize = this.editorSerialize;
+
         this.init();
     }
 
@@ -72,6 +75,15 @@
      */
 
     Embeds.prototype.init = function () {
+        var $embeds = this.$el.find('.medium-insert-embeds');
+
+        $embeds.attr('contenteditable', false);
+        $embeds.each(function () {
+            if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
+                $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
+            }
+        });
+
         this.events();
         this.backwardsCompatibility();
     };
@@ -126,6 +138,27 @@
      */
     Embeds.prototype.getCore = function () {
         return this.core;
+    };
+
+    /**
+     * Extend editor's serialize function
+     *
+     * @return {object} Serialized data
+     */
+
+    Embeds.prototype.editorSerialize = function () {
+        var data = this._serializePreEmbeds();
+
+        $.each(data, function (key) {
+            var $data = $('<div />').html(data[key].value);
+
+            $data.find('.medium-insert-embeds').removeAttr('contenteditable');
+            $data.find('.medium-insert-embeds-overlay').remove();
+
+            data[key].value = $data.html();
+        });
+
+        return data;
     };
 
     /**
