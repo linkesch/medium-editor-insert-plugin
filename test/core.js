@@ -191,3 +191,54 @@ test('editor\'s serialize removes also plugin buttons', function () {
 
     equal(editor.serialize()['element-0'].value, '<p><br></p>', 'plugin buttons are removed');
 });
+
+test('editor\'s deactivate function disables plugin', function () {
+    var editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor
+    });
+
+    editor.deactivate();
+
+    equal(this.$el.data('plugin_mediumInsert').options.enabled, false, 'plugin was disabled');
+});
+
+test('editor\'s activate function enables plugin', function () {
+    var editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor
+    });
+
+    editor.activate();
+
+    ok(this.$el.data('plugin_mediumInsert').options.enabled, 'plugin was enabled');
+});
+
+test('editor\'s update placeholder function displays placeholder dispite of plugin buttons', function () {
+    var editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor
+    });
+
+    editor.placeholders.updatePlaceholder(this.$el.get(0));
+
+    ok(this.$el.hasClass('medium-editor-placeholder'), 'placeholder was displayed');
+});
+
+test('editor\'s update placeholder function hides placeholder when there is a text', function () {
+    var editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor
+    });
+
+    this.$el.addClass('medium-editor-placeholder');
+    this.$el.prepend('<p>asd</p>');
+
+    editor.placeholders.updatePlaceholder(this.$el.get(0));
+
+    equal(this.$el.hasClass('medium-editor-placeholder'), false, 'placeholder was removed');
+});
