@@ -19,7 +19,7 @@ module.exports = function(grunt) {
                 dest: 'dist/js/<%= pkg.name %>.min.js'
             }
         },
-        
+
         concat: {
             dist: {
                 options: {

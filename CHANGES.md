@@ -1,4 +1,11 @@
 
+1.5.2 / 2015-04-15
+==================
+
+  * Remove contenteditable attr and overlay div from embeds on ```serialize```
+  * Remove contenteditable attr from figure and figcaption in images on ```serialize```
+  * Simplify button positioning
+
 1.5.1 / 2015-04-13
 ==================
 

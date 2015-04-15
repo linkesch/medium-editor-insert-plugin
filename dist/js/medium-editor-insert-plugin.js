@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.5.1 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.5.2 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -250,6 +250,16 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
 
         $(window).on('resize', $.proxy(this, 'positionButtons', null));
+    };
+
+    /**
+     * Return editor instance
+     *
+     * @return {object} MediumEditor
+     */
+
+    Core.prototype.getEditor = function () {
+        return this.options.editor;
     };
 
     /**
@@ -851,6 +861,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this._defaults = defaults;
         this._name = pluginName;
 
+        // Extend editor's functions
+        if (this.core.getEditor()) {
+            this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
+            this.core.getEditor().serialize = this.editorSerialize;
+        }
+
         this.init();
     }
 
@@ -861,6 +877,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Embeds.prototype.init = function () {
+        var $embeds = this.$el.find('.medium-insert-embeds');
+
+        $embeds.attr('contenteditable', false);
+        $embeds.each(function () {
+            if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
+                $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
+            }
+        });
+
         this.events();
         this.backwardsCompatibility();
     };
@@ -915,6 +940,27 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
     Embeds.prototype.getCore = function () {
         return this.core;
+    };
+
+    /**
+     * Extend editor's serialize function
+     *
+     * @return {object} Serialized data
+     */
+
+    Embeds.prototype.editorSerialize = function () {
+        var data = this._serializePreEmbeds();
+
+        $.each(data, function (key) {
+            var $data = $('<div />').html(data[key].value);
+
+            $data.find('.medium-insert-embeds').removeAttr('contenteditable');
+            $data.find('.medium-insert-embeds-overlay').remove();
+
+            data[key].value = $data.html();
+        });
+
+        return data;
     };
 
     /**
@@ -1477,6 +1523,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             this.options.preview = false;
         }
 
+        // Extend editor's functions
+        if (this.core.getEditor()) {
+            this.core.getEditor()._serializePreImages = this.core.getEditor().serialize;
+            this.core.getEditor().serialize = this.editorSerialize;
+        }
+
         this.init();
     }
 
@@ -1487,6 +1539,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.init = function () {
+        var $images = this.$el.find('.medium-insert-images');
+
+        $images.find('figcaption').attr('contenteditable', true);
+        $images.find('figure').attr('contenteditable', false);
+
         this.events();
         this.backwardsCompatibility();
         this.sorting();
@@ -1532,6 +1589,26 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
     Images.prototype.getCore = function () {
         return this.core;
+    };
+
+    /**
+     * Extend editor's serialize function
+     *
+     * @return {object} Serialized data
+     */
+
+    Images.prototype.editorSerialize = function () {
+        var data = this._serializePreImages();
+
+        $.each(data, function (key) {
+            var $data = $('<div />').html(data[key].value);
+
+            $data.find('.medium-insert-images').find('figcaption, figure').removeAttr('contenteditable');
+
+            data[key].value = $data.html();
+        });
+
+        return data;
     };
 
     /**
