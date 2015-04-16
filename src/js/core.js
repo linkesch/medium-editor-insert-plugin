@@ -105,7 +105,6 @@
             })
             .on('keyup click', $.proxy(this, 'toggleButtons'))
             .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
-            .on('keydown', $.proxy(this, 'fixSelectAll'))
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
 
@@ -269,30 +268,6 @@
 
         if ($el.is('img') === false || $el.hasClass('medium-insert-buttons-show')) {
             e.preventDefault();
-        }
-    };
-
-    /**
-     * Fix #39
-     * For some reason Chrome doesn't "select-all", when the last placeholder is visible.
-     * So it's needed to hide it when the user "selects all", and show it again when they presses any other key.
-     *
-     * @return {boolean} document.execCommand()
-     */
-
-    Core.prototype.fixSelectAll = function (e) {
-        this.$el.children().last().removeClass('hide');
-
-         if ((e.ctrlKey || e.metaKey) && e.which === 65) {
-            e.preventDefault();
-
-            if(this.$el.find('p').text().trim().length === 0) {
-              return false;
-            }
-
-            this.$el.children().last().addClass('hide');
-
-            return document.execCommand('selectAll', false, null);
         }
     };
 
