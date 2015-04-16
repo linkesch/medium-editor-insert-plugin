@@ -105,10 +105,10 @@
             .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
         this.$el
-            .on('selectstart mousedown', '.medium-insert-embeds-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
-            .on('keyup click', $.proxy(this, 'togglePlaceholder'))
+            .on('keyup click paste', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'))
-            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'));
+            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
+            .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
     };
 
     /**
@@ -139,6 +139,7 @@
      *
      * @return {object} Core object
      */
+
     Embeds.prototype.getCore = function () {
         return this.core;
     };
@@ -194,22 +195,6 @@
     };
 
     /**
-     * Disable placeholder selection, instead move cursor to input
-     *
-     * @param {Event} e
-     * @return {void}
-     */
-
-    Embeds.prototype.disablePlaceholderSelection = function (e) {
-        var $place = $(e.target).closest('.medium-insert-embeds-input');
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        this.getCore().moveCaret($place);
-    };
-
-    /**
      * Toggles placeholder
      *
      * @param {Event} e
@@ -219,7 +204,7 @@
     Embeds.prototype.togglePlaceholder = function (e) {
         var $place = $(e.target),
             selection = window.getSelection(),
-            range, $current, $placeholder, re, text;
+            range, $current, text;
 
         if (!selection || selection.rangeCount === 0) {
             return;
@@ -236,21 +221,32 @@
 
         if ($place.hasClass('medium-insert-embeds-active')) {
 
-            $placeholder = $place.find('.medium-insert-embeds-placeholder');
-            re = new RegExp(this.options.placeholder, 'g');
-            text = $place.text().replace(re, '').trim();
+            text = $place.text().trim();
 
-            if (text === '' && $placeholder.length === 0) {
-                $place.append(this.templates['src/js/templates/embeds-placeholder.hbs']({
-                    placeholder: this.options.placeholder
-                }));
-            } else if (text !== '' && $placeholder.length) {
-                $placeholder.remove();
+            if (text === '' && $place.hasClass('medium-insert-embeds-placeholder') === false) {
+                $place
+                    .addClass('medium-insert-embeds-placeholder')
+                    .attr('data-placeholder', this.options.placeholder);
+            } else if (text !== '' && $place.hasClass('medium-insert-embeds-placeholder')) {
+                $place
+                    .removeClass('medium-insert-embeds-placeholder')
+                    .removeAttr('data-placeholder');
             }
 
         } else {
             this.$el.find('.medium-insert-embeds-active').remove();
         }
+    };
+
+    /**
+     * Right click on placeholder in Chrome selects whole line. Fix this by placing caret at the end of line
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Embeds.prototype.fixRightClickOnPlaceholder = function (e) {
+        this.getCore().moveCaret($(e.target));
     };
 
     /**
@@ -262,14 +258,13 @@
 
     Embeds.prototype.processLink = function (e) {
         var $place = this.$el.find('.medium-insert-embeds-active'),
-            re, url;
+            url;
 
         if (!$place.length) {
             return;
         }
 
-        re = new RegExp(this.options.placeholder, 'g');
-        url = $place.text().replace(re, '').trim();
+        url = $place.text().trim();
 
         // Return empty placeholder on backspace, delete or enter
         if (url === '' && [8, 46, 13].indexOf(e.which) !== -1) {
