@@ -593,7 +593,7 @@
         }
 
         $captions.each(function () {
-            if ($(this).find('.medium-insert-caption-placeholder').length || $(this).text().trim() === '') {
+            if ($(this).hasClass('medium-insert-caption-placeholder') || $(this).text().trim() === '') {
                 $(this).remove();
             }
         });
@@ -610,8 +610,9 @@
         var $caption = $el.find('figcaption');
 
         if ($caption.length) {
-            $caption.find('.medium-insert-caption-placeholder').remove();
-            this.moveCaret($caption);
+            $caption
+                .removeClass('medium-insert-caption-placeholder')
+                .removeAttr('data-placeholder');
         }
     };
 

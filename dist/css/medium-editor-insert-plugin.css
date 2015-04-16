@@ -144,11 +144,14 @@
             font-size: 15px; }
 
 .medium-insert-caption-placeholder {
-  position: absolute;
-  top: 0;
-  z-index: 0;
-  width: 100%;
-  text-align: center; }
+  position: relative; }
+  .medium-insert-caption-placeholder:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    content: attr(data-placeholder); }
 
 .dragging {
   cursor: move; }

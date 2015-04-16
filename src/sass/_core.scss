@@ -82,9 +82,13 @@
 }
 
 .medium-insert-caption-placeholder {
-    position: absolute;
-    top: 0;
-    z-index: 0;
-    width: 100%;
-    text-align: center;
+    position: relative;
+    &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        content: attr(data-placeholder);
+    }
 }

@@ -466,7 +466,7 @@
 
         if ($(e.target).is('.medium-insert-caption-placeholder')) {
             this.getCore().removeCaptionPlaceholder($el.find('figure'));
-        } else if ($el.is('figcaption') === false) {
+        } else if ($(e.target).is('figcaption') === false) {
             this.getCore().removeCaptions();
         }
     };

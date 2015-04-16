@@ -66,14 +66,14 @@ test('selecting embed', function () {
 
 test('clicking on caption removes placeholder', function () {
     this.$el.prepend('<div class="medium-insert-embeds">'+
-        '<figure><figcaption><div class="medium-insert-caption-placeholder"></div></figcaption></figure>'+
+        '<figure><figcaption class="medium-insert-caption-placeholder"></figcaption></figure>'+
         '<div class="medium-insert-embeds-overlay"></div>'+
     '</div>');
 
     this.$el.find('.medium-insert-caption-placeholder').click();
     this.clock.tick(50);
 
-    equal(this.$el.find('figcaption .medium-insert-caption-placeholder').length, 0, 'caption placeholder removed');
+    equal(this.$el.find('figcaption').hasClass('medium-insert-caption-placeholder'), false, 'caption placeholder removed');
 });
 
 test('unselecting embed', function () {
