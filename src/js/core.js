@@ -106,7 +106,10 @@
             .on('keyup click', $.proxy(this, 'toggleButtons'))
             .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
-            .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
+            .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'))
+            .on('paste', '.medium-insert-caption-placeholder', function (e) {
+                $.proxy(this, 'removeCaptionPlaceholder')($(e.target));
+            }.bind(this));
 
         $(window).on('resize', $.proxy(this, 'positionButtons', null));
     };
@@ -607,7 +610,7 @@
      */
 
     Core.prototype.removeCaptionPlaceholder = function ($el) {
-        var $caption = $el.find('figcaption');
+        var $caption = $el.is('figcaption') ? $el : $el.find('figcaption');
 
         if ($caption.length) {
             $caption
