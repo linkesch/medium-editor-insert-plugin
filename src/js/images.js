@@ -7,12 +7,16 @@
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
-            uploadScript: 'upload.php',
+            uploadScript: null, // DEPRECATED: Use fileUploadOptions instead
             deleteScript: 'delete.php',
             preview: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: {}, // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#formdata
+            formData: {}, // DEPRECATED: Use fileUploadOptions instead
+            fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+                url: 'upload.php',
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+            },
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -188,20 +192,24 @@
 
     Images.prototype.add = function () {
         var that = this,
-            $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
+            $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
+            fileUploadOptions = {
+                dataType: 'json',
+                add: function (e, data) {
+                    $.proxy(that, 'uploadAdd', e, data)();
+                },
+                done: function (e, data) {
+                    $.proxy(that, 'uploadDone', e, data)();
+                }
+            };
 
-        var fileUploadOptions = {
-            url: this.options.uploadScript,
-            dataType: 'json',
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            formData: this.options.formData,
-            add: function (e, data) {
-                $.proxy(that, 'uploadAdd', e, data)();
-            },
-            done: function (e, data) {
-                $.proxy(that, 'uploadDone', e, data)();
-            }
-        };
+        // Backwards compatibility
+        if (this.options.uploadScript) {
+            fileUploadOptions.url = this.options.uploadScript;
+        }
+        if (this.options.formData) {
+            fileUploadOptions.formData = this.options.formData;
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
@@ -217,7 +225,7 @@
             };
         }
 
-        $file.fileupload(fileUploadOptions);
+        $file.fileupload($.extend(true, {}, this.options.fileUploadOptions, fileUploadOptions));
 
         $file.click();
     };

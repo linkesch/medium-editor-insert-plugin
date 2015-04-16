@@ -99,6 +99,8 @@
      */
 
     Core.prototype.events = function () {
+        var that = this;
+
         this.$el
             .on('dragover drop', function (e) {
                 e.preventDefault();
@@ -108,8 +110,8 @@
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'))
             .on('paste', '.medium-insert-caption-placeholder', function (e) {
-                $.proxy(this, 'removeCaptionPlaceholder')($(e.target));
-            }.bind(this));
+                $.proxy(that, 'removeCaptionPlaceholder')($(e.target));
+            });
 
         $(window).on('resize', $.proxy(this, 'positionButtons', null));
     };
