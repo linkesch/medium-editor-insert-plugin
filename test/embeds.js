@@ -64,6 +64,23 @@ test('selecting embed', function () {
     ok(this.$el.find('figcaption').length, 'caption added');
 });
 
+test('disabling captions', function () {
+    $('#qunit-fixture').html('<div class="editable"><div class="medium-insert-embeds"><figure></figure><div class="medium-insert-embeds-overlay"></div></div></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            embeds: {
+                captions: false
+            }
+        }
+    });
+
+    this.$el.find('img').click();
+    this.clock.tick(50);
+
+    equal(this.$el.find('figcaption').length, 0, 'caption was not added');
+});
+
 test('clicking on caption removes placeholder', function () {
     this.$el.prepend('<div class="medium-insert-embeds">'+
         '<figure><figcaption class="medium-insert-caption-placeholder"></figcaption></figure>'+

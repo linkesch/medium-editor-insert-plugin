@@ -185,6 +185,23 @@ test('selecting image', function () {
     ok(this.$el.find('figcaption').length, 'caption added');
 });
 
+test('disabling captions', function () {
+    $('#qunit-fixture').html('<div class="editable"><div class="medium-insert-images"><figure><img src="image1.jpg" alt=""></figure></div></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                captions: false
+            }
+        }
+    });
+
+    this.$el.find('img').click();
+    this.clock.tick(50);
+
+    equal(this.$el.find('figcaption').length, 0, 'caption was not added');
+});
+
 test('clicking on caption removes placeholder', function () {
     this.$el.find('p')
         .addClass('medium-insert-images')

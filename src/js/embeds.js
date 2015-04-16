@@ -9,6 +9,8 @@
             label: '<span class="fa fa-youtube-play"></span>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
+            captions: true,
+            captionPlaceholder: 'Type caption (optional)',
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -26,7 +28,6 @@
                     // removed: function ($el) {}
                 }
             },
-            captionPlaceholder: 'Type caption (optional)',
             actions: {
                 remove: {
                     label: '<span class="fa fa-times"></span>',
@@ -433,7 +434,10 @@
 
             setTimeout(function () {
                 that.addToolbar();
-                that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+
+                if (that.options.captions) {
+                    that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+                }
             }, 50);
         }
     };

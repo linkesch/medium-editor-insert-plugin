@@ -10,6 +10,7 @@
             uploadScript: null, // DEPRECATED: Use fileUploadOptions instead
             deleteScript: 'delete.php',
             preview: true,
+            captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
             formData: {}, // DEPRECATED: Use fileUploadOptions instead
@@ -429,7 +430,10 @@
 
             setTimeout(function () {
                 that.addToolbar();
-                that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+
+                if (that.options.captions) {
+                    that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+                }
             }, 50);
         }
     };
