@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.5.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v1.6.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -26,21 +26,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-buttons.hbs"] = Handleb
 
 this["MediumInsert"]["Templates"]["src/js/templates/core-caption.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<figcaption contenteditable=\"true\">\n	<div class=\"medium-insert-caption-placeholder\" contenteditable=\"false\">"
+  return "<figcaption contenteditable=\"true\" class=\"medium-insert-caption-placeholder\" data-placeholder=\""
     + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
-    + "</div>\n</figcaption>";
+    + "\"></figcaption>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<p><br></p>\n";
   },"useData":true});
-
-this["MediumInsert"]["Templates"]["src/js/templates/embeds-placeholder.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"medium-insert-embeds-placeholder\" contenteditable=\"false\">"
-    + escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"placeholder","hash":{},"data":data}) : helper)))
-    + "</div>";
-},"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   var stack1, buffer = "    <div class=\"medium-insert-embeds-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n        <ul class=\"medium-editor-toolbar-actions clearfix\">\n";
@@ -239,15 +232,19 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.events = function () {
+        var that = this;
+
         this.$el
             .on('dragover drop', function (e) {
                 e.preventDefault();
             })
             .on('keyup click', $.proxy(this, 'toggleButtons'))
             .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
-            .on('keydown', $.proxy(this, 'fixSelectAll'))
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
-            .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
+            .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'))
+            .on('paste', '.medium-insert-caption-placeholder', function (e) {
+                $.proxy(that, 'removeCaptionPlaceholder')($(e.target));
+            });
 
         $(window).on('resize', $.proxy(this, 'positionButtons', null));
     };
@@ -409,30 +406,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if ($el.is('img') === false || $el.hasClass('medium-insert-buttons-show')) {
             e.preventDefault();
-        }
-    };
-
-    /**
-     * Fix #39
-     * For some reason Chrome doesn't "select-all", when the last placeholder is visible.
-     * So it's needed to hide it when the user "selects all", and show it again when they presses any other key.
-     *
-     * @return {boolean} document.execCommand()
-     */
-
-    Core.prototype.fixSelectAll = function (e) {
-        this.$el.children().last().removeClass('hide');
-
-         if ((e.ctrlKey || e.metaKey) && e.which === 65) {
-            e.preventDefault();
-
-            if(this.$el.find('p').text().trim().length === 0) {
-              return false;
-            }
-
-            this.$el.children().last().addClass('hide');
-
-            return document.execCommand('selectAll', false, null);
         }
     };
 
@@ -758,7 +731,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         }
 
         $captions.each(function () {
-            if ($(this).find('.medium-insert-caption-placeholder').length || $(this).text().trim() === '') {
+            if ($(this).hasClass('medium-insert-caption-placeholder') || $(this).text().trim() === '') {
                 $(this).remove();
             }
         });
@@ -772,11 +745,32 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.removeCaptionPlaceholder = function ($el) {
-        var $caption = $el.find('figcaption');
+        var $caption = $el.is('figcaption') ? $el : $el.find('figcaption');
 
         if ($caption.length) {
-            $caption.find('.medium-insert-caption-placeholder').remove();
-            this.moveCaret($caption);
+            $caption
+                .removeClass('medium-insert-caption-placeholder')
+                .removeAttr('data-placeholder');
+        }
+    };
+
+    /**
+     * Show warning about deprecated options/methods
+     *
+     * @param {string} oldName
+     * @param {string} newName
+     * @param {string} version
+     * @return {void}
+     */
+
+    Core.prototype.deprecated = function (oldName, newName, version) {
+        var m = oldName +" is deprecated, please use "+ newName +" instead.";
+        if (version) {
+            m += " Will be removed in "+ version;
+        }
+
+        if(window.console !== undefined){
+            window.console.warn(m);
         }
     };
 
@@ -808,6 +802,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             label: '<span class="fa fa-youtube-play"></span>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
+            captions: true,
+            captionPlaceholder: 'Type caption (optional)',
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -825,7 +821,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     // removed: function ($el) {}
                 }
             },
-            captionPlaceholder: 'Type caption (optional)',
             actions: {
                 remove: {
                     label: '<span class="fa fa-times"></span>',
@@ -904,10 +899,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
         this.$el
-            .on('selectstart mousedown', '.medium-insert-embeds-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
-            .on('keyup click', $.proxy(this, 'togglePlaceholder'))
+            .on('keyup click paste', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'))
-            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'));
+            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
+            .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
     };
 
     /**
@@ -938,6 +933,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      *
      * @return {object} Core object
      */
+
     Embeds.prototype.getCore = function () {
         return this.core;
     };
@@ -993,22 +989,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     };
 
     /**
-     * Disable placeholder selection, instead move cursor to input
-     *
-     * @param {Event} e
-     * @return {void}
-     */
-
-    Embeds.prototype.disablePlaceholderSelection = function (e) {
-        var $place = $(e.target).closest('.medium-insert-embeds-input');
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        this.getCore().moveCaret($place);
-    };
-
-    /**
      * Toggles placeholder
      *
      * @param {Event} e
@@ -1018,7 +998,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.togglePlaceholder = function (e) {
         var $place = $(e.target),
             selection = window.getSelection(),
-            range, $current, $placeholder, re, text;
+            range, $current, text;
 
         if (!selection || selection.rangeCount === 0) {
             return;
@@ -1035,21 +1015,32 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if ($place.hasClass('medium-insert-embeds-active')) {
 
-            $placeholder = $place.find('.medium-insert-embeds-placeholder');
-            re = new RegExp(this.options.placeholder, 'g');
-            text = $place.text().replace(re, '').trim();
+            text = $place.text().trim();
 
-            if (text === '' && $placeholder.length === 0) {
-                $place.append(this.templates['src/js/templates/embeds-placeholder.hbs']({
-                    placeholder: this.options.placeholder
-                }));
-            } else if (text !== '' && $placeholder.length) {
-                $placeholder.remove();
+            if (text === '' && $place.hasClass('medium-insert-embeds-placeholder') === false) {
+                $place
+                    .addClass('medium-insert-embeds-placeholder')
+                    .attr('data-placeholder', this.options.placeholder);
+            } else if (text !== '' && $place.hasClass('medium-insert-embeds-placeholder')) {
+                $place
+                    .removeClass('medium-insert-embeds-placeholder')
+                    .removeAttr('data-placeholder');
             }
 
         } else {
             this.$el.find('.medium-insert-embeds-active').remove();
         }
+    };
+
+    /**
+     * Right click on placeholder in Chrome selects whole line. Fix this by placing caret at the end of line
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Embeds.prototype.fixRightClickOnPlaceholder = function (e) {
+        this.getCore().moveCaret($(e.target));
     };
 
     /**
@@ -1061,14 +1052,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Embeds.prototype.processLink = function (e) {
         var $place = this.$el.find('.medium-insert-embeds-active'),
-            re, url;
+            url;
 
         if (!$place.length) {
             return;
         }
 
-        re = new RegExp(this.options.placeholder, 'g');
-        url = $place.text().replace(re, '').trim();
+        url = $place.text().trim();
 
         // Return empty placeholder on backspace, delete or enter
         if (url === '' && [8, 46, 13].indexOf(e.which) !== -1) {
@@ -1237,7 +1227,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             setTimeout(function () {
                 that.addToolbar();
-                that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+
+                if (that.options.captions) {
+                    that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+                }
             }, 50);
         }
     };
@@ -1270,7 +1263,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if ($(e.target).is('.medium-insert-caption-placeholder')) {
             this.getCore().removeCaptionPlaceholder($el.find('figure'));
-        } else if ($el.is('figcaption') === false) {
+        } else if ($(e.target).is('figcaption') === false) {
             this.getCore().removeCaptions();
         }
     };
@@ -1438,12 +1431,17 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
-            uploadScript: 'upload.php',
+            uploadScript: null, // DEPRECATED: Use fileUploadOptions instead
             deleteScript: 'delete.php',
             preview: true,
+            captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: {}, // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#formdata
+            formData: {}, // DEPRECATED: Use fileUploadOptions instead
+            fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+                url: 'upload.php',
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+            },
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -1619,20 +1617,26 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Images.prototype.add = function () {
         var that = this,
-            $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
+            $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
+            fileUploadOptions = {
+                dataType: 'json',
+                add: function (e, data) {
+                    $.proxy(that, 'uploadAdd', e, data)();
+                },
+                done: function (e, data) {
+                    $.proxy(that, 'uploadDone', e, data)();
+                }
+            };
 
-        var fileUploadOptions = {
-            url: this.options.uploadScript,
-            dataType: 'json',
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            formData: this.options.formData,
-            add: function (e, data) {
-                $.proxy(that, 'uploadAdd', e, data)();
-            },
-            done: function (e, data) {
-                $.proxy(that, 'uploadDone', e, data)();
-            }
-        };
+        // Backwards compatibility
+        if (this.options.uploadScript) {
+            fileUploadOptions.url = this.options.uploadScript;
+            this.getCore().deprecated('uploadScript', 'fileUploadOptions', '2.0');
+        }
+        if (this.options.formData) {
+            fileUploadOptions.formData = this.options.formData;
+            this.getCore().deprecated('formData', 'fileUploadOptions', '2.0');
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
@@ -1648,7 +1652,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             };
         }
 
-        $file.fileupload(fileUploadOptions);
+        $file.fileupload($.extend(true, {}, this.options.fileUploadOptions, fileUploadOptions));
 
         $file.click();
     };
@@ -1852,7 +1856,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             setTimeout(function () {
                 that.addToolbar();
-                that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+
+                if (that.options.captions) {
+                    that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+                }
             }, 50);
         }
     };

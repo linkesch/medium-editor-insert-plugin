@@ -1,4 +1,13 @@
 
+1.6.0/ 2015-04-16
+==================
+
+  * Add option ```captions``` (boolean) to images and embeds to enable/disable captions. Captions are enabled by default.
+  * Expose option ```fileUploadOptions``` in images to enable file upload configuration
+  * Use medium-editor like placeholders for embeds and captions (using ```:after``` CSS pseudo-element instead of actual DOM element)
+  * Add support for right click on placeholders (both in embeds and captions) to enable pasting via context menu
+  * Deprecate ```uploadScript``` and ```formData``` options in images. Use ```fileUploadOptions``` instead.
+
 1.5.2 / 2015-04-15
 ==================
 
