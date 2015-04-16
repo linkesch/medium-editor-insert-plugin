@@ -207,9 +207,11 @@
         // Backwards compatibility
         if (this.options.uploadScript) {
             fileUploadOptions.url = this.options.uploadScript;
+            this.getCore().deprecated('uploadScript', 'fileUploadOptions', '2.0');
         }
         if (this.options.formData) {
             fileUploadOptions.formData = this.options.formData;
+            this.getCore().deprecated('formData', 'fileUploadOptions', '2.0');
         }
 
         // Only add progress callbacks for browsers that support XHR2,
