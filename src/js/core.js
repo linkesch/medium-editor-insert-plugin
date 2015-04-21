@@ -410,6 +410,7 @@
             this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
             $.each(this.options.addons, function (addon) {
+
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
                 }
@@ -476,6 +477,7 @@
      */
 
     Core.prototype.positionButtons = function (activeAddon) {
+
         var $buttons = this.$el.find('.medium-insert-buttons'),
             $p = this.$el.find('.medium-insert-active'),
             $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
@@ -483,13 +485,13 @@
 
         if ($p.length) {
 
-            left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-            left = left < 0 ? $p.position().left : left;
+            left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
+            left = left < 0 ? $p.offset().left : left;
             top = $p.position().top + parseInt($p.css('margin-top'), 10);
 
             if (activeAddon) {
-                if ($p.position().left !== $first.position().left) {
-                    left = $first.position().left;
+                if ($p.hasClass('medium-insert-images-right') || $p.hasClass('medium-insert-images-left')) {
+                    left = $first.offset().left;
                 }
 
                 top += $p.height() + 15; // 15px offset

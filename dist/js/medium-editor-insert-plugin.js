@@ -543,6 +543,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
             $.each(this.options.addons, function (addon) {
+
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
                 }
@@ -609,6 +610,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.positionButtons = function (activeAddon) {
+
         var $buttons = this.$el.find('.medium-insert-buttons'),
             $p = this.$el.find('.medium-insert-active'),
             $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
@@ -616,13 +618,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if ($p.length) {
 
-            left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-            left = left < 0 ? $p.position().left : left;
+            left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
+            left = left < 0 ? $p.offset().left : left;
             top = $p.position().top + parseInt($p.css('margin-top'), 10);
 
             if (activeAddon) {
-                if ($p.position().left !== $first.position().left) {
-                    left = $first.position().left;
+                if ($p.hasClass('medium-insert-images-right') || $p.hasClass('medium-insert-images-left')) {
+                    left = $first.offset().left;
                 }
 
                 top += $p.height() + 15; // 15px offset
@@ -952,6 +954,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             $data.find('.medium-insert-embeds').removeAttr('contenteditable');
             $data.find('.medium-insert-embeds-overlay').remove();
+            $data.find('.medium-editor-toolbar').remove();
+
 
             data[key].value = $data.html();
         });
@@ -1308,13 +1312,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2;
 
         if ($embed.length === 0) {
             return;
         }
 
-        $('body').append(this.templates['src/js/templates/embeds-toolbar.hbs']({
+        $embed.append(this.templates['src/js/templates/embeds-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
@@ -1322,26 +1326,19 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $toolbar = $('.medium-insert-embeds-toolbar');
         $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
-        top = $embed.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
-        if (top < 0) {
-            top = 0;
-        }
-
         $toolbar
             .css({
-                top: top,
-                left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
+                top: - $toolbar.height() - 8 - 2 - 5,
+                left: '50%',
+                marginLeft : - $toolbar.width() / 2
+
             })
             .show();
 
-        $toolbar2
-            .css({
-                top: $embed.offset().top + 2, // 2px - distance from a border
-                left: $embed.offset().left + $embed.width() - $toolbar2.width() - 4 // 4px - distance from a border
-            })
-            .show();
+        $toolbar2.show();
 
         $toolbar.find('button').each(function () {
+
             if ($embed.hasClass('medium-insert-embeds-'+ $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
                 active = true;
@@ -1437,7 +1434,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: {}, // DEPRECATED: Use fileUploadOptions instead
+            formData: null, // DEPRECATED: Use fileUploadOptions instead
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -1599,9 +1596,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var data = this._serializePreImages();
 
         $.each(data, function (key) {
+
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-images').find('figcaption, figure').removeAttr('contenteditable');
+            $data.find('.medium-editor-toolbar').remove();
 
             data[key].value = $data.html();
         });
@@ -1957,9 +1956,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2;
 
-        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+       $('.medium-insert-images.medium-insert-active').append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
@@ -1967,23 +1966,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $toolbar = $('.medium-insert-images-toolbar');
         $toolbar2 = $('.medium-insert-images-toolbar2');
 
-        top = $image.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
-        if (top < 0) {
-            top = 0;
-        }
-
         $toolbar
             .css({
-                top: top,
-                left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
+                top: - $toolbar.height() - 8 - 2 - 5,
+                left: '50%',
+                marginLeft : - $toolbar.width() / 2
             })
             .show();
 
         $toolbar2
-            .css({
-                top: $image.offset().top + 2, // 2px - distance from a border
-                left: $image.offset().left + $image.width() - $toolbar2.width() - 4 // 4px - distance from a border
-            })
             .show();
 
         $toolbar.find('button').each(function () {
@@ -1992,6 +1983,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 active = true;
             }
         });
+
 
         if (active === false) {
             $toolbar.find('button').first().addClass('medium-editor-button-active');

@@ -175,9 +175,11 @@
         var data = this._serializePreImages();
 
         $.each(data, function (key) {
+
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-images').find('figcaption, figure').removeAttr('contenteditable');
+            $data.find('.medium-editor-toolbar').remove();
 
             data[key].value = $data.html();
         });
@@ -533,9 +535,9 @@
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2;
 
-        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+       $('.medium-insert-images.medium-insert-active').append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
@@ -543,23 +545,15 @@
         $toolbar = $('.medium-insert-images-toolbar');
         $toolbar2 = $('.medium-insert-images-toolbar2');
 
-        top = $image.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
-        if (top < 0) {
-            top = 0;
-        }
-
         $toolbar
             .css({
-                top: top,
-                left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
+                top: - $toolbar.height() - 8 - 2 - 5,
+                left: '50%',
+                marginLeft : - $toolbar.width() / 2
             })
             .show();
 
         $toolbar2
-            .css({
-                top: $image.offset().top + 2, // 2px - distance from a border
-                left: $image.offset().left + $image.width() - $toolbar2.width() - 4 // 4px - distance from a border
-            })
             .show();
 
         $toolbar.find('button').each(function () {
@@ -568,6 +562,7 @@
                 active = true;
             }
         });
+
 
         if (active === false) {
             $toolbar.find('button').first().addClass('medium-editor-button-active');
