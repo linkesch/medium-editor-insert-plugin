@@ -542,13 +542,10 @@
             $target = $(e.target),
             $toolbar, $toolbar2;
 
-
-
             if($target.closest('.medium-insert-images').is('[class*="grid"]')){
 
                 $target.closest('.medium-insert-images').append(this.templates['src/js/templates/images-toolbar.hbs']({
-                    styles: this.options.styles,
-                    actions: this.options.actions
+                    styles: this.options.styles
 
                 }).trim());
 

@@ -118,11 +118,16 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-remove.hbs"] = Handle
   },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div class=\"medium-insert-images-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.styles : depth0), {"name":"each","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "    </ul>\n</div>\n";
+},"2":function(depth0,helpers,partials,data) {
   var stack1, buffer = "";
-  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.label : depth0), {"name":"if","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data});
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.label : depth0), {"name":"if","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer;
-},"2":function(depth0,helpers,partials,data) {
+},"3":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, functionType="function", helperMissing=helpers.helperMissing, buffer = "                <li>\n                    <button class=\"medium-editor-action\" data-action=\""
     + escapeExpression(lambda((data && data.key), depth0))
     + "\">";
@@ -130,11 +135,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
   if (stack1 != null) { buffer += stack1; }
   return buffer + "</button>\n                </li>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<div class=\"medium-insert-images-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n";
-  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.styles : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
-  if (stack1 != null) { buffer += stack1; }
-  return buffer + "    </ul>\n</div>\n\n";
-},"useData":true});
+  var stack1;
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.styles : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { return stack1; }
+  else { return ''; }
+  },"useData":true});
 ;(function ($, window, document, undefined) {
 
     'use strict';
@@ -664,7 +669,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Core.prototype.toggleAddons = function () {
         this.$el.find('.medium-insert-buttons-addons').toggle(0,function(){
-
             if($(this).is(':visible')){
                 $(this).css('display', 'inline-block');
             }
@@ -1986,13 +1990,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $target = $(e.target),
             $toolbar, $toolbar2;
 
-
-
             if($target.closest('.medium-insert-images').is('[class*="grid"]')){
 
                 $target.closest('.medium-insert-images').append(this.templates['src/js/templates/images-toolbar.hbs']({
-                    styles: this.options.styles,
-                    actions: this.options.actions
+                    styles: this.options.styles
 
                 }).trim());
 

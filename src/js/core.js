@@ -527,7 +527,6 @@
 
     Core.prototype.toggleAddons = function () {
         this.$el.find('.medium-insert-buttons-addons').toggle(0,function(){
-
             if($(this).is(':visible')){
                 $(this).css('display', 'inline-block');
             }
