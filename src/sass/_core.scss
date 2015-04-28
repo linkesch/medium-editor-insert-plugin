@@ -1,5 +1,6 @@
 .medium-editor-insert-plugin {
     outline: 0 solid transparent;
+    position: relative;
     &:focus {
         outline: 0 solid transparent;
     }
@@ -10,9 +11,7 @@
         clear: both;
     }
 
-    p {
-        margin: 1em 0;
-    }
+    p {margin: 1em 0}
 
     progress {
         display: block;
@@ -25,6 +24,7 @@
 
     &.medium-editor-placeholder:after {
         padding: 1em 0;
+
     }
 
     .medium-insert-buttons {
@@ -38,10 +38,11 @@
 
         .medium-insert-buttons-show {
             box-sizing: border-box;
-            display: block;
+            display: inline-block;
+            vertical-align: middle;
+            margin:0;
             width: 32px;
             height: 32px;
-            margin-top: -5px;
             border-radius: 20px;
             border: 1px solid;
             font-size: 25px;
@@ -55,16 +56,16 @@
             padding: 0;
             list-style: none;
             display: none;
-            position: relative;
-            z-index: 2;
-            left: 55px;
-            top: -32px;
+            vertical-align: middle;
+
             li {
                 display: inline-block;
+                vertical-align: middle;
+                margin-left: 5px;
                 a {
                     box-sizing: border-box;
                     display: inline-block;
-                    margin: 0 5px;
+
                     width: 32px;
                     height: 32px;
                     border-radius: 20px;

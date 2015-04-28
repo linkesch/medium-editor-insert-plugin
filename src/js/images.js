@@ -35,9 +35,9 @@
                     // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>',
-                    // added: function ($el) {},
-                    // removed: function ($el) {}
+                   label: '<span class="fa fa-th"></span>',
+                    //added: function ($el) {},
+                    //removed: function ($el) {}
                 }
             },
             actions: {
@@ -136,8 +136,7 @@
             .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
             .on('click', '.medium-insert-images-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
-        this.$el
-            .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'));
+        this.$el.on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'));
     };
 
     /**
@@ -423,6 +422,7 @@
 
     Images.prototype.selectImage = function (e) {
         if(this.getCore().options.enabled) {
+
             var $image = $(e.target),
                 that = this;
 
@@ -432,12 +432,16 @@
             $image.addClass('medium-insert-image-active');
             $image.closest('.medium-insert-images').addClass('medium-insert-active');
 
-            setTimeout(function () {
-                that.addToolbar();
+            var captionLength = $image.closest('figure').find('figcaption').length;
 
-                if (that.options.captions) {
+            setTimeout(function () {
+                that.addToolbar(e);
+
+                if (that.options.captions && captionLength === 0) {
+
                     that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
                 }
+
             }, 50);
         }
     };
@@ -531,30 +535,62 @@
      * @returns {void}
      */
 
-    Images.prototype.addToolbar = function () {
+    Images.prototype.addToolbar = function (e) {
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
+            $target = $(e.target),
             $toolbar, $toolbar2;
 
-       $('.medium-insert-images.medium-insert-active').append(this.templates['src/js/templates/images-toolbar.hbs']({
-            styles: this.options.styles,
-            actions: this.options.actions
-        }).trim());
+
+
+            if($target.closest('.medium-insert-images').is('[class*="grid"]')){
+
+                $target.closest('.medium-insert-images').append(this.templates['src/js/templates/images-toolbar.hbs']({
+                    styles: this.options.styles,
+                    actions: this.options.actions
+
+                }).trim());
+
+                $target.closest('figure').append(this.templates['src/js/templates/images-remove.hbs']({
+                    actions: this.options.actions
+                }).trim());
+
+            }else{
+
+               $target.closest('figure')
+                   .append(this.templates['src/js/templates/images-toolbar.hbs']({
+                            styles: this.options.styles
+                    }).trim()).append(this.templates['src/js/templates/images-remove.hbs']({
+                        actions: this.options.actions
+                    }).trim());
+            }
+
+
+
+       // $('.medium-insert-images.medium-insert-active:not([class*="grid"]) figure').append(this.templates['src/js/templates/images-toolbar.hbs']({
+       //      styles: this.options.styles,
+       //      actions: this.options.actions
+       //  }).trim());
+
+
+       // $('.medium-insert-images.medium-insert-active[class*="grid"]').append(this.templates['src/js/templates/images-toolbar.hbs']({
+       //      styles: this.options.styles,
+       //      actions: this.options.actions
+       //  }).trim());
+
 
         $toolbar = $('.medium-insert-images-toolbar');
         $toolbar2 = $('.medium-insert-images-toolbar2');
 
-        $toolbar
-            .css({
+        $toolbar.css({
                 top: - $toolbar.height() - 8 - 2 - 5,
                 left: '50%',
                 marginLeft : - $toolbar.width() / 2
-            })
-            .show();
+            }).show();
 
-        $toolbar2
-            .show();
+
+        $toolbar2.show();
 
         $toolbar.find('button').each(function () {
             if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {
@@ -626,7 +662,6 @@
         }
 
         this.getCore().hideButtons();
-
         this.$el.trigger('input');
     };
 

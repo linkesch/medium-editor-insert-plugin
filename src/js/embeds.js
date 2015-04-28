@@ -523,22 +523,20 @@
             return;
         }
 
-        $embed.append(this.templates['src/js/templates/embeds-toolbar.hbs']({
+        $embed.find('figure').append(this.templates['src/js/templates/embeds-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
 
+
         $toolbar = $('.medium-insert-embeds-toolbar');
         $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
-        $toolbar
-            .css({
+        $toolbar.css({
                 top: - $toolbar.height() - 8 - 2 - 5,
                 left: '50%',
                 marginLeft : - $toolbar.width() / 2
-
-            })
-            .show();
+            }).show();
 
         $toolbar2.show();
 
