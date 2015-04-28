@@ -563,20 +563,6 @@
                     }).trim());
             }
 
-
-
-       // $('.medium-insert-images.medium-insert-active:not([class*="grid"]) figure').append(this.templates['src/js/templates/images-toolbar.hbs']({
-       //      styles: this.options.styles,
-       //      actions: this.options.actions
-       //  }).trim());
-
-
-       // $('.medium-insert-images.medium-insert-active[class*="grid"]').append(this.templates['src/js/templates/images-toolbar.hbs']({
-       //      styles: this.options.styles,
-       //      actions: this.options.actions
-       //  }).trim());
-
-
         $toolbar = $('.medium-insert-images-toolbar');
         $toolbar2 = $('.medium-insert-images-toolbar2');
 
@@ -595,7 +581,6 @@
                 active = true;
             }
         });
-
 
         if (active === false) {
             $toolbar.find('button').first().addClass('medium-editor-button-active');

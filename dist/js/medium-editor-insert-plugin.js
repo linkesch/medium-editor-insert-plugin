@@ -628,12 +628,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $p = this.$el.find('.medium-insert-active'),
             left,
             top,
-            widthEl = this.$el.outerWidth() + $showButtons.outerWidth(),
-            windowWidth = $(window).width();
+            offsetLeftEl = this.$el.offset().left;
 
-        if ($p.length) {
+        if ($p.length > 0) {
 
-            if(windowWidth > widthEl){
+            if(offsetLeftEl > $showButtons.outerWidth()){
                left = - $showButtons.width();
             }else{
                 left = 0;
@@ -2011,20 +2010,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     }).trim());
             }
 
-
-
-       // $('.medium-insert-images.medium-insert-active:not([class*="grid"]) figure').append(this.templates['src/js/templates/images-toolbar.hbs']({
-       //      styles: this.options.styles,
-       //      actions: this.options.actions
-       //  }).trim());
-
-
-       // $('.medium-insert-images.medium-insert-active[class*="grid"]').append(this.templates['src/js/templates/images-toolbar.hbs']({
-       //      styles: this.options.styles,
-       //      actions: this.options.actions
-       //  }).trim());
-
-
         $toolbar = $('.medium-insert-images-toolbar');
         $toolbar2 = $('.medium-insert-images-toolbar2');
 
@@ -2043,7 +2028,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 active = true;
             }
         });
-
 
         if (active === false) {
             $toolbar.find('button').first().addClass('medium-editor-button-active');

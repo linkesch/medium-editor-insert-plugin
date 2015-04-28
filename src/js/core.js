@@ -486,12 +486,11 @@
             $p = this.$el.find('.medium-insert-active'),
             left,
             top,
-            widthEl = this.$el.outerWidth() + $showButtons.outerWidth(),
-            windowWidth = $(window).width();
+            offsetLeftEl = this.$el.offset().left;
 
-        if ($p.length) {
+        if ($p.length > 0) {
 
-            if(windowWidth > widthEl){
+            if(offsetLeftEl > $showButtons.outerWidth()){
                left = - $showButtons.width();
             }else{
                 left = 0;
