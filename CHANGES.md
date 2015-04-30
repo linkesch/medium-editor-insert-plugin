@@ -1,4 +1,11 @@
 
+1.6.1 / 2015-04-30
+==================
+
+  * Fix initializing plugin without addons
+  * Trigger the input event after swapping out the preview image for the real one
+  * Change default formData to null
+
 1.6.0/ 2015-04-16
 ==================
 
