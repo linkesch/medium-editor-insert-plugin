@@ -113,7 +113,7 @@
                 $.proxy(that, 'removeCaptionPlaceholder')($(e.target));
             });
 
-        $(window).on('resize', $.proxy(this, 'positionButtons', null));
+         $(window).on('resize', $.proxy(this, 'positionButtons', null));
     };
 
     /**
@@ -380,6 +380,7 @@
      */
 
     Core.prototype.toggleButtons = function (e) {
+
         var $el = $(e.target),
             selection = window.getSelection(),
             that = this,
@@ -410,6 +411,7 @@
             this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
             $.each(this.options.addons, function (addon) {
+
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
                 }
@@ -422,9 +424,11 @@
             });
 
             if ($p.length && (($p.text().trim() === '' && !activeAddon) || activeAddon === 'images')) {
+
                 $p.addClass('medium-insert-active');
 
                 // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
+
                 setTimeout(function () {
                     that.positionButtons(activeAddon);
                     that.showButtons(activeAddon);
@@ -445,13 +449,13 @@
     Core.prototype.showButtons = function (activeAddon) {
         var $buttons = this.$el.find('.medium-insert-buttons');
 
-        $buttons.show();
-        $buttons.find('li').show();
-
         if (activeAddon) {
             $buttons.find('li').hide();
             $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();
-        }
+        }else{
+          $buttons.show();
+          $buttons.find('li').show();
+      }
     };
 
     /**
@@ -476,23 +480,35 @@
      */
 
     Core.prototype.positionButtons = function (activeAddon) {
+
         var $buttons = this.$el.find('.medium-insert-buttons'),
+            $showButtons = this.$el.find('.medium-insert-buttons-show'),
             $p = this.$el.find('.medium-insert-active'),
-            $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
-            left, top;
+            left,
+            top,
+            offsetLeftEl = this.$el.offset().left;
 
-        if ($p.length) {
+        if ($p.length > 0) {
 
-            left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-            left = left < 0 ? $p.position().left : left;
+            if(offsetLeftEl > $showButtons.outerWidth()){
+               left = - $showButtons.width();
+            }else{
+                left = 0;
+            }
+
             top = $p.position().top + parseInt($p.css('margin-top'), 10);
 
             if (activeAddon) {
-                if ($p.position().left !== $first.position().left) {
-                    left = $first.position().left;
-                }
 
-                top += $p.height() + 15; // 15px offset
+                // console.log("activeAddon", activeAddon)
+                //  $buttons.hide()
+
+                // if ($p.hasClass('medium-insert-images-right') || $p.hasClass('medium-insert-images-left')) {
+
+                //    // left = $first.offset().left;
+                // }
+                // top += $p.height() + 15; // 15px offset
+                // console.log($p, top)
             }
 
             $buttons.css({
@@ -509,7 +525,11 @@
      */
 
     Core.prototype.toggleAddons = function () {
-        this.$el.find('.medium-insert-buttons-addons').toggle();
+        this.$el.find('.medium-insert-buttons-addons').toggle(0,function(){
+            if($(this).is(':visible')){
+                $(this).css('display', 'inline-block');
+            }
+        });
     };
 
     /**
@@ -574,6 +594,7 @@
      */
 
     Core.prototype.addCaption = function ($el, placeholder) {
+
         var $caption = $el.find('figcaption');
 
         if ($caption.length === 0) {

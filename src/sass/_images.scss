@@ -11,7 +11,11 @@
 }
 
 .medium-insert-images {
+    figure{
+        display: inline-block;
+    }
     margin: 1em 0;
+    position: relative;
     .dragged {
         position: absolute;
         top: 0;

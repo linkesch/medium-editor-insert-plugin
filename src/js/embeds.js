@@ -159,6 +159,8 @@
 
             $data.find('.medium-insert-embeds').removeAttr('contenteditable');
             $data.find('.medium-insert-embeds-overlay').remove();
+            $data.find('.medium-editor-toolbar').remove();
+
 
             data[key].value = $data.html();
         });
@@ -515,40 +517,31 @@
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2;
 
         if ($embed.length === 0) {
             return;
         }
 
-        $('body').append(this.templates['src/js/templates/embeds-toolbar.hbs']({
+        $embed.find('figure').append(this.templates['src/js/templates/embeds-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
 
+
         $toolbar = $('.medium-insert-embeds-toolbar');
         $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
-        top = $embed.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
-        if (top < 0) {
-            top = 0;
-        }
+        $toolbar.css({
+                top: - $toolbar.height() - 8 - 2 - 5,
+                left: '50%',
+                marginLeft : - $toolbar.width() / 2
+            }).show();
 
-        $toolbar
-            .css({
-                top: top,
-                left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
-            })
-            .show();
-
-        $toolbar2
-            .css({
-                top: $embed.offset().top + 2, // 2px - distance from a border
-                left: $embed.offset().left + $embed.width() - $toolbar2.width() - 4 // 4px - distance from a border
-            })
-            .show();
+        $toolbar2.show();
 
         $toolbar.find('button').each(function () {
+
             if ($embed.hasClass('medium-insert-embeds-'+ $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
                 active = true;

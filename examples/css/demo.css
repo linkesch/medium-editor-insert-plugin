@@ -26,6 +26,7 @@ body {
     max-width: 960px;
     margin: 30px auto;
     padding: 0 15px;
+    position: relative;
 }
 
 .editable {

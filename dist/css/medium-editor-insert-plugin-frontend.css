@@ -55,9 +55,9 @@
   margin: 1em 0;
   position: relative; }
   .medium-insert-embeds iframe, .mediumInsert-embeds iframe {
-    margin: 0 auto !important; }
+    margin: 0 auto; }
   .medium-insert-embeds div, .mediumInsert-embeds div {
-    margin: 0 auto !important; }
+    margin: 0 auto; }
   .medium-insert-embeds.medium-insert-embeds-left, .medium-insert-embeds-left.mediumInsert-embeds {
     width: 33.33%;
     float: left;

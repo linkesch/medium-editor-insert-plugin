@@ -1,5 +1,6 @@
 .medium-insert-embeds-input {
     position: relative;
+    clear:none;
     color: #ccc;
     z-index: 1;
     text-align: left;
@@ -15,7 +16,9 @@
         color: #ccc;
     }
 }
-
+.medium-insert-embeds:not(.medium-insert-embeds-input){
+    clear:both;
+}
 .medium-insert-embeds-selected {
     .medium-insert-embed {
         outline: 2px solid #000;
