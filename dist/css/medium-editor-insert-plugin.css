@@ -117,7 +117,21 @@
       font-size: 25px;
       line-height: 28px;
       text-align: center;
-      text-decoration: none; }
+      text-decoration: none;
+      background: #fff;
+      -webkit-transform: rotate(0);
+      -ms-transform: rotate(0);
+      transform: rotate(0);
+      -webkit-transition: -webkit-transform 100ms;
+              transition: -webkit-transform 100ms;
+      transition: transform 100ms; }
+      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show.medium-insert-buttons-rotate {
+        -webkit-transition: -webkit-transform 250ms;
+                transition: -webkit-transform 250ms;
+        transition: transform 250ms;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg); }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
       padding: 0;

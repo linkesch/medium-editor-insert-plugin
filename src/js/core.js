@@ -470,6 +470,7 @@
 
         $el.find('.medium-insert-buttons').hide();
         $el.find('.medium-insert-buttons-addons').hide();
+        $el.find('.medium-insert-buttons-show').removeClass('medium-insert-buttons-rotate');
     };
 
     /**
@@ -513,7 +514,8 @@
      */
 
     Core.prototype.toggleAddons = function () {
-        this.$el.find('.medium-insert-buttons-addons').toggle();
+        this.$el.find('.medium-insert-buttons-addons').fadeToggle();
+        this.$el.find('.medium-insert-buttons-show').toggleClass('medium-insert-buttons-rotate');
     };
 
     /**
@@ -524,6 +526,7 @@
 
     Core.prototype.hideAddons = function () {
         this.$el.find('.medium-insert-buttons-addons').hide();
+        this.$el.find('.medium-insert-buttons-show').removeClass('medium-insert-buttons-rotate');
     };
 
     /**

@@ -150,10 +150,13 @@ test('toggling addons buttons after clicking on show button', function () {
     this.$el.find('.medium-insert-buttons-show').click();
 
     equal(this.$el.find('.medium-insert-buttons-addons').css('display'), 'block', 'addons are visible');
+    ok(this.$el.find('.medium-insert-buttons-show').hasClass('medium-insert-buttons-rotate'), '.medium-insert-buttons-rotate class added');
 
     this.$el.find('.medium-insert-buttons-show').click();
 
-    equal(this.$el.find('.medium-insert-buttons-addons').css('display'), 'none', 'addons are hidden');
+    // hidden the buttons will trigger fadeToggle which will fade the element. So the display will be block until the fade is finish.
+    // equal(this.$el.find('.medium-insert-buttons-addons').css('display'), 'none', 'addons are hidden');
+    ok(!this.$el.find('.medium-insert-buttons-show').hasClass('medium-insert-buttons-rotate'), '.medium-insert-buttons-rotate class removed');
 });
 
 asyncTest('calling addon\'s add function if addon\'s button is clicked', function () {
