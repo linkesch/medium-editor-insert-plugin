@@ -418,6 +418,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Core.prototype.initAddons = function () {
         var that = this;
 
+        if (!this.options.addons || this.options.addons.length === 0) {
+            return;
+        }
+
         $.each(this.options.addons, function (addon, options) {
             var addonName = pluginName + ucfirst(addon);
 
@@ -1437,7 +1441,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: {}, // DEPRECATED: Use fileUploadOptions instead
+            formData: null, // DEPRECATED: Use fileUploadOptions instead
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -1783,17 +1787,20 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Images.prototype.showImage = function (img, data) {
         var $place = this.$el.find('.medium-insert-active'),
-            domImage;
+            domImage,
+            that;
 
         // Hide editor's placeholder
         $place.click();
 
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
+        that = this;
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+                that.$el.trigger('input');
             };
             domImage.src = img;
         } else {
