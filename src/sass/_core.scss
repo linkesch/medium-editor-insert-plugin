@@ -48,6 +48,14 @@
             line-height: 28px;
             text-align: center;
             text-decoration: none;
+            background: #fff;
+            transform: rotate(0);
+            transition: transform 100ms;
+
+            &.medium-insert-buttons-rotate {
+                transition: transform 250ms;
+                transform: rotate(45deg);
+            }
         }
 
         .medium-insert-buttons-addons {
