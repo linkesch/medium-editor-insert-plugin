@@ -171,6 +171,36 @@ asyncTest('triggering input event on showImage', function () {
     });
 });
 
+asyncTest('triggering input event twice on showImage for preview', function (assert) {
+    var that = this,
+        inputTriggerCount = 0,
+        stubbedImage,
+        context;
+
+    stubbedImage = sinon.stub();
+    sinon.stub(this.addon, 'getDOMImage').returns(stubbedImage);
+    context = this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
+        '<figure><img src="data:" alt=""></figure>'+
+    '</div>');
+
+    assert.expect(2);
+    this.$el.on('input', function () {
+        if (inputTriggerCount === 0)
+            start();
+        if (inputTriggerCount === 2) {
+            that.$el.off('input');
+        } else {
+            inputTriggerCount++;
+        }
+        ok(1, 'input triggered');
+    });
+
+    this.addon.showImage('http://image.co', {
+        context: context
+    });
+    stubbedImage.onload();
+});
+
 test('selecting image', function () {
     this.$el.find('p')
         .addClass('medium-insert-images')

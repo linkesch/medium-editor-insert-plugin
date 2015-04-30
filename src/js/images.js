@@ -359,17 +359,20 @@
 
     Images.prototype.showImage = function (img, data) {
         var $place = this.$el.find('.medium-insert-active'),
-            domImage;
+            domImage,
+            that;
 
         // Hide editor's placeholder
         $place.click();
 
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
+        that = this;
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+                that.$el.trigger('input');
             };
             domImage.src = img;
         } else {
