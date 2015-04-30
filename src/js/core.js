@@ -285,6 +285,10 @@
     Core.prototype.initAddons = function () {
         var that = this;
 
+        if (!this.options.addons || this.options.addons.length === 0) {
+            return;
+        }
+
         $.each(this.options.addons, function (addon, options) {
             var addonName = pluginName + ucfirst(addon);
 
