@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
     <title>medium editor | example</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/demo.css">
@@ -19,18 +20,18 @@
             margin: 0;
         }
 
-        .medium-insert-images.medium-insert-images-grid figure {
+        .medium-insert-images.medium-insert-images-grid.small-grid figure {
             width: 10%;
         }
 
         @media (max-width: 750px) {
-            .medium-insert-images.medium-insert-images-grid figure {
+            .medium-insert-images.medium-insert-images-grid.small-grid figure {
                 width: 20%;
             }
         }
 
         @media (max-width: 450px) {
-            .medium-insert-images.medium-insert-images-grid figure {
+            .medium-insert-images.medium-insert-images-grid.small-grid figure {
                 width: 25%;
             }
         }
@@ -69,8 +70,8 @@
 
             <p>This plugin is brought to you thanks to these great contributors from all around the world:</p>
 
-            <div class="medium-insert-images medium-insert-images-grid">
-                <figure contenteditable="false"><img src="uploads/312938.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/19343.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/39333.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1228229.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/594298.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1101183.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1790778.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1270102.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/93555.png" alt=""></figure><figure contenteditable="false"><img src="uploads/1891369.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1642674.png" alt=""></figure><figure contenteditable="false"><img src="uploads/431361.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/883073.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1485056.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1064889.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/62333.png" alt=""></figure><figure contenteditable="false"><img src="uploads/433501.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/714146.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/882228.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/28841.jpg" alt=""></figure>
+            <div class="medium-insert-images medium-insert-images-grid small-grid">
+                <figure><img src="uploads/312938.jpg" alt=""></figure><figure><img src="uploads/19343.jpg" alt=""></figure><figure><img src="uploads/39333.jpg" alt=""></figure><figure><img src="uploads/1228229.jpg" alt=""></figure><figure><img src="uploads/594298.jpg" alt=""></figure><figure><img src="uploads/1101183.jpg" alt=""></figure><figure><img src="uploads/1790778.jpg" alt=""></figure><figure><img src="uploads/1270102.jpg" alt=""></figure><figure><img src="uploads/93555.png" alt=""></figure><figure><img src="uploads/1891369.jpg" alt=""></figure><figure><img src="uploads/1642674.png" alt=""></figure><figure><img src="uploads/431361.jpg" alt=""></figure><figure><img src="uploads/883073.jpg" alt=""></figure><figure><img src="uploads/1485056.jpg" alt=""></figure><figure><img src="uploads/1064889.jpg" alt=""></figure><figure><img src="uploads/62333.png" alt=""></figure><figure><img src="uploads/433501.jpg" alt=""></figure><figure><img src="uploads/714146.jpg" alt=""></figure><figure><img src="uploads/882228.jpg" alt=""></figure><figure><img src="uploads/28841.jpg" alt=""></figure>
             </div>
 
             <p><em>... And yes, you can create this nice images grid with the plugin. And much more...</em></p>
@@ -127,7 +128,8 @@
                                     $el.cycle('destroy');
                                 }
                             }
-                        }
+                        },
+                        actions: false
                     }
                 }
             });

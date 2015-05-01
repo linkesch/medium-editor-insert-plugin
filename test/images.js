@@ -1,4 +1,4 @@
-/*global placeCaret: false, Blob: false */
+/*global placeCaret, Blob */
 
 module('images', {
     setup: function () {
@@ -95,25 +95,110 @@ asyncTest('image upload without preview', function () {
     });
 });
 
-asyncTest('triggering input event on uploadDone', function () {
+asyncTest('automatically adding grid when multiple images are in a set', function () {
     var that = this;
 
+    this.addon.options.preview = false;
+    this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
+        '<figure></figure>'+
+        '<figure></figure>'+
+    '</div>');
+
+    this.addon.uploadAdd(null, {
+        autoUpload: true,
+        files: [new Blob([''], { type: 'image/jpeg' })],
+        submit: function () {
+            that.addon.uploadDone(null, {
+                result: {
+                    files: [
+                        { url: 'test.jpg' }
+                    ]
+                }
+            });
+
+            ok(that.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), '.medium-insert-images-grid class added');
+            start();
+        },
+        process: function () {
+            return this;
+        },
+        done: function (callback) {
+            callback();
+        }
+    });
+});
+
+asyncTest('not adding grid when not enough images are in a set', function () {
+    var that = this;
+
+    this.addon.options.preview = false;
+    this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
+        '<figure></figure>'+
+    '</div>');
+
+    this.addon.uploadAdd(null, {
+        autoUpload: true,
+        files: [new Blob([''], { type: 'image/jpeg' })],
+        submit: function () {
+            that.addon.uploadDone(null, {
+                result: {
+                    files: [
+                        { url: 'test.jpg' }
+                    ]
+                }
+            });
+
+            equal(that.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), false, '.medium-insert-images-grid class was not added');
+            start();
+        },
+        process: function () {
+            return this;
+        },
+        done: function (callback) {
+            callback();
+        }
+    });
+});
+
+asyncTest('triggering input event on showImage', function () {
     this.$el.one('input', function () {
         ok(1, 'input triggered');
         start();
     });
 
-    this.stub(this.addon, 'showImage', function () {
-        that.addon.showImage.restore();
+    this.addon.showImage(null, {
+        submit: function () {}
+    });
+});
+
+asyncTest('triggering input event twice on showImage for preview', function (assert) {
+    var that = this,
+        inputTriggerCount = 0,
+        stubbedImage,
+        context;
+
+    stubbedImage = sinon.stub();
+    sinon.stub(this.addon, 'getDOMImage').returns(stubbedImage);
+    context = this.$el.prepend('<div class="medium-insert-images medium-insert-active">'+
+        '<figure><img src="data:" alt=""></figure>'+
+    '</div>');
+
+    assert.expect(2);
+    this.$el.on('input', function () {
+        if (inputTriggerCount === 0)
+            start();
+        if (inputTriggerCount === 2) {
+            that.$el.off('input');
+        } else {
+            inputTriggerCount++;
+        }
+        ok(1, 'input triggered');
     });
 
-    this.addon.uploadDone(null, {
-        result: {
-            files: [
-                { url: 'test.jpg' }
-            ]
-        }
+    this.addon.showImage('http://image.co', {
+        context: context
     });
+    stubbedImage.onload();
 });
 
 test('selecting image', function () {
@@ -125,18 +210,50 @@ test('selecting image', function () {
     this.clock.tick(50);
 
     ok(this.$el.find('img').hasClass('medium-insert-image-active'), 'image is selected');
-    equal($('.medium-insert-images-toolbar').length, 1, 'image toolbar added');
+    ok($('.medium-insert-images-toolbar').length, 'image toolbar added');
+    ok($('.medium-insert-images-toolbar2').length, '2nd toolbar added');
+    ok(this.$el.find('figcaption').length, 'caption added');
+});
+
+test('disabling captions', function () {
+    $('#qunit-fixture').html('<div class="editable"><div class="medium-insert-images"><figure><img src="image1.jpg" alt=""></figure></div></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                captions: false
+            }
+        }
+    });
+
+    this.$el.find('img').click();
+    this.clock.tick(50);
+
+    equal(this.$el.find('figcaption').length, 0, 'caption was not added');
+});
+
+test('clicking on caption removes placeholder', function () {
+    this.$el.find('p')
+        .addClass('medium-insert-images')
+        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption class="medium-insert-caption-placeholder"></figcaption></figure>');
+
+    this.$el.find('.medium-insert-caption-placeholder').click();
+    this.clock.tick(50);
+
+    equal(this.$el.find('figcaption').hasClass('medium-insert-caption-placeholder'), false, 'caption placeholder removed');
 });
 
 test('unselecting image', function () {
     this.$el.find('p')
         .addClass('medium-insert-images')
-        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"></figure>');
+        .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption></figcaption></figure>');
 
     this.$el.click();
 
     equal(this.$el.find('img').hasClass('medium-insert-image-active'), false, 'image is unselected');
     equal($('.medium-insert-images-toolbar').length, 0, 'image toolbar removed');
+    equal($('.medium-insert-images-toolbar2').length, 0, '2nd toolbar removed');
+    equal(this.$el.find('figcaption').length, 0, 'caption removed');
 });
 
 test('removing image', function () {
@@ -145,15 +262,21 @@ test('removing image', function () {
     $event.which = 8;
 
     this.$el.find('p')
-        .addClass('medium-insert-images')
+        .addClass('medium-insert-images medium-insert-images-grid')
         .append('<figure><img src="image1.jpg" alt=""></figure>'+
-            '<figure><img src="image2.jpg" alt="" class="medium-insert-image-active"></figure>');
+            '<figure><img src="image2.jpg" alt=""></figure>'+
+            '<figure><img src="image3.jpg" alt=""></figure>'+
+            '<figure><img src="image4.jpg" alt="" class="medium-insert-image-active"></figure>');
 
     this.$el.trigger($event);
 
-    equal(this.$el.find('img').length, 1, 'image deleted');
-    equal(this.$el.find('img').attr('src'), 'image1.jpg', 'not selected image was not deleted');
+    equal(this.$el.find('img').length, 3, 'image deleted');
+    equal(this.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid'), true, '.medium-insert-images-grid class remains');
 
+    this.$el.find('img').last().addClass('medium-insert-image-active');
+    this.$el.trigger($event);
+
+    equal(this.$el.find('img').length, 2, 'image deleted');
 
     this.$el.find('img').addClass('medium-insert-image-active');
     this.$el.trigger($event);
@@ -260,3 +383,102 @@ asyncTest('choosing image style calls callback function', function () {
 
     $('.medium-insert-images-toolbar .medium-editor-action').first().click();
 });
+
+asyncTest('clicking image action calls callback function', function () {
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                actions: {
+                    remove: {
+                        clicked: function () {
+                            ok(1, 'callback function called');
+                            start();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    this.$el.find('p')
+        .addClass('medium-insert-images')
+        .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+    // Place caret into first paragraph
+    placeCaret(this.$el.find('p').get(0), 0);
+
+    this.$el.find('img').click();
+    this.clock.tick(50);
+
+    $('.medium-insert-images-toolbar2 .medium-editor-action').first().click();
+});
+
+asyncTest('uploadDone calls uploadCompleted callback', function () {
+    var that = this;
+
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                uploadCompleted: function () {
+                    ok(1, 'uploadCompleted callback called');
+                    start();
+                }
+            }
+        }
+    });
+    this.addon = this.$el.data('plugin_mediumInsertImages');
+
+
+    this.stub(this.addon, 'showImage', function () {
+        that.addon.showImage.restore();
+    });
+
+    this.addon.uploadDone(null, {
+        result: {
+            files: [
+                { url: 'test.jpg' }
+            ]
+        }
+    });
+});
+
+test('contentediable attr are added on initialization', function () {
+    $('#qunit-fixture').html('<div class="editable"><div class="medium-insert-images"><figure><img src="image1.jpg" alt=""><figcaption></figcaption></figure></div></div>');
+    this.$el = $('.editable');
+
+    this.$el.mediumInsert({
+        addons: {
+            images: {}
+        }
+    });
+
+    equal(this.$el.find('.medium-insert-images figure').attr('contenteditable'), 'false', 'contenteditable attr was added to figure');
+    equal(this.$el.find('.medium-insert-images figcaption').attr('contenteditable'), 'true', 'contenteditable attr was added to figcaption');
+});
+
+/* THIS TEST FOR SOME REASON DOESN'T WORK IN PHANTOMJS
+
+test('editor\'s serialize removes also contenteditable attr', function () {
+    var html = '<div class="medium-insert-images"><figure><img src="image1.jpg" alt=""></figure></div><p><br></p>',
+        editor;
+
+    $('#qunit-fixture').html('<div class="editable">'+ html +'</div>');
+    this.$el = $('.editable');
+
+    editor = new MediumEditor(this.$el.get(0));
+
+    this.$el.mediumInsert({
+        editor: editor,
+        addons: {
+            images: {}
+        }
+    });
+
+    equal(editor.serialize()['element-0'].value, html, 'contenteditable attr were removed');
+});
+*/

@@ -7,23 +7,67 @@
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
-            uploadScript: 'upload.php',
+            uploadScript: null, // DEPRECATED: Use fileUploadOptions instead
             deleteScript: 'delete.php',
             preview: true,
+            captions: true,
+            captionPlaceholder: 'Type caption for image (optional)',
+            autoGrid: 3,
+            formData: null, // DEPRECATED: Use fileUploadOptions instead
+            fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+                url: 'upload.php',
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+            },
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>'
+                    label: '<span class="fa fa-align-justify"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>'
+                    label: '<span class="fa fa-align-left"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>'
+                    label: '<span class="fa fa-align-right"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>'
+                    label: '<span class="fa fa-th"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 }
-            }
+            },
+            actions: {
+                remove: {
+                    label: '<span class="fa fa-times"></span>',
+                    clicked: function () {
+                        var $event = $.Event('keydown');
+
+                        $event.which = 8;
+                        $(document).trigger($event);
+                    }
+                }
+            },
+            sorting: function () {
+                var that = this;
+
+                $('.medium-insert-images').sortable({
+                    group: 'medium-insert-images',
+                    containerSelector: '.medium-insert-images',
+                    itemSelector: 'figure',
+                    placeholder: '<figure class="placeholder">',
+                    handle: 'img',
+                    nested: false,
+                    vertical: false,
+                    afterMove: function () {
+                        that.$el.trigger('input');
+                    }
+                });
+            },
+            // uploadCompleted: function ($el, data) {}
         };
 
     /**
@@ -41,6 +85,7 @@
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
+        this.core = this.$el.data('plugin_'+ pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -50,6 +95,12 @@
         // Allow image preview only in browsers, that support's that
         if (this.options.preview && !window.FileReader) {
             this.options.preview = false;
+        }
+
+        // Extend editor's functions
+        if (this.core.getEditor()) {
+            this.core.getEditor()._serializePreImages = this.core.getEditor().serialize;
+            this.core.getEditor().serialize = this.editorSerialize;
         }
 
         this.init();
@@ -62,6 +113,11 @@
      */
 
     Images.prototype.init = function () {
+        var $images = this.$el.find('.medium-insert-images');
+
+        $images.find('figcaption').attr('contenteditable', true);
+        $images.find('figure').attr('contenteditable', false);
+
         this.events();
         this.backwardsCompatibility();
         this.sorting();
@@ -77,7 +133,8 @@
         $(document)
             .on('click', $.proxy(this, 'unselectImage'))
             .on('keydown', $.proxy(this, 'removeImage'))
-            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+            .on('click', '.medium-insert-images-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
+            .on('click', '.medium-insert-images-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
         this.$el
             .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'));
@@ -105,11 +162,27 @@
      * @return {object} Core object
      */
     Images.prototype.getCore = function () {
-        if (typeof(this.core) === 'undefined') {
-            this.core = this.$el.data('plugin_'+ pluginName);
-        }
-
         return this.core;
+    };
+
+    /**
+     * Extend editor's serialize function
+     *
+     * @return {object} Serialized data
+     */
+
+    Images.prototype.editorSerialize = function () {
+        var data = this._serializePreImages();
+
+        $.each(data, function (key) {
+            var $data = $('<div />').html(data[key].value);
+
+            $data.find('.medium-insert-images').find('figcaption, figure').removeAttr('contenteditable');
+
+            data[key].value = $data.html();
+        });
+
+        return data;
     };
 
     /**
@@ -120,25 +193,42 @@
 
     Images.prototype.add = function () {
         var that = this,
-            $file = $(this.templates['src/js/templates/images-fileupload.hbs']());
+            $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
+            fileUploadOptions = {
+                dataType: 'json',
+                add: function (e, data) {
+                    $.proxy(that, 'uploadAdd', e, data)();
+                },
+                done: function (e, data) {
+                    $.proxy(that, 'uploadDone', e, data)();
+                }
+            };
 
-        $file.fileupload({
-            url: this.options.uploadScript,
-            dataType: 'json',
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            add: function (e, data) {
-                $.proxy(that, 'uploadAdd', e, data)();
-            },
-            progress: function (e, data) {
+        // Backwards compatibility
+        if (this.options.uploadScript) {
+            fileUploadOptions.url = this.options.uploadScript;
+            this.getCore().deprecated('uploadScript', 'fileUploadOptions', '2.0');
+        }
+        if (this.options.formData) {
+            fileUploadOptions.formData = this.options.formData;
+            this.getCore().deprecated('formData', 'fileUploadOptions', '2.0');
+        }
+
+        // Only add progress callbacks for browsers that support XHR2,
+        // and test for XHR2 per:
+        // http://stackoverflow.com/questions/6767887/
+        // what-is-the-best-way-to-check-for-xhr2-file-upload-support
+        if (new XMLHttpRequest().upload) {
+            fileUploadOptions.progress = function (e, data) {
                 $.proxy(that, 'uploadProgress', e, data)();
-            },
-            progressall: function (e, data) {
+            };
+
+            fileUploadOptions.progressall = function (e, data) {
                 $.proxy(that, 'uploadProgressall', e, data)();
-            },
-            done: function (e, data) {
-                $.proxy(that, 'uploadDone', e, data)();
-            }
-        });
+            };
+        }
+
+        $file.fileupload($.extend(true, {}, this.options.fileUploadOptions, fileUploadOptions));
 
         $file.click();
     };
@@ -168,7 +258,7 @@
 
         $place.addClass('medium-insert-images');
 
-        if (this.options.preview === false && $place.find('progress').length === 0) {
+        if (this.options.preview === false && $place.find('progress').length === 0 && (new XMLHttpRequest().upload)) {
             $place.append(this.templates['src/js/templates/images-progressbar.hbs']());
         }
 
@@ -250,12 +340,14 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.getCore().clean();
-        this.$el.trigger('input');
-
         this.sorting();
+
+        if (this.options.uploadCompleted) {
+            this.options.uploadCompleted($el, data);
+        }
     };
 
     /**
@@ -266,19 +358,24 @@
      */
 
     Images.prototype.showImage = function (img, data) {
-        var $place, domImage;
+        var $place = this.$el.find('.medium-insert-active'),
+            domImage,
+            that;
+
+        // Hide editor's placeholder
+        $place.click();
 
         // If preview is allowed and preview image already exists,
         // replace it with uploaded image
+        that = this;
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+                that.$el.trigger('input');
             };
             domImage.src = img;
         } else {
-            $place = this.$el.find('.medium-insert-active');
-
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
                 img: img,
                 progress: this.options.preview
@@ -286,10 +383,32 @@
 
             $place.find('br').remove();
 
+            if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
+                $.each(this.options.styles, function (style, options) {
+                    var className = 'medium-insert-images-'+ style;
+
+                    $place.removeClass(className);
+
+                    if (options.removed) {
+                        options.removed($place);
+                    }
+                });
+
+                $place.addClass('medium-insert-images-grid');
+
+                if (this.options.styles.grid.added) {
+                    this.options.styles.grid.added($place);
+                }
+            }
+
             if (this.options.preview) {
                 data.submit();
             }
         }
+
+        this.$el.trigger('input');
+
+        return data.context;
     };
 
     Images.prototype.getDOMImage = function () {
@@ -304,15 +423,24 @@
      */
 
     Images.prototype.selectImage = function (e) {
-        var $image = $(e.target),
-            that = this;
+        if(this.getCore().options.enabled) {
+            var $image = $(e.target),
+                that = this;
 
-        $image.addClass('medium-insert-image-active');
-        $image.closest('.medium-insert-images').addClass('medium-insert-active');
+            // Hide keyboard on mobile devices
+            this.$el.blur();
 
-        setTimeout(function () {
-            that.addToolbar();
-        }, 50);
+            $image.addClass('medium-insert-image-active');
+            $image.closest('.medium-insert-images').addClass('medium-insert-active');
+
+            setTimeout(function () {
+                that.addToolbar();
+
+                if (that.options.captions) {
+                    that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+                }
+            }, 50);
+        }
     };
 
     /**
@@ -328,13 +456,19 @@
 
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
-            $('.medium-insert-images-toolbar').remove();
+            $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
+            this.getCore().removeCaptions($el);
             return;
         }
 
         $image.removeClass('medium-insert-image-active');
+        $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
-        $('.medium-insert-images-toolbar').remove();
+        if ($el.is('.medium-insert-caption-placeholder')) {
+            this.getCore().removeCaptionPlaceholder($image.closest('figure'));
+        } else if ($el.is('figcaption') === false) {
+            this.getCore().removeCaptions();
+        }
     };
 
     /**
@@ -358,11 +492,14 @@
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
 
-                $('.medium-insert-images-toolbar').remove();
+                $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
                 if ($parent.find('figure').length === 0) {
-                    $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
-                    $parent.before($empty);
+                    $empty = $parent.next();
+                    if ($empty.is('p') === false || $empty.text() !== '') {
+                        $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                        $parent.before($empty);
+                    }
                     $parent.remove();
 
                     // Hide addons
@@ -399,18 +536,32 @@
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar;
+            $toolbar, $toolbar2, top;
 
-        $toolbar = $(this.templates['src/js/templates/images-toolbar.hbs']({
-            styles: this.options.styles
+        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+            styles: this.options.styles,
+            actions: this.options.actions
         }).trim());
 
-        $('body').append($toolbar);
+        $toolbar = $('.medium-insert-images-toolbar');
+        $toolbar2 = $('.medium-insert-images-toolbar2');
+
+        top = $image.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
+        if (top < 0) {
+            top = 0;
+        }
 
         $toolbar
             .css({
-                top: $image.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an image outset, 5px - distance from an image
+                top: top,
                 left: $image.offset().left + $image.width() / 2 - $toolbar.width() / 2
+            })
+            .show();
+
+        $toolbar2
+            .css({
+                top: $image.offset().top + 2, // 2px - distance from a border
+                left: $image.offset().left + $image.width() - $toolbar2.width() - 4 // 4px - distance from a border
             })
             .show();
 
@@ -462,6 +613,28 @@
             }
         });
 
+        this.getCore().hideButtons();
+
+        this.$el.trigger('input');
+    };
+
+    /**
+     * Fires toolbar2 action
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Images.prototype.toolbar2Action = function (e) {
+        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
+            callback = this.options.actions[$button.data('action')].clicked;
+
+        if (callback) {
+            callback(this.$el.find('.medium-insert-image-active'));
+        }
+
+        this.getCore().hideButtons();
+
         this.$el.trigger('input');
     };
 
@@ -472,19 +645,7 @@
      */
 
     Images.prototype.sorting = function () {
-        var that = this;
-
-        $('.medium-insert-images').sortable({
-            group: 'medium-insert-images',
-            containerSelector: '.medium-insert-images',
-            itemSelector: 'figure',
-            placeholder: '<figure class="placeholder">',
-            nested: false,
-            vertical: false,
-            afterMove: function () {
-                that.$el.trigger('input');
-            }
-        });
+        this.options.sorting();
     };
 
     /** Plugin initialization */
