@@ -104,7 +104,7 @@
 
     Embeds.prototype.events = function () {
         $(document)
-            .on('click', $.proxy(this, 'unselectEmbed'))
+            //.on('click', $.proxy(this, 'unselectEmbed'))
             .on('keydown', $.proxy(this, 'removeEmbed'))
             .on('click', '.medium-insert-embeds-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
             .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
@@ -112,7 +112,7 @@
         this.$el
             .on('keyup click paste', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'))
-            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
+            .on('click', '.medium-editor-action[data-action]', $.proxy(this, 'selectEmbed'))
             .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
     };
 
@@ -132,6 +132,7 @@
         this.$el.find('.medium-insert-embeds').each(function () {
             if ($(this).find('.medium-insert-embed').length === 0) {
                 $(this).after(that.templates['src/js/templates/embeds-wrapper.hbs']({
+
                     html: $(this).html()
                 }));
                 $(this).remove();
@@ -378,9 +379,13 @@
             alert('Incorrect URL format specified');
             return false;
         } else {
+
             $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
-                html: html
+                html: html,
+                actions: this.options.actions,
+                styles: this.options.styles
             }));
+
             $place.remove();
 
             this.$el.trigger('input');
@@ -436,11 +441,9 @@
         if(this.getCore().options.enabled) {
             var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
                 that = this;
-
             $embed.addClass('medium-insert-embeds-selected');
-
             setTimeout(function () {
-                that.addToolbar();
+               // that.addToolbar();
 
                 if (that.options.captions) {
                     that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);

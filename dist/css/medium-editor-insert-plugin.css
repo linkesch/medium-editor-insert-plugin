@@ -207,8 +207,36 @@
 .medium-insert-embeds-selected .medium-insert-embed {
   outline: 2px solid #000; }
 
-.medium-insert-embeds-toolbar {
-  display: none; }
+.medium-insert-embeds-toolbar.styles {
+  left: 0;
+  background: none;
+  box-shadow: none;
+  border: 0 none;
+  text-align: left;
+  font-weight: lighter; }
+
+.medium-toggle-embeds-styles {
+  background-color: #242424;
+  padding: 10px 15px; }
+
+.medium-insert-embeds-toolbar2.action {
+  right: 0;
+  left: auto; }
+
+.medium-toggle-embeds-styles {
+  color: #fff;
+  display: inline-block;
+  text-decoration: none; }
+
+.medium-insert-embeds-toolbar.styles ul.medium-editor-toolbar-actions {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 0.5s linear, opacity 0.5s linear;
+          transition: visibility 0.5s linear, opacity 0.5s linear; }
+
+.medium-insert-embeds-toolbar.styles:hover ul.medium-editor-toolbar-actions {
+  visibility: visible;
+  opacity: 1; }
 
 .medium-insert-embeds .medium-insert-embeds-overlay, .mediumInsert-embeds .medium-insert-embeds-overlay {
   position: absolute;

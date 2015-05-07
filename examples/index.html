@@ -12,6 +12,17 @@
     <link rel="stylesheet" href="../dist/css/medium-editor-insert-plugin.min.css">
 
     <style>
+        .aside{
+            width:50%;
+        }
+
+        .editable, .aside{
+            float:left;
+              width:50%;
+        }
+  #container{
+    padding-left:60px;
+  }
         .medium-insert-images-slideshow figure {
             width: 100%;
         }
@@ -80,6 +91,9 @@
 
             <p>The plugin is free and released under MIT license.</p>
         </div>
+        <div class="aside">
+            ASICEDDE
+        </div>
 
         <footer>
             <a href="https://github.com/orthes/medium-editor-insert-plugin"><span class="fa fa-github"></span></a>
@@ -115,9 +129,27 @@
                 editor: editor,
                 addons: {
                     images: {
+                        styles:true,
                         autoGrid :false
+                    },
+                    embeds: {
+                        styles : {
+                           wide: {
+                                label: '<span class="fa fa-align-justify"></span>'
+                            },
+                        },
+                        actions :{
+                          remove: {
+                            label: '<span class="fa fa-times"></span>',
+                            clicked: function ($el) {
+                              var $event = $.Event('keydown');
+                              $event.which = 8;
+                              $(document).trigger($event);
+                            }
+                        }
                     }
                 }
+          }
             });
         });
 
