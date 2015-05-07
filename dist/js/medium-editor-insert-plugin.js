@@ -906,9 +906,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         $embeds.attr('contenteditable', false);
         $embeds.each(function () {
-            if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
-                $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
+
+            if(this.options.styles && this.options.actions){
+                if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
+                    $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
+                }
             }
+
         });
 
         this.events();
@@ -1251,6 +1255,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Embeds.prototype.selectEmbed = function (e) {
+
         if(this.getCore().options.enabled) {
             var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
                 that = this;
