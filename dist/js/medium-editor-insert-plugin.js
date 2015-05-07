@@ -914,22 +914,33 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Embeds.prototype.init = function () {
-        var $embeds = this.$el.find('.medium-insert-embeds');
 
-        $embeds.attr('contenteditable', false);
-        $embeds.each(function () {
+       var $embeds = this.$el.find('.medium-insert-embeds');
+       var html = $embeds.html();
 
-            if(this.options.styles && this.options.actions){
-                if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
-                    $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
-                }
-            }
 
-        });
+        $embeds.replaceWith(this.templates['src/js/templates/embeds-wrapper.hbs']({
+            html:html,
+            actions: this.options.actions,
+            styles: this.options.styles
+        }));
+
+        // $embeds.attr('contenteditable', false);
+        // $embeds.each(function () {
+
+        //     if(this.options.styles && this.options.actions){
+        //         if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
+        //             $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
+        //         }
+        //     }
+
+        // });
 
         this.events();
         this.backwardsCompatibility();
+        //this.initEmbeds()
     };
+
 
     /**
      * Event listeners
@@ -947,7 +958,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.$el
             .on('keyup click paste', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'))
-            .on('click', '.medium-editor-action[data-action]', $.proxy(this, 'selectEmbed'))
+            .on('click', '.medium-editor-action[data-action="remove"]', $.proxy(this, 'removeEmbed'))
             .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
     };
 
@@ -1000,7 +1011,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $data.find('.medium-insert-embeds').removeAttr('contenteditable');
             $data.find('.medium-insert-embeds-overlay').remove();
             $data.find('.medium-editor-toolbar').remove();
-
 
             data[key].value = $data.html();
         });
@@ -1330,13 +1340,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.removeEmbed = function (e) {
         var $embed, $empty;
 
-        if (e.which === 8 || e.which === 46) {
-            $embed = this.$el.find('.medium-insert-embeds-selected');
+            $embed = $(e.target).closest('.medium-insert-embeds');
 
-            if ($embed.length) {
+            if ($embed.length > 0) {
                 e.preventDefault();
-
-                $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
 
                 $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
                 $embed.before($empty);
@@ -1348,7 +1355,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 this.getCore().moveCaret($empty);
                 this.$el.trigger('input');
             }
-        }
+
     };
 
     /**

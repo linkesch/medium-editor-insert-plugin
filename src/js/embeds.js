@@ -81,7 +81,7 @@
     Embeds.prototype.init = function () {
 
        var $embeds = this.$el.find('.medium-insert-embeds');
-       var html = $embeds.html()
+       var html = $embeds.html();
 
 
         $embeds.replaceWith(this.templates['src/js/templates/embeds-wrapper.hbs']({
@@ -384,7 +384,6 @@
 
     Embeds.prototype.embed = function (html) {
         var $place = this.$el.find('.medium-insert-embeds-active');
-        console.log(html)
 
         if (!html) {
             alert('Incorrect URL format specified');
@@ -506,7 +505,7 @@
     Embeds.prototype.removeEmbed = function (e) {
         var $embed, $empty;
 
-            $embed = $(e.target).closest('.medium-insert-embeds')
+            $embed = $(e.target).closest('.medium-insert-embeds');
 
             if ($embed.length > 0) {
                 e.preventDefault();
