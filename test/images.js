@@ -461,7 +461,7 @@ test('contentediable attr are added on initialization', function () {
     equal(this.$el.find('.medium-insert-images figcaption').attr('contenteditable'), 'true', 'contenteditable attr was added to figcaption');
 });
 
-/* THIS TEST FOR SOME REASON DOESN'T WORK IN PHANTOMJS
+/* THESE TESTS FOR SOME REASON DON'T WORK IN PHANTOMJS
 
 test('editor\'s serialize removes also contenteditable attr', function () {
     var html = '<div class="medium-insert-images"><figure><img src="image1.jpg" alt=""></figure></div><p><br></p>',
@@ -480,5 +480,49 @@ test('editor\'s serialize removes also contenteditable attr', function () {
     });
 
     equal(editor.serialize()['element-0'].value, html, 'contenteditable attr were removed');
+});
+
+
+asyncTest('file type validation', function () {
+    sinon.stub(window, 'alert', function (text) {
+        ok(text.match(/^This file is not in a supported format/), 'alert was displayed');
+        window.alert.restore();
+        start();
+        return false;
+    });
+
+    this.$el.find('p').click();
+
+    this.addon.uploadAdd(null, {
+        files: [{ type: 'application/json' }]
+    });
+});
+
+asyncTest('file size validation', function () {
+    $('#qunit-fixture').html('<div class="editable"></div>');
+    this.$el = $('.editable');
+    this.$el.mediumInsert({
+        addons: {
+            images: {
+                fileUploadOptions: {
+                    maxFileSize: 1000
+                }
+            }
+        }
+    });
+    this.addon = this.$el.data('plugin_mediumInsertImages');
+
+    sinon.stub(window, 'alert', function (text) {
+        ok(text.match(/^This file is too big/), 'alert was displayed');
+        window.alert.restore();
+        start();
+        return false;
+    });
+
+    this.$el.find('p').click();
+
+    this.addon.uploadAdd(null, {
+        files: [{ type: 'image/jpeg', size: 1001 }]
+    });
 });
 */

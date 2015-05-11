@@ -67,6 +67,10 @@
                     }
                 });
             },
+            messages: {
+                acceptFileTypesError: 'This file is not in a supported format: ',
+                maxFileSizeError: 'This file is too big: '
+            }
             // uploadCompleted: function ($el, data) {}
         };
 
@@ -245,7 +249,21 @@
     Images.prototype.uploadAdd = function (e, data) {
         var $place = this.$el.find('.medium-insert-active'),
             that = this,
+            uploadErrors = [],
+            file = data.files[0],
+            acceptFileTypes = this.options.fileUploadOptions.acceptFileTypes,
+            maxFileSize = this.options.fileUploadOptions.maxFileSize,
             reader;
+
+        if (acceptFileTypes && !acceptFileTypes.test(file['type'])) {
+            uploadErrors.push(this.options.messages.acceptFileTypesError + file['name']);
+        } else if (maxFileSize && file['size'] > maxFileSize) {
+            uploadErrors.push(this.options.messages.maxFileSizeError + file['name']);
+        }
+        if (uploadErrors.length > 0) {
+            alert(uploadErrors.join("\n"));
+            return;
+        }
 
         this.getCore().hideButtons();
 
