@@ -1,4 +1,9 @@
 
+1.7.0 / 2015-05-11
+==================
+
+  * Version bump to 1.7.0, because 1.6.2 added file type and size validation which should cause a minor version bump, not only s patch
+
 1.6.2 / 2015-05-11
 ==================
 
