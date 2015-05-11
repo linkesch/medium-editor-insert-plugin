@@ -1,4 +1,11 @@
 
+1.6.2 / 2015-05-11
+==================
+
+  * Fix file type and file size validation
+  * Add a rotate animation on button
+  * Speed up Travis build
+
 1.6.1 / 2015-04-30
 ==================
 
