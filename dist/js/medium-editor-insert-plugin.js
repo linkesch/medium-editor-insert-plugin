@@ -916,25 +916,17 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Embeds.prototype.init = function () {
 
        var $embeds = this.$el.find('.medium-insert-embeds');
-       var html = $embeds.html();
+       var self = this;
 
+       $embeds.each(function(){
+            var html = $(this).find('.medium-insert-embed').html();
 
-        $embeds.replaceWith(this.templates['src/js/templates/embeds-wrapper.hbs']({
-            html:html,
-            actions: this.options.actions,
-            styles: this.options.styles
-        }));
-
-        // $embeds.attr('contenteditable', false);
-        // $embeds.each(function () {
-
-        //     if(this.options.styles && this.options.actions){
-        //         if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
-        //             $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
-        //         }
-        //     }
-
-        // });
+            $(this).replaceWith(self.templates['src/js/templates/embeds-wrapper.hbs']({
+                html:html,
+                actions: self.options.actions,
+                styles: self.options.styles
+            }));
+       });
 
         this.events();
         this.backwardsCompatibility();
@@ -1003,6 +995,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Embeds.prototype.editorSerialize = function () {
+
         var data = this._serializePreEmbeds();
 
         $.each(data, function (key) {
@@ -1011,6 +1004,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $data.find('.medium-insert-embeds').removeAttr('contenteditable');
             $data.find('.medium-insert-embeds-overlay').remove();
             $data.find('.medium-editor-toolbar').remove();
+            $data.find('.medium-insert-active').remove();
 
             data[key].value = $data.html();
         });
