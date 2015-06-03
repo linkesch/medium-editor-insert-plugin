@@ -57,19 +57,14 @@
 
         // Extend editor's functions
         if (this.options && this.options.editor) {
-            // Deprecated in editor
-            this.options.editor._deactivate = this.options.editor.deactivate;
-            this.options.editor._activate = this.options.editor.activate;
-            this.options.editor.deactivate = this.editorDeactivate;
-            this.options.editor.activate = this.editorActivate;
-
             this.options.editor._serialize = this.options.editor.serialize;
             this.options.editor._destroy = this.options.editor.destroy;
             this.options.editor._setup = this.options.editor.setup;
-            this.options.editor._hideInsertButtons = this.hideButtons;
+
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
+
             this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
         }
     }
@@ -147,36 +142,6 @@
     };
 
     /**
-     * Extend editor's deactivate function to deactivate this plugin too
-     *
-     * @deprecated
-     * @return {void}
-     */
-
-    Core.prototype.editorDeactivate = function () {
-        $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).disable();
-        });
-
-        this._deactivate();
-    };
-
-    /**
-     * Extend editor's activate function to activate this plugin too
-     *
-     * @deprecated
-     * @return {void}
-     */
-
-    Core.prototype.editorActivate = function () {
-        this._activate();
-
-        $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).enable();
-        });
-    };
-
-    /**
      * Extend editor's destroy function to deactivate this plugin too
      *
      * @return {void}
@@ -221,7 +186,7 @@
 
         if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
             this.showPlaceholder(el);
-            this.base._hideInsertButtons($(el));
+            this.hideButtons();
         } else {
             this.hidePlaceholder(el);
         }
