@@ -1,3 +1,5 @@
+/*global MediumEditor*/
+
 ;(function ($, window, document, Util, undefined) {
 
     'use strict';
