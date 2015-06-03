@@ -70,7 +70,7 @@
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
-            this.options.editor.placeholders.updatePlaceholder = this.editorUpdatePlaceholder;
+            this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
         }
     }
 
@@ -215,12 +215,11 @@
             cloneHtml;
 
         $clone.find('.medium-insert-buttons').remove();
-        cloneHtml = $clone.html().replace(/^\s+|\s+$/g, '').replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
+        cloneHtml = $clone.html()
+            .replace(/^\s+|\s+$/g, '')
+            .replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
 
-        if (!(el.querySelector('img')) &&
-            !(el.querySelector('blockquote')) &&
-            cloneHtml === '') {
-
+        if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
             this.showPlaceholder(el);
             this.base._hideInsertButtons($(el));
         } else {
