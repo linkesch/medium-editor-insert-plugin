@@ -592,26 +592,6 @@
         }
     };
 
-    /**
-     * Show warning about deprecated options/methods
-     *
-     * @param {string} oldName
-     * @param {string} newName
-     * @param {string} version
-     * @return {void}
-     */
-
-    Core.prototype.deprecated = function (oldName, newName, version) {
-        var m = oldName +" is deprecated, please use "+ newName +" instead.";
-        if (version) {
-            m += " Will be removed in "+ version;
-        }
-
-        if(window.console !== undefined){
-            window.console.warn(m);
-        }
-    };
-
     /** Plugin initialization */
 
     $.fn[pluginName] = function (options) {

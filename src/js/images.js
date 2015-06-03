@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+;(function ($, window, document, Util, undefined) {
 
     'use strict';
 
@@ -211,11 +211,11 @@
         // Backwards compatibility
         if (this.options.uploadScript) {
             fileUploadOptions.url = this.options.uploadScript;
-            this.getCore().deprecated('uploadScript', 'fileUploadOptions', '2.0');
+            Util.deprecated('uploadScript', 'fileUploadOptions', '2.0');
         }
         if (this.options.formData) {
             fileUploadOptions.formData = this.options.formData;
-            this.getCore().deprecated('formData', 'fileUploadOptions', '2.0');
+            Util.deprecated('formData', 'fileUploadOptions', '2.0');
         }
 
         // Only add progress callbacks for browsers that support XHR2,
@@ -676,4 +676,4 @@
         });
     };
 
-})(jQuery, window, document);
+})(jQuery, window, document, MediumEditor.util);
