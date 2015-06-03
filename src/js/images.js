@@ -161,15 +161,6 @@
     };
 
     /**
-     * Get the Core object
-     *
-     * @return {object} Core object
-     */
-    Images.prototype.getCore = function () {
-        return this.core;
-    };
-
-    /**
      * Extend editor's serialize function
      *
      * @return {object} Serialized data
@@ -265,13 +256,13 @@
             return;
         }
 
-        this.getCore().hideButtons();
+        this.core.hideButtons();
 
         // Replace paragraph with div, because figure elements can't be inside paragraph
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
-            this.getCore().moveCaret($place);
+            this.core.moveCaret($place);
         }
 
         $place.addClass('medium-insert-images');
@@ -360,7 +351,7 @@
     Images.prototype.uploadDone = function (e, data) {
         var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
-        this.getCore().clean();
+        this.core.clean();
         this.sorting();
 
         if (this.options.uploadCompleted) {
@@ -441,7 +432,7 @@
      */
 
     Images.prototype.selectImage = function (e) {
-        if(this.getCore().options.enabled) {
+        if(this.core.options.enabled) {
             var $image = $(e.target),
                 that = this;
 
@@ -455,7 +446,7 @@
                 that.addToolbar();
 
                 if (that.options.captions) {
-                    that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+                    that.core.addCaption($image.closest('figure'), that.options.captionPlaceholder);
                 }
             }, 50);
         }
@@ -475,7 +466,7 @@
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
             $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
-            this.getCore().removeCaptions($el);
+            this.core.removeCaptions($el);
             return;
         }
 
@@ -483,9 +474,9 @@
         $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
         if ($el.is('.medium-insert-caption-placeholder')) {
-            this.getCore().removeCaptionPlaceholder($image.closest('figure'));
+            this.core.removeCaptionPlaceholder($image.closest('figure'));
         } else if ($el.is('figcaption') === false) {
-            this.getCore().removeCaptions();
+            this.core.removeCaptions();
         }
     };
 
@@ -521,9 +512,9 @@
                     $parent.remove();
 
                     // Hide addons
-                    this.getCore().hideAddons();
+                    this.core.hideAddons();
 
-                    this.getCore().moveCaret($empty);
+                    this.core.moveCaret($empty);
                 }
 
                 this.$el.trigger('input');
@@ -631,7 +622,7 @@
             }
         });
 
-        this.getCore().hideButtons();
+        this.core.hideButtons();
 
         this.$el.trigger('input');
     };
@@ -651,7 +642,7 @@
             callback(this.$el.find('.medium-insert-image-active'));
         }
 
-        this.getCore().hideButtons();
+        this.core.hideButtons();
 
         this.$el.trigger('input');
     };

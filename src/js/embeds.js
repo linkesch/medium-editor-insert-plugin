@@ -136,16 +136,6 @@
     };
 
     /**
-     * Get the Core object
-     *
-     * @return {object} Core object
-     */
-
-    Embeds.prototype.getCore = function () {
-        return this.core;
-    };
-
-    /**
      * Extend editor's serialize function
      *
      * @return {object} Serialized data
@@ -184,7 +174,7 @@
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
-            this.getCore().moveCaret($place);
+            this.core.moveCaret($place);
         }
 
         $place.addClass('medium-insert-embeds medium-insert-embeds-input medium-insert-embeds-active');
@@ -192,7 +182,7 @@
         this.togglePlaceholder({ target: $place.get(0) });
 
         $place.click();
-        this.getCore().hideButtons();
+        this.core.hideButtons();
     };
 
     /**
@@ -247,7 +237,7 @@
      */
 
     Embeds.prototype.fixRightClickOnPlaceholder = function (e) {
-        this.getCore().moveCaret($(e.target));
+        this.core.moveCaret($(e.target));
     };
 
     /**
@@ -415,7 +405,7 @@
 
         this.$el.trigger('input');
 
-        this.getCore().moveCaret($place);
+        this.core.moveCaret($place);
     };
 
     /**
@@ -426,7 +416,7 @@
      */
 
     Embeds.prototype.selectEmbed = function (e) {
-        if(this.getCore().options.enabled) {
+        if(this.core.options.enabled) {
             var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
                 that = this;
 
@@ -436,7 +426,7 @@
                 that.addToolbar();
 
                 if (that.options.captions) {
-                    that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+                    that.core.addCaption($embed.find('figure'), that.options.captionPlaceholder);
                 }
             }, 50);
         }
@@ -456,11 +446,11 @@
         if ($el.hasClass('medium-insert-embeds-selected')) {
             $embed.not($el).removeClass('medium-insert-embeds-selected');
             $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
-            this.getCore().removeCaptions($el.find('figcaption'));
+            this.core.removeCaptions($el.find('figcaption'));
 
             if ($(e.target).is('.medium-insert-caption-placeholder') || $(e.target).is('figcaption')) {
                 $el.removeClass('medium-insert-embeds-selected');
-                this.getCore().removeCaptionPlaceholder($el.find('figure'));
+                this.core.removeCaptionPlaceholder($el.find('figure'));
             }
             return;
         }
@@ -469,9 +459,9 @@
         $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
 
         if ($(e.target).is('.medium-insert-caption-placeholder')) {
-            this.getCore().removeCaptionPlaceholder($el.find('figure'));
+            this.core.removeCaptionPlaceholder($el.find('figure'));
         } else if ($(e.target).is('figcaption') === false) {
-            this.getCore().removeCaptions();
+            this.core.removeCaptions();
         }
     };
 
@@ -498,9 +488,9 @@
                 $embed.remove();
 
                 // Hide addons
-                this.getCore().hideAddons();
+                this.core.hideAddons();
 
-                this.getCore().moveCaret($empty);
+                this.core.moveCaret($empty);
                 this.$el.trigger('input');
             }
         }
