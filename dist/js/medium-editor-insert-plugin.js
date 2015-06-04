@@ -203,7 +203,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
-            this.options.editor.placeholders.updatePlaceholder = this.editorUpdatePlaceholder;
+            this.options.editor.updatePlaceholder = this.editorUpdatePlaceholder;
         }
     }
 
