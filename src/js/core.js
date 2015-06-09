@@ -57,20 +57,15 @@
 
         // Extend editor's functions
         if (this.options && this.options.editor) {
-            // Deprecated in editor
-            this.options.editor._deactivate = this.options.editor.deactivate;
-            this.options.editor._activate = this.options.editor.activate;
-            this.options.editor.deactivate = this.editorDeactivate;
-            this.options.editor.activate = this.editorActivate;
-
             this.options.editor._serialize = this.options.editor.serialize;
             this.options.editor._destroy = this.options.editor.destroy;
             this.options.editor._setup = this.options.editor.setup;
-            this.options.editor._hideInsertButtons = this.hideButtons;
+
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
-            this.options.editor.placeholders.updatePlaceholder = this.editorUpdatePlaceholder;
+
+            this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
         }
     }
 
@@ -147,36 +142,6 @@
     };
 
     /**
-     * Extend editor's deactivate function to deactivate this plugin too
-     *
-     * @deprecated
-     * @return {void}
-     */
-
-    Core.prototype.editorDeactivate = function () {
-        $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).disable();
-        });
-
-        this._deactivate();
-    };
-
-    /**
-     * Extend editor's activate function to activate this plugin too
-     *
-     * @deprecated
-     * @return {void}
-     */
-
-    Core.prototype.editorActivate = function () {
-        this._activate();
-
-        $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).enable();
-        });
-    };
-
-    /**
      * Extend editor's destroy function to deactivate this plugin too
      *
      * @return {void}
@@ -215,14 +180,13 @@
             cloneHtml;
 
         $clone.find('.medium-insert-buttons').remove();
-        cloneHtml = $clone.html().replace(/^\s+|\s+$/g, '').replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
+        cloneHtml = $clone.html()
+            .replace(/^\s+|\s+$/g, '')
+            .replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
 
-        if (!(el.querySelector('img')) &&
-            !(el.querySelector('blockquote')) &&
-            cloneHtml === '') {
-
+        if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
             this.showPlaceholder(el);
-            this.base._hideInsertButtons($(el));
+            this.hideButtons();
         } else {
             this.hidePlaceholder(el);
         }
@@ -625,26 +589,6 @@
             $caption
                 .removeClass('medium-insert-caption-placeholder')
                 .removeAttr('data-placeholder');
-        }
-    };
-
-    /**
-     * Show warning about deprecated options/methods
-     *
-     * @param {string} oldName
-     * @param {string} newName
-     * @param {string} version
-     * @return {void}
-     */
-
-    Core.prototype.deprecated = function (oldName, newName, version) {
-        var m = oldName +" is deprecated, please use "+ newName +" instead.";
-        if (version) {
-            m += " Will be removed in "+ version;
-        }
-
-        if(window.console !== undefined){
-            window.console.warn(m);
         }
     };
 
