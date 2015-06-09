@@ -60,6 +60,7 @@
             this.options.editor._serialize = this.options.editor.serialize;
             this.options.editor._destroy = this.options.editor.destroy;
             this.options.editor._setup = this.options.editor.setup;
+            this.options.editor._hideInsertButtons = this.hideButtons;
 
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
@@ -186,7 +187,7 @@
 
         if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
             this.showPlaceholder(el);
-            this.hideButtons();
+            this.base._hideInsertButtons($(el));
         } else {
             this.hidePlaceholder(el);
         }
