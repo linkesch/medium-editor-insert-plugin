@@ -9,13 +9,11 @@
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
-            uploadScript: null, // DEPRECATED: Use fileUploadOptions instead
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: null, // DEPRECATED: Use fileUploadOptions instead
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -200,16 +198,6 @@
                     $.proxy(that, 'uploadDone', e, data)();
                 }
             };
-
-        // Backwards compatibility
-        if (this.options.uploadScript) {
-            fileUploadOptions.url = this.options.uploadScript;
-            Util.deprecated('uploadScript', 'fileUploadOptions', '2.0');
-        }
-        if (this.options.formData) {
-            fileUploadOptions.formData = this.options.formData;
-            Util.deprecated('formData', 'fileUploadOptions', '2.0');
-        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
