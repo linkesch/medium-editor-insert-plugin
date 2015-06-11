@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.0.0 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.0.1 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -193,6 +193,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             this.options.editor._serialize = this.options.editor.serialize;
             this.options.editor._destroy = this.options.editor.destroy;
             this.options.editor._setup = this.options.editor.setup;
+            this.options.editor._hideInsertButtons = this.hideButtons;
 
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
@@ -319,7 +320,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
             this.showPlaceholder(el);
-            this.hideButtons();
+            this.base._hideInsertButtons($(el));
         } else {
             this.hidePlaceholder(el);
         }
