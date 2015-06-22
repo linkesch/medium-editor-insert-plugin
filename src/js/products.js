@@ -149,7 +149,7 @@
             this.insertProduct((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
             //this.getCore().moveCaret($place);
         }
-    },
+    };
 
     /**
      * Disable placeholder selection, instead move cursor to input

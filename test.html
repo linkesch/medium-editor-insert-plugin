@@ -11,6 +11,12 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/qunit/qunit/qunit.js"></script>
+    <script src="bower_components/blanket/dist/qunit/blanket.min.js"></script>
+    <script>
+        if (location.href.match(/(\?|&)gruntReport($|&|=)/)) {
+            blanket.options("reporter", "node_modules/grunt-blanket-qunit/reporter/grunt-reporter.js");
+        }
+    </script>
     <script src="/testem.js"></script>
     <script src="test/lib/Blob.js"></script>
     <script src="test/lib/sinon/sinon.js"></script>
@@ -23,9 +29,9 @@
     <script src="bower_components/jquery-sortable/source/js/jquery-sortable-min.js"></script>
     <script src="src/js/templates.js"></script>
 
-    <script src="src/js/core.js"></script>
-    <script src="src/js/images.js"></script>
-    <script src="src/js/embeds.js"></script>
+    <script src="src/js/core.js" data-cover></script>
+    <script src="src/js/images.js" data-cover></script>
+    <script src="src/js/embeds.js" data-cover></script>
 
     <script src="test/core.js"></script>
     <script src="test/images.js"></script>

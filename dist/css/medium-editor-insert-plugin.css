@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v1.0.1 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.0.1 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -21,13 +21,28 @@
   .medium-insert-images.medium-insert-images-left, .medium-insert-images-left.mediumInsert, .mediumInsert.small {
     max-width: 33.33%;
     float: left;
-    margin: 0 40px 20px 0; }
+    margin: 0 30px 20px 0; }
   .medium-insert-images.medium-insert-images-right, .medium-insert-images-right.mediumInsert {
     max-width: 33.33%;
     float: right;
-    margin: 0 0 20px 40px; }
+    margin: 0 0 20px 30px; }
   .medium-insert-images.medium-insert-images-grid, .medium-insert-images-grid.mediumInsert {
-    margin: -0.5em; }
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+    -webkit-box-align: start;
+    -webkit-align-items: flex-start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    margin: 0.5em -0.5em; }
     .medium-insert-images.medium-insert-images-grid figure, .medium-insert-images-grid.mediumInsert figure {
       width: 33.33%;
       display: inline-block; }
@@ -37,11 +52,35 @@
 
 .medium-insert-embeds, .mediumInsert-embeds {
   text-align: center;
-  margin: 1em 0; }
+  margin: 1em 0;
+  position: relative; }
   .medium-insert-embeds iframe, .mediumInsert-embeds iframe {
-    margin: 0 auto; }
+    margin: 0 auto !important; }
   .medium-insert-embeds div, .mediumInsert-embeds div {
-    margin: 0 auto; }
+    margin: 0 auto !important; }
+  .medium-insert-embeds.medium-insert-embeds-left, .medium-insert-embeds-left.mediumInsert-embeds {
+    width: 33.33%;
+    float: left;
+    margin: 0 30px 20px 0; }
+  .medium-insert-embeds.medium-insert-embeds-right, .medium-insert-embeds-right.mediumInsert-embeds {
+    width: 33.33%;
+    float: right;
+    margin: 0 0 20px 30px; }
+
+.medium-insert-images figure, .mediumInsert figure, .medium-insert-embeds figure, .mediumInsert-embeds figure {
+  position: relative; }
+  .medium-insert-images figure figcaption, .mediumInsert figure figcaption, .medium-insert-embeds figure figcaption, .mediumInsert-embeds figure figcaption {
+    position: relative;
+    z-index: 1;
+    display: block;
+    text-align: center;
+    margin: 10px 0;
+    color: #ccc;
+    font-size: 0.8em;
+    font-style: italic;
+    outline: 0 solid transparent; }
+    .medium-insert-images figure figcaption:focus, .mediumInsert figure figcaption:focus, .medium-insert-embeds figure figcaption:focus, .mediumInsert-embeds figure figcaption:focus {
+      outline: 0 solid transparent; }
 
 .medium-editor-insert-plugin {
   outline: 0 solid transparent; }
@@ -78,7 +117,19 @@
       font-size: 25px;
       line-height: 28px;
       text-align: center;
-      text-decoration: none; }
+      text-decoration: none;
+      background: #fff;
+      -webkit-transform: rotate(0);
+          -ms-transform: rotate(0);
+              transform: rotate(0);
+      -webkit-transition: -webkit-transform 100ms;
+              transition: transform 100ms; }
+      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show.medium-insert-buttons-rotate {
+        -webkit-transition: -webkit-transform 250ms;
+                transition: transform 250ms;
+        -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+                transform: rotate(45deg); }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
       padding: 0;
@@ -104,6 +155,16 @@
           .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a .fa {
             font-size: 15px; }
 
+.medium-insert-caption-placeholder {
+  position: relative; }
+  .medium-insert-caption-placeholder:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    content: attr(data-placeholder); }
+
 .dragging {
   cursor: move; }
 
@@ -115,12 +176,10 @@
 
 .medium-insert-images, .mediumInsert {
   margin: 1em 0; }
-  .medium-insert-images figure, .mediumInsert figure {
-    position: relative; }
   .medium-insert-images .dragged, .mediumInsert .dragged {
     position: absolute;
     top: 0;
-    opacity: 0.5;
+    opacity: .5;
     z-index: 2000; }
   .medium-insert-images .placeholder, .mediumInsert .placeholder {
     position: relative;
@@ -138,46 +197,27 @@
 .medium-insert-embeds-input {
   position: relative;
   color: #ccc;
-  z-index: 1; }
+  z-index: 1;
+  text-align: left; }
 
 .medium-insert-embeds-placeholder {
-  position: absolute;
-  top: 0;
-  z-index: 0; }
+  position: relative; }
+  .medium-insert-embeds-placeholder:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: attr(data-placeholder);
+    color: #ccc; }
 
-.medium-insert-products {
-  position: relative;
-  height: 250px;
-  width: 300px;
-  margin-bottom: 25px; }
-
-.hubrick-product-block {
-  position: absolute;
-  height: 250px;
-  border: 1px solid #dbdbdb;
-  padding: 8px; }
-
-.medium-insert-products-active {
+.medium-insert-embeds-selected .medium-insert-embed {
   outline: 2px solid #000; }
-  .medium-insert-products-active .hubrick-product-block {
-    border: none; }
 
-.medium-insert-products-input {
-  position: relative;
-  color: #ccc;
-  z-index: 1; }
+.medium-insert-embeds-toolbar {
+  display: none; }
 
-.medium-insert-products-placeholder {
+.medium-insert-embeds .medium-insert-embeds-overlay, .mediumInsert-embeds .medium-insert-embeds-overlay {
   position: absolute;
+  width: 100%;
+  height: 100%;
   top: 0;
-  z-index: 0; }
-
-.medium-insert-products-left {
-  max-width: 33.33%;
-  float: left;
-  margin: 0 40px 20px 0; }
-
-.medium-insert-products-right {
-  max-width: 33.33%;
-  float: right;
-  margin: 0 0 20px 40px; }
+  left: 0; }

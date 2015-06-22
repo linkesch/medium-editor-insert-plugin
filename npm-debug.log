@@ -1,0 +1,34 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'run', 'test' ]
+2 info using npm@2.1.10
+3 info using node@v0.13.0-pre
+4 verbose run-script [ 'pretest', 'test', 'posttest' ]
+5 info pretest medium-editor-insert-plugin@2.0.1
+6 info test medium-editor-insert-plugin@2.0.1
+7 verbose unsafe-perm in lifecycle true
+8 info medium-editor-insert-plugin@2.0.1 Failed to exec test script
+9 verbose stack Error: Exit status 3
+9 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:212:16)
+9 verbose stack     at EventEmitter.emit (events.js:110:17)
+9 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:14:12)
+9 verbose stack     at ChildProcess.emit (events.js:110:17)
+9 verbose stack     at maybeClose (child_process.js:1000:16)
+9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1072:5)
+10 verbose pkgid medium-editor-insert-plugin@2.0.1
+11 verbose cwd /Users/elenav/dev/work/medium-editor-insert-plugin
+12 error Darwin 14.1.0
+13 error argv "node" "/usr/local/bin/npm" "run" "test"
+14 error node v0.13.0-pre
+15 error npm  v2.1.10
+16 error code ELIFECYCLE
+17 error medium-editor-insert-plugin@2.0.1 test: `grunt test --verbose`
+17 error Exit status 3
+18 error Failed at the medium-editor-insert-plugin@2.0.1 test script 'grunt test --verbose'.
+18 error This is most likely a problem with the medium-editor-insert-plugin package,
+18 error not with npm itself.
+18 error Tell the author that this fails on your system:
+18 error     grunt test --verbose
+18 error You can get their info via:
+18 error     npm owner ls medium-editor-insert-plugin
+18 error There is likely additional logging output above.
+19 verbose exit [ 1, true ]

@@ -2,11 +2,11 @@
     text-align: center;
     figure {
          margin: 0;
-         display: block; 
+         display: block;
          img {
              max-width: 100%;
              margin-top: 1em;
-             vertical-align: top; 
+             vertical-align: top;
          }
          &:first-child {
              img {
@@ -25,7 +25,11 @@
         margin: 0 0 20px 40px;
     }
     &.medium-insert-images-grid {
-        margin: -0.5em;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: center;
+        margin: 0.5em -0.5em;
         figure {
             width: 33.33%;
             display: inline-block;
@@ -40,11 +44,42 @@
 .medium-insert-embeds {
     text-align: center;
     margin: 1em 0;
+    position: relative;
     iframe {
-        margin: 0 auto;
+        margin: 0 auto !important;
     }
     div {
-        margin: 0 auto;
+        margin: 0 auto !important;
+    }
+    &.medium-insert-embeds-left {
+        width: 33.33%;
+        float: left;
+        margin: 0 30px 20px 0;
+    }
+    &.medium-insert-embeds-right {
+        width: 33.33%;
+        float: right;
+        margin: 0 0 20px 30px;
+    }
+}
+
+.medium-insert-images, .medium-insert-embeds {
+    figure {
+        position: relative;
+        figcaption {
+            position: relative;
+            z-index: 1;
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+            color: #ccc;
+            font-size: 0.8em;
+            font-style: italic;
+            outline: 0 solid transparent;
+            &:focus {
+                outline: 0 solid transparent;
+            }
+        }
     }
 }
 
