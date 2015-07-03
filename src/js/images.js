@@ -9,6 +9,7 @@
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
+            deleteMethod: 'POST',
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
@@ -521,7 +522,14 @@
 
     Images.prototype.deleteFile = function (file) {
         if (this.options.deleteScript) {
-            $.post(this.options.deleteScript, { file: file });
+            // If deleteMethod is somehow undefined, defaults to POST
+            var method = this.options.deleteMethod || 'POST';
+
+            $.ajax({
+                url: this.options.deleteScript,
+                type: method,
+                data: { file: file }
+            });
         }
     };
 
