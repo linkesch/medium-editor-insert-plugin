@@ -313,9 +313,9 @@ asyncTest('deleting file', function () {
         .append('<figure><img src="image1.jpg" alt=""></figure>'+
             '<figure><img src="image2.jpg" alt="" class="medium-insert-image-active"></figure>');
 
-    this.stub(jQuery, 'post', function () {
+    this.stub(jQuery, 'ajax', function () {
        ok(1, 'ajax call created');
-       jQuery.post.restore();
+       jQuery.ajax.restore();
        start();
     });
 
