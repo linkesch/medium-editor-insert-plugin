@@ -8,7 +8,7 @@
     var pluginName = 'mediumInsert',
         addonName = 'Images', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-camera"></span>',
+            label: '<div class="icon icon-camera"></div>',
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
@@ -20,29 +20,29 @@
             },
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<div class="icon icon-align-justify"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<div class="icon icon-align-left"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<div class="icon icon-align-right"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>',
+                    label: '<div class="icon icon-grid"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                    label: '<div class="icon icon-remove"></div>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 

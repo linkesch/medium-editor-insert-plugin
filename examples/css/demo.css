@@ -67,3 +67,7 @@ footer a {
 footer .fa {
     font-size: 2.5em;
 }
+
+.icon-play {
+    background-image: url('../../src/assets/icons/play.svg');
+}

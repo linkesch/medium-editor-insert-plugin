@@ -78,14 +78,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Ha
   return "<input type=\"file\" multiple>";
   },"useData":true});
 
-
 this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<figure contenteditable=\"false\">\n    <img src=\""
     + escapeExpression(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"img","hash":{},"data":data}) : helper)))
     + "\" alt=\"\">\n</figure>";
 },"useData":true});
-
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<progress min=\"0\" max=\"100\" value=\"0\">0</progress>";
@@ -783,31 +781,31 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
     var pluginName = 'mediumInsert',
         addonName = 'Embeds', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-youtube-play"></span>',
+            label: '<div class="icon icon-youtube"></div>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<div class="icon icon-align-justify"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<div class="icon icon-align-left"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<div class="icon icon-align-right"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                    label: '<div class="icon icon-remove"></div>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 
@@ -1406,7 +1404,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
     var pluginName = 'mediumInsert',
         addonName = 'Images', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-camera"></span>',
+            label: '<div class="icon icon-camera"></div>',
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
@@ -1418,29 +1416,29 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             },
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<div class="icon icon-align-justify"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<div class="icon icon-align-left"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<div class="icon icon-align-right"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>',
+                    label: '<div class="icon icon-grid"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                    label: '<div class="icon icon-remove"></div>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 
@@ -2067,17 +2065,17 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
         // first char is uppercase
         addonName = 'Products', 
         defaults = {
-            label: '<span class="fa fa-shopping-cart"></span>',
+            label: '<div class="icon icon-shopping-cart"></div>',
             placeholder: 'Search for a product on Hubrick',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>'
+                    label: '<div class="icon icon-align-justify"></div>'
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>'
+                    label: '<div class="icon icon-align-left"></div>',
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>'
+                    label: '<div class="icon icon-align-right"></div>'
                 }
             }
         };
@@ -2208,7 +2206,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             this.insertProduct((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
             //this.getCore().moveCaret($place);
         }
-    },
+    };
 
     /**
      * Disable placeholder selection, instead move cursor to input

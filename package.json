@@ -18,6 +18,7 @@
     "grunt-banner": "^0.2.3",
     "grunt-blanket-qunit": "^0.2.0",
     "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-handlebars": "^0.9.1",
     "grunt-contrib-jshint": "~0.11.0",
     "grunt-contrib-uglify": "~0.9.1",

@@ -1,0 +1,53 @@
+
+.medium-insert-buttons-addons {
+    .icon {
+        background-size: 18px 18px;
+        background-position: 6px 6px;
+        opacity: .3;
+    }
+}
+
+.medium-editor-toolbar-actions {
+    .icon {
+        background-size: 18px 18px;
+    }
+}
+
+.icon {
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+
+    &.icon-camera {
+        background-image: url('../assets/icons/camera.svg');
+    }
+
+    &.icon-align-justify {
+        background-image: url('../assets/icons/justify.svg');
+    }
+
+    &.icon-align-left {
+        background-image: url('../assets/icons/align-left.svg');
+    }
+
+    &.icon-align-right {
+        background-image: url('../assets/icons/align-right.svg');
+    }
+
+    &.icon-grid {
+        background-image: url('../assets/icons/grid.svg');
+    }
+
+    &.icon-remove {
+        background-image: url('../assets/icons/remove.svg');
+    }
+
+    &.icon-youtube {
+        background-image: url('../assets/icons/youtube.svg');
+    }
+
+    &.icon-shopping-cart {
+        background-image: url('../assets/icons/shopping-cart.svg');
+    }
+
+}
