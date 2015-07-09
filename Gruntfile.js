@@ -63,6 +63,15 @@ module.exports = function(grunt) {
             }
         },
 
+        copy: {
+            dist: {
+                expand: true,
+                cwd: 'src/assets/',
+                src: ['**'],
+                dest: 'dist/assets/'
+            },
+        },
+
         csso: {
             dist: {
                 options: {
@@ -122,8 +131,9 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('test', ['jshint', 'blanket_qunit']);
-    grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
+    grunt.registerTask('js', ['handlebars', 'uglify', 'concat']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
-    grunt.registerTask('default', ['js', 'css']);
+    grunt.registerTask('assets', ['copy']);
+    grunt.registerTask('default', ['js', 'css', 'assets']);
 
 };

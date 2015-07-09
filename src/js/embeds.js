@@ -6,31 +6,31 @@
     var pluginName = 'mediumInsert',
         addonName = 'Embeds', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-youtube-play"></span>',
+            label: '<div class="icon icon-youtube"></div>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<div class="icon icon-align-justify"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<div class="icon icon-align-left"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<div class="icon icon-align-right"></div>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                    label: '<div class="icon icon-remove"></div>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 

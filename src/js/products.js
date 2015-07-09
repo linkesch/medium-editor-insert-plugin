@@ -8,17 +8,17 @@
         // first char is uppercase
         addonName = 'Products', 
         defaults = {
-            label: '<span class="fa fa-shopping-cart"></span>',
+            label: '<div class="icon icon-shopping-cart"></div>',
             placeholder: 'Search for a product on Hubrick',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>'
+                    label: '<div class="icon icon-align-justify"></div>'
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>'
+                    label: '<div class="icon icon-align-left"></div>',
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>'
+                    label: '<div class="icon icon-align-right"></div>'
                 }
             }
         };
