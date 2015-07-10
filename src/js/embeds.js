@@ -30,7 +30,7 @@
             },
             actions: {
                 remove: {
-                    label: '<div class="icon icon-remove"></div>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 
