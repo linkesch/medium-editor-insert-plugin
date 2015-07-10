@@ -11,6 +11,21 @@
     .icon {
         background-size: 18px 18px;
     }
+
+    svg {
+        transition: fill .2s ease;
+        fill: white;
+    }
+
+    button {
+        padding-top: 12px !important;
+
+        &:hover {
+            svg {
+                fill: #45d187;
+            }
+        }
+    }
 }
 
 .icon {
@@ -20,22 +35,6 @@
 
     &.icon-camera {
         background-image: url('../assets/icons/camera.svg');
-    }
-
-    &.icon-align-justify {
-        background-image: url('../assets/icons/justify.svg');
-    }
-
-    &.icon-align-left {
-        background-image: url('../assets/icons/align-left.svg');
-    }
-
-    &.icon-align-right {
-        background-image: url('../assets/icons/align-right.svg');
-    }
-
-    &.icon-grid {
-        background-image: url('../assets/icons/grid.svg');
     }
 
     &.icon-remove {

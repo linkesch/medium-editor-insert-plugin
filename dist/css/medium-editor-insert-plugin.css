@@ -267,20 +267,22 @@
 .medium-editor-toolbar-actions .icon {
   background-size: 18px 18px; }
 
+.medium-editor-toolbar-actions svg {
+  -webkit-transition: fill 0.2s ease;
+          transition: fill 0.2s ease;
+  fill: white; }
+
+.medium-editor-toolbar-actions button {
+  padding-top: 12px !important; }
+  .medium-editor-toolbar-actions button:hover svg {
+    fill: #45d187; }
+
 .icon {
   height: 100%;
   width: 100%;
   background-repeat: no-repeat; }
   .icon.icon-camera {
     background-image: url("../assets/icons/camera.svg"); }
-  .icon.icon-align-justify {
-    background-image: url("../assets/icons/justify.svg"); }
-  .icon.icon-align-left {
-    background-image: url("../assets/icons/align-left.svg"); }
-  .icon.icon-align-right {
-    background-image: url("../assets/icons/align-right.svg"); }
-  .icon.icon-grid {
-    background-image: url("../assets/icons/grid.svg"); }
   .icon.icon-remove {
     background-image: url("../assets/icons/remove.svg"); }
   .icon.icon-youtube {

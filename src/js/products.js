@@ -11,14 +11,14 @@
             label: '<div class="icon icon-shopping-cart"></div>',
             placeholder: 'Search for a product on Hubrick',
             styles: {
-                wide: {
-                    label: '<div class="icon icon-align-justify"></div>'
-                },
                 left: {
-                    label: '<div class="icon icon-align-left"></div>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
+                },
+                wide: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
                 },
                 right: {
-                    label: '<div class="icon icon-align-right"></div>'
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>'
                 }
             }
         };

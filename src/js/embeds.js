@@ -12,18 +12,18 @@
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
             styles: {
-                wide: {
-                    label: '<div class="icon icon-align-justify"></div>',
+                left: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
-                left: {
-                    label: '<div class="icon icon-align-left"></div>',
+                wide: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<div class="icon icon-align-right"></div>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
