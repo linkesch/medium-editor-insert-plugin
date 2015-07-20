@@ -48,6 +48,14 @@
             line-height: 28px;
             text-align: center;
             text-decoration: none;
+            background: #fff;
+            transform: rotate(0);
+            transition: transform 100ms;
+
+            &.medium-insert-buttons-rotate {
+                transition: transform 250ms;
+                transform: rotate(45deg);
+            }
         }
 
         .medium-insert-buttons-addons {
@@ -82,9 +90,13 @@
 }
 
 .medium-insert-caption-placeholder {
-    position: absolute;
-    top: 0;
-    z-index: 0;
-    width: 100%;
-    text-align: center;
+    position: relative;
+    &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        content: attr(data-placeholder);
+    }
 }

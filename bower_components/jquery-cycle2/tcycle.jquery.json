@@ -1,0 +1,33 @@
+{
+  "name": "tcycle",
+  "title": "tCycle",
+  "description": "'t' is for tiny.  tCycle is a minimalist jQuery slideshow plugin that won't blow your bandwidth budget.",
+  "keywords": [
+    "slideshow",
+    "tiny",
+    "cycle"
+  ],
+  "version": "2.0.0",
+  "author": {
+    "name": "M. Alsup",
+    "url": "http://jquery.malsup.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://malsup.github.com/mit-license.txt"
+    },
+    {
+      "type": "GPL",
+      "url": "http://malsup.github.com/gpl-license-v2.txt"
+    }
+  ],
+  "bugs": "https://github.com/malsup/cycle2/issues",
+  "homepage": "http://jquery.malsup.com/cycle2/tcycle",
+  "docs": "http://jquery.malsup.com/cycle2/tcycle",
+  "download": "http://malsup.github.com/jquery.tcycle.js",
+  "dependencies": {
+    "jquery": ">=1.7"
+  }
+}
+

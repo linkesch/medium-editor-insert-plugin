@@ -1,7 +1,6 @@
 {
   "name": "medium-editor",
-  "version": "3.0.8",
-  "homepage": "http://daviferreira.github.io/medium-editor/",
+  "homepage": "http://yabwe.github.io/medium-editor/",
   "authors": [
     "Davi Ferreira <hi@daviferreira.com>",
     "Nate Mielnik <nathan@outlook.com>",
@@ -32,17 +31,18 @@
     "Gruntfile.js",
     "demo",
     "package.json",
-    "src/js",
+    "src",
     "README.md",
     "CHANGES.md"
   ],
-  "_release": "3.0.8",
+  "version": "4.12.6",
+  "_release": "4.12.6",
   "_resolution": {
     "type": "version",
-    "tag": "3.0.8",
-    "commit": "2635f9ea132107ccc79f24a3f5dbaefc4e069368"
+    "tag": "4.12.6",
+    "commit": "0c98debe8b0e92c5176df3057e8c6b9feec9972f"
   },
   "_source": "git://github.com/daviferreira/medium-editor.git",
-  "_target": "~3.0.7",
+  "_target": "^4.12.0",
   "_originalSource": "medium-editor"
 }

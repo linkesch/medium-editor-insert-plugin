@@ -6,9 +6,14 @@
 }
 
 .medium-insert-embeds-placeholder {
-    position: absolute;
-    top: 0;
-    z-index: 0;
+    position: relative;
+    &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: attr(data-placeholder);
+        color: #ccc;
+    }
 }
 
 .medium-insert-embeds-selected {

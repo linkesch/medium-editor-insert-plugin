@@ -1,12 +1,34 @@
 {
   "name": "jquery-sortable",
-  "homepage": "https://github.com/johnny/jquery-sortable",
-  "version": "0.9.12",
-  "_release": "0.9.12",
+  "version": "0.9.13",
+  "homepage": "http://johnny.github.io/jquery-sortable/",
+  "authors": [
+    "Jonas von Andrian"
+  ],
+  "main": "./source/js/jquery-sortable.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "sortable",
+    "sort",
+    "sorting",
+    "drag",
+    "dragging"
+  ],
+  "license": "BSD-3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.9.13",
   "_resolution": {
     "type": "version",
-    "tag": "0.9.12",
-    "commit": "d864cae550a0a076f55800013595c4fbf94900ee"
+    "tag": "0.9.13",
+    "commit": "74a710047e4947decd3f3a6ca14bee92429b0b51"
   },
   "_source": "git://github.com/johnny/jquery-sortable.git",
   "_target": "~0.9.12",

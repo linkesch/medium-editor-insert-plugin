@@ -58,13 +58,15 @@
         // Extend editor's functions
         if (this.options && this.options.editor) {
             this.options.editor._serialize = this.options.editor.serialize;
-            this.options.editor._deactivate = this.options.editor.deactivate;
-            this.options.editor._activate = this.options.editor.activate;
+            this.options.editor._destroy = this.options.editor.destroy;
+            this.options.editor._setup = this.options.editor.setup;
             this.options.editor._hideInsertButtons = this.hideButtons;
+
             this.options.editor.serialize = this.editorSerialize;
-            this.options.editor.deactivate = this.editorDeactivate;
-            this.options.editor.activate = this.editorActivate;
-            this.options.editor.activatePlaceholder = this.editorActivatePlaceholder;
+            this.options.editor.destroy = this.editorDestroy;
+            this.options.editor.setup = this.editorSetup;
+
+            this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
         }
     }
 
@@ -93,18 +95,31 @@
      */
 
     Core.prototype.events = function () {
+        var that = this;
+
         this.$el
             .on('dragover drop', function (e) {
                 e.preventDefault();
             })
-            .on('blur', $.proxy(this, 'editorActivatePlaceholder'))
             .on('keyup click', $.proxy(this, 'toggleButtons'))
             .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
-            .on('keydown', $.proxy(this, 'fixSelectAll'))
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
-            .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'));
+            .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'))
+            .on('paste', '.medium-insert-caption-placeholder', function (e) {
+                $.proxy(that, 'removeCaptionPlaceholder')($(e.target));
+            });
 
         $(window).on('resize', $.proxy(this, 'positionButtons', null));
+    };
+
+    /**
+     * Return editor instance
+     *
+     * @return {object} MediumEditor
+     */
+
+    Core.prototype.getEditor = function () {
+        return this.options.editor;
     };
 
     /**
@@ -128,27 +143,27 @@
     };
 
     /**
-     * Extend editor's deactivate function to deactivate this plugin too
+     * Extend editor's destroy function to deactivate this plugin too
      *
      * @return {void}
      */
 
-    Core.prototype.editorDeactivate = function () {
-        this._deactivate();
-
+    Core.prototype.editorDestroy = function () {
         $.each(this.elements, function (key, el) {
             $(el).data('plugin_' + pluginName).disable();
         });
+
+        this._destroy();
     };
 
     /**
-     * Extend editor's activate function to activate this plugin too
+     * Extend editor's setup function to activate this plugin too
      *
      * @return {void}
      */
 
-    Core.prototype.editorActivate = function () {
-        this._activate();
+    Core.prototype.editorSetup = function () {
+        this._setup();
 
         $.each(this.elements, function (key, el) {
             $(el).data('plugin_' + pluginName).enable();
@@ -156,35 +171,26 @@
     };
 
     /**
-     * Extend editor's activatePlaceholder function to activate placeholder dispite of the plugin buttons
+     * Extend editor's placeholder.updatePlaceholder function to show placeholder dispite of the plugin buttons
      *
      * @return {void}
      */
 
-    Core.prototype.editorActivatePlaceholder = function (el) {
+    Core.prototype.editorUpdatePlaceholder = function (el) {
         var $clone = $(el).clone(),
             cloneHtml;
 
         $clone.find('.medium-insert-buttons').remove();
-        cloneHtml = $clone.html().replace(/^\s+|\s+$/g, '').replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
+        cloneHtml = $clone.html()
+            .replace(/^\s+|\s+$/g, '')
+            .replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
 
-        if (!(el.querySelector('img')) &&
-            !(el.querySelector('blockquote')) &&
-            cloneHtml === '') {
-
-            el.classList.add('medium-editor-placeholder');
-            this._hideInsertButtons($(el));
+        if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
+            this.showPlaceholder(el);
+            this.base._hideInsertButtons($(el));
+        } else {
+            this.hidePlaceholder(el);
         }
-    };
-
-    /**
-     * Activate placeholder
-     *
-     * @return {void}
-     */
-
-    Core.prototype.activatePlaceholder = function () {
-        this.options.editor.activatePlaceholder(this.$el.get(0));
     };
 
     /**
@@ -236,30 +242,6 @@
     };
 
     /**
-     * Fix #39
-     * For some reason Chrome doesn't "select-all", when the last placeholder is visible.
-     * So it's needed to hide it when the user "selects all", and show it again when they presses any other key.
-     *
-     * @return {boolean} document.execCommand()
-     */
-
-    Core.prototype.fixSelectAll = function (e) {
-        this.$el.children().last().removeClass('hide');
-
-         if ((e.ctrlKey || e.metaKey) && e.which === 65) {
-            e.preventDefault();
-
-            if(this.$el.find('p').text().trim().length === 0) {
-              return false;
-            }
-
-            this.$el.children().last().addClass('hide');
-
-            return document.execCommand('selectAll', false, null);
-        }
-    };
-
-    /**
      * Initialize addons
      *
      * @return {void}
@@ -267,6 +249,10 @@
 
     Core.prototype.initAddons = function () {
         var that = this;
+
+        if (!this.options.addons || this.options.addons.length === 0) {
+            return;
+        }
 
         $.each(this.options.addons, function (addon, options) {
             var addonName = pluginName + ucfirst(addon);
@@ -365,11 +351,26 @@
     Core.prototype.toggleButtons = function (e) {
         var $el = $(e.target),
             selection = window.getSelection(),
-            range = selection.getRangeAt(0),
-            $current = $(range.commonAncestorContainer),
-            $p = $current.is('p') ? $current : $current.closest('p'),
             that = this,
-            activeAddon;
+            range, $current, $p, activeAddon;
+
+        if (this.options.enabled === false) {
+            return;
+        }
+
+        if (!selection || selection.rangeCount === 0) {
+            $current = $el;
+        } else {
+            range = selection.getRangeAt(0);
+            $current = $(range.commonAncestorContainer);
+        }
+
+        // When user clicks on  editor's placeholder in FF, $current el is editor itself, not the first paragraph as it should
+        if ($current.hasClass('medium-editor-insert-plugin')) {
+            $current = $current.find('p:first');
+        }
+
+        $p = $current.is('p') ? $current : $current.closest('p');
 
         this.clean();
 
@@ -381,7 +382,7 @@
                 if ($el.closest('.medium-insert-'+ addon).length) {
                     $current = $el;
                 }
-                
+
                 if ($current.closest('.medium-insert-'+ addon).length) {
                     $p = $current.closest('.medium-insert-'+ addon);
                     activeAddon = addon;
@@ -418,7 +419,7 @@
 
         if (activeAddon) {
             $buttons.find('li').hide();
-            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();   
+            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();
         }
     };
 
@@ -434,6 +435,7 @@
 
         $el.find('.medium-insert-buttons').hide();
         $el.find('.medium-insert-buttons-addons').hide();
+        $el.find('.medium-insert-buttons-show').removeClass('medium-insert-buttons-rotate');
     };
 
     /**
@@ -446,28 +448,21 @@
     Core.prototype.positionButtons = function (activeAddon) {
         var $buttons = this.$el.find('.medium-insert-buttons'),
             $p = this.$el.find('.medium-insert-active'),
-            $last = $p.find('figure:last').length ? $p.find('figure:last') : $p,
             $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
-            left, top, $caption;
+            left, top;
 
         if ($p.length) {
 
             left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
             left = left < 0 ? $p.position().left : left;
+            top = $p.position().top + parseInt($p.css('margin-top'), 10);
 
             if (activeAddon) {
                 if ($p.position().left !== $first.position().left) {
                     left = $first.position().left;
                 }
 
-                top = $last.position().top + $last.height() + parseInt($p.css('margin-bottom'), 10) - 5; // 5px - adjustment
-
-                $caption = $last.find('figcaption');
-                if ($caption.length) {
-                    top -= $caption.height() + parseInt($caption.css('margin-top'), 10);
-                }
-            } else {
-                top = $p.position().top + parseInt($p.css('margin-top'), 10);
+                top += $p.height() + 15; // 15px offset
             }
 
             $buttons.css({
@@ -484,7 +479,8 @@
      */
 
     Core.prototype.toggleAddons = function () {
-        this.$el.find('.medium-insert-buttons-addons').toggle();
+        this.$el.find('.medium-insert-buttons-addons').fadeToggle();
+        this.$el.find('.medium-insert-buttons-show').toggleClass('medium-insert-buttons-rotate');
     };
 
     /**
@@ -495,6 +491,7 @@
 
     Core.prototype.hideAddons = function () {
         this.$el.find('.medium-insert-buttons-addons').hide();
+        this.$el.find('.medium-insert-buttons-show').removeClass('medium-insert-buttons-rotate');
     };
 
     /**
@@ -573,7 +570,7 @@
         }
 
         $captions.each(function () {
-            if ($(this).find('.medium-insert-caption-placeholder').length || $(this).text().trim() === '') {
+            if ($(this).hasClass('medium-insert-caption-placeholder') || $(this).text().trim() === '') {
                 $(this).remove();
             }
         });
@@ -587,7 +584,13 @@
      */
 
     Core.prototype.removeCaptionPlaceholder = function ($el) {
-        $el.find('.medium-insert-caption-placeholder').remove();
+        var $caption = $el.is('figcaption') ? $el : $el.find('figcaption');
+
+        if ($caption.length) {
+            $caption
+                .removeClass('medium-insert-caption-placeholder')
+                .removeAttr('data-placeholder');
+        }
     };
 
     /** Plugin initialization */

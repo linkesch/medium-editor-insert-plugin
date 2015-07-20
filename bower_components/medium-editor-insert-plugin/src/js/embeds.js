@@ -9,26 +9,33 @@
             label: '<span class="fa fa-youtube-play"></span>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
+            captions: true,
+            captionPlaceholder: 'Type caption (optional)',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>'
+                    label: '<span class="fa fa-align-justify"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>'
+                    label: '<span class="fa fa-align-left"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>'
+                    label: '<span class="fa fa-align-right"></span>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 }
             },
-            captionPlaceholder: 'Type caption (optional)',
             actions: {
                 remove: {
                     label: '<span class="fa fa-times"></span>',
                     clicked: function () {
                         var $event = $.Event('keydown');
-                        
+
                         $event.which = 8;
-                        $(document).trigger($event);   
+                        $(document).trigger($event);
                     }
                 }
             }
@@ -56,6 +63,12 @@
         this._defaults = defaults;
         this._name = pluginName;
 
+        // Extend editor's functions
+        if (this.core.getEditor()) {
+            this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
+            this.core.getEditor().serialize = this.editorSerialize;
+        }
+
         this.init();
     }
 
@@ -66,6 +79,15 @@
      */
 
     Embeds.prototype.init = function () {
+        var $embeds = this.$el.find('.medium-insert-embeds');
+
+        $embeds.attr('contenteditable', false);
+        $embeds.each(function () {
+            if ($(this).find('.medium-insert-embeds-overlay').length === 0) {
+                $(this).append($('<div />').addClass('medium-insert-embeds-overlay'));
+            }
+        });
+
         this.events();
         this.backwardsCompatibility();
     };
@@ -84,10 +106,10 @@
             .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
         this.$el
-            .on('selectstart mousedown', '.medium-insert-embeds-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
-            .on('keyup click', $.proxy(this, 'togglePlaceholder'))
+            .on('keyup click paste', $.proxy(this, 'togglePlaceholder'))
             .on('keydown', $.proxy(this, 'processLink'))
-            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'));
+            .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
+            .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
     };
 
     /**
@@ -107,19 +129,31 @@
             if ($(this).find('.medium-insert-embed').length === 0) {
                 $(this).after(that.templates['src/js/templates/embeds-wrapper.hbs']({
                     html: $(this).html()
-                }));    
-                $(this).remove(); 
+                }));
+                $(this).remove();
             }
         });
     };
 
     /**
-     * Get the Core object
+     * Extend editor's serialize function
      *
-     * @return {object} Core object
+     * @return {object} Serialized data
      */
-    Embeds.prototype.getCore = function () {
-        return this.core;
+
+    Embeds.prototype.editorSerialize = function () {
+        var data = this._serializePreEmbeds();
+
+        $.each(data, function (key) {
+            var $data = $('<div />').html(data[key].value);
+
+            $data.find('.medium-insert-embeds').removeAttr('contenteditable');
+            $data.find('.medium-insert-embeds-overlay').remove();
+
+            data[key].value = $data.html();
+        });
+
+        return data;
     };
 
     /**
@@ -140,7 +174,7 @@
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
-            this.getCore().moveCaret($place);
+            this.core.moveCaret($place);
         }
 
         $place.addClass('medium-insert-embeds medium-insert-embeds-input medium-insert-embeds-active');
@@ -148,23 +182,7 @@
         this.togglePlaceholder({ target: $place.get(0) });
 
         $place.click();
-        this.getCore().hideButtons();
-    };
-
-    /**
-     * Disable placeholder selection, instead move cursor to input
-     *
-     * @param {Event} e
-     * @return {void}
-     */
-
-    Embeds.prototype.disablePlaceholderSelection = function (e) {
-        var $place = $(e.target).closest('.medium-insert-embeds-input');
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        this.getCore().moveCaret($place);
+        this.core.hideButtons();
     };
 
     /**
@@ -177,9 +195,14 @@
     Embeds.prototype.togglePlaceholder = function (e) {
         var $place = $(e.target),
             selection = window.getSelection(),
-            range = selection.getRangeAt(0),
-            $current = $(range.commonAncestorContainer),
-            $placeholder, re, text;
+            range, $current, text;
+
+        if (!selection || selection.rangeCount === 0) {
+            return;
+        }
+
+        range = selection.getRangeAt(0);
+        $current = $(range.commonAncestorContainer);
 
         if ($current.hasClass('medium-insert-embeds-active')) {
             $place = $current;
@@ -189,21 +212,32 @@
 
         if ($place.hasClass('medium-insert-embeds-active')) {
 
-            $placeholder = $place.find('.medium-insert-embeds-placeholder');
-            re = new RegExp(this.options.placeholder, 'g');
-            text = $place.text().replace(re, '').trim();
+            text = $place.text().trim();
 
-            if (text === '' && $placeholder.length === 0) {
-                $place.append(this.templates['src/js/templates/embeds-placeholder.hbs']({
-                    placeholder: this.options.placeholder
-                }));
-            } else if (text !== '' && $placeholder.length) {
-                $placeholder.remove();
+            if (text === '' && $place.hasClass('medium-insert-embeds-placeholder') === false) {
+                $place
+                    .addClass('medium-insert-embeds-placeholder')
+                    .attr('data-placeholder', this.options.placeholder);
+            } else if (text !== '' && $place.hasClass('medium-insert-embeds-placeholder')) {
+                $place
+                    .removeClass('medium-insert-embeds-placeholder')
+                    .removeAttr('data-placeholder');
             }
 
         } else {
             this.$el.find('.medium-insert-embeds-active').remove();
         }
+    };
+
+    /**
+     * Right click on placeholder in Chrome selects whole line. Fix this by placing caret at the end of line
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Embeds.prototype.fixRightClickOnPlaceholder = function (e) {
+        this.core.moveCaret($(e.target));
     };
 
     /**
@@ -215,14 +249,13 @@
 
     Embeds.prototype.processLink = function (e) {
         var $place = this.$el.find('.medium-insert-embeds-active'),
-            re, url;
+            url;
 
         if (!$place.length) {
             return;
         }
 
-        re = new RegExp(this.options.placeholder, 'g');
-        url = $place.text().replace(re, '').trim();
+        url = $place.text().trim();
 
         // Return empty placeholder on backspace, delete or enter
         if (url === '' && [8, 46, 13].indexOf(e.which) !== -1) {
@@ -305,11 +338,11 @@
         }
 
         html = url.replace(/\n?/g, '')
-            .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
-            .replace(/^http:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
+            .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video video-youtube"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
+            .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<div class="video video-vimeo"><iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
             //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
             //.replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
-            .replace(/^http:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
+            .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
 
         this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
@@ -372,7 +405,7 @@
 
         this.$el.trigger('input');
 
-        this.getCore().moveCaret($place);
+        this.core.moveCaret($place);
     };
 
     /**
@@ -383,15 +416,20 @@
      */
 
     Embeds.prototype.selectEmbed = function (e) {
-        var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
-            that = this;
+        if(this.core.options.enabled) {
+            var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
+                that = this;
 
-        $embed.addClass('medium-insert-embeds-selected');
+            $embed.addClass('medium-insert-embeds-selected');
 
-        setTimeout(function () {
-            that.addToolbar();
-            that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
-        }, 50);
+            setTimeout(function () {
+                that.addToolbar();
+
+                if (that.options.captions) {
+                    that.core.addCaption($embed.find('figure'), that.options.captionPlaceholder);
+                }
+            }, 50);
+        }
     };
 
     /**
@@ -408,11 +446,11 @@
         if ($el.hasClass('medium-insert-embeds-selected')) {
             $embed.not($el).removeClass('medium-insert-embeds-selected');
             $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
-            this.getCore().removeCaptions($el.find('figcaption'));
+            this.core.removeCaptions($el.find('figcaption'));
 
             if ($(e.target).is('.medium-insert-caption-placeholder') || $(e.target).is('figcaption')) {
                 $el.removeClass('medium-insert-embeds-selected');
-                this.getCore().removeCaptionPlaceholder($el.find('figure'));
+                this.core.removeCaptionPlaceholder($el.find('figure'));
             }
             return;
         }
@@ -421,9 +459,9 @@
         $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
 
         if ($(e.target).is('.medium-insert-caption-placeholder')) {
-            this.getCore().removeCaptionPlaceholder($el.find('figure'));
-        } else if ($el.is('figcaption') === false) {
-            this.getCore().removeCaptions();
+            this.core.removeCaptionPlaceholder($el.find('figure'));
+        } else if ($(e.target).is('figcaption') === false) {
+            this.core.removeCaptions();
         }
     };
 
@@ -450,9 +488,9 @@
                 $embed.remove();
 
                 // Hide addons
-                this.getCore().hideAddons();
+                this.core.hideAddons();
 
-                this.getCore().moveCaret($empty);
+                this.core.moveCaret($empty);
                 this.$el.trigger('input');
             }
         }
@@ -467,7 +505,7 @@
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2;
+            $toolbar, $toolbar2, top;
 
         if ($embed.length === 0) {
             return;
@@ -481,9 +519,14 @@
         $toolbar = $('.medium-insert-embeds-toolbar');
         $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
+        top = $embed.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+        if (top < 0) {
+            top = 0;
+        }
+
         $toolbar
             .css({
-                top: $embed.offset().top - $toolbar.height() - 8 - 2 - 5, // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+                top: top,
                 left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
             })
             .show();

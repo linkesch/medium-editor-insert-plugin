@@ -1,0 +1,33 @@
+{
+  "name": "cycle2",
+  "title": "Cycle2",
+  "description": "The successor to Cycle. Cycle2 is a mobile and desktop friendly slideshow built around ease-of-use with a declarative API. It supports responsive designs, dynamic slideshow manipulation, swipe events, and lots of options!",
+  "keywords": [
+    "slideshow",
+    "carousel",
+    "slider"
+  ],
+  "version": "2.1.6",
+  "author": {
+    "name": "M. Alsup",
+    "url": "http://jquery.malsup.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://malsup.github.com/mit-license.txt"
+    },
+    {
+      "type": "GPL",
+      "url": "http://malsup.github.com/gpl-license-v2.txt"
+    }
+  ],
+  "bugs": "https://github.com/malsup/cycle2/issues",
+  "homepage": "http://jquery.malsup.com/cycle2/",
+  "docs": "http://jquery.malsup.com/cycle2/",
+  "download": "http://malsup.github.com/min/jquery.cycle2.min.js",
+  "dependencies": {
+    "jquery": ">=1.7"
+  }
+}
+
