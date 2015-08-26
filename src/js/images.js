@@ -24,13 +24,18 @@
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
+                right: {
+                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
                 wide: {
                     label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
-                right: {
-                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
+                full_width: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
