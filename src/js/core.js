@@ -597,13 +597,21 @@
 
     $.fn[pluginName] = function (options) {
         return this.each(function () {
-            if (!$.data(this, 'plugin_' + pluginName)) {
+            var that = this,
+                textareaId;
+
+            if ($(that).is('textarea')) {
+                textareaId = $(that).attr('medium-editor-textarea-id');
+                that = $(that).siblings('[medium-editor-textarea-id="'+ textareaId +'"]').get(0);
+            }
+
+            if (!$.data(that, 'plugin_' + pluginName)) {
                 // Plugin initialization
-                $.data(this, 'plugin_' + pluginName, new Core(this, options));
-                $.data(this, 'plugin_' + pluginName).init();
-            } else if (typeof options === 'string' && $.data(this, 'plugin_' + pluginName)[options]) {
+                $.data(that, 'plugin_' + pluginName, new Core(that, options));
+                $.data(that, 'plugin_' + pluginName).init();
+            } else if (typeof options === 'string' && $.data(that, 'plugin_' + pluginName)[options]) {
                 // Method call
-                $.data(this, 'plugin_' + pluginName)[options]();
+                $.data(that, 'plugin_' + pluginName)[options]();
             }
         });
     };
