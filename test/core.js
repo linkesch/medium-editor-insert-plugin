@@ -36,6 +36,19 @@ test('plugin initialization', function () {
     ok(this.$el.hasClass('medium-editor-insert-plugin'), '.medium-editor-insert-plugin class added');
 });
 
+test('plugin initialization on a textarea', function () {
+    var textareaId;
+
+    $('#qunit-fixture').html('<div medium-editor-textarea-id="123"></div><textarea id="textarea" medium-editor-textarea-id="123">test</textarea>');
+    this.$el = $('#textarea');
+
+    this.$el.mediumInsert();
+    textareaId = this.$el.attr('medium-editor-textarea-id');
+
+    equal(this.$el.hasClass('medium-editor-insert-plugin'), false, '.medium-editor-insert-plugin class not added to textarea');
+    ok(this.$el.siblings('[medium-editor-textarea-id="'+ textareaId +'"]').hasClass('medium-editor-insert-plugin'), '.medium-editor-insert-plugin class added to div');
+});
+
 asyncTest('addons initialization', function () {
     this.stub($.fn, 'mediumInsertImages', function () {
         ok(1, 'images initialized');
