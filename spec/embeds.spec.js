@@ -115,7 +115,7 @@ describe("Embeds addon", function () {
     it('triggers input event after removing embed ', function (done) {
         var $event = $.Event('keydown');
 
-        this.$el.one('input', function () {
+        this.editor.subscribe('editableInput', function () {
             expect(true).toBe(true);
             done();
         });
@@ -145,7 +145,7 @@ describe("Embeds addon", function () {
     it('triggers input event after changing embed style ', function (done) {
         this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-left"><div class="medium-insert-embeds-overlay"></div></div>');
 
-        this.$el.one('input', function () {
+        this.editor.subscribe('editableInput', function () {
             expect(true).toBe(true);
             done();
         });

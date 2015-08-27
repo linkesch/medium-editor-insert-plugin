@@ -367,7 +367,7 @@
             }));
             $place.remove();
 
-            this.$el.trigger('input');
+            this.core.triggerInput();
 
             if (html.indexOf('facebook') !== -1) {
                 if (typeof(FB) !== 'undefined') {
@@ -403,7 +403,7 @@
         $empty = $(emptyTemplate);
         $content.after($empty);
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
 
         this.core.moveCaret($place);
     };
@@ -491,7 +491,7 @@
                 this.core.hideAddons();
 
                 this.core.moveCaret($empty);
-                this.$el.trigger('input');
+                this.core.triggerInput();
             }
         }
     };
@@ -586,7 +586,7 @@
             }
         });
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -604,7 +604,7 @@
             callback(this.$el.find('.medium-insert-embeds-selected'));
         }
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /** Plugin initialization */
