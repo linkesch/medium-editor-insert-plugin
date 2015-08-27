@@ -6,7 +6,10 @@ module('embeds', {
 
         $('#qunit-fixture').html('<div class="editable"></div>');
         this.$el = $('.editable');
+
+        this.editor = new MediumEditor(this.$el.get(0));
         this.$el.mediumInsert({
+            editor: this.editor,
             addons: {
                 embeds: {
                     oembedProxy: false
@@ -116,12 +119,15 @@ test('removing embed', function () {
 });
 
 asyncTest('removing embed triggers input event', function () {
-   var $event = $.Event('keydown');
+   var $event = $.Event('keydown'),
+       that = this,
+       editableInputCallback = function () {
+           ok(1, 'input triggered');
+           that.editor.unsubscribe('editableInput', editableInputCallback);
+           start();
+       };
 
-   this.$el.one('input', function () {
-       ok(1, 'input triggered');
-       start();
-   });
+   this.editor.subscribe('editableInput', editableInputCallback);
 
    $event.which = 8;
 
@@ -146,12 +152,16 @@ test('choosing embed style', function () {
 });
 
 asyncTest('choosing embed style triggers input event', function () {
+    var that = this,
+        editableInputCallback = function () {
+            ok(1, 'input triggered');
+            that.editor.unsubscribe('editableInput', editableInputCallback);
+            start();
+        };
+
     this.$el.prepend('<div class="medium-insert-embeds medium-insert-embeds-left"><div class="medium-insert-embeds-overlay"></div></div>');
 
-    this.$el.one('input', function () {
-        ok(1, 'input triggered');
-        start();
-    });
+    this.editor.subscribe('editableInput', editableInputCallback);
 
     this.$el.find('.medium-insert-embeds-overlay').click();
     this.clock.tick(50);

@@ -194,6 +194,18 @@
     };
 
     /**
+     * Trigger editableInput on editor
+     *
+     * @return {void}
+     */
+
+    Core.prototype.triggerInput = function () {
+        if (this.getEditor()) {
+            this.getEditor().trigger('editableInput', null, this.el);
+        }
+    };
+
+    /**
      * Deselects selected text
      *
      * @return {void}

@@ -1,4 +1,8 @@
 {
+    "globals": {
+        "MediumEditor": true
+    },
+
     "predef": {
         "jQuery": false,
         "document": false,

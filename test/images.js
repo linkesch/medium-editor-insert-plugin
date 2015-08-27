@@ -6,7 +6,11 @@ module('images', {
 
         $('#qunit-fixture').html('<div class="editable"></div>');
         this.$el = $('.editable');
-        this.$el.mediumInsert();
+
+        this.editor = new MediumEditor('.editable');
+        this.$el.mediumInsert({
+            editor: this.editor
+        });
         this.addon = this.$el.data('plugin_mediumInsertImages');
 
         // Place caret into first paragraph
@@ -19,6 +23,8 @@ module('images', {
 
 asyncTest('image preview', function () {
     var that = this;
+
+    window.console.log($('#qunit-fixture').html());
 
     this.$el.find('p').click();
 
@@ -161,10 +167,14 @@ asyncTest('not adding grid when not enough images are in a set', function () {
 });
 
 asyncTest('triggering input event on showImage', function () {
-    this.$el.one('input', function () {
-        ok(1, 'input triggered');
-        start();
-    });
+    var that = this,
+        editableInputCallback = function () {
+            ok(1, 'input triggered');
+            that.editor.unsubscribe('editableInput', editableInputCallback);
+            start();
+        };
+
+    this.editor.subscribe('editableInput', editableInputCallback);
 
     this.addon.showImage(null, {
         submit: function () {}
@@ -174,6 +184,16 @@ asyncTest('triggering input event on showImage', function () {
 asyncTest('triggering input event twice on showImage for preview', function (assert) {
     var that = this,
         inputTriggerCount = 0,
+        editableInputCallback = function () {
+            if (inputTriggerCount === 0)
+                start();
+            if (inputTriggerCount === 2) {
+                that.editor.unsubscribe('editableInput', editableInputCallback);
+            } else {
+                inputTriggerCount++;
+            }
+            ok(1, 'input triggered');
+        },
         stubbedImage,
         context;
 
@@ -184,16 +204,7 @@ asyncTest('triggering input event twice on showImage for preview', function (ass
     '</div>');
 
     assert.expect(2);
-    this.$el.on('input', function () {
-        if (inputTriggerCount === 0)
-            start();
-        if (inputTriggerCount === 2) {
-            that.$el.off('input');
-        } else {
-            inputTriggerCount++;
-        }
-        ok(1, 'input triggered');
-    });
+    this.editor.subscribe('editableInput', editableInputCallback);
 
     this.addon.showImage('http://image.co', {
         context: context
@@ -286,12 +297,15 @@ test('removing image', function () {
 });
 
 asyncTest('removing image triggers input event', function () {
-   var $event = $.Event('keydown');
+   var $event = $.Event('keydown'),
+       that = this,
+       editableInputCallback = function () {
+           ok(1, 'input triggered');
+           that.editor.unsubscribe('editableInput', editableInputCallback);
+           start();
+       };
 
-   this.$el.one('input', function () {
-       ok(1, 'input triggered');
-       start();
-   });
+   this.editor.subscribe('editableInput', editableInputCallback);
 
    $event.which = 8;
 
@@ -339,12 +353,15 @@ test('choosing image style', function () {
 asyncTest('choosing image style triggers input event', function () {
     var $p = this.$el.find('p')
         .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
-        .append('<figure><img src="image1.jpg" alt=""></figure>');
+        .append('<figure><img src="image1.jpg" alt=""></figure>'),
+        that = this,
+        editableInputCallback = function () {
+            ok(1, 'input triggered');
+            that.editor.unsubscribe('editableInput', editableInputCallback);
+            start();
+        };
 
-    this.$el.one('input', function () {
-        ok(1, 'input triggered');
-        start();
-    });
+    this.editor.subscribe('editableInput', editableInputCallback);
 
     $p.find('img').click();
     this.clock.tick(50);
