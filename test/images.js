@@ -24,8 +24,6 @@ module('images', {
 asyncTest('image preview', function () {
     var that = this;
 
-    window.console.log($('#qunit-fixture').html());
-
     this.$el.find('p').click();
 
     this.addon.uploadAdd(null, {
