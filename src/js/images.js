@@ -18,7 +18,13 @@
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
+            defaultStyle: 'wide',
             styles: {
+                wide: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
                 left: {
                     label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
                     // added: function ($el) {},
@@ -29,13 +35,8 @@
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
-                wide: {
+                'full-width': {
                     label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
-                    // added: function ($el) {},
-                    // removed: function ($el) {}
-                },
-                full_width: {
-                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
@@ -391,7 +392,7 @@
                 $.each(this.options.styles, function (style, options) {
                     var className = 'medium-insert-images-'+ style;
 
-                    $place.removeClass(className);
+                    $place.addClass(className);
 
                     if (options.removed) {
                         options.removed($place);
@@ -402,6 +403,13 @@
 
                 if (this.options.styles.grid.added) {
                     this.options.styles.grid.added($place);
+                }
+            } else if (this.options.defaultStyle) {
+                var className = 'medium-insert-images-'+ this.options.defaultStyle;
+                $place.addClass(className);
+
+                if (this.options.styles[this.options.defaultStyle] && this.options.styles[this.options.defaultStyle].added) {
+                    this.options.styles[this.options.defaultStyle]($place);
                 }
             }
 

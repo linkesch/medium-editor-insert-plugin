@@ -130,6 +130,8 @@
         -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
                 transform: rotate(45deg); }
+      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show:hover {
+        background-color: transparent; }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
       padding: 0;
@@ -154,6 +156,8 @@
           text-align: center; }
           .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a .fa {
             font-size: 15px; }
+          .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a:hover {
+            background-color: transparent; }
 
 .medium-insert-caption-placeholder {
   position: relative; }

@@ -11,6 +11,7 @@
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
+            defaultStyle: 'wide',
             styles: {
                 left: {
                     label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
@@ -374,6 +375,14 @@
                     setTimeout(function () {
                         FB.XFBML.parse();
                     }, 2000);
+                }
+            }
+            if (this.options.defaultStyle) {
+                var className = 'medium-insert-embeds-'+ this.options.defaultStyle;
+                $place.addClass(className);
+
+                if (this.options.styles[this.options.defaultStyle] && this.options.styles[this.options.defaultStyle].added) {
+                    this.options.styles[this.options.defaultStyle]($place);
                 }
             }
         }

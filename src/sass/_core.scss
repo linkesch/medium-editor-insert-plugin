@@ -56,6 +56,9 @@
                 transition: transform 250ms;
                 transform: rotate(45deg);
             }
+            &:hover {
+                background-color: transparent;
+            }
         }
 
         .medium-insert-buttons-addons {
@@ -82,6 +85,10 @@
                     text-align: center;
                     .fa {
                         font-size: 15px;
+                    }
+
+                    &:hover {
+                        background-color: transparent;
                     }
                 }
             }
