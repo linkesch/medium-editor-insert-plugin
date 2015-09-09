@@ -10,7 +10,8 @@
         defaults = {
             label: '<div class="icon icon-camera"></div>',
             deleteScript: 'delete.php',
-            preview: true,
+            preview: true,            
+            dataPostOnPreview: false,
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
@@ -275,6 +276,9 @@
 
                     reader.onload = function (e) {
                         $.proxy(that, 'showImage', e.target.result, data)();
+                        if (that.options.dataPostOnPreview) {
+                            data.submit();
+                        }
                     };
 
                     reader.readAsDataURL(data.files[0]);
@@ -345,7 +349,7 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        var $el = $.proxy(this, 'showImage', data.result.url, data)();
 
         this.core.clean();
         this.sorting();
@@ -362,6 +366,7 @@
      * @returns {void}
      */
 
+    
     Images.prototype.showImage = function (img, data) {
         var $place = this.$el.find('.medium-insert-active'),
             domImage,
@@ -377,12 +382,15 @@
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+                data.context.find('img').attr('img-id', domImage.getAttribute('img-id'));                
                 that.$el.trigger('input');
             };
             domImage.src = img;
+            domImage.setAttribute('img-id', data.result.id);
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
                 img: img,
+                imgId: data.result ? data.result.id : '',
                 progress: this.options.preview
             })).appendTo($place);
 
@@ -392,7 +400,7 @@
                 $.each(this.options.styles, function (style, options) {
                     var className = 'medium-insert-images-'+ style;
 
-                    $place.addClass(className);
+                    $place.removeClass(className);
 
                     if (options.removed) {
                         options.removed($place);
@@ -403,13 +411,6 @@
 
                 if (this.options.styles.grid.added) {
                     this.options.styles.grid.added($place);
-                }
-            } else if (this.options.defaultStyle) {
-                var className = 'medium-insert-images-'+ this.options.defaultStyle;
-                $place.addClass(className);
-
-                if (this.options.styles[this.options.defaultStyle] && this.options.styles[this.options.defaultStyle].added) {
-                    this.options.styles[this.options.defaultStyle]($place);
                 }
             }
 

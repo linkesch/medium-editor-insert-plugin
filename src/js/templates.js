@@ -80,11 +80,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Ha
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var helper;
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
   return "<figure contenteditable=\"false\">\n    <img src=\""
-    + this.escapeExpression(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"img","hash":{},"data":data}) : helper)))
-    + "\" attr='2fff' alt=\"\"></img>\n</figure>";
+    + alias3(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"img","hash":{},"data":data}) : helper)))
+    + "\" img-id='"
+    + alias3(((helper = (helper = helpers.imgId || (depth0 != null ? depth0.imgId : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"imgId","hash":{},"data":data}) : helper)))
+    + "' alt=\"\"></img>\n</figure>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
