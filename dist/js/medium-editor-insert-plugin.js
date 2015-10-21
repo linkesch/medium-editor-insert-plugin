@@ -93,9 +93,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handleb
 
   return "<figure contenteditable=\"false\">\n    <img src=\""
     + alias3(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"img","hash":{},"data":data}) : helper)))
-    + "\" img-id='"
-    + alias3(((helper = (helper = helpers.imgId || (depth0 != null ? depth0.imgId : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"imgId","hash":{},"data":data}) : helper)))
-    + "' alt=\"\"></img>\n</figure>";
+    + "\" img-id=\""
+    + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\" alt=\"\" />\n</figure>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -1432,11 +1432,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
         defaults = {
             label: '<div class="icon icon-camera"></div>',
             deleteScript: 'delete.php',
-            preview: true,            
-            dataPostOnPreview: false,
+            //preview: true,            
+            //dataPostOnPreview: false,
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+            onPreviewLoaded: null,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -1616,17 +1617,30 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
      */
 
     Images.prototype.add = function () {
+        var originalAdd = this.options.fileUploadOptions.add,
+            originalDone = this.options.fileUploadOptions.done;
+            
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
             fileUploadOptions = {
                 dataType: 'json',
                 add: function (e, data) {
+                    if (typeof originalAdd === 'function') {
+                        originalAdd.call(that, e, data);
+                    }
                     $.proxy(that, 'uploadAdd', e, data)();
                 },
                 done: function (e, data) {
+                    if (typeof originalDone === 'function') {
+                        originalDone.call(that, e, data);
+                    }
                     $.proxy(that, 'uploadDone', e, data)();
                 }
             };
+
+        if (typeof this.options.fileUploadOptions.url === 'function') {
+            fileUploadOptions.url = this.options.fileUploadOptions.url();
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
@@ -1698,9 +1712,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
 
                     reader.onload = function (e) {
                         $.proxy(that, 'showImage', e.target.result, data)();
-                        if (that.options.dataPostOnPreview) {
-                            data.submit();
-                        }
+                        // if (that.options.dataPostOnPreview) {
+                        //     data.submit();
+                        // }
                     };
 
                     reader.readAsDataURL(data.files[0]);
@@ -1771,7 +1785,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result.url, data)();
+        var $el = $.proxy(this, 'showImage', data.result, data)();
 
         this.core.clean();
         this.sorting();
@@ -1802,17 +1816,16 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
         that = this;
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
-            domImage.onload = function () {
-                data.context.find('img').attr('src', domImage.src);
-                data.context.find('img').attr('img-id', domImage.getAttribute('img-id'));                
+            domImage.onload = function () {               
+                data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
                 that.$el.trigger('input');
             };
-            domImage.src = img;
-            domImage.setAttribute('img-id', data.result.id);
+            domImage.setAttribute('img-id', img.id);
+            domImage.src = img.url;
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
-                img: img,
-                imgId: data.result ? data.result.id : '',
+                id: img.id,
+                img: img.url,
                 progress: this.options.preview
             })).appendTo($place);
 
@@ -1837,7 +1850,19 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             }
 
             if (this.options.preview) {
-                data.submit();
+                var reader = new FileReader();
+                reader.onload = function (file) {
+                    var image = new Image();
+                    image.src = file.target.result;
+
+                    image.onload = function () {
+                        if (typeof that.options.onPreviewLoaded === 'function') {
+                            that.options.onPreviewLoaded(image, data);
+                        }
+                        data.submit();
+                    };
+                };
+                reader.readAsDataURL(data.files[0]);
             }
         }
 

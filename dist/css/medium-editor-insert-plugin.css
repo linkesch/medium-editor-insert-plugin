@@ -115,7 +115,7 @@
       border-radius: 20px;
       border: 1px solid;
       font-size: 25px;
-      line-height: 28px;
+      line-height: 30px;
       text-align: center;
       text-decoration: none;
       background: #fff;
@@ -124,14 +124,14 @@
               transform: rotate(0);
       -webkit-transition: -webkit-transform 100ms;
               transition: transform 100ms; }
+      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show:hover {
+        color: white; }
       .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show.medium-insert-buttons-rotate {
         -webkit-transition: -webkit-transform 250ms;
                 transition: transform 250ms;
         -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
                 transform: rotate(45deg); }
-      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show:hover {
-        background-color: transparent; }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
       padding: 0;
@@ -156,8 +156,6 @@
           text-align: center; }
           .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a .fa {
             font-size: 15px; }
-          .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a:hover {
-            background-color: transparent; }
 
 .medium-insert-caption-placeholder {
   position: relative; }
@@ -264,12 +262,12 @@
   margin: 0 0 20px 40px; }
 
 .medium-insert-buttons-addons .icon {
-  background-size: 18px 18px;
-  background-position: 6px 6px;
+  background-size: 16px 16px;
+  background-position: 7px 7px;
   opacity: .3; }
 
 .medium-editor-toolbar-actions .icon {
-  background-size: 18px 18px; }
+  background-size: 16px 16px; }
 
 .medium-editor-toolbar-actions svg {
   -webkit-transition: fill 0.2s ease;

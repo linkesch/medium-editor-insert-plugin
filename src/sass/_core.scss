@@ -45,19 +45,20 @@
             border-radius: 20px;
             border: 1px solid;
             font-size: 25px;
-            line-height: 28px;
+            line-height: 30px;
             text-align: center;
             text-decoration: none;
             background: #fff;
             transform: rotate(0);
             transition: transform 100ms;
 
+            &:hover {
+                color: white;
+            }
+
             &.medium-insert-buttons-rotate {
                 transition: transform 250ms;
                 transform: rotate(45deg);
-            }
-            &:hover {
-                background-color: transparent;
             }
         }
 
@@ -85,10 +86,6 @@
                     text-align: center;
                     .fa {
                         font-size: 15px;
-                    }
-
-                    &:hover {
-                        background-color: transparent;
                     }
                 }
             }
