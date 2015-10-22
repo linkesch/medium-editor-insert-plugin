@@ -16,6 +16,7 @@
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
             onPreviewLoaded: null,
+            checkImageStyles: null,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -38,7 +39,7 @@
                     // removed: function ($el) {}
                 },
                 'full-width': {
-                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
@@ -574,10 +575,15 @@
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2, top,
+            styles = $.extend(true, {}, this.options.styles);
+
+        if (typeof this.options.checkImageStyles === 'function') {
+            this.options.checkImageStyles($image.get(0), styles);
+        }
 
         $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
-            styles: this.options.styles,
+            styles: styles,
             actions: this.options.actions
         }).trim());
 
