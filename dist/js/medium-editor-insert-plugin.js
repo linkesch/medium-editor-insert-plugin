@@ -1713,9 +1713,16 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
 
                     reader.onload = function (e) {
                         $.proxy(that, 'showImage', e.target.result, data)();
-                        // if (that.options.dataPostOnPreview) {
-                        //     data.submit();
-                        // }
+
+                        var image = new Image();
+                        image.src = e.target.result;
+
+                        image.onload = function () {
+                            if (typeof that.options.onPreviewLoaded === 'function') {
+                                that.options.onPreviewLoaded(image, data);
+                            }
+                            data.submit();
+                        };
                     };
 
                     reader.readAsDataURL(data.files[0]);
@@ -1786,7 +1793,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result, data)();
+        var $el = $.proxy(this, 'showImage', data.result.url, data)();
 
         this.core.clean();
         this.sorting();
@@ -1821,12 +1828,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
                 data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
                 that.$el.trigger('input');
             };
-            domImage.setAttribute('img-id', img.id);
-            domImage.src = img.url;
+            domImage.setAttribute('img-id', data.result.id);
+            domImage.src = img;
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
-                id: img.id,
-                img: img.url,
+                id: data.result ? data.result.id : '',
+                img: img,
                 progress: this.options.preview
             })).appendTo($place);
 
@@ -1848,22 +1855,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
                 if (this.options.styles.grid.added) {
                     this.options.styles.grid.added($place);
                 }
-            }
-
-            if (this.options.preview) {
-                var reader = new FileReader();
-                reader.onload = function (file) {
-                    var image = new Image();
-                    image.src = file.target.result;
-
-                    image.onload = function () {
-                        if (typeof that.options.onPreviewLoaded === 'function') {
-                            that.options.onPreviewLoaded(image, data);
-                        }
-                        data.submit();
-                    };
-                };
-                reader.readAsDataURL(data.files[0]);
             }
         }
 
