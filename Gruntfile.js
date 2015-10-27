@@ -45,6 +45,25 @@ module.exports = function(grunt) {
           unit: {}
         },
 
+        jasmine: {
+            suite: {
+                src: 'src/js/*.js',
+                options: {
+                    specs: ['spec/*.spec.js'],
+                    vendor: [
+                        'bower_components/jquery/dist/jquery.min.js',
+                        'bower_components/medium-editor/dist/js/medium-editor.min.js',
+                        'bower_components/handlebars/handlebars.runtime.min.js',
+                        'bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+                        'bower_components/blueimp-file-upload/js/jquery.iframe-transport.js',
+                        'bower_components/blueimp-file-upload/js/jquery.fileupload.js',
+                        'bower_components/jquery-sortable/source/js/jquery-sortable-min.js'
+                    ],
+                    summary: true
+                }
+            }
+        },
+
         sass: {
             dist: {
                 files: [{
