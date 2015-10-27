@@ -226,4 +226,193 @@ describe("Images addon", function () {
 
         expect(this.$el.find('figcaption').hasClass('medium-insert-caption-placeholder')).toEqual(false);
     });
+
+    it('supports unselecting image', function () {
+        this.$el.find('p')
+            .addClass('medium-insert-images')
+            .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption></figcaption></figure>');
+
+        this.$el.click();
+
+        expect(this.$el.find('img').hasClass('medium-insert-image-active')).toBe(false);
+        expect($('.medium-insert-images-toolbar').length).toEqual(0);
+        expect($('.medium-insert-images-toolbar2').length).toEqual(0);
+        expect(this.$el.find('figcaption').length).toEqual(0);
+    });
+
+    it('supports removing image', function () {
+        var $event = $.Event('keydown');
+
+        $event.which = 8;
+
+        this.$el.find('p')
+            .addClass('medium-insert-images medium-insert-images-grid')
+            .append('<figure><img src="image1.jpg" alt=""></figure>' +
+                '<figure><img src="image2.jpg" alt=""></figure>' +
+                '<figure><img src="image3.jpg" alt=""></figure>' +
+                '<figure><img src="image4.jpg" alt="" class="medium-insert-image-active"></figure>');
+
+        this.$el.trigger($event);
+
+        expect(this.$el.find('img').length).toEqual(3);
+        expect(this.$el.find('.medium-insert-images').hasClass('medium-insert-images-grid')).toBe(true);
+
+        this.$el.find('img').last().addClass('medium-insert-image-active');
+        this.$el.trigger($event);
+
+        expect(this.$el.find('img').length).toEqual(2);
+
+        this.$el.find('img').addClass('medium-insert-image-active');
+        this.$el.trigger($event);
+
+        expect(this.$el.find('.medium-insert-images').length).toEqual(0);
+        expect($('.medium-insert-images-toolbar').length).toEqual(0);
+    });
+
+    it('triggers input event after removing image', function (done) {
+        var $event = $.Event('keydown');
+
+        this.$el.one('input', function () {
+            expect(true).toBe(true);
+            done();
+        });
+
+        $event.which = 8;
+
+        this.$el.find('p')
+            .addClass('medium-insert-images')
+            .append('<figure><img src="image1.jpg" alt=""></figure>' +
+                '<figure><img src="image2.jpg" alt="" class="medium-insert-image-active"></figure>');
+
+        this.$el.trigger($event);
+    });
+
+    it('supports deleting file', function () {
+        var $event = $.Event('keydown');
+
+        $event.which = 8;
+
+        this.$el.find('p')
+            .addClass('medium-insert-images')
+            .append('<figure><img src="image1.jpg" alt=""></figure>' +
+                '<figure><img src="image2.jpg" alt="" class="medium-insert-image-active"></figure>');
+
+        spyOn(jQuery, 'ajax');
+        this.$el.trigger($event);
+
+        expect(jQuery.ajax.calls.count()).toEqual(1);
+    });
+
+    it('support changing image style', function () {
+        var $p = this.$el.find('p')
+            .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
+            .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+        $p.find('img').click();
+        jasmine.clock().tick(50);
+
+        $('.medium-insert-images-toolbar .medium-editor-action').first().click();
+
+        expect($p.hasClass('medium-insert-images-wide')).toBe(true);
+        expect($p.hasClass('medium-insert-images-left')).toBe(false);
+    });
+
+    it('triggers input event after changing image style', function (done) {
+        var $p = this.$el.find('p')
+            .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
+            .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+        this.$el.one('input', function () {
+            expect(true).toBe(true);
+            done();
+        });
+
+        $p.find('img').click();
+        jasmine.clock().tick(50);
+
+        $('.medium-insert-images-toolbar .medium-editor-action').first().click();
+    });
+
+    it('calls callback function after changing image style ', function (done) {
+        this.addon.options.styles.wide.added = function () {
+            expect(true).toBe(true);
+            done();
+        };
+
+        this.$el.find('p')
+            .addClass('medium-insert-images')
+            .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+        // Place caret into first paragraph
+        placeCaret(this.$el.find('p').get(0), 0);
+
+        this.$el.find('img').click();
+        jasmine.clock().tick(50);
+
+        $('.medium-insert-images-toolbar .medium-editor-action').first().click();
+    });
+
+    it('calls callback function after clicking on image action ', function (done) {
+        this.addon.options.actions.remove.clicked = function () {
+            expect(true).toBe(true);
+            done();
+        };
+
+        this.$el.find('p')
+            .addClass('medium-insert-images')
+            .append('<figure><img src="image1.jpg" alt=""></figure>');
+
+        // Place caret into first paragraph
+        placeCaret(this.$el.find('p').get(0), 0);
+
+        this.$el.find('img').click();
+        jasmine.clock().tick(50);
+
+        $('.medium-insert-images-toolbar2 .medium-editor-action').first().click();
+    });
+
+    it('calls uploadCompleted callback', function (done) {
+        this.addon.options.uploadCompleted = function () {
+            expect(true).toBe(true);
+            done();
+        };
+
+        spyOn(this.addon, 'showImage');
+
+        this.addon.uploadDone(null, {
+            result: {
+                files: [
+                    { url: 'test.jpg' }
+                ]
+            }
+        });
+    });
+
+    it('validatates file type on upload', function (done) {
+        spyOn(window, 'alert').and.callFake(function (text) {
+            expect(text).toMatch(/^This file is not in a supported format/);
+            done();
+        });
+
+        this.$el.find('p').click();
+
+        this.addon.uploadAdd(null, {
+            files: [{ type: 'application/json' }]
+        });
+    });
+
+    it('validates file size on upload', function (done) {
+        this.addon.options.fileUploadOptions.maxFileSize = 1000;
+
+        spyOn(window, 'alert').and.callFake(function (text) {
+            expect(text).toMatch(/^This file is too big/);
+            done();
+        });
+
+        this.$el.find('p').click();
+
+        this.addon.uploadAdd(null, {
+            files: [{ type: 'image/jpeg', size: 1001 }]
+        });
+    });
 });

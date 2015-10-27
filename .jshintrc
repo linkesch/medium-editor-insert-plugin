@@ -19,7 +19,8 @@
         "afterEach": false,
         "MediumEditor": false,
         "jasmine": false,
-        "spyOn": false
+        "spyOn": false,
+        "placeCaret": false
     },
 
     "jquery" : true,

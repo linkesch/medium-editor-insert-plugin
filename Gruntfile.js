@@ -42,6 +42,7 @@ module.exports = function(grunt) {
                 src: 'src/js/*.js',
                 options: {
                     specs: ['spec/*.spec.js'],
+                    helpers: 'spec/helpers/*.js',
                     vendor: [
                         'bower_components/jquery/dist/jquery.min.js',
                         'bower_components/medium-editor/dist/js/medium-editor.min.js',
