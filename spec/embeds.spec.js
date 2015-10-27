@@ -1,4 +1,4 @@
-describe("Embeds addon", function () {
+describe('Embeds addon', function () {
     beforeEach(function () {
         $('body').append('<div id="fixtures"><div class="editable"></div></div>');
         this.$el = $('.editable');

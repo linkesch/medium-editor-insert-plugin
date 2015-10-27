@@ -1,4 +1,4 @@
-describe("Images addon", function () {
+describe('Images addon', function () {
     beforeEach(function () {
         $('body').append('<div id="fixtures"><div class="editable"></div></div>');
         this.$el = $('.editable');
@@ -17,7 +17,7 @@ describe("Images addon", function () {
         jasmine.clock().uninstall();
     });
 
-    it("creates preview image before upload", function (done) {
+    it('creates preview image before upload', function (done) {
         this.$el.find('p').click();
 
         this.addon.uploadAdd(null, {
