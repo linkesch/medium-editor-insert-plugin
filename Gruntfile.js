@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load grunt tasks just in time
@@ -52,6 +52,16 @@ module.exports = function(grunt) {
                         'bower_components/blueimp-file-upload/js/jquery.fileupload.js',
                         'bower_components/jquery-sortable/source/js/jquery-sortable-min.js'
                     ],
+                    template: require('grunt-template-jasmine-istanbul'),
+                    templateOptions: {
+                        coverage: 'reports/jasmine/coverage.json',
+                        report: [{
+                            type: 'lcov',
+                            options: {
+                                dir: 'reports/jasmine/lcov'
+                            }
+                        }]
+                    },
                     summary: true
                 }
             }

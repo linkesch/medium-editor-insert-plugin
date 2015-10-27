@@ -7,3 +7,4 @@ examples/uploads/*
 server.js
 .tm_properties
 .project
+reports

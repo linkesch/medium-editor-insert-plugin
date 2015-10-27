@@ -20,7 +20,8 @@
         "MediumEditor": false,
         "jasmine": false,
         "spyOn": false,
-        "placeCaret": false
+        "placeCaret": false,
+        "require": false
     },
 
     "jquery" : true,
