@@ -34,15 +34,7 @@ module.exports = function(grunt) {
             options: {
                 jshintrc: true
             },
-            files: ['src/js/*.js', '!src/js/templates.js', 'test/*.js']
-        },
-
-        blanket_qunit: {
-          options: {
-              urls: ['test.html?coverage=true&gruntReport'],
-              threshold: 70
-          },
-          unit: {}
+            files: ['src/js/*.js', '!src/js/templates.js', 'spec/*.js']
         },
 
         jasmine: {
@@ -140,7 +132,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('test', ['jshint', 'blanket_qunit']);
+    grunt.registerTask('test', ['jshint', 'jasmine']);
     grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
     grunt.registerTask('default', ['js', 'css']);
