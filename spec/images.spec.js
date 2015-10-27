@@ -150,7 +150,7 @@ describe("Images addon", function () {
     });
 
     it('triggers input event on showImage', function (done) {
-        this.$el.one('input', function () {
+        this.editor.subscribe('editableInput', function () {
             expect(true).toBe(true);
             done();
         });
@@ -169,15 +169,14 @@ describe("Images addon", function () {
 
         spyOn(this.addon, 'getDOMImage').and.returnValue(stubbedImage);
 
-        this.$el.on('input', function () {
+        this.editor.subscribe('editableInput', function () {
             inputTriggerCount++;
 
             if (inputTriggerCount === 2) {
-                this.$el.off('input');
                 expect(true).toBe(true);
                 done();
             }
-        }.bind(this));
+        });
 
         this.addon.showImage('http://image.co', {
             context: context
@@ -272,7 +271,7 @@ describe("Images addon", function () {
     it('triggers input event after removing image', function (done) {
         var $event = $.Event('keydown');
 
-        this.$el.one('input', function () {
+        this.editor.subscribe('editableInput', function () {
             expect(true).toBe(true);
             done();
         });
@@ -322,7 +321,7 @@ describe("Images addon", function () {
             .attr('class', 'medium-insert-images medium-insert-active medium-insert-images-left')
             .append('<figure><img src="image1.jpg" alt=""></figure>');
 
-        this.$el.one('input', function () {
+        this.editor.subscribe('editableInput', function () {
             expect(true).toBe(true);
             done();
         });
