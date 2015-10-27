@@ -1,4 +1,4 @@
-describe("Core", function () {
+describe('Core', function () {
     beforeEach(function () {
         $('body').append('<div id="fixtures"><div class="editable"></div></div>');
         this.$el = $('.editable');
