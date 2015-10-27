@@ -215,4 +215,15 @@ describe("Images addon", function () {
 
         expect(this.$el.find('figcaption').length).toEqual(0);
     });
+
+    it('removes placeholder after clicking on caption', function () {
+        this.$el.find('p')
+            .addClass('medium-insert-images')
+            .append('<figure><img src="image1.jpg" alt="" class="medium-insert-image-active"><figcaption class="medium-insert-caption-placeholder"></figcaption></figure>');
+
+        this.$el.find('.medium-insert-caption-placeholder').click();
+        jasmine.clock().tick(50);
+
+        expect(this.$el.find('figcaption').hasClass('medium-insert-caption-placeholder')).toEqual(false);
+    });
 });
