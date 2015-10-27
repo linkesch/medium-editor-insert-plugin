@@ -69,11 +69,11 @@ $(function () {
 
 ## [Documentation](https://github.com/orthes/medium-editor-insert-plugin/wiki)
 
-- [Getting Started](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Getting-Started)
-- [Configuration](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Configuration)
-- [Server response](https://github.com/orthes/medium-editor-insert-plugin/wiki/Server-response)
-- [Custom addons](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Custom-addons)
-- [Upgrading from v0.3](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Upgrading-from-v0.3)
+- [Getting Started](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Getting-Started)
+- [Configuration](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Configuration)
+- [Server response](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Server-response)
+- [Custom addons](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Custom-addons)
+- [Upgrading from v0.3](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Upgrading-from-v0.3)
 - [Versioning](https://github.com/orthes/medium-editor-insert-plugin/wiki/Versioning)
 - [Development & Contributing](https://github.com/orthes/medium-editor-insert-plugin/wiki/Development-&-Contributing)
 - [License](https://github.com/orthes/medium-editor-insert-plugin/wiki/License)
