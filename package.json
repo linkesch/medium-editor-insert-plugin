@@ -17,6 +17,7 @@
     "grunt-autoprefixer": "^3.0.1",
     "grunt-banner": "^0.2.3",
     "grunt-blanket-qunit": "^0.2.0",
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-concat": "^0.4.0",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-handlebars": "^0.10.2",
@@ -29,6 +30,7 @@
     "time-grunt": "^1.1.0"
   },
   "scripts": {
-    "test": "grunt test --verbose"
+    "build": "node_modules/grunt-cli/bin/grunt --verbose",
+    "test": "node_modules/grunt-cli/bin/grunt test --verbose"
   }
 }
