@@ -270,8 +270,8 @@
   background-size: 16px 16px; }
 
 .medium-editor-toolbar-actions svg {
-  -webkit-transition: fill 0.2s ease;
-          transition: fill 0.2s ease;
+  -webkit-transition: fill .2s ease;
+          transition: fill .2s ease;
   fill: white; }
 
 .medium-editor-toolbar-actions button {

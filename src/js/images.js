@@ -550,11 +550,16 @@
      * @returns {void}
      */
 
+    function noop() {}
     Images.prototype.deleteFile = function (file) {
+        var callback = (typeof this.options.onDelete) === 'function' ?
+            this.options.onDelete.bind(this) : noop;
+
         if (this.options.deleteScript) {
-            $.post(this.options.deleteScript, { file: file });
+            $.post(this.options.deleteScript, { file: file })
+                .complete(callback)
         }
-    };
+    }
 
     /**
      * Adds image toolbar to editor
