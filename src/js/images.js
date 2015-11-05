@@ -5,83 +5,84 @@
     'use strict';
 
     /** Default values */
-    var pluginName = 'mediumInsert',
-        addonName = 'Images', // first char is uppercase
-        defaults = {
-            label: '<div class="icon icon-camera"></div>',
-            deleteScript: 'delete.php',
-            //preview: true,            
-            //dataPostOnPreview: false,
-            captions: true,
-            captionPlaceholder: 'Type caption for image (optional)',
-            autoGrid: 3,
-            onPreviewLoaded: null,
-            checkImageStyles: null,
-            fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
-                url: 'upload.php',
-                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+    var pluginName = 'mediumInsert';
+    var addonName = 'Images'; // first char is uppercase
+    var defaults = {
+        label: '<div class="icon icon-camera"></div>',
+        onDelete: null,
+        deleteScript: 'delete.php',
+        //preview: true,
+        //dataPostOnPreview: false,
+        captions: true,
+        captionPlaceholder: 'Type caption for image (optional)',
+        autoGrid: 3,
+        onPreviewLoaded: null,
+        checkImageStyles: null,
+        fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+            url: 'upload.php',
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+        },
+        defaultStyle: 'wide',
+        styles: {
+            wide: {
+                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
+                // added: function ($el) {},
+                // removed: function ($el) {}
             },
-            defaultStyle: 'wide',
-            styles: {
-                wide: {
-                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
-                    // added: function ($el) {},
-                    // removed: function ($el) {}
-                },
-                left: {
-                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
-                    // added: function ($el) {},
-                    // removed: function ($el) {}
-                },
-                right: {
-                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
-                    // added: function ($el) {},
-                    // removed: function ($el) {}
-                },
-                'full-width': {
-                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
-                    // added: function ($el) {},
-                    // removed: function ($el) {}
-                },
-                grid: {
-                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#grid"/></svg>'
-                    // added: function ($el) {},
-                    // removed: function ($el) {}
-                }
+            left: {
+                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
+                // added: function ($el) {},
+                // removed: function ($el) {}
             },
-            actions: {
-                remove: {
-                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
-                    clicked: function () {
-                        var $event = $.Event('keydown');
-
-                        $event.which = 8;
-                        $(document).trigger($event);
-                    }
-                }
+            right: {
+                label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
+                // added: function ($el) {},
+                // removed: function ($el) {}
             },
-            sorting: function () {
-                var that = this;
-
-                $('.medium-insert-images').sortable({
-                    group: 'medium-insert-images',
-                    containerSelector: '.medium-insert-images',
-                    itemSelector: 'figure',
-                    placeholder: '<figure class="placeholder">',
-                    handle: 'img',
-                    nested: false,
-                    vertical: false,
-                    afterMove: function () {
-                        that.$el.trigger('input');
-                    }
-                });
+            'full-width': {
+                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
+                // added: function ($el) {},
+                // removed: function ($el) {}
             },
-            messages: {
-                acceptFileTypesError: 'This file is not in a supported format: ',
-                maxFileSizeError: 'This file is too big: '
+            grid: {
+                label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#grid"/></svg>'
+                // added: function ($el) {},
+                // removed: function ($el) {}
             }
-            // uploadCompleted: function ($el, data) {}
-        };
+        },
+        actions: {
+            remove: {
+                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
+                clicked: function () {
+                    var $event = $.Event('keydown');
+
+                    $event.which = 8;
+                    $(document).trigger($event);
+                }
+            }
+        },
+        sorting: function () {
+            var that = this;
+
+            $('.medium-insert-images').sortable({
+                group: 'medium-insert-images',
+                containerSelector: '.medium-insert-images',
+                itemSelector: 'figure',
+                placeholder: '<figure class="placeholder">',
+                handle: 'img',
+                nested: false,
+                vertical: false,
+                afterMove: function () {
+                    that.$el.trigger('input');
+                }
+            });
+        },
+        messages: {
+            acceptFileTypesError: 'This file is not in a supported format: ',
+            maxFileSizeError: 'This file is too big: '
+        }
+        // uploadCompleted: function ($el, data) {}
+    };
 
     /**
      * Images object
@@ -198,7 +199,7 @@
     Images.prototype.add = function () {
         var originalAdd = this.options.fileUploadOptions.add,
             originalDone = this.options.fileUploadOptions.done;
-            
+
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
             fileUploadOptions = {
@@ -388,7 +389,7 @@
      * @returns {void}
      */
 
-    
+
     Images.prototype.showImage = function (img, data) {
         var $place = this.$el.find('.medium-insert-active'),
             domImage,
@@ -402,7 +403,7 @@
         that = this;
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
-            domImage.onload = function () {               
+            domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
                 that.$el.trigger('input');
             };
