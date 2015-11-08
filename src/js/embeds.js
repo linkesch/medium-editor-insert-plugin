@@ -297,10 +297,11 @@
             },
             success: function(data) {
                 var html = data && data.html;
-		 if (that.options.storeMeta){
-                    console.log('storig meta');
+
+		if (that.options.storeMeta){
                     html+='<div class="medium-insert-meta"><script type="text/json">'+JSON.stringify(data)+'</script></div>';                    
                 }
+
                 if (data && !data.html && data.type === 'photo' && data.url) {
                     html = '<img src="' + data.url + '" alt="">';
                 }
