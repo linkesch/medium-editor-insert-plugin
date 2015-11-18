@@ -732,6 +732,21 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             $el.append(this.templates['src/js/templates/core-caption.hbs']({
                 placeholder: placeholder
             }));
+
+            $el.find('figcaption')
+                .on('keypress', function(event) {
+                    // prevent newlines in caption
+                    if(event.keyCode === 13) {
+                        event.preventDefault();
+                    }
+                })
+                .on('keyup', function(event) {
+                    // prevent downstream MediumEditor wrapping caption text in a
+                    // <p> tag
+                    if(event.keyCode === 13) {
+                        event.stopPropagation()
+                    }
+                });
         }
     };
 
@@ -1551,7 +1566,22 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
     Images.prototype.init = function () {
         var $images = this.$el.find('.medium-insert-images');
 
-        $images.find('figcaption').attr('contenteditable', true);
+        $images.find('figcaption')
+            .attr('contenteditable', true)
+            .on('keypress', function(event) {
+                // prevent newlines in caption
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                }
+            })
+            .on('keyup', function(event) {
+                // prevent downstream MediumEditor wrapping caption text in a
+                // <p> tag
+                if(event.keyCode === 13) {
+                    event.stopPropagation()
+                }
+            });
+
         $images.find('figure').attr('contenteditable', false);
 
         this.events();

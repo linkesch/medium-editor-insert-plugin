@@ -552,6 +552,21 @@
             $el.append(this.templates['src/js/templates/core-caption.hbs']({
                 placeholder: placeholder
             }));
+
+            $el.find('figcaption')
+                .on('keypress', function(event) {
+                    // prevent newlines in caption
+                    if(event.keyCode === 13) {
+                        event.preventDefault();
+                    }
+                })
+                .on('keyup', function(event) {
+                    // prevent downstream MediumEditor wrapping caption text in a
+                    // <p> tag
+                    if(event.keyCode === 13) {
+                        event.stopPropagation()
+                    }
+                });
         }
     };
 
