@@ -10,3 +10,7 @@ server.js
 reports
 .grunt/
 _SpecRunner.html
+
+*.sublime-project
+
+*.sublime-workspace
