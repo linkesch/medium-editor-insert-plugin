@@ -545,7 +545,10 @@
             active = false,
             $toolbar, $toolbar2, top;
 
-        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+        var mediumEditor = this.core.getEditor();
+        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+
+        $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
