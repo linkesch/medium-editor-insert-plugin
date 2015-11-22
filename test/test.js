@@ -3,27 +3,16 @@ $(document).ready(function(){
 	$('.editable').mediumInsert({
 		editor: medEditor,
 		enabled: false,
-		buttonLabels: 'fontawesome',
-		addons: {
-			images: {
-				styles: {
-					slideshow: {
-						label: '<span class="fa fa-play"></span>',
-								added: function ($el) {
-									$el
-										.data('cycle-center-vert', true)
-										.cycle({
-											slides: 'figure'
-										});
-								},
-								removed: function ($el) {
-									$el.cycle('destroy');
-								}
-							}
-						},
-						actions: false
-					}
-				}
+		buttonLabels: 'fontawesome'
+	});
+
+	$('#button').click(function()
+	{
+		var allContents = medEditor.serialize();
+		var elContent = allContents["element-0"].value;
+
+		console.log(allContents);
+		$('#elContents').text(elContent);
 	});
 });
 
