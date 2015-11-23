@@ -9,6 +9,7 @@
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
+            deleteMethod: 'POST',
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
@@ -63,7 +64,7 @@
                     nested: false,
                     vertical: false,
                     afterMove: function () {
-                        that.$el.trigger('input');
+                        that.core.triggerInput();
                     }
                 });
             },
@@ -371,7 +372,7 @@
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
-                that.$el.trigger('input');
+                that.core.triggerInput();
             };
             domImage.src = img;
         } else {
@@ -405,7 +406,7 @@
             }
         }
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
 
         return data.context;
     };
@@ -507,7 +508,7 @@
                     this.core.moveCaret($empty);
                 }
 
-                this.$el.trigger('input');
+                this.core.triggerInput();
             }
         }
     };
@@ -521,7 +522,14 @@
 
     Images.prototype.deleteFile = function (file) {
         if (this.options.deleteScript) {
-            $.post(this.options.deleteScript, { file: file });
+            // If deleteMethod is somehow undefined, defaults to POST
+            var method = this.options.deleteMethod || 'POST';
+
+            $.ajax({
+                url: this.options.deleteScript,
+                type: method,
+                data: { file: file }
+            });
         }
     };
 
@@ -537,7 +545,10 @@
             active = false,
             $toolbar, $toolbar2, top;
 
-        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+        var mediumEditor = this.core.getEditor();
+        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+
+        $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
@@ -614,7 +625,7 @@
 
         this.core.hideButtons();
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -634,7 +645,7 @@
 
         this.core.hideButtons();
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -644,7 +655,7 @@
      */
 
     Images.prototype.sorting = function () {
-        this.options.sorting();
+        $.proxy(this.options.sorting, this)();
     };
 
     /** Plugin initialization */

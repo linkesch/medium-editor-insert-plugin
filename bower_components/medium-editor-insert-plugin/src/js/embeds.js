@@ -367,7 +367,7 @@
             }));
             $place.remove();
 
-            this.$el.trigger('input');
+            this.core.triggerInput();
 
             if (html.indexOf('facebook') !== -1) {
                 if (typeof(FB) !== 'undefined') {
@@ -403,7 +403,7 @@
         $empty = $(emptyTemplate);
         $content.after($empty);
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
 
         this.core.moveCaret($place);
     };
@@ -491,7 +491,7 @@
                 this.core.hideAddons();
 
                 this.core.moveCaret($empty);
-                this.$el.trigger('input');
+                this.core.triggerInput();
             }
         }
     };
@@ -511,7 +511,10 @@
             return;
         }
 
-        $('body').append(this.templates['src/js/templates/embeds-toolbar.hbs']({
+        var mediumEditor = this.core.getEditor();
+        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+
+        $(toolbarContainer).append(this.templates['src/js/templates/embeds-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
@@ -586,7 +589,7 @@
             }
         });
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -604,7 +607,7 @@
             callback(this.$el.find('.medium-insert-embeds-selected'));
         }
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /** Plugin initialization */

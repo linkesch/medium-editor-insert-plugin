@@ -1,4 +1,17 @@
 
+2.1.1 / 2015-11-23
+==================
+
+  * Fix context for sorting function
+  * Add support for editor's ```elementsContainer``` option
+
+2.1.0 / 2015-10-27
+==================
+
+  * Add support for ```editableInput``` event
+  * Add support for textarea
+  * Add ```deleteMethod``` option
+
 2.0.1 / 2015-06-11
 ==================
 

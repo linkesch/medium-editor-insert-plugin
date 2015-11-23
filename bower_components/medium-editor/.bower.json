@@ -4,7 +4,8 @@
   "authors": [
     "Davi Ferreira <hi@daviferreira.com>",
     "Nate Mielnik <nathan@outlook.com>",
-    "Noah Chase <nchase@gmail.com>"
+    "Noah Chase <nchase@gmail.com>",
+    "Jeremy Benoist <jeremy.benoist@gmail.com>"
   ],
   "description": "Medium.com WYSIWYG editor clone written in pure JavaScript.",
   "main": [
@@ -35,14 +36,14 @@
     "README.md",
     "CHANGES.md"
   ],
-  "version": "4.12.6",
-  "_release": "4.12.6",
+  "version": "5.10.0",
+  "_release": "5.10.0",
   "_resolution": {
     "type": "version",
-    "tag": "4.12.6",
-    "commit": "0c98debe8b0e92c5176df3057e8c6b9feec9972f"
+    "tag": "5.10.0",
+    "commit": "b49622084e3e6d46f5b569c8a79aedd5b08c3f3b"
   },
   "_source": "git://github.com/daviferreira/medium-editor.git",
-  "_target": "^4.12.0",
+  "_target": "~5.10.0",
   "_originalSource": "medium-editor"
 }

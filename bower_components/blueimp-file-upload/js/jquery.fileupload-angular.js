@@ -1,5 +1,5 @@
 /*
- * jQuery File Upload AngularJS Plugin 2.2.0
+ * jQuery File Upload AngularJS Plugin
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2013, Sebastian Tschan
@@ -91,7 +91,7 @@
                     angular.forEach(data.files, function (file) {
                         filesCopy.push(file);
                     });
-                    scope.$apply(function () {
+                    scope.$parent.$applyAsync(function () {
                         addFileMethods(scope, data);
                         var method = scope.option('prependFiles') ?
                                 'unshift' : 'push';
@@ -100,7 +100,7 @@
                     data.process(function () {
                         return scope.process(data);
                     }).always(function () {
-                        scope.$apply(function () {
+                        scope.$parent.$applyAsync(function () {
                             addFileMethods(scope, data);
                             scope.replace(filesCopy, data.files);
                         });
@@ -111,12 +111,6 @@
                             data.submit();
                         }
                     });
-                },
-                progress: function (e, data) {
-                    if (e.isDefaultPrevented()) {
-                        return false;
-                    }
-                    data.scope.$apply();
                 },
                 done: function (e, data) {
                     if (e.isDefaultPrevented()) {
@@ -320,9 +314,11 @@
                     'fileuploadprocessalways',
                     'fileuploadprocessstop'
                 ].join(' '), function (e, data) {
-                    if ($scope.$emit(e.type, data).defaultPrevented) {
-                        e.preventDefault();
-                    }
+                    $scope.$parent.$applyAsync(function () {
+                        if ($scope.$emit(e.type, data).defaultPrevented) {
+                            e.preventDefault();
+                        }
+                    });
                 }).on('remove', function () {
                     // Remove upload methods from the scope,
                     // when the widget is removed:
