@@ -4,9 +4,9 @@
 
     /** Default values */
     var pluginName = 'mediumInsert',
-        
+
         // first char is uppercase
-        addonName = 'Products', 
+        addonName = 'Products',
         defaults = {
             label: '<div class="icon icon-shopping-cart"></div>',
             placeholder: 'Search for a product on Hubrick',
@@ -228,7 +228,7 @@
 
         $toolbar
             .css({
-                top: $productBlock.offset().top  - $toolbar.height() - 8 - 2 - 5, 
+                top: $productBlock.offset().top  - $toolbar.height() - 8 - 2 - 5,
                 left: $productBlock.offset().left + $productBlock.width() / 2 - $toolbar.width() / 2
             })
             .show();
@@ -314,7 +314,7 @@
      */
 
     Products.prototype.selectProduct = function (e) {
-        var $product = $(e.target).closest('.medium-insert-products'),        
+        var $product = $(e.target).closest('.medium-insert-products'),
             that = this;
         $product.addClass('medium-insert-products-active');
         $product.closest('.medium-insert-products').addClass('medium-insert-active');
