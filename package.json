@@ -1,6 +1,6 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "jQuery insert plugin for MediumEditor",
   "license": "MIT",
   "homepage": "https://github.com/orthes/medium-editor-insert-plugin",

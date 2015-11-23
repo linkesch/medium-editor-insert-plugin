@@ -1,4 +1,10 @@
 
+2.1.1 / 2015-11-23
+==================
+
+  * Fix context for sorting function
+  * Add support for editor's ```elementsContainer``` option
+
 2.1.0 / 2015-10-27
 ==================
 
