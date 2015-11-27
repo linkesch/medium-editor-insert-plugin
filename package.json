@@ -12,6 +12,7 @@
     "name": "Pavel Linkesch",
     "url": "http://linkesch.sk"
   },
+  "main": "dist/medium-editor-insert-plugin.js",
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-autoprefixer": "^3.0.1",

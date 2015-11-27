@@ -19,6 +19,7 @@
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
+            fileDeleteOptions: {},
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -525,11 +526,11 @@
             // If deleteMethod is somehow undefined, defaults to POST
             var method = this.options.deleteMethod || 'POST';
 
-            $.ajax({
+            $.ajax($.extend(true, {}, {
                 url: this.options.deleteScript,
                 type: method,
                 data: { file: file }
-            });
+            }, this.options.fileDeleteOptions));
         }
     };
 
