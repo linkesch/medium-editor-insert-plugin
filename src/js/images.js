@@ -391,10 +391,6 @@
 
         this.core.clean();
         this.sorting();
-
-        if (this.options.uploadCompleted) {
-            this.options.uploadCompleted($el, data);
-        }
     };
 
     /**
@@ -421,6 +417,10 @@
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
                 that.$el.trigger('input');
+
+                if (typeof that.options.uploadCompleted === 'function') {
+                    that.options.uploadCompleted(that.$el, data);
+                }
             };
             domImage.setAttribute('img-id', data.result.id);
             domImage.src = img;
