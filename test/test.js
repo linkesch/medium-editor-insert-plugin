@@ -3,7 +3,12 @@ $(document).ready(function(){
 	$('.editable').mediumInsert({
 		editor: medEditor,
 		enabled: true,
-		buttonLabels: 'fontawesome'
+		buttonLabels: 'fontawesome',
+		addons: {
+			images: {
+				label: '<span class="fa fa-cogs"></span>'
+			}
+		}
 	});
 
 	$('#button').click(function()
