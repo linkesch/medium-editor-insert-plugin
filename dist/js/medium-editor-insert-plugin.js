@@ -1828,10 +1828,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
 
         this.core.clean();
         this.sorting();
-
-        if (this.options.uploadCompleted) {
-            this.options.uploadCompleted($el, data);
-        }
     };
 
     /**
@@ -1858,6 +1854,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
                 that.$el.trigger('input');
+
+                if (typeof that.options.uploadCompleted === 'function') {
+                    that.options.uploadCompleted(that.$el, data);
+                }
             };
             domImage.setAttribute('img-id', data.result.id);
             domImage.src = img;
@@ -2159,9 +2159,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
 
     /** Default values */
     var pluginName = 'mediumInsert',
-        
+
         // first char is uppercase
-        addonName = 'Products', 
+        addonName = 'Products',
         defaults = {
             label: '<div class="icon icon-shopping-cart"></div>',
             placeholder: 'Search for a product on Hubrick',
@@ -2383,7 +2383,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
 
         $toolbar
             .css({
-                top: $productBlock.offset().top  - $toolbar.height() - 8 - 2 - 5, 
+                top: $productBlock.offset().top  - $toolbar.height() - 8 - 2 - 5,
                 left: $productBlock.offset().left + $productBlock.width() / 2 - $toolbar.width() / 2
             })
             .show();
@@ -2469,7 +2469,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Han
      */
 
     Products.prototype.selectProduct = function (e) {
-        var $product = $(e.target).closest('.medium-insert-products'),        
+        var $product = $(e.target).closest('.medium-insert-products'),
             that = this;
         $product.addClass('medium-insert-products-active');
         $product.closest('.medium-insert-products').addClass('medium-insert-active');
