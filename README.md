@@ -1,5 +1,7 @@
 # jQuery insert plugin for MediumEditor
 
+[![Join the chat at https://gitter.im/orthes/medium-editor-insert-plugin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
 [![Dependency Status](http://www.versioneye.com/user/projects/53f742dce09da3467d000389/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742dce09da3467d000389)
 [![Dependency Status](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f)
