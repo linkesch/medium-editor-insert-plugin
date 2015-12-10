@@ -1,10 +1,10 @@
 # jQuery insert plugin for MediumEditor
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
 [![Dependency Status](http://www.versioneye.com/user/projects/53f742dce09da3467d000389/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742dce09da3467d000389)
 [![Dependency Status](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f)
 [![Codacy Badge](https://www.codacy.com/project/badge/1f8565ed2e554e4fa952ec4da6a2080b)](https://www.codacy.com/public/orthes/mediumeditorinsertplugin)
-[![Stories in Ready](https://badge.waffle.io/orthes/medium-editor-insert-plugin.svg?label=ready&title=Ready)](http://waffle.io/orthes/medium-editor-insert-plugin)
 
 This plugin expands capabilities of [MediumEditor](https://github.com/daviferreira/medium-editor) (a clone of medium.com WYSIWYG editor) and it enables users to insert into the editor various types of content (depending on available addons).
 
