@@ -89,6 +89,7 @@
     function Images (el, options) {
         this.el = el;
         this.$el = $(el);
+        this.$currentImage = null;
         this.templates = window.MediumInsert.Templates;
         this.core = this.$el.data('plugin_'+ pluginName);
 
@@ -427,6 +428,8 @@
             var $image = $(e.target),
                 that = this;
 
+            this.$currentImage = $image;
+
             // Hide keyboard on mobile devices
             this.$el.blur();
 
@@ -469,6 +472,7 @@
         } else if ($el.is('figcaption') === false) {
             this.core.removeCaptions();
         }
+        this.$currentImage = null;
     };
 
     /**
@@ -595,6 +599,7 @@
      */
 
     Images.prototype.toolbarAction = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             $li = $button.closest('li'),
             $ul = $li.closest('ul'),
@@ -636,6 +641,7 @@
      */
 
     Images.prototype.toolbar2Action = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             callback = this.options.actions[$button.data('action')].clicked;
 
