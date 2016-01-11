@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.1.1 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.2.0 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -1413,6 +1413,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
+            fileDeleteOptions: {},
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -1919,11 +1920,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             // If deleteMethod is somehow undefined, defaults to POST
             var method = this.options.deleteMethod || 'POST';
 
-            $.ajax({
+            $.ajax($.extend(true, {}, {
                 url: this.options.deleteScript,
                 type: method,
                 data: { file: file }
-            });
+            }, this.options.fileDeleteOptions));
         }
     };
 
