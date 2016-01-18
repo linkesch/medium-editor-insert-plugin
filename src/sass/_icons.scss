@@ -1,0 +1,52 @@
+
+.medium-insert-buttons-addons {
+    .icon {
+        background-size: 16px 16px;
+        background-position: 7px 7px;
+        opacity: .3;
+    }
+}
+
+.medium-editor-toolbar-actions {
+    .icon {
+        background-size: 16px 16px;
+    }
+
+    svg {
+        transition: fill .2s ease;
+        fill: white;
+    }
+
+    button {
+        padding-top: 12px !important;
+
+        &:hover {
+            svg {
+                fill: #45d187;
+            }
+        }
+    }
+}
+
+.icon {
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+
+    &.icon-camera {
+        background-image: url('../assets/icons/camera.svg');
+    }
+
+    &.icon-remove {
+        background-image: url('../assets/icons/remove.svg');
+    }
+
+    &.icon-youtube {
+        background-image: url('../assets/icons/youtube.svg');
+    }
+
+    &.icon-shopping-cart {
+        background-image: url('../assets/icons/shopping-cart.svg');
+    }
+
+}

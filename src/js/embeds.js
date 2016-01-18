@@ -6,31 +6,32 @@
     var pluginName = 'mediumInsert',
         addonName = 'Embeds', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-youtube-play"></span>',
+            label: '<div class="icon icon-youtube"></div>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
+            defaultStyle: 'wide',
             styles: {
-                wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                left: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
-                left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                wide: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 
@@ -374,6 +375,14 @@
                     setTimeout(function () {
                         FB.XFBML.parse();
                     }, 2000);
+                }
+            }
+            if (this.options.defaultStyle) {
+                var className = 'medium-insert-embeds-'+ this.options.defaultStyle;
+                $place.addClass(className);
+
+                if (this.options.styles[this.options.defaultStyle] && this.options.styles[this.options.defaultStyle].added) {
+                    this.options.styles[this.options.defaultStyle]($place);
                 }
             }
         }

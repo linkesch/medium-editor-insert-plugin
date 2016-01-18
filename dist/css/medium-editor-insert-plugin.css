@@ -21,11 +21,11 @@
   .medium-insert-images.medium-insert-images-left, .medium-insert-images-left.mediumInsert, .mediumInsert.small {
     max-width: 33.33%;
     float: left;
-    margin: 0 30px 20px 0; }
+    margin: 0 40px 20px 0; }
   .medium-insert-images.medium-insert-images-right, .medium-insert-images-right.mediumInsert {
     max-width: 33.33%;
     float: right;
-    margin: 0 0 20px 30px; }
+    margin: 0 0 20px 40px; }
   .medium-insert-images.medium-insert-images-grid, .medium-insert-images-grid.mediumInsert {
     display: -webkit-box;
     display: -webkit-flex;
@@ -115,20 +115,20 @@
       border-radius: 20px;
       border: 1px solid;
       font-size: 25px;
-      line-height: 28px;
+      line-height: 30px;
       text-align: center;
       text-decoration: none;
       background: #fff;
       -webkit-transform: rotate(0);
-          -ms-transform: rotate(0);
               transform: rotate(0);
       -webkit-transition: -webkit-transform 100ms;
               transition: transform 100ms; }
+      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show:hover {
+        color: white; }
       .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show.medium-insert-buttons-rotate {
         -webkit-transition: -webkit-transform 250ms;
                 transition: transform 250ms;
         -webkit-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
                 transform: rotate(45deg); }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
@@ -222,3 +222,71 @@
   height: 100%;
   top: 0;
   left: 0; }
+
+.medium-insert-products {
+  position: relative;
+  height: 250px;
+  width: 300px;
+  margin-bottom: 25px; }
+
+.hubrick-product-block {
+  position: absolute;
+  height: 250px;
+  border: 1px solid #dbdbdb;
+  padding: 8px; }
+
+.medium-insert-products-active {
+  outline: 2px solid #000; }
+  .medium-insert-products-active .hubrick-product-block {
+    border: none; }
+
+.medium-insert-products-input {
+  position: relative;
+  color: #ccc;
+  z-index: 1; }
+
+.medium-insert-products-placeholder {
+  position: absolute;
+  top: 0;
+  z-index: 0; }
+
+.medium-insert-products-left {
+  max-width: 33.33%;
+  float: left;
+  margin: 0 40px 20px 0; }
+
+.medium-insert-products-right {
+  max-width: 33.33%;
+  float: right;
+  margin: 0 0 20px 40px; }
+
+.medium-insert-buttons-addons .icon {
+  background-size: 16px 16px;
+  background-position: 7px 7px;
+  opacity: .3; }
+
+.medium-editor-toolbar-actions .icon {
+  background-size: 16px 16px; }
+
+.medium-editor-toolbar-actions svg {
+  -webkit-transition: fill .2s ease;
+          transition: fill .2s ease;
+  fill: white; }
+
+.medium-editor-toolbar-actions button {
+  padding-top: 12px !important; }
+  .medium-editor-toolbar-actions button:hover svg {
+    fill: #45d187; }
+
+.icon {
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat; }
+  .icon.icon-camera {
+    background-image: url("../assets/icons/camera.svg"); }
+  .icon.icon-remove {
+    background-image: url("../assets/icons/remove.svg"); }
+  .icon.icon-youtube {
+    background-image: url("../assets/icons/youtube.svg"); }
+  .icon.icon-shopping-cart {
+    background-image: url("../assets/icons/shopping-cart.svg"); }

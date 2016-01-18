@@ -21,11 +21,11 @@
   .medium-insert-images.medium-insert-images-left, .medium-insert-images-left.mediumInsert, .mediumInsert.small {
     max-width: 33.33%;
     float: left;
-    margin: 0 30px 20px 0; }
+    margin: 0 40px 20px 0; }
   .medium-insert-images.medium-insert-images-right, .medium-insert-images-right.mediumInsert {
     max-width: 33.33%;
     float: right;
-    margin: 0 0 20px 30px; }
+    margin: 0 0 20px 40px; }
   .medium-insert-images.medium-insert-images-grid, .medium-insert-images-grid.mediumInsert {
     display: -webkit-box;
     display: -webkit-flex;

@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="css/demo.css">
     <link rel="stylesheet" href="../bower_components/medium-editor/dist/css/medium-editor.min.css">
     <link rel="stylesheet" href="../bower_components/medium-editor/dist/css/themes/default.css" id="medium-editor-theme">
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="../dist/css/medium-editor-insert-plugin.min.css">
 
     <style>
@@ -103,6 +102,7 @@
     <script src="../src/js/core.js"></script>
     <script src="../src/js/embeds.js"></script>
     <script src="../src/js/images.js"></script>
+    <script src="../src/js/products.js"></script>
 
     <script>
         var editor = new MediumEditor('.editable', {
@@ -116,7 +116,7 @@
                     images: {
                         styles: {
                             slideshow: {
-                                label: '<span class="fa fa-play"></span>',
+                                label: '<div class="icon icon-play"></div>',
                                 added: function ($el) {
                                     $el
                                         .data('cycle-center-vert', true)
@@ -130,7 +130,12 @@
                             }
                         },
                         actions: false
+                    },
+
+                    products: function () {
+                        // no configuration options yet :)
                     }
+
                 }
             });
         });

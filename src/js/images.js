@@ -8,43 +8,54 @@
     var pluginName = 'mediumInsert',
         addonName = 'Images', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-camera"></span>',
+            label: '<div class="icon icon-camera"></div>',
             deleteMethod: 'POST',
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+
+            // custom functions
+            onPreviewLoaded: null,
+            checkImageStyles: null,
+
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
             fileDeleteOptions: {},
+            defaultStyle: 'wide',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
+                'full-width': {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>',
+                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#grid"/></svg>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 
@@ -190,17 +201,30 @@
      */
 
     Images.prototype.add = function () {
+        var originalAdd = this.options.fileUploadOptions.add,
+            originalDone = this.options.fileUploadOptions.done;
+
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
             fileUploadOptions = {
                 dataType: 'json',
                 add: function (e, data) {
+                    if (typeof originalAdd === 'function') {
+                        originalAdd.call(that, e, data);
+                    }
                     $.proxy(that, 'uploadAdd', e, data)();
                 },
                 done: function (e, data) {
+                    if (typeof originalDone === 'function') {
+                        originalDone.call(that, e, data);
+                    }
                     $.proxy(that, 'uploadDone', e, data)();
                 }
             };
+
+        if (typeof this.options.fileUploadOptions.url === 'function') {
+            fileUploadOptions.url = this.options.fileUploadOptions.url();
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
@@ -272,6 +296,17 @@
 
                     reader.onload = function (e) {
                         $.proxy(that, 'showImage', e.target.result, data)();
+
+
+                        var image = new Image();
+                        image.src = e.target.result;
+
+                        image.onload = function () {
+                            if (typeof that.options.onPreviewLoaded === 'function') {
+                                that.options.onPreviewLoaded(image, data);
+                            }
+                            data.submit();
+                        };
                     };
 
                     reader.readAsDataURL(data.files[0]);
@@ -342,7 +377,7 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        var $el = $.proxy(this, 'showImage', data.result.url, data)();
 
         this.core.clean();
         this.sorting();
@@ -373,12 +408,18 @@
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
             domImage.onload = function () {
-                data.context.find('img').attr('src', domImage.src);
+                data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
                 that.core.triggerInput();
+
+                // if (typeof that.options.uploadCompleted === 'function') {
+                //     that.options.uploadCompleted(that.$el, data);
+                // }
             };
+            domImage.setAttribute('img-id', data.result.id);
             domImage.src = img;
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
+                id: data.result ? data.result.id : '',
                 img: img,
                 progress: this.options.preview
             })).appendTo($place);
@@ -403,9 +444,9 @@
                 }
             }
 
-            if (this.options.preview) {
-                data.submit();
-            }
+            // if (this.options.preview) {
+            //     data.submit();
+            // }
         }
 
         this.core.triggerInput();
@@ -492,7 +533,7 @@
             if ($image.length) {
                 e.preventDefault();
 
-                this.deleteFile($image.attr('src'));
+                this.deleteFile($image);
 
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
@@ -525,15 +566,16 @@
      * @returns {void}
      */
 
-    Images.prototype.deleteFile = function (file) {
+    Images.prototype.deleteFile = function (imageElement) {
         if (this.options.deleteScript) {
             // If deleteMethod is somehow undefined, defaults to POST
+            var url = typeof this.options.deleteScript === 'function' ?
+                this.options.deleteScript(imageElement) : this.options.deleteScript;
             var method = this.options.deleteMethod || 'POST';
 
             $.ajax($.extend(true, {}, {
-                url: this.options.deleteScript,
-                type: method,
-                data: { file: file }
+                url: url,
+                type: method
             }, this.options.fileDeleteOptions));
         }
     };
@@ -548,13 +590,18 @@
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2, top,
+            styles = $.extend(true, {}, this.options.styles);
+
+        if (typeof this.options.checkImageStyles === 'function') {
+            this.options.checkImageStyles($image.get(0), styles);
+        }
 
         var mediumEditor = this.core.getEditor();
         var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
 
         $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
-            styles: this.options.styles,
+            styles: styles,
             actions: this.options.actions
         }).trim());
 

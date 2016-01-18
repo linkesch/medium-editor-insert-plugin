@@ -10,6 +10,10 @@
 this["MediumInsert"] = this["MediumInsert"] || {};
 this["MediumInsert"]["Templates"] = this["MediumInsert"]["Templates"] || {};
 
+Handlebars.registerPartial("icons", Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<svg viewBox=\"0 0 128 128\" style=\"display:none;\">\n    <defs>\n        <g id='justify-left'>\n            <path d=\"M76.17,20.579h37.438c2.861,0,5.177,2.34,5.177,5.228c0,2.887-2.316,5.227-5.177,5.227H76.17\n                c-2.86,0-5.176-2.339-5.176-5.227C70.994,22.918,73.31,20.579,76.17,20.579z\"/>\n            <path d=\"M76.17,57.979h25.015c2.86,0,5.176,2.338,5.176,5.226c0,2.888-2.316,5.228-5.176,5.228H76.17\n                c-2.86,0-5.176-2.339-5.176-5.228C70.994,60.317,73.31,57.979,76.17,57.979z\"/>\n            <path d=\"M76.17,39.278h46.562c2.861,0,5.177,2.339,5.177,5.228c0,2.888-2.316,5.227-5.177,5.227H76.17\n                c-2.86,0-5.176-2.339-5.176-5.227C70.994,41.618,73.31,39.278,76.17,39.278z\"/>\n            <path d=\"M76.17,76.692h46.562c2.861,0,5.177,2.338,5.177,5.227c0,2.888-2.316,5.228-5.177,5.228H76.17\n                c-2.86,0-5.176-2.34-5.176-5.228C70.994,79.03,73.31,76.692,76.17,76.692z\"/>\n            <path d=\"M76.17,95.392h46.562c2.861,0,5.177,2.339,5.177,5.227c0,2.888-2.316,5.227-5.177,5.227H76.17\n                c-2.86,0-5.176-2.338-5.176-5.227C70.994,97.731,73.31,95.392,76.17,95.392z\"/>\n            <path d=\"M7.97,20.003h45.863c4.284,0,7.765,3.516,7.765,7.841v71.389c0,4.326-3.481,7.841-7.765,7.841H7.97\n                c-4.283,0-7.764-3.515-7.764-7.841V27.844C0.206,23.506,3.674,20.003,7.97,20.003z\"/>\n        </g>\n        <g id='justify-full'>\n            <path d=\"M7.423,23.367h113.236c3.998,0,7.247,3.281,7.247,7.318v66.63c0,4.037-3.249,7.318-7.247,7.318H7.423\n                c-3.998,0-7.247-3.281-7.247-7.318v-66.63C0.176,26.636,3.412,23.367,7.423,23.367z\"/>\n        </g>\n        <g id='justify-right'>\n            <path d=\"M51.944,20.579H14.506c-2.861,0-5.177,2.34-5.177,5.228c0,2.887,2.316,5.227,5.177,5.227h37.438\n                c2.86,0,5.177-2.339,5.177-5.227C57.121,22.918,54.804,20.579,51.944,20.579z\"/>\n            <path d=\"M51.944,57.979H26.93c-2.861,0-5.177,2.338-5.177,5.226c0,2.888,2.316,5.228,5.177,5.228h25.015\n                c2.86,0,5.177-2.339,5.177-5.228C57.121,60.317,54.804,57.979,51.944,57.979z\"/>\n            <path d=\"M51.944,39.278H5.383c-2.861,0-5.177,2.339-5.177,5.228c0,2.888,2.316,5.227,5.177,5.227h46.562\n                c2.86,0,5.177-2.339,5.177-5.227C57.121,41.618,54.804,39.278,51.944,39.278z\"/>\n            <path d=\"M51.944,76.692H5.383c-2.861,0-5.177,2.338-5.177,5.227c0,2.888,2.316,5.228,5.177,5.228h46.562\n                c2.86,0,5.177-2.34,5.177-5.228C57.121,79.03,54.804,76.692,51.944,76.692z\"/>\n            <path d=\"M51.944,95.392H5.383c-2.861,0-5.177,2.339-5.177,5.227c0,2.888,2.316,5.227,5.177,5.227h46.562\n                c2.86,0,5.177-2.338,5.177-5.227C57.121,97.731,54.804,95.392,51.944,95.392z\"/>\n            <path d=\"M120.144,20.003H74.281c-4.284,0-7.765,3.516-7.765,7.841v71.389c0,4.326,3.481,7.841,7.765,7.841h45.863\n                c4.283,0,7.764-3.515,7.764-7.841V27.844C127.908,23.506,124.441,20.003,120.144,20.003z\"/>\n        </g>\n        <g id='full-width'>\n            <path d=\"M13.9,27.4H2c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h11.9c1.1,0,2,0.9,2,2l0,0C15.9,26.5,15,27.4,13.9,27.4z\"/>\n            <path d=\"M0,38.2V26.3c0-1.1,0.9-2,2-2l0,0c1.1,0,2,0.9,2,2v11.9c0,1.1-0.9,2-2,2l0,0C0.9,40.2,0,39.3,0,38.2z\"/>\n            <path d=\"M4,89.8v11.9c0,1.1-0.9,2-2,2l0,0c-1.1,0-2-0.9-2-2V89.8c0-1.1,0.9-2,2-2l0,0C3.1,87.8,4,88.7,4,89.8z\"/>\n            <path d=\"M13.9,104.6H2c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h11.9c1.1,0,2,0.9,2,2l0,0C15.9,103.7,15,104.6,13.9,104.6z\"/>\n            <path d=\"M114.1,27.4H126c1.1,0,2-0.9,2-2l0,0c0-1.1-0.9-2-2-2h-11.9c-1.1,0-2,0.9-2,2l0,0C112.1,26.5,113,27.4,114.1,27.4z\"/>\n            <path d=\"M128,38.2V26.3c0-1.1-0.9-2-2-2l0,0c-1.1,0-2,0.9-2,2v11.9c0,1.1,0.9,2,2,2l0,0C127.1,40.2,128,39.3,128,38.2z\"/>\n            <path d=\"M124,89.8v11.9c0,1.1,0.9,2,2,2l0,0c1.1,0,2-0.9,2-2V89.8c0-1.1-0.9-2-2-2l0,0C124.9,87.8,124,88.7,124,89.8z\"/>\n            <path d=\"M114.1,104.6H126c1.1,0,2-0.9,2-2l0,0c0-1.1-0.9-2-2-2h-11.9c-1.1,0-2,0.9-2,2l0,0C112.1,103.7,113,104.6,114.1,104.6z\"/>\n            <path d=\"M116.8,96H11.4c-1.1,0-2-0.9-2-2V34.3c0-1.1,0.9-2,2-2h105.4c1.1,0,2,0.9,2,2V94C118.8,95.1,117.9,96,116.8,96z\"/>\n        </g>\n        <g id='grid'>\n            <path id=\"XMLID_9_\" d=\"M34.8,3.9c0-2.2-1.8-4-4-4H4c-2.2,0-4,1.8-4,4v26.8c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4L34.8,3.9L34.8,3.9\n                z\"/>\n            <path id=\"XMLID_8_\" d=\"M81.2,3.9c0-2.2-1.8-4-4-4H50.4c-2.2,0-4,1.8-4,4v26.8c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4V3.9z\"/>\n            <path id=\"XMLID_7_\" d=\"M127.5,3.9c0-2.2-1.8-4-4-4H96.8c-2.2,0-4,1.8-4,4v26.8c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4L127.5,3.9\n                L127.5,3.9z\"/>\n            <path id=\"XMLID_6_\" d=\"M34.8,50.6c0-2.2-1.8-4-4-4H4c-2.2,0-4,1.8-4,4v26.8c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4L34.8,50.6\n                L34.8,50.6L34.8,50.6z\"/>\n            <path id=\"XMLID_5_\" d=\"M81.2,50.6c0-2.2-1.8-4-4-4H50.4c-2.2,0-4,1.8-4,4v26.8c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4V50.6z\"/>\n            <path id=\"XMLID_4_\" d=\"M127.5,50.6c0-2.2-1.8-4-4-4H96.8c-2.2,0-4,1.8-4,4v26.8c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4L127.5,50.6\n                L127.5,50.6L127.5,50.6z\"/>\n            <path id=\"XMLID_3_\" d=\"M30.8,93.2H4c-2.2,0-4,1.8-4,4V124c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4V97.2C34.8,95,33,93.2,30.8,93.2z\"\n                />\n            <path id=\"XMLID_2_\" d=\"M77.2,93.2H50.4c-2.2,0-4,1.8-4,4V124c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4V97.2\n                C81.2,95,79.4,93.2,77.2,93.2z\"/>\n            <path id=\"XMLID_1_\" d=\"M123.6,93.2H96.8c-2.2,0-4,1.8-4,4V124c0,2.2,1.8,4,4,4h26.8c2.2,0,4-1.8,4-4V97.2\n                C127.5,95,125.8,93.2,123.6,93.2z\"/>\n        </g>\n        <g id='remove'>\n            <path id=\"XMLID_1_\" d=\"M123.7,25.2L84.9,64l38.8,38.8c5.8,5.8,5.8,15.1,0,20.9c-2.9,2.9-6.7,4.3-10.4,4.3c-3.8,0-7.6-1.4-10.4-4.3\n                L64,84.9l-38.8,38.8c-2.9,2.9-6.7,4.3-10.4,4.3c-3.8,0-7.6-1.4-10.4-4.3c-5.8-5.8-5.8-15.1,0-20.9L43.1,64L4.3,25.2\n                c-5.8-5.8-5.8-15.1,0-20.9c5.8-5.8,15.1-5.8,20.9,0L64,43.1l38.8-38.8c5.8-5.8,15.1-5.8,20.9,0C129.4,10.1,129.4,19.4,123.7,25.2z\"\n                />\n        </g>\n    </defs>\n</svg>";
+},"useData":true}));
+
 this["MediumInsert"]["Templates"]["src/js/templates/core-buttons.hbs"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function";
 
@@ -35,7 +39,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-caption.hbs"] = Handleb
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<p><br></p>\n";
+    return "<p><br/></p>\n";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
@@ -65,10 +69,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handl
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : {};
 
-  return ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.styles : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+  return ((stack1 = container.invokePartial(partials.icons,depth0,{"name":"icons","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + "\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.styles : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.actions : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"useData":true});
+},"usePartial":true,"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper;
@@ -79,19 +85,17 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handl
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<input type=\"file\" multiple>";
+    return "<input type=\"file\" accept=\"image/*\" />";
 },"useData":true});
 
-this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
-    return "        <div class=\"medium-insert-images-progress\"></div>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "<figure contenteditable=\"false\">\n    <img src=\""
-    + container.escapeExpression(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"img","hash":{},"data":data}) : helper)))
-    + "\" alt=\"\">\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.progress : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</figure>";
+    + alias4(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"img","hash":{},"data":data}) : helper)))
+    + "\" img-id=\""
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\" alt=\"\" />\n</figure>";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -131,10 +135,48 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : {};
 
-  return "<div class=\"medium-insert-images-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n"
+  return ((stack1 = container.invokePartial(partials.icons,depth0,{"name":"icons","data":data,"helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + "\n<div class=\"medium-insert-images-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.styles : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "    </ul>\n</div>\n\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.actions : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"usePartial":true,"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-placeholder.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "<div class=\"medium-insert-products-placeholder\" contenteditable=\"false\">"
+    + container.escapeExpression(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"placeholder","hash":{},"data":data}) : helper)))
+    + "</div>";
+},"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-product.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div contenteditable=\"false\">\n    <div class=\"hubrick-product-block\">\n    	Hi! I'm a Hubrick product. The data here needs to be pretty JSON from an API.\n    </div>\n</div>";
+},"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-toolbar.hbs"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.label : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"2":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function";
+
+  return "                <li>\n                    <button class=\"medium-editor-action\" data-action=\""
+    + container.escapeExpression(((helper = (helper = helpers.key || (data && data.key)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"key","hash":{},"data":data}) : helper)))
+    + "\">"
+    + ((stack1 = ((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"label","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "</button>\n                </li>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = container.invokePartial(partials.icons,depth0,{"name":"icons","data":data,"indent":" ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+    + "\n <div class=\"medium-insert-products-toolbar medium-editor-toolbar medium-toolbar-arrow-under medium-editor-toolbar-active\">\n    <ul class=\"medium-editor-toolbar-actions clearfix\">\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.styles : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "    </ul>\n</div>";
+},"usePartial":true,"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/products-wrapper.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div class=\"medium-insert-products\">\n	<div contenteditable=\"false\">\n	    <div class=\"hubrick-product-block centered\">\n	    	<h3>Nike Foobar</h3>\n	    	Hi! I'm a Hubrick product. This data right here needs to be pretty JSON from an API.\n	    </div>\n	</div>\n</div>";
 },"useData":true});
 ;(function ($, window, document, undefined) {
 
@@ -702,6 +744,21 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $el.append(this.templates['src/js/templates/core-caption.hbs']({
                 placeholder: placeholder
             }));
+
+            $el.find('figcaption')
+                .on('keypress', function(event) {
+                    // prevent newlines in caption
+                    if(event.keyCode === 13) {
+                        event.preventDefault();
+                    }
+                })
+                .on('keyup', function(event) {
+                    // prevent downstream MediumEditor wrapping caption text in a
+                    // <p> tag
+                    if(event.keyCode === 13) {
+                        event.stopPropagation()
+                    }
+                });
         }
     };
 
@@ -776,31 +833,32 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     var pluginName = 'mediumInsert',
         addonName = 'Embeds', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-youtube-play"></span>',
+            label: '<div class="icon icon-youtube"></div>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
+            defaultStyle: 'wide',
             styles: {
-                wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                left: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
-                left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                wide: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 
@@ -1146,6 +1204,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     }, 2000);
                 }
             }
+            if (this.options.defaultStyle) {
+                var className = 'medium-insert-embeds-'+ this.options.defaultStyle;
+                $place.addClass(className);
+
+                if (this.options.styles[this.options.defaultStyle] && this.options.styles[this.options.defaultStyle].added) {
+                    this.options.styles[this.options.defaultStyle]($place);
+                }
+            }
         }
     };
 
@@ -1402,43 +1468,54 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     var pluginName = 'mediumInsert',
         addonName = 'Images', // first char is uppercase
         defaults = {
-            label: '<span class="fa fa-camera"></span>',
+            label: '<div class="icon icon-camera"></div>',
             deleteMethod: 'POST',
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+
+            // custom functions
+            onPreviewLoaded: null,
+            checkImageStyles: null,
+
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
             fileDeleteOptions: {},
+            defaultStyle: 'wide',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
+                'full-width': {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>',
+                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#grid"/></svg>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
             },
             actions: {
                 remove: {
-                    label: '<span class="fa fa-times"></span>',
+                     label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
                     clicked: function () {
                         var $event = $.Event('keydown');
 
@@ -1583,17 +1660,30 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.add = function () {
+        var originalAdd = this.options.fileUploadOptions.add,
+            originalDone = this.options.fileUploadOptions.done;
+
         var that = this,
             $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
             fileUploadOptions = {
                 dataType: 'json',
                 add: function (e, data) {
+                    if (typeof originalAdd === 'function') {
+                        originalAdd.call(that, e, data);
+                    }
                     $.proxy(that, 'uploadAdd', e, data)();
                 },
                 done: function (e, data) {
+                    if (typeof originalDone === 'function') {
+                        originalDone.call(that, e, data);
+                    }
                     $.proxy(that, 'uploadDone', e, data)();
                 }
             };
+
+        if (typeof this.options.fileUploadOptions.url === 'function') {
+            fileUploadOptions.url = this.options.fileUploadOptions.url();
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
@@ -1665,6 +1755,17 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
                     reader.onload = function (e) {
                         $.proxy(that, 'showImage', e.target.result, data)();
+
+
+                        var image = new Image();
+                        image.src = e.target.result;
+
+                        image.onload = function () {
+                            if (typeof that.options.onPreviewLoaded === 'function') {
+                                that.options.onPreviewLoaded(image, data);
+                            }
+                            data.submit();
+                        };
                     };
 
                     reader.readAsDataURL(data.files[0]);
@@ -1735,7 +1836,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        var $el = $.proxy(this, 'showImage', data.result.url, data)();
 
         this.core.clean();
         this.sorting();
@@ -1766,12 +1867,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
             domImage.onload = function () {
-                data.context.find('img').attr('src', domImage.src);
+                data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
                 that.core.triggerInput();
+
+                // if (typeof that.options.uploadCompleted === 'function') {
+                //     that.options.uploadCompleted(that.$el, data);
+                // }
             };
+            domImage.setAttribute('img-id', data.result.id);
             domImage.src = img;
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
+                id: data.result ? data.result.id : '',
                 img: img,
                 progress: this.options.preview
             })).appendTo($place);
@@ -1796,9 +1903,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 }
             }
 
-            if (this.options.preview) {
-                data.submit();
-            }
+            // if (this.options.preview) {
+            //     data.submit();
+            // }
         }
 
         this.core.triggerInput();
@@ -1882,7 +1989,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             if ($image.length) {
                 e.preventDefault();
 
-                this.deleteFile($image.attr('src'));
+                this.deleteFile($image);
 
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
@@ -1915,15 +2022,16 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * @returns {void}
      */
 
-    Images.prototype.deleteFile = function (file) {
+    Images.prototype.deleteFile = function (imageElement) {
         if (this.options.deleteScript) {
             // If deleteMethod is somehow undefined, defaults to POST
+            var url = typeof this.options.deleteScript === 'function' ?
+                this.options.deleteScript(imageElement) : this.options.deleteScript;
             var method = this.options.deleteMethod || 'POST';
 
             $.ajax($.extend(true, {}, {
-                url: this.options.deleteScript,
-                type: method,
-                data: { file: file }
+                url: url,
+                type: method
             }, this.options.fileDeleteOptions));
         }
     };
@@ -1938,13 +2046,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2, top,
+            styles = $.extend(true, {}, this.options.styles);
+
+        if (typeof this.options.checkImageStyles === 'function') {
+            this.options.checkImageStyles($image.get(0), styles);
+        }
 
         var mediumEditor = this.core.getEditor();
         var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
 
         $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
-            styles: this.options.styles,
+            styles: styles,
             actions: this.options.actions
         }).trim());
 
@@ -2064,3 +2177,427 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     };
 
 })(jQuery, window, document, MediumEditor.util);
+
+;(function ($, window, document, undefined) {
+
+    'use strict';
+
+    /** Default values */
+    var pluginName = 'mediumInsert',
+
+        // first char is uppercase
+        addonName = 'Products',
+        defaults = {
+            label: '<div class="icon icon-shopping-cart"></div>',
+            placeholder: 'Search for a product on Hubrick',
+            styles: {
+                left: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
+                },
+                wide: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
+                },
+                right: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>'
+                }
+            }
+        };
+
+    /**
+     * Embeds object
+     *
+     * Sets options, variables and calls init() function
+     *
+     * @constructor
+     * @param {DOM} el - DOM element to init the plugin on
+     * @param {object} options - Options to override defaults
+     * @return {void}
+     */
+
+    function Products (el, options) {
+        this.el = el;
+        this.$el = $(el);
+        this.templates = window.MediumInsert.Templates;
+
+        this.options = $.extend(true, {}, defaults, options);
+
+        this._defaults = defaults;
+        this._name = pluginName;
+
+        this.init();
+    }
+
+    /**
+     * Initialization
+     *
+     * @return {void}
+     */
+
+    Products.prototype.init = function () {
+        this.events();
+    };
+
+    /**
+     * Event listeners
+     *
+     * @return {void}
+     */
+
+    Products.prototype.events = function () {
+        this.$el
+            .on('selectstart mousedown', '.medium-insert-products-placeholder', $.proxy(this, 'disablePlaceholderSelection'))
+            .on('keyup click', $.proxy(this, 'togglePlaceholder'))
+            .on('keydown', $.proxy(this, 'removeProduct'))
+            .on('keydown', $.proxy(this, 'search'));
+
+        $(document)
+            .on('click', $.proxy(this, 'unselectProduct'))
+            .on('click', '.medium-insert-products > div', $.proxy(this, 'selectProduct'))
+            .on('click', '.medium-insert-products-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'));
+    };
+
+    /**
+     * Get the Core object
+     *
+     * @return {object} Core object
+     */
+    Products.prototype.getCore = function () {
+        if (typeof(this.core) === 'undefined') {
+            this.core = this.$el.data('plugin_'+ pluginName);
+        }
+
+        return this.core;
+    };
+
+    /**
+     * Add product element
+     *
+     * @return {void}
+     */
+
+    Products.prototype.add = function () {
+        var $place = this.$el.find('.medium-insert-active');
+
+        // Fix #132
+        // Make sure that the content of the paragraph is empty and <br> is wrapped in <p></p> to avoid Firefox problems
+        $place.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+
+        // Replace paragraph with div to prevent #124 issue with pasting in Chrome,
+        // because medium editor wraps inserted content into paragraph and paragraphs can't be nested
+        if ($place.is('p')) {
+            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place = this.$el.find('.medium-insert-active');
+            this.getCore().moveCaret($place);
+        }
+
+        $place.addClass('medium-insert-products-input medium-insert-products-active');
+
+        this.togglePlaceholder({ target: $place.get(0) });
+
+        $place.click();
+    };
+
+    /**
+     * Search Hubrick Products endpoint for products
+     *
+     * @param {event} e
+     * @return {void}
+     */
+    Products.prototype.search = function (e) {
+        var $place = this.$el.find('.medium-insert-products-active'),
+            re, url;
+
+        if (!$place.length) {
+            return;
+        }
+
+        re = new RegExp(this.options.placeholder, 'g');
+        url = $place.text().replace(re, '').trim();
+
+        // Return empty placeholder on backspace, delete or enter
+        if (url === '' && [8, 46, 13].indexOf(e.which) !== -1) {
+            $place.remove();
+            return;
+        }
+
+
+        if (e.which === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var html = '<div class="medium-product-block">This is a test product block</div>';
+            this.insertProduct((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
+            //this.getCore().moveCaret($place);
+        }
+    };
+
+    /**
+     * Disable placeholder selection, instead move cursor to input
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Products.prototype.disablePlaceholderSelection = function (e) {
+        var $place = $(e.target).closest('.medium-insert-products-input');
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.getCore().moveCaret($place);
+    };
+
+    /**
+     * Toggles placeholder
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Products.prototype.togglePlaceholder = function (e) {
+        var $place = $(e.target),
+            selection = window.getSelection(),
+            range = selection.getRangeAt(0),
+            $current = $(range.commonAncestorContainer),
+            $placeholder, re, text;
+
+        if ($current.hasClass('medium-insert-products-active')) {
+            $place = $current;
+        } else if ($current.closest('.medium-insert-products-active').length) {
+            $place = $current.closest('.medium-insert-products-active');
+        }
+
+
+        if ($place.hasClass('medium-insert-products-active')) {
+
+            $placeholder = $place.find('.medium-insert-products-placeholder');
+            re = new RegExp(this.options.placeholder, 'g');
+            text = $place.text().replace(re, '').trim();
+
+            if (text === '' && $placeholder.length === 0) {
+                $place.append(this.templates['src/js/templates/products-placeholder.hbs']({
+                    placeholder: this.options.placeholder
+                }));
+            } else if (text !== '' && $placeholder.length) {
+                $placeholder.remove();
+            }
+
+        } else {
+            //console.log('removing product');
+            //this.$el.find('.medium-insert-products-active').remove();
+        }
+    };
+
+    /**
+     * Adds product toolbar to editor
+     *
+     * @returns {void}
+     */
+
+    Products.prototype.addToolbar = function () {
+        var $productBlock = this.$el.find('.hubrick-product-block'),
+            $div = $productBlock.closest('.medium-insert-products'),
+            active = false,
+            $toolbar;
+
+        $toolbar = $(this.templates['src/js/templates/products-toolbar.hbs']({
+            styles: this.options.styles
+        }).trim());
+
+        $('body').append($toolbar);
+
+        $toolbar
+            .css({
+                top: $productBlock.offset().top  - $toolbar.height() - 8 - 2 - 5,
+                left: $productBlock.offset().left + $productBlock.width() / 2 - $toolbar.width() / 2
+            })
+            .show();
+
+        $toolbar.find('button').each(function () {
+            if ($div.hasClass('medium-insert-products-'+ $(this).data('action'))) {
+                $(this).addClass('medium-editor-button-active');
+                active = true;
+            }
+        });
+
+        if (active === false) {
+            $toolbar.find('button').first().addClass('medium-editor-button-active');
+        }
+    };
+
+    /**
+     * Fires product action
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Products.prototype.toolbarAction = function (e) {
+        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
+            $li = $button.closest('li'),
+            $ul = $li.closest('ul'),
+            $lis = $ul.find('li'),
+            $p = this.$el.find('.medium-insert-active'),
+            that = this;
+
+        $button.addClass('medium-editor-button-active');
+        $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
+
+        $lis.find('button').each(function () {
+            var className = 'medium-insert-products-'+ $(this).data('action');
+
+            if ($(this).hasClass('medium-editor-button-active')) {
+                $p.addClass(className);
+
+                if (that.options.styles[$(this).data('action')].added) {
+                    that.options.styles[$(this).data('action')].added($p);
+                }
+            } else {
+                $p.removeClass(className);
+
+                if (that.options.styles[$(this).data('action')].removed) {
+                    that.options.styles[$(this).data('action')].removed($p);
+                }
+            }
+        });
+
+        this.$el.trigger('input');
+    };
+
+    /**
+     * Add product HTML to page
+     *
+     * @param {string} html
+     * @return {void}
+     */
+
+    Products.prototype.insertProduct = function (html) {
+        var $place = this.$el.find('.medium-insert-products-active');
+
+        if (!html) {
+            return false;
+        } else {
+            $place.after(this.templates['src/js/templates/products-wrapper.hbs']({
+                html: html
+            }));
+            $place.remove();
+
+            this.$el.trigger('input');
+        }
+    };
+
+    /**
+     * Select clicked product
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Products.prototype.selectProduct = function (e) {
+        var $product = $(e.target).closest('.medium-insert-products'),
+            that = this;
+        $product.addClass('medium-insert-products-active');
+        $product.closest('.medium-insert-products').addClass('medium-insert-active');
+
+        setTimeout(function () {
+            that.addToolbar();
+        }, 50);
+    };
+
+    /**
+     * Unselect selected product
+     *
+     * @param {Event} e
+     * @returns {void}
+     */
+
+    Products.prototype.unselectProduct = function (e) {
+        var $el = $(e.target),
+            $product = this.$el.find('.hubrick-product-block');
+
+        if ($el.is('.hubrick-product-block') || $el.closest('.hubrick-product-block').length) {
+            return;
+        }
+
+        $product
+            .closest('.medium-insert-products-active')
+            .removeClass('medium-insert-products-active');
+        $('.medium-insert-products-toolbar').remove();
+    };
+
+
+    Products.prototype.removeProduct = function (e) {
+
+        var $product, $parent, $empty;
+
+        // if backspace or delete have been pressed
+        if (e.which === 8 || e.which === 46) {
+
+            // there should only be one active product at any given time
+            $product = this.$el.find('.medium-insert-products-active');
+
+            if ($product.length) {
+                e.preventDefault();
+                $parent = $product.closest('.medium-insert-products');
+                $('.medium-insert-products-toolbar').remove();
+
+                if ($parent.length) {
+                    $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                    $parent.before($empty);
+                    $parent.remove();
+
+                    // Hide addons
+                    this.getCore().hideAddons();
+
+                    this.getCore().moveCaret($empty);
+                }
+
+                this.$el.trigger('input');
+            }
+        }
+    };
+
+    // Images.prototype.removeImage = function (e) {
+    //     var $image, $parent, $empty;
+
+    //     if (e.which === 8 || e.which === 46) {
+    //         $image = this.$el.find('.medium-insert-image-active');
+
+    //         if ($image.length) {
+    //             e.preventDefault();
+
+    //             this.deleteFile($image.attr('src'));
+
+    //             $parent = $image.closest('.medium-insert-images');
+    //             $image.closest('figure').remove();
+
+    //             $('.medium-insert-images-toolbar').remove();
+
+    //             if ($parent.find('figure').length === 0) {
+    //                 $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+    //                 $parent.before($empty);
+    //                 $parent.remove();
+
+    //                 // Hide addons
+    //                 this.getCore().hideAddons();
+
+    //                 this.getCore().moveCaret($empty);
+    //             }
+
+    //             this.$el.trigger('input');
+    //         }
+    //     }
+    // };
+
+
+    /** Plugin initialization */
+
+    $.fn[pluginName + addonName] = function (options) {
+        return this.each(function () {
+            if (!$.data(this, 'plugin_' + pluginName + addonName)) {
+                $.data(this, 'plugin_' + pluginName + addonName, new Products(this, options));
+            }
+        });
+    };
+
+})(jQuery, window, document);
