@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load grunt tasks just in time
@@ -34,15 +34,37 @@ module.exports = function(grunt) {
             options: {
                 jshintrc: true
             },
-            files: ['src/js/*.js', '!src/js/templates.js', 'test/*.js']
+            files: ['src/js/*.js', '!src/js/templates.js', 'spec/*.js']
         },
 
-        blanket_qunit: {
-          options: {
-              urls: ['test.html?coverage=true&gruntReport'],
-              threshold: 70
-          },
-          unit: {}
+        jasmine: {
+            suite: {
+                src: 'src/js/*.js',
+                options: {
+                    specs: ['spec/*.spec.js'],
+                    helpers: 'spec/helpers/*.js',
+                    vendor: [
+                        'bower_components/jquery/dist/jquery.min.js',
+                        'bower_components/medium-editor/dist/js/medium-editor.min.js',
+                        'bower_components/handlebars/handlebars.runtime.min.js',
+                        'bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+                        'bower_components/blueimp-file-upload/js/jquery.iframe-transport.js',
+                        'bower_components/blueimp-file-upload/js/jquery.fileupload.js',
+                        'bower_components/jquery-sortable/source/js/jquery-sortable-min.js'
+                    ],
+                    template: require('grunt-template-jasmine-istanbul'),
+                    templateOptions: {
+                        coverage: 'reports/jasmine/coverage.json',
+                        report: [{
+                            type: 'lcov',
+                            options: {
+                                dir: 'reports/jasmine/lcov'
+                            }
+                        }]
+                    },
+                    summary: true
+                }
+            }
         },
 
         sass: {
@@ -61,15 +83,6 @@ module.exports = function(grunt) {
             dist: {
                 src: 'dist/css/*.css'
             }
-        },
-
-        copy: {
-            dist: {
-                expand: true,
-                cwd: 'src/assets/',
-                src: ['**'],
-                dest: 'dist/assets/'
-            },
         },
 
         csso: {
@@ -130,10 +143,9 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('test', ['jshint', 'blanket_qunit']);
+    grunt.registerTask('test', ['jshint', 'jasmine']);
     grunt.registerTask('js', ['handlebars', 'uglify', 'concat']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
-    grunt.registerTask('assets', ['copy']);
-    grunt.registerTask('default', ['js', 'css', 'assets']);
+    grunt.registerTask('default', ['js', 'css']);
 
 };

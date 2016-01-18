@@ -5,84 +5,87 @@
     'use strict';
 
     /** Default values */
-    var pluginName = 'mediumInsert';
-    var addonName = 'Images'; // first char is uppercase
-    var defaults = {
-        label: '<div class="icon icon-camera"></div>',
-        onDelete: null,
-        deleteScript: 'delete.php',
-        //preview: true,
-        //dataPostOnPreview: false,
-        captions: true,
-        captionPlaceholder: 'Type caption for image (optional)',
-        autoGrid: 3,
-        onPreviewLoaded: null,
-        checkImageStyles: null,
-        fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
-            url: 'upload.php',
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
-        },
-        defaultStyle: 'wide',
-        styles: {
-            wide: {
-                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
-                // added: function ($el) {},
-                // removed: function ($el) {}
-            },
-            left: {
-                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
-                // added: function ($el) {},
-                // removed: function ($el) {}
-            },
-            right: {
-                label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
-                // added: function ($el) {},
-                // removed: function ($el) {}
-            },
-            'full-width': {
-                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
-                // added: function ($el) {},
-                // removed: function ($el) {}
-            },
-            grid: {
-                label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#grid"/></svg>'
-                // added: function ($el) {},
-                // removed: function ($el) {}
-            }
-        },
-        actions: {
-            remove: {
-                label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
-                clicked: function () {
-                    var $event = $.Event('keydown');
+    var pluginName = 'mediumInsert',
+        addonName = 'Images', // first char is uppercase
+        defaults = {
+            label: '<div class="icon icon-camera"></div>',
+            deleteMethod: 'POST',
+            deleteScript: 'delete.php',
+            preview: true,
+            captions: true,
+            captionPlaceholder: 'Type caption for image (optional)',
+            autoGrid: 3,
 
-                    $event.which = 8;
-                    $(document).trigger($event);
-                }
-            }
-        },
-        sorting: function () {
-            var that = this;
+            // custom functions
+            onPreviewLoaded: null,
+            checkImageStyles: null,
 
-            $('.medium-insert-images').sortable({
-                group: 'medium-insert-images',
-                containerSelector: '.medium-insert-images',
-                itemSelector: 'figure',
-                placeholder: '<figure class="placeholder">',
-                handle: 'img',
-                nested: false,
-                vertical: false,
-                afterMove: function () {
-                    that.$el.trigger('input');
+            fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+                url: 'upload.php',
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+            },
+            fileDeleteOptions: {},
+            defaultStyle: 'wide',
+            styles: {
+                wide: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-full"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
+                left: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-left"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
+                right: {
+                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#justify-right"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
+                'full-width': {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#full-width"/></svg>',
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
+                },
+                grid: {
+                    label:  '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#grid"/></svg>'
+                    // added: function ($el) {},
+                    // removed: function ($el) {}
                 }
-            });
-        },
-        messages: {
-            acceptFileTypesError: 'This file is not in a supported format: ',
-            maxFileSizeError: 'This file is too big: '
-        }
-        // uploadCompleted: function ($el, data) {}
-    };
+            },
+            actions: {
+                remove: {
+                    label: '<svg viewBox="0 0 128 128" width="25" height="25"><use xlink:href="#remove"/></svg>',
+                    clicked: function () {
+                        var $event = $.Event('keydown');
+
+                        $event.which = 8;
+                        $(document).trigger($event);
+                    }
+                }
+            },
+            sorting: function () {
+                var that = this;
+
+                $('.medium-insert-images').sortable({
+                    group: 'medium-insert-images',
+                    containerSelector: '.medium-insert-images',
+                    itemSelector: 'figure',
+                    placeholder: '<figure class="placeholder">',
+                    handle: 'img',
+                    nested: false,
+                    vertical: false,
+                    afterMove: function () {
+                        that.core.triggerInput();
+                    }
+                });
+            },
+            messages: {
+                acceptFileTypesError: 'This file is not in a supported format: ',
+                maxFileSizeError: 'This file is too big: '
+            }
+            // uploadCompleted: function ($el, data) {}
+        };
 
     /**
      * Images object
@@ -129,22 +132,7 @@
     Images.prototype.init = function () {
         var $images = this.$el.find('.medium-insert-images');
 
-        $images.find('figcaption')
-            .attr('contenteditable', true)
-            .on('keypress', function(event) {
-                // prevent newlines in caption
-                if(event.keyCode === 13) {
-                    event.preventDefault();
-                }
-            })
-            .on('keyup', function(event) {
-                // prevent downstream MediumEditor wrapping caption text in a
-                // <p> tag
-                if(event.keyCode === 13) {
-                    event.stopPropagation()
-                }
-            });
-
+        $images.find('figcaption').attr('contenteditable', true);
         $images.find('figure').attr('contenteditable', false);
 
         this.events();
@@ -308,6 +296,7 @@
                     reader.onload = function (e) {
                         $.proxy(that, 'showImage', e.target.result, data)();
 
+
                         var image = new Image();
                         image.src = e.target.result;
 
@@ -391,6 +380,10 @@
 
         this.core.clean();
         this.sorting();
+
+        if (this.options.uploadCompleted) {
+            this.options.uploadCompleted($el, data);
+        }
     };
 
     /**
@@ -399,7 +392,6 @@
      * @param {string} img
      * @returns {void}
      */
-
 
     Images.prototype.showImage = function (img, data) {
         var $place = this.$el.find('.medium-insert-active'),
@@ -416,11 +408,11 @@
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src).attr('img-id', domImage.getAttribute('img-id'));
-                that.$el.trigger('input');
+                that.core.triggerInput();
 
-                if (typeof that.options.uploadCompleted === 'function') {
-                    that.options.uploadCompleted(that.$el, data);
-                }
+                // if (typeof that.options.uploadCompleted === 'function') {
+                //     that.options.uploadCompleted(that.$el, data);
+                // }
             };
             domImage.setAttribute('img-id', data.result.id);
             domImage.src = img;
@@ -450,9 +442,13 @@
                     this.options.styles.grid.added($place);
                 }
             }
+
+            // if (this.options.preview) {
+            //     data.submit();
+            // }
         }
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
 
         return data.context;
     };
@@ -533,7 +529,7 @@
             if ($image.length) {
                 e.preventDefault();
 
-                this.deleteFile($image.attr('src'));
+                this.deleteFile($image);
 
                 $parent = $image.closest('.medium-insert-images');
                 $image.closest('figure').remove();
@@ -554,7 +550,7 @@
                     this.core.moveCaret($empty);
                 }
 
-                this.$el.trigger('input');
+                this.core.triggerInput();
             }
         }
     };
@@ -566,16 +562,19 @@
      * @returns {void}
      */
 
-    function noop() {}
-    Images.prototype.deleteFile = function (file) {
-        var callback = (typeof this.options.onDelete) === 'function' ?
-            this.options.onDelete.bind(this) : noop;
-
+    Images.prototype.deleteFile = function (imageElement) {
         if (this.options.deleteScript) {
-            $.post(this.options.deleteScript, { file: file })
-                .complete(callback)
+            // If deleteMethod is somehow undefined, defaults to POST
+            var url = typeof this.options.deleteScript === 'function' ?
+                this.options.deleteScript(imageElement) : this.options.deleteScript;
+            var method = this.options.deleteMethod || 'POST';
+
+            $.ajax($.extend(true, {}, {
+                url: url,
+                type: method
+            }, this.options.fileDeleteOptions));
         }
-    }
+    };
 
     /**
      * Adds image toolbar to editor
@@ -594,7 +593,10 @@
             this.options.checkImageStyles($image.get(0), styles);
         }
 
-        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+        var mediumEditor = this.core.getEditor();
+        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+
+        $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: styles,
             actions: this.options.actions
         }).trim());
@@ -671,7 +673,7 @@
 
         this.core.hideButtons();
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -691,7 +693,7 @@
 
         this.core.hideButtons();
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -701,7 +703,7 @@
      */
 
     Images.prototype.sorting = function () {
-        this.options.sorting();
+        $.proxy(this.options.sorting, this)();
     };
 
     /** Plugin initialization */

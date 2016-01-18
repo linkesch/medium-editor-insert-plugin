@@ -1,4 +1,8 @@
 {
+    "globals": {
+        "MediumEditor": true
+    },
+
     "predef": {
         "jQuery": false,
         "document": false,
@@ -11,7 +15,16 @@
         "start": false,
         "sinon": false,
         "alert": false,
-        "FB": false
+        "FB": false,
+        "describe": false,
+        "it": false,
+        "expect": false,
+        "beforeEach": false,
+        "afterEach": false,
+        "jasmine": false,
+        "spyOn": false,
+        "placeCaret": false,
+        "require": false
     },
 
     "jquery" : true,

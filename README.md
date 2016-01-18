@@ -1,12 +1,12 @@
 # jQuery insert plugin for MediumEditor
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.png)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
 [![Dependency Status](http://www.versioneye.com/user/projects/53f742dce09da3467d000389/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742dce09da3467d000389)
 [![Dependency Status](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f)
 [![Codacy Badge](https://www.codacy.com/project/badge/1f8565ed2e554e4fa952ec4da6a2080b)](https://www.codacy.com/public/orthes/mediumeditorinsertplugin)
-[![Stories in Ready](https://badge.waffle.io/orthes/medium-editor-insert-plugin.svg?label=ready&title=Ready)](http://waffle.io/orthes/medium-editor-insert-plugin)
 
-This plugin expands capabilities of [MediumEditor](https://github.com/daviferreira/medium-editor) (a clone of medium.com WYSIWYG editor) and it enables users to insert into the editor various types of content (depending on available addons).
+This plugin expands capabilities of [MediumEditor](https://github.com/yabwe/medium-editor) (a clone of medium.com WYSIWYG editor) and it enables users to insert into the editor various types of content (depending on available addons).
 
 Current available addons:
 
@@ -21,7 +21,7 @@ Current available addons:
 
 ## Download
 
-* Bower (recommended): ```bower install medium-editor-insert-plugin#^1.0 --save```
+* Bower (recommended): ```bower install medium-editor-insert-plugin#^2.1 --save```
 * Manual: [Download the latest release](https://github.com/orthes/medium-editor-insert-plugin/releases)
 
 
@@ -67,11 +67,11 @@ $(function () {
 
 ## [Documentation](https://github.com/orthes/medium-editor-insert-plugin/wiki)
 
-- [Getting Started](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Getting-Started)
-- [Configuration](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Configuration)
-- [Server response](https://github.com/orthes/medium-editor-insert-plugin/wiki/Server-response)
-- [Custom addons](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Custom-addons)
-- [Upgrading from v0.3](https://github.com/orthes/medium-editor-insert-plugin/wiki/v1.0-Upgrading-from-v0.3)
+- [Getting Started](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Getting-Started)
+- [Configuration](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Configuration)
+- [Server response](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Server-response)
+- [Custom addons](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Custom-addons)
+- [Upgrading from v0.3](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Upgrading-from-v0.3)
 - [Versioning](https://github.com/orthes/medium-editor-insert-plugin/wiki/Versioning)
 - [Development & Contributing](https://github.com/orthes/medium-editor-insert-plugin/wiki/Development-&-Contributing)
 - [License](https://github.com/orthes/medium-editor-insert-plugin/wiki/License)
@@ -80,6 +80,6 @@ $(function () {
 
 ## Sponsors
 
-[creator5](http://www.creator5.com) | [Maker](http://maker.me) | [Nusii](http://nusii.com)
+[creator5](http://www.creator5.com) | [Maker](https://maker.me/) | [Nusii](http://nusii.com)
 -------- | ----- | -----
 [![creator5](http://i.imgur.com/K9uiIuT.png)](http://www.creator5.com) | [![Maker](http://i.imgur.com/8t8wsM8.png)](http://maker.me) | [![nusii](http://i.imgur.com/tvdJ249.png)](http://nusii.com)
