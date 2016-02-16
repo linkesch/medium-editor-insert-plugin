@@ -136,16 +136,6 @@
     };
 
     /**
-     * Get the Core object
-     *
-     * @return {object} Core object
-     */
-
-    Embeds.prototype.getCore = function () {
-        return this.core;
-    };
-
-    /**
      * Extend editor's serialize function
      *
      * @return {object} Serialized data
@@ -184,7 +174,7 @@
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
-            this.getCore().moveCaret($place);
+            this.core.moveCaret($place);
         }
 
         $place.addClass('medium-insert-embeds medium-insert-embeds-input medium-insert-embeds-active');
@@ -192,7 +182,7 @@
         this.togglePlaceholder({ target: $place.get(0) });
 
         $place.click();
-        this.getCore().hideButtons();
+        this.core.hideButtons();
     };
 
     /**
@@ -247,7 +237,7 @@
      */
 
     Embeds.prototype.fixRightClickOnPlaceholder = function (e) {
-        this.getCore().moveCaret($(e.target));
+        this.core.moveCaret($(e.target));
     };
 
     /**
@@ -348,8 +338,8 @@
         }
 
         html = url.replace(/\n?/g, '')
-            .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
-            .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
+            .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video video-youtube"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
+            .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<div class="video video-vimeo"><iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
             //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
             //.replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
             .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
@@ -377,7 +367,7 @@
             }));
             $place.remove();
 
-            this.$el.trigger('input');
+            this.core.triggerInput();
 
             if (html.indexOf('facebook') !== -1) {
                 if (typeof(FB) !== 'undefined') {
@@ -413,9 +403,9 @@
         $empty = $(emptyTemplate);
         $content.after($empty);
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
 
-        this.getCore().moveCaret($place);
+        this.core.moveCaret($place);
     };
 
     /**
@@ -426,7 +416,7 @@
      */
 
     Embeds.prototype.selectEmbed = function (e) {
-        if(this.getCore().options.enabled) {
+        if(this.core.options.enabled) {
             var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
                 that = this;
 
@@ -436,7 +426,7 @@
                 that.addToolbar();
 
                 if (that.options.captions) {
-                    that.getCore().addCaption($embed.find('figure'), that.options.captionPlaceholder);
+                    that.core.addCaption($embed.find('figure'), that.options.captionPlaceholder);
                 }
             }, 50);
         }
@@ -456,11 +446,11 @@
         if ($el.hasClass('medium-insert-embeds-selected')) {
             $embed.not($el).removeClass('medium-insert-embeds-selected');
             $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
-            this.getCore().removeCaptions($el.find('figcaption'));
+            this.core.removeCaptions($el.find('figcaption'));
 
             if ($(e.target).is('.medium-insert-caption-placeholder') || $(e.target).is('figcaption')) {
                 $el.removeClass('medium-insert-embeds-selected');
-                this.getCore().removeCaptionPlaceholder($el.find('figure'));
+                this.core.removeCaptionPlaceholder($el.find('figure'));
             }
             return;
         }
@@ -469,9 +459,9 @@
         $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
 
         if ($(e.target).is('.medium-insert-caption-placeholder')) {
-            this.getCore().removeCaptionPlaceholder($el.find('figure'));
+            this.core.removeCaptionPlaceholder($el.find('figure'));
         } else if ($(e.target).is('figcaption') === false) {
-            this.getCore().removeCaptions();
+            this.core.removeCaptions();
         }
     };
 
@@ -498,10 +488,10 @@
                 $embed.remove();
 
                 // Hide addons
-                this.getCore().hideAddons();
+                this.core.hideAddons();
 
-                this.getCore().moveCaret($empty);
-                this.$el.trigger('input');
+                this.core.moveCaret($empty);
+                this.core.triggerInput();
             }
         }
     };
@@ -521,7 +511,10 @@
             return;
         }
 
-        $('body').append(this.templates['src/js/templates/embeds-toolbar.hbs']({
+        var mediumEditor = this.core.getEditor();
+        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+
+        $(toolbarContainer).append(this.templates['src/js/templates/embeds-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
@@ -596,7 +589,7 @@
             }
         });
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -614,7 +607,7 @@
             callback(this.$el.find('.medium-insert-embeds-selected'));
         }
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /** Plugin initialization */

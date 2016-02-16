@@ -1,4 +1,6 @@
-;(function ($, window, document, undefined) {
+/*global MediumEditor*/
+
+;(function ($, window, document, Util, undefined) {
 
     'use strict';
 
@@ -7,17 +9,17 @@
         addonName = 'Images', // first char is uppercase
         defaults = {
             label: '<span class="fa fa-camera"></span>',
-            uploadScript: null, // DEPRECATED: Use fileUploadOptions instead
+            deleteMethod: 'POST',
             deleteScript: 'delete.php',
             preview: true,
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            formData: null, // DEPRECATED: Use fileUploadOptions instead
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
+            fileDeleteOptions: {},
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -63,10 +65,14 @@
                     nested: false,
                     vertical: false,
                     afterMove: function () {
-                        that.$el.trigger('input');
+                        that.core.triggerInput();
                     }
                 });
             },
+            messages: {
+                acceptFileTypesError: 'This file is not in a supported format: ',
+                maxFileSizeError: 'This file is too big: '
+            }
             // uploadCompleted: function ($el, data) {}
         };
 
@@ -84,6 +90,7 @@
     function Images (el, options) {
         this.el = el;
         this.$el = $(el);
+        this.$currentImage = null;
         this.templates = window.MediumInsert.Templates;
         this.core = this.$el.data('plugin_'+ pluginName);
 
@@ -157,15 +164,6 @@
     };
 
     /**
-     * Get the Core object
-     *
-     * @return {object} Core object
-     */
-    Images.prototype.getCore = function () {
-        return this.core;
-    };
-
-    /**
      * Extend editor's serialize function
      *
      * @return {object} Serialized data
@@ -204,16 +202,6 @@
                 }
             };
 
-        // Backwards compatibility
-        if (this.options.uploadScript) {
-            fileUploadOptions.url = this.options.uploadScript;
-            this.getCore().deprecated('uploadScript', 'fileUploadOptions', '2.0');
-        }
-        if (this.options.formData) {
-            fileUploadOptions.formData = this.options.formData;
-            this.getCore().deprecated('formData', 'fileUploadOptions', '2.0');
-        }
-
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
         // http://stackoverflow.com/questions/6767887/
@@ -245,15 +233,29 @@
     Images.prototype.uploadAdd = function (e, data) {
         var $place = this.$el.find('.medium-insert-active'),
             that = this,
+            uploadErrors = [],
+            file = data.files[0],
+            acceptFileTypes = this.options.fileUploadOptions.acceptFileTypes,
+            maxFileSize = this.options.fileUploadOptions.maxFileSize,
             reader;
 
-        this.getCore().hideButtons();
+        if (acceptFileTypes && !acceptFileTypes.test(file['type'])) {
+            uploadErrors.push(this.options.messages.acceptFileTypesError + file['name']);
+        } else if (maxFileSize && file['size'] > maxFileSize) {
+            uploadErrors.push(this.options.messages.maxFileSizeError + file['name']);
+        }
+        if (uploadErrors.length > 0) {
+            alert(uploadErrors.join("\n"));
+            return;
+        }
+
+        this.core.hideButtons();
 
         // Replace paragraph with div, because figure elements can't be inside paragraph
         if ($place.is('p')) {
             $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
             $place = this.$el.find('.medium-insert-active');
-            this.getCore().moveCaret($place);
+            this.core.moveCaret($place);
         }
 
         $place.addClass('medium-insert-images');
@@ -340,14 +342,10 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
-        this.getCore().clean();
+        this.core.clean();
         this.sorting();
-
-        if (this.options.uploadCompleted) {
-            this.options.uploadCompleted($el, data);
-        }
     };
 
     /**
@@ -372,8 +370,13 @@
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
-                that.$el.trigger('input');
-            };
+
+                if (this.options.uploadCompleted) {
+                    this.options.uploadCompleted(data.context, data);
+                }
+
+                that.core.triggerInput();
+            }.bind(this);
             domImage.src = img;
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
@@ -403,10 +406,12 @@
 
             if (this.options.preview) {
                 data.submit();
+            } else if (this.options.uploadCompleted) {
+                this.options.uploadCompleted(data.context, data);
             }
         }
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
 
         return data.context;
     };
@@ -423,9 +428,11 @@
      */
 
     Images.prototype.selectImage = function (e) {
-        if(this.getCore().options.enabled) {
+        if(this.core.options.enabled) {
             var $image = $(e.target),
                 that = this;
+
+            this.$currentImage = $image;
 
             // Hide keyboard on mobile devices
             this.$el.blur();
@@ -437,7 +444,7 @@
                 that.addToolbar();
 
                 if (that.options.captions) {
-                    that.getCore().addCaption($image.closest('figure'), that.options.captionPlaceholder);
+                    that.core.addCaption($image.closest('figure'), that.options.captionPlaceholder);
                 }
             }, 50);
         }
@@ -457,7 +464,7 @@
         if ($el.is('img') && $el.hasClass('medium-insert-image-active')) {
             $image.not($el).removeClass('medium-insert-image-active');
             $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
-            this.getCore().removeCaptions($el);
+            this.core.removeCaptions($el);
             return;
         }
 
@@ -465,10 +472,11 @@
         $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
 
         if ($el.is('.medium-insert-caption-placeholder')) {
-            this.getCore().removeCaptionPlaceholder($image.closest('figure'));
+            this.core.removeCaptionPlaceholder($image.closest('figure'));
         } else if ($el.is('figcaption') === false) {
-            this.getCore().removeCaptions();
+            this.core.removeCaptions();
         }
+        this.$currentImage = null;
     };
 
     /**
@@ -503,12 +511,12 @@
                     $parent.remove();
 
                     // Hide addons
-                    this.getCore().hideAddons();
+                    this.core.hideAddons();
 
-                    this.getCore().moveCaret($empty);
+                    this.core.moveCaret($empty);
                 }
 
-                this.$el.trigger('input');
+                this.core.triggerInput();
             }
         }
     };
@@ -522,7 +530,14 @@
 
     Images.prototype.deleteFile = function (file) {
         if (this.options.deleteScript) {
-            $.post(this.options.deleteScript, { file: file });
+            // If deleteMethod is somehow undefined, defaults to POST
+            var method = this.options.deleteMethod || 'POST';
+
+            $.ajax($.extend(true, {}, {
+                url: this.options.deleteScript,
+                type: method,
+                data: { file: file }
+            }, this.options.fileDeleteOptions));
         }
     };
 
@@ -538,7 +553,10 @@
             active = false,
             $toolbar, $toolbar2, top;
 
-        $('body').append(this.templates['src/js/templates/images-toolbar.hbs']({
+        var mediumEditor = this.core.getEditor();
+        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+
+        $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
             actions: this.options.actions
         }).trim());
@@ -585,6 +603,7 @@
      */
 
     Images.prototype.toolbarAction = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             $li = $button.closest('li'),
             $ul = $li.closest('ul'),
@@ -613,9 +632,9 @@
             }
         });
 
-        this.getCore().hideButtons();
+        this.core.hideButtons();
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -626,6 +645,7 @@
      */
 
     Images.prototype.toolbar2Action = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             callback = this.options.actions[$button.data('action')].clicked;
 
@@ -633,9 +653,9 @@
             callback(this.$el.find('.medium-insert-image-active'));
         }
 
-        this.getCore().hideButtons();
+        this.core.hideButtons();
 
-        this.$el.trigger('input');
+        this.core.triggerInput();
     };
 
     /**
@@ -645,7 +665,7 @@
      */
 
     Images.prototype.sorting = function () {
-        this.options.sorting();
+        $.proxy(this.options.sorting, this)();
     };
 
     /** Plugin initialization */
@@ -658,4 +678,4 @@
         });
     };
 
-})(jQuery, window, document);
+})(jQuery, window, document, MediumEditor.util);

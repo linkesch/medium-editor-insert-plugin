@@ -1,4 +1,53 @@
 
+2.2.1 / 2016-02-05
+==================
+
+  * Fix when `uploadCompleted()` is called - wait until uploaded image replaces preview
+  * Fix uploading high quality images
+  * Fix bug when an image toolbar action effects all instances of the editor (when using multiple editors on the same page)
+
+2.2.0 / 2016-01-11
+==================
+
+  * Add ```fileDeleteOptions``` option to images
+
+2.1.1 / 2015-11-23
+==================
+
+  * Fix context for sorting function
+  * Add support for editor's ```elementsContainer``` option
+
+2.1.0 / 2015-10-27
+==================
+
+  * Add support for ```editableInput``` event
+  * Add support for textarea
+  * Add ```deleteMethod``` option
+
+2.0.1 / 2015-06-11
+==================
+
+  * Fix ```hideButtons``` function
+
+2.0.0 / 2015-06-09
+==================
+
+  * **This version works for MediumEditor ```v4.12.0``` and up, because in ```v4.12.0``` MediumEditor changed the way to retrieve extension**
+  * Remove deprecated images options: ```uploadScript``` and ```formData```. Use ```fileUploadOptions``` instead.
+  * Add ```video-vimeo``` and ```video-youtube``` classes to embedded videos to allow css customization
+
+1.7.0 / 2015-05-11
+==================
+
+  * Version bump to 1.7.0, because 1.6.2 added file type and size validation which should cause a minor version bump, not only a patch
+
+1.6.2 / 2015-05-11
+==================
+
+  * Fix file type and file size validation
+  * Add a rotate animation on button
+  * Speed up Travis build
+
 1.6.1 / 2015-04-30
 ==================
 

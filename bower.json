@@ -1,6 +1,6 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "1.6.1",
+  "version": "2.2.1",
   "description": "jQuery insert plugin for MediumEditor",
   "main": [
     "dist/js/medium-editor-insert-plugin.js",
@@ -14,24 +14,19 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "test.html",
+    "spec",
     "examples",
     "Gruntfile.js",
     "package.json"
   ],
   "dependencies": {
     "jquery": ">=1.9.0",
-    "medium-editor": "^4.1.1",
-    "handlebars": "~3.0.0",
-    "blueimp-file-upload": "~9.9.0",
+    "medium-editor": "~5.10",
+    "handlebars": "~4.0.0",
+    "blueimp-file-upload": "~9.11.1",
     "jquery-sortable": "~0.9.12"
   },
   "devDependencies": {
-    "qunit": "~1.18.0",
-    "sinon": "~1.14.1",
-    "sinon-qunit": "~2.0.0",
-    "jquery-cycle2": "~2.1.6",
-    "blanket": "~1.1.5"
+    "jquery-cycle2": "~2.1.6"
   }
 }
