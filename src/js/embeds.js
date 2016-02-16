@@ -298,8 +298,23 @@
             success: function(data) {
                 var html = data && data.html;
 
-                if (data && !data.html && data.type === 'photo' && data.url) {
+                if (data && !html && data.type === 'photo' && data.url) {
                     html = '<img src="' + data.url + '" alt="">';
+                }
+
+                if (!html) {
+                    // Prevent render empty embed.
+                    $.proxy(that, 'convertBadEmbed', url)();
+                    return;
+                }
+
+                if (html && html.indexOf('</script>') > -1) {
+                    // Store embed code with <script> tag inside wrapper attribute value.
+                    // Make nice attribute value escaping using jQuery.
+                    var $div = $('<div>')
+                        .attr('data-embed-code', html)
+                        .html(html);
+                    html = $('<div>').append($div).html();
                 }
 
                 $.proxy(that, 'embed', html)();

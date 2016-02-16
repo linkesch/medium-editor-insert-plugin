@@ -136,6 +136,12 @@
 
             $data.find('.medium-insert-buttons').remove();
 
+            // Restore original embed code from embed wrapper attribute value.
+            $data.find('[data-embed-code]').each(function() {
+                var $this = $(this);
+                $this.html($this.attr('data-embed-code'));
+            });
+
             data[key].value = $data.html();
         });
 
