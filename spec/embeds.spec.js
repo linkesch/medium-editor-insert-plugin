@@ -336,4 +336,24 @@ describe('Embeds addon', function () {
         expect($serialized.find('.medium-insert-embeds').attr('contenteditable')).toBeUndefined();
         expect($serialized.find('.medium-insert-embeds-overlay').length).toEqual(0);
     });
+
+    it('uses data-embed-code as container html for javascript-based embeds', function() {
+        var html = '<div class="medium-insert-embeds"><figure class="medium-insert-embed"><div data-embed-code="<div>good-value</div>">bad-value</div></figure></div>',
+            editor, $serialized;
+
+        $('#fixtures').html('<div class="editable">' + html + '</div>');
+        this.$el = $('.editable');
+
+        editor = new MediumEditor(this.$el.get(0));
+
+        this.$el.mediumInsert({
+            editor: editor,
+            addons: {
+                embeds: {}
+            }
+        });
+
+        $serialized = $(editor.serialize()['element-0'].value);
+        expect($serialized.find('[data-embed-code]').html()).toEqual('<div>good-value</div>');
+    });
 });
