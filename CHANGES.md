@@ -1,4 +1,9 @@
 
+2.2.2 / 2016-02-27
+==================
+
+  * Fix serializing html with embed codes containing scripts
+
 2.2.1 / 2016-02-05
 ==================
 

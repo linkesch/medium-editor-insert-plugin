@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.2.1 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.2.2 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -273,6 +273,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-buttons').remove();
+
+            // Restore original embed code from embed wrapper attribute value.
+            $data.find('[data-embed-code]').each(function() {
+                var $this = $(this);
+                $this.html($this.attr('data-embed-code'));
+            });
 
             data[key].value = $data.html();
         });
@@ -1063,8 +1069,23 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             success: function(data) {
                 var html = data && data.html;
 
-                if (data && !data.html && data.type === 'photo' && data.url) {
+                if (data && !html && data.type === 'photo' && data.url) {
                     html = '<img src="' + data.url + '" alt="">';
+                }
+
+                if (!html) {
+                    // Prevent render empty embed.
+                    $.proxy(that, 'convertBadEmbed', url)();
+                    return;
+                }
+
+                if (html && html.indexOf('</script>') > -1) {
+                    // Store embed code with <script> tag inside wrapper attribute value.
+                    // Make nice attribute value escaping using jQuery.
+                    var $div = $('<div>')
+                        .attr('data-embed-code', html)
+                        .html(html);
+                    html = $('<div>').append($div).html();
                 }
 
                 $.proxy(that, 'embed', html)();
