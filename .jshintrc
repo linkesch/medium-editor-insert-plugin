@@ -1,6 +1,7 @@
 {
     "globals": {
-        "MediumEditor": true
+        "MediumEditor": true,
+        "regexHelper": true
     },
 
     "predef": {
