@@ -62,17 +62,9 @@ module.exports = function (grunt) {
                             }
                         }]
                     },
-                    summary: true,
-                    keepRunner: true
+                    summary: true
                 }
 
-            }
-        },
-        connect: {
-            server: {
-                options: {
-                    port: 8888
-                }
             }
         },
         sass: {
@@ -155,7 +147,4 @@ module.exports = function (grunt) {
     grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
     grunt.registerTask('default', ['js', 'css']);
-
-    // grunt.loadNpmTasks("grunt-contrib-jasmine");
-    // grunt.loadNpmTasks("grunt-contrib-connect");
 };
