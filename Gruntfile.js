@@ -52,7 +52,7 @@ module.exports = function (grunt) {
                         'bower_components/blueimp-file-upload/js/jquery.fileupload.js',
                         'bower_components/jquery-sortable/source/js/jquery-sortable-min.js'
                     ],
-                    //template: require('grunt-template-jasmine-istanbul'),
+                    template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: 'reports/jasmine/coverage.json',
                         report: [{
@@ -152,7 +152,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', ['jshint', 'jasmine']);
-    grunt.registerTask('js', ['test', 'handlebars', 'concat']);
+    grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
     grunt.registerTask('default', ['js', 'css']);
 

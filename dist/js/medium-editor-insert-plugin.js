@@ -1117,6 +1117,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                         .html(html);
                     html = $('<div>').append($div).html();
                 }
+
                 if (pasted) {
                     $.proxy(that, 'embed', html, url)();
                 }
@@ -1146,6 +1147,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * Get HTML using regexp
      *
      * @param {string} url
+     * @param {bool} pasted
      * @return {void}
      */
 
@@ -1176,6 +1178,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * Add html to page
      *
      * @param {string} html
+     * @param {string} pastedUrl
      * @return {void}
      */
 
