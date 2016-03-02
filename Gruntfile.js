@@ -64,9 +64,9 @@ module.exports = function (grunt) {
                     },
                     summary: true
                 }
+
             }
         },
-
         sass: {
             dist: {
                 files: [{
@@ -147,5 +147,4 @@ module.exports = function (grunt) {
     grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
     grunt.registerTask('default', ['js', 'css']);
-
 };
