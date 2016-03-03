@@ -5,11 +5,11 @@ describe('Embeds addon', function () {
         this.editor = new MediumEditor(this.$el.get(0));
         this.$el.mediumInsert({
             editor: this.editor,
-            addons:{
-             embeds: {
-                oembedProxy: false,
-                parseOnPaste:true
-                }   
+            addons: {
+                embeds: {
+                    oembedProxy: false,
+                    parseOnPaste: true
+                }
             }
         });
         this.addon = this.$el.data('plugin_mediumInsertEmbeds');
@@ -222,20 +222,20 @@ describe('Embeds addon', function () {
         expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
     });
 
-    it('supports embedding youtube via paste', function () {        
+    it('supports embedding youtube via paste', function () {
         this.$el = $('.editable');
         var e = {
             originalEvent: {
-               clipboardData: {
-                   getData: function(){
-                       return 'https://www.youtube.com/watch?v=BROWqjuTM0g';
-                   }
-               } 
+                clipboardData: {
+                    getData: function () {
+                        return 'https://www.youtube.com/watch?v=BROWqjuTM0g';
+                    }
+                }
             }
         };
         this.$el.append($('<p>https://www.youtube.com/watch?v=BROWqjuTM0g</p>'));
         this.addon.processPasted(e);
-        
+
         expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
         expect(this.$el.find('.medium-insert-embeds iframe').length).toEqual(1);
     });
@@ -258,6 +258,24 @@ describe('Embeds addon', function () {
         expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
         expect(this.$el.find('.medium-insert-embeds iframe').length).toEqual(1);
         expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
+    });
+
+    it('supports embedding vimeo via paste', function () {
+        this.$el = $('.editable');
+        var e = {
+            originalEvent: {
+                clipboardData: {
+                    getData: function () {
+                        return 'http://vimeo.com/2619976';
+                    }
+                }
+            }
+        };
+        this.$el.append($('<p>http://vimeo.com/2619976</p>'));
+        this.addon.processPasted(e);
+
+        expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds iframe').length).toEqual(1);
     });
 
     it('support embedding instagram', function () {

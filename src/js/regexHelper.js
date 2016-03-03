@@ -8,7 +8,7 @@ var regexHelper = (function () {
     }
 
     function vimeo_parser(url) {
-        var regExp = /http:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+        var regExp = /^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/;
         var match = url.match(regExp);
         if (match) {
             return match;
