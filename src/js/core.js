@@ -66,7 +66,9 @@
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
 
-            this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
+            if (this.options.editor.getExtensionByName('placeholder') !== undefined) {
+                this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
+            }
         }
     }
 
