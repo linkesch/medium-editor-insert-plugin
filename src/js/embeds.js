@@ -294,8 +294,7 @@
         }
         var pastedUrl = e.originalEvent.clipboardData.getData('text');
 
-        if (regexHelper.vimeo_parser(pastedUrl) ||
-            regexHelper.youtube_parser(pastedUrl)) {
+        if (regexHelper.urlParser(pastedUrl)) {
 
             if (this.options.oembedProxy) {
                 this.oembed(pastedUrl, true);
@@ -419,6 +418,8 @@
             return false;
         } else {
             if (pastedUrl) {
+                // Get the element with the pasted url
+                // place the embed template and remove the pasted text
                 $place = this.$el.find(":not(iframe, script, style)")
                     .contents().filter(
                         function () {
