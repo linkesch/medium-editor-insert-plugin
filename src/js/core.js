@@ -296,11 +296,7 @@
             return;
         }
 
-        // Fix #39
-        // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
-        // To force placeholder to appear, set <p><br></p> as content of the $el
-
-        if (this.$el.html().trim() === '' || this.$el.html().trim() === '<br>') {
+        if (this.$el.children().length === 0) {
             this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
@@ -309,7 +305,7 @@
         $text = this.$el
             .contents()
             .filter(function () {
-                return this.nodeName === '#text' && $.trim($(this).text()) !== '';
+                return (this.nodeName === '#text' && $.trim($(this).text()) !== '') || this.nodeName.toLowerCase() === 'br';
             });
 
         $text.each(function () {
