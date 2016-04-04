@@ -1,4 +1,11 @@
 
+2.2.3 / 2016-04-04
+==================
+
+  * Fix performance when uploading images
+  * Update editor's `updatePlaceholder` function
+  * Fix initializing plugin when editor's placeholder is turned off
+
 2.2.2 / 2016-02-27
 ==================
 
