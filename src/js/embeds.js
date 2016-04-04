@@ -294,8 +294,8 @@
         }
         var pastedUrl = e.originalEvent.clipboardData.getData('text');
 
-        if (regexHelper.urlParser(pastedUrl)) {
-
+        var linkRegEx = new RegExp('^(http(s?):)?\/\/','i');
+        if (linkRegEx.test(pastedUrl)) {
             if (this.options.oembedProxy) {
                 this.oembed(pastedUrl, true);
             } else {
