@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css">
 
     <style>
+        .medium-insert-images figure figcaption,
+        .mediumInsert figure figcaption,
+        .medium-insert-embeds figure figcaption,
+        .mediumInsert-embeds figure figcaption {
+            font-size: 12px;
+            line-height: 1.2em;
+        }
         .medium-insert-images-slideshow figure {
             width: 100%;
         }
@@ -39,9 +46,29 @@
         <header id="version">This demo uses medium-editor v5.10.0 + medium-editor-insert-plugin v2.2.3</header>
 
         <div class="editable" data-placeholder="Type some text">
-            <h3>jQuery insert plugin for MediumEditor</h3>
+            <h2>jQuery insert plugin for MediumEditor</h2>
 
-            <p>This is <strong>a demo</strong> of jQuery insert plugin for MediumEditor. This whole website is an editable editor. You can click on text and start typing. If you want to insert an image, <strong>create a new empty paragraph</strong> and the plugin's button will appear on the left. From there it's pretty self-explanatory. Have fun.</p>
+            <div class="medium-insert-images">
+                <figure contenteditable="false">
+                    <img src="uploads/01.jpg" alt="">
+                    <figcaption contenteditable="true">Random royalty-free image</figcaption>
+                </figure>
+            </div>
+
+            <p>This is <strong>a demo</strong> of jQuery insert plugin for MediumEditor. This whole website is an editable editor. You can click on text and start typing. Or you can click on the image above and see what this plugin has to offer. If you want to insert an image, <strong>create a new empty paragraph</strong> and the plugin's button will appear on the left. From there it's pretty self-explanatory.</p>
+
+            <p>And we also support embedding of videos, social media, etc.</p>
+
+            <div class="medium-insert-embeds">
+                <figure>
+                    <div class="medium-insert-embed">
+                        <div><div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.2493%;"><iframe src="https://www.youtube.com/embed/_rDtZgLolHQ?wmode=transparent&amp;rel=0&amp;autohide=1&amp;showinfo=0&amp;enablejsapi=1" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" style="top: 0px; left: 0px; width: 100%; height: 100%; position: absolute;"></iframe></div></div>
+                    </div>
+                    <figcaption contenteditable="true">Casey Neistat, who else...</figcaption>
+                </figure>
+            </div>
+
+            <p>Have fun.</p>
 
             <h4>What to do next?</h4>
 
@@ -49,7 +76,7 @@
 
             <h4>Contributors</h4>
 
-            <p>This plugin is brought to you thanks to these great contributors from all around the world:</p>
+            <p>This plugin is brought to you by these great contributors from all around the world:</p>
 
             <div class="medium-insert-images medium-insert-images-grid small-grid">
                 <figure contenteditable="false"><img src="uploads/312938.jpg" alt=""></figure>
@@ -123,6 +150,7 @@
                     images: {
                         uploadScript: null,
                         deleteScript: null,
+                        captionPlaceholder: 'Type caption for image',
                         styles: {
                             slideshow: {
                                 label: '<span class="fa fa-play"></span>',
