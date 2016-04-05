@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.1.1 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.2.3 - jQuery insert plugin for MediumEditor
  *
  * https://github.com/orthes/medium-editor-insert-plugin
  * 
@@ -89,9 +89,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handleb
 
   return "<figure contenteditable=\"false\">\n    <img src=\""
     + container.escapeExpression(((helper = (helper = helpers.img || (depth0 != null ? depth0.img : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"img","hash":{},"data":data}) : helper)))
-    + "\" alt=\"\">\n"
+    + "\" alt=\"\" />\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.progress : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</figure>";
+    + "</figure>\n";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-progressbar.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -204,7 +204,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
 
-            this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
+            if (this.options.editor.getExtensionByName('placeholder') !== undefined) {
+                this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
+            }
         }
     }
 
@@ -274,6 +276,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             $data.find('.medium-insert-buttons').remove();
 
+            // Restore original embed code from embed wrapper attribute value.
+            $data.find('[data-embed-code]').each(function() {
+                var $this = $(this);
+                $this.html($this.attr('data-embed-code'));
+            });
+
             data[key].value = $data.html();
         });
 
@@ -314,16 +322,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * @return {void}
      */
 
-    Core.prototype.editorUpdatePlaceholder = function (el) {
-        var $clone = $(el).clone(),
-            cloneHtml;
+    Core.prototype.editorUpdatePlaceholder = function (el, dontShow) {
+        var contents = $(el).children()
+            .not('.medium-insert-buttons').contents();
 
-        $clone.find('.medium-insert-buttons').remove();
-        cloneHtml = $clone.html()
-            .replace(/^\s+|\s+$/g, '')
-            .replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
-
-        if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
+        if (!dontShow && contents.length === 1 && contents[0].nodeName.toLowerCase() === 'br') {
             this.showPlaceholder(el);
             this.base._hideInsertButtons($(el));
         } else {
@@ -431,11 +434,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             return;
         }
 
-        // Fix #39
-        // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
-        // To force placeholder to appear, set <p><br></p> as content of the $el
-
-        if (this.$el.html().trim() === '' || this.$el.html().trim() === '<br>') {
+        if (this.$el.children().length === 0) {
             this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
@@ -444,7 +443,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $text = this.$el
             .contents()
             .filter(function () {
-                return this.nodeName === '#text' && $.trim($(this).text()) !== '';
+                return (this.nodeName === '#text' && $.trim($(this).text()) !== '') || this.nodeName.toLowerCase() === 'br';
             });
 
         $text.each(function () {
@@ -1068,8 +1067,23 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             success: function(data) {
                 var html = data && data.html;
 
-                if (data && !data.html && data.type === 'photo' && data.url) {
+                if (data && !html && data.type === 'photo' && data.url) {
                     html = '<img src="' + data.url + '" alt="">';
+                }
+
+                if (!html) {
+                    // Prevent render empty embed.
+                    $.proxy(that, 'convertBadEmbed', url)();
+                    return;
+                }
+
+                if (html && html.indexOf('</script>') > -1) {
+                    // Store embed code with <script> tag inside wrapper attribute value.
+                    // Make nice attribute value escaping using jQuery.
+                    var $div = $('<div>')
+                        .attr('data-embed-code', html)
+                        .html(html);
+                    html = $('<div>').append($div).html();
                 }
 
                 $.proxy(that, 'embed', html)();
@@ -1413,6 +1427,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
+            fileDeleteOptions: {},
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>',
@@ -1483,6 +1498,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     function Images (el, options) {
         this.el = el;
         this.$el = $(el);
+        this.$currentImage = null;
         this.templates = window.MediumInsert.Templates;
         this.core = this.$el.data('plugin_'+ pluginName);
 
@@ -1734,14 +1750,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.core.clean();
         this.sorting();
-
-        if (this.options.uploadCompleted) {
-            this.options.uploadCompleted($el, data);
-        }
     };
 
     /**
@@ -1766,8 +1778,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+
+                if (this.options.uploadCompleted) {
+                    this.options.uploadCompleted(data.context, data);
+                }
+
                 that.core.triggerInput();
-            };
+            }.bind(this);
             domImage.src = img;
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
@@ -1797,6 +1814,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             if (this.options.preview) {
                 data.submit();
+            } else if (this.options.uploadCompleted) {
+                this.options.uploadCompleted(data.context, data);
             }
         }
 
@@ -1820,6 +1839,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if(this.core.options.enabled) {
             var $image = $(e.target),
                 that = this;
+
+            this.$currentImage = $image;
 
             // Hide keyboard on mobile devices
             this.$el.blur();
@@ -1863,6 +1884,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         } else if ($el.is('figcaption') === false) {
             this.core.removeCaptions();
         }
+        this.$currentImage = null;
     };
 
     /**
@@ -1919,11 +1941,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             // If deleteMethod is somehow undefined, defaults to POST
             var method = this.options.deleteMethod || 'POST';
 
-            $.ajax({
+            $.ajax($.extend(true, {}, {
                 url: this.options.deleteScript,
                 type: method,
                 data: { file: file }
-            });
+            }, this.options.fileDeleteOptions));
         }
     };
 
@@ -1989,6 +2011,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.toolbarAction = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             $li = $button.closest('li'),
             $ul = $li.closest('ul'),
@@ -2030,6 +2053,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.toolbar2Action = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             callback = this.options.actions[$button.data('action')].clicked;
 

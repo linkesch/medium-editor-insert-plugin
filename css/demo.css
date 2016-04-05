@@ -28,6 +28,15 @@ body {
     padding: 0 15px;
 }
 
+#version {
+    border-bottom: 5px solid #efefef;
+    padding-bottom: 1em;
+    font-size: small;
+    color: #333;
+    font-style: italic;
+    text-align: center;
+}
+
 .editable {
     outline: none;
     min-height: 38px;

@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>medium editor | example</title>
+    <title>medium-editor-insert-plugin | example</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/demo.css">
     <link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.min.css">
-    <link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css" id="medium-editor-theme">
+    <link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css">
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css">
 
@@ -18,16 +18,16 @@
             margin: 0;
         }
         .medium-insert-images.medium-insert-images-grid.small-grid figure {
-            width: 10%;
+            width: 12.5%;
         }
         @media (max-width: 750px) {
             .medium-insert-images.medium-insert-images-grid.small-grid figure {
-                width: 20%;
+                width: 25%;
             }
         }
         @media (max-width: 450px) {
             .medium-insert-images.medium-insert-images-grid.small-grid figure {
-                width: 25%;
+                width: 50%;
             }
         }
     </style>
@@ -35,27 +35,13 @@
 <body>
     <a href="https://github.com/orthes/medium-editor-insert-plugin"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 5000;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
-    <div class="top-bar">
-        Theme:
-        <select id="sel-themes">
-            <option value="bower_components/medium-editor/dist/css/themes/default" selected>default</option>
-            <option value="bower_components/medium-editor/dist/css/themes/roman">roman</option>
-            <option value="bower_components/medium-editor/dist/css/themes/mani">mani</option>
-            <option value="bower_components/medium-editor/dist/css/themes/flat">flat</option>
-            <option value="bower_components/medium-editor/dist/css/themes/bootstrap">bootstrap</option>
-        </select>
-    </div>
-    <br><br>
-
     <div id="container">
+        <header id="version">This demo uses medium-editor v5.10.0 + medium-editor-insert-plugin v2.2.3</header>
+
         <div class="editable" data-placeholder="Type some text">
             <h3>jQuery insert plugin for MediumEditor</h3>
 
-            <p>This is <strong>a demo</strong> of jQuery insert plugin for MediumEditor.</p>
-
-            <blockquote>HINT: This whole website is an editable editor. You can click on text and start typing.</blockquote>
-
-            <p>If you want to insert an image, <strong>create a new empty paragraph</strong> and the plugin's button will appear on the left. From there it's pretty self-explanatory. Have fun.</p>
+            <p>This is <strong>a demo</strong> of jQuery insert plugin for MediumEditor. This whole website is an editable editor. You can click on text and start typing. If you want to insert an image, <strong>create a new empty paragraph</strong> and the plugin's button will appear on the left. From there it's pretty self-explanatory. Have fun.</p>
 
             <h4>What to do next?</h4>
 
@@ -66,7 +52,38 @@
             <p>This plugin is brought to you thanks to these great contributors from all around the world:</p>
 
             <div class="medium-insert-images medium-insert-images-grid small-grid">
-                <figure contenteditable="false"><img src="uploads/312938.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/19343.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/39333.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1228229.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/594298.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1101183.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1790778.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1270102.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/93555.png" alt=""></figure><figure contenteditable="false"><img src="uploads/1891369.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1642674.png" alt=""></figure><figure contenteditable="false"><img src="uploads/431361.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/883073.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1485056.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/1064889.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/62333.png" alt=""></figure><figure contenteditable="false"><img src="uploads/433501.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/714146.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/882228.jpg" alt=""></figure><figure contenteditable="false"><img src="uploads/28841.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/312938.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/62333.png" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/39333.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/19343.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/79373.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1228229.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/594298.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/5272569.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1790778.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/4083642.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1101183.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/431361.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1086365.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/93555.png" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/883073.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1891369.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1642706.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1270102.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/28841.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/610268.png" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/525103.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1831399.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1485056.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/55442.png" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1064889.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/714146.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/882228.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/433501.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/1912864.png" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/28841.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/366564.jpg" alt=""></figure>
+                <figure contenteditable="false"><img src="uploads/6654724.jpg" alt=""></figure>
             </div>
 
             <p><em>... And yes, you can create this nice images grid with the plugin. And much more...</em></p>
@@ -96,9 +113,9 @@
     <script src="bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.min.js"></script>
 
     <script>
-        var editor = new MediumEditor('.editable', {
-            buttonLabels: 'fontawesome'
-        });
+        var editor = new MediumEditor('.editable'
+            );
+
         $(function () {
             $('.editable').mediumInsert({
                 editor: editor,
@@ -125,10 +142,6 @@
                     }
                 }
             });
-        });
-        var cssLink = document.getElementById('medium-editor-theme');
-        document.getElementById('sel-themes').addEventListener('change', function () {
-            cssLink.href = this.value + '.css';
         });
 
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
