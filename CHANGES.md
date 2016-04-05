@@ -1,4 +1,9 @@
 
+2.2.4 / 2016-04-05
+==================
+
+  * Change dependency versioning to enable minor releases of medium-editor
+
 2.2.3 / 2016-04-04
 ==================
 
