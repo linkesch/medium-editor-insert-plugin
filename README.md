@@ -39,12 +39,12 @@ Current available addons:
 The first step is to include the plugin with all its dependencies to your code:
 
 ```html
-<!-- CSS -->
-<link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.min.css">
-<link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css" id="medium-editor-theme">
 <!-- Font Awesome for awesome icons. You can redefine icons used in a plugin configuration -->
 <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-<!-- The plugin itself -->
+
+<!-- CSS -->
+<link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.min.css">
+<link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css">
 <link rel="stylesheet" href="bower_components/medium-editor-insert-plugin/dist/css/medium-editor-insert-plugin.min.css">
 
 <!-- JS -->
@@ -55,7 +55,6 @@ The first step is to include the plugin with all its dependencies to your code:
 <script src="bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script src="bower_components/blueimp-file-upload/js/jquery.iframe-transport.js"></script>
 <script src="bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
-<!-- The plugin itself -->
 <script src="bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.min.js"></script>
 ```
 
