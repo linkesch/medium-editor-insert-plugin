@@ -2,17 +2,37 @@
   "name": "medium-editor-insert-plugin",
   "version": "2.2.4",
   "description": "jQuery insert plugin for MediumEditor",
+  "main": "dist/js/medium-editor-insert-plugin.js",
+  "homepage": "http://linkesch.com/medium-editor-insert-plugin",
   "license": "MIT",
-  "homepage": "https://github.com/orthes/medium-editor-insert-plugin",
   "repository": {
     "type": "git",
     "url": "https://github.com/orthes/medium-editor-insert-plugin.git"
   },
+  "bugs": {
+    "url": "https://github.com/orthes/medium-editor-insert-plugin/issues"
+  },
   "author": {
     "name": "Pavel Linkesch",
+    "email": "pavel.linkesch@gmail.com",
     "url": "http://linkesch.sk"
   },
-  "main": "dist/js/medium-editor-insert-plugin.js",
+  "contributors": [
+    {
+      "name": "Jeremy Benoist",
+      "email": "jeremy.benoist@gmail.com"
+    }
+  ],
+  "keywords": [
+    "contenteditable",
+    "editor",
+    "medium",
+    "wysiwyg",
+    "rich-text",
+    "images",
+    "embeds",
+    "videos"
+  ],
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-autoprefixer": "^3.0.1",
