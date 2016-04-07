@@ -9,6 +9,7 @@
             label: '<span class="fa fa-youtube-play"></span>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
+            scrapperProxy: '',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
             styles: {
@@ -39,6 +40,7 @@
                     }
                 }
             },
+            removeEmbedOnSerialization: false,
             parseOnPaste: false
         };
 
@@ -67,7 +69,7 @@
         // Extend editor's functions
         if (this.core.getEditor()) {
             this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
-            this.core.getEditor().serialize = this.editorSerialize;
+            this.core.getEditor().serialize = this.editorSerialize.bind(this);
         }
 
         this.init();
@@ -103,6 +105,7 @@
         $(document)
             .on('click', $.proxy(this, 'unselectEmbed'))
             .on('keydown', $.proxy(this, 'removeEmbed'))
+            .on('keydown', $.proxy(this, 'scrapeContent'))
             .on('click', '.medium-insert-embeds-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
             .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
@@ -144,17 +147,30 @@
     /**
      * Extend editor's serialize function
      *
+     * Remove plugin's html
+     *
      * @return {object} Serialized data
      */
 
     Embeds.prototype.editorSerialize = function () {
-        var data = this._serializePreEmbeds();
+        var that = this;
+        var data = this.core.getEditor()._serializePreEmbeds();
 
         $.each(data, function (key) {
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-embeds').removeAttr('contenteditable');
             $data.find('.medium-insert-embeds-overlay').remove();
+
+            if (that.options.removeEmbedOnSerialization) {
+              $.each($data.find('.medium-insert-embeds'), function(i, embed) {
+                var url = $(embed).data('embedSrc');
+                var captionText = $(embed).find('figcaption').text().trim();
+                var captionData = captionText ? ' data-caption="' + captionText + '"' : '';
+
+                $(embed).replaceWith( '<p><a data-embeded="true"' + captionData + ' href="' + url + '">' + url + '</a></p>' );
+              });
+            }
 
             data[key].value = $data.html();
         });
@@ -438,7 +454,6 @@
                 $place.remove();
             }
 
-
             this.core.triggerInput();
 
             if (html.indexOf('facebook') !== -1) {
@@ -535,6 +550,48 @@
         } else if ($(e.target).is('figcaption') === false) {
             this.core.removeCaptions();
         }
+    };
+
+    /**
+     * Scrape content
+     */
+    Embeds.prototype.scrapeContent = function(e) {
+      var that = this;
+
+      // this.options.scrapperProxy &&
+      if (e.which === 13 && this.options.scrapperProxy) {
+
+        var node = window.getSelection();
+        var $parentNode = $($($(node.anchorNode)[0]).parent()[0]);
+        var nodeText = $parentNode.text().trim();
+
+        if ($parentNode.prop("tagName") === 'P' && isURL(nodeText)) {
+          this.options.scrapperProxy(nodeText, function(err, data) {
+            if (data) {
+              that.wrapScrappedContent($parentNode, data, nodeText);
+            }
+          });
+        }
+
+      }
+    };
+
+    function isURL(string) {
+      return /((([A-Za-z]{3,9}:(?:\/\/))(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.))((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\-\.\!\/\\\w]*))?)/gi.test(string);
+    }
+
+    /**
+     * Embed scraped data
+     */
+    Embeds.prototype.wrapScrappedContent = function(node, data, url) {
+      var templateResult = this.templates['src/js/templates/embeds-scrapped.hbs']({
+        title: data.title,
+        description: data.description,
+        domain: data.domain,
+        image: data.image
+      });
+
+      this.embed(templateResult, url, node);
     };
 
     /**

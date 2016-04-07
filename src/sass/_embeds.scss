@@ -35,3 +35,39 @@
         left: 0;
     }
 }
+
+.medium-insert-embeds {
+  .scraped-container {
+    overflow: hidden;
+    max-height: 280px;
+    box-sizing: border-box;
+    color: rgba(0,0,0,.44);
+    box-shadow: 0 1px 4px rgba(0,0,0,.04),inset 0 0 0 1px rgba(0,0,0,.09);
+    display: table;
+    width: 100%;
+    .info {
+      display: table-cell;
+      text-align: left;
+      vertical-align: middle;
+      padding: 20px;
+      font-size: 16px;
+      text-decoration: none;
+      color: inherit;
+      .title {
+        display: block;
+        color: rgba(0,0,0,.9);
+      }
+      .description {
+        display: block;
+      }
+    }
+    .image {
+      display: table-cell;
+      width: 160px;
+      height: 160px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+  }
+}

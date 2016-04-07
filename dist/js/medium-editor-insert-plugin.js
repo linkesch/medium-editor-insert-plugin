@@ -59,6 +59,24 @@ this["MediumInsert"]["Templates"]["src/js/templates/core-empty-line.hbs"] = Hand
     return "<p><br></p>\n";
 },"useData":true});
 
+this["MediumInsert"]["Templates"]["src/js/templates/embeds-scrapped.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\"scraped scraped-container\">\n  <a href=\""
+    + alias4(((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"url","hash":{},"data":data}) : helper)))
+    + "\" class=\"info\">\n    <strong class=\"title\">"
+    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+    + "</strong>\n    <em class=\"description\">"
+    + alias4(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"description","hash":{},"data":data}) : helper)))
+    + "</em>\n    "
+    + alias4(((helper = (helper = helpers.domain || (depth0 != null ? depth0.domain : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"domain","hash":{},"data":data}) : helper)))
+    + "\n  </a>\n  <a href=\""
+    + alias4(((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"url","hash":{},"data":data}) : helper)))
+    + "\" class=\"image\" style=\"background-image: url("
+    + alias4(((helper = (helper = helpers.image || (depth0 != null ? depth0.image : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"image","hash":{},"data":data}) : helper)))
+    + ");\"></a>\n</div>";
+},"useData":true});
+
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
@@ -92,10 +110,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-toolbar.hbs"] = Handl
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper;
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function";
 
-  return "<div class=\"medium-insert-embeds\" contenteditable=\"false\">\n	<figure>\n		<div class=\"medium-insert-embed\">\n			"
-    + ((stack1 = ((helper = (helper = helpers.html || (depth0 != null ? depth0.html : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"html","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+  return "<div class=\"medium-insert-embeds\" contenteditable=\"false\" data-embed-src=\""
+    + ((stack1 = ((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"url","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "\">\n	<figure>\n		<div class=\"medium-insert-embed\">\n			"
+    + ((stack1 = ((helper = (helper = helpers.html || (depth0 != null ? depth0.html : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"html","hash":{},"data":data}) : helper))) != null ? stack1 : "")
     + "\n		</div>\n	</figure>\n	<div class=\"medium-insert-embeds-overlay\"></div>\n</div>";
 },"useData":true});
 
@@ -263,7 +283,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 e.preventDefault();
             })
             .on('keyup click', $.proxy(this, 'toggleButtons'))
-            .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
+            .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons .medium-insert-embeds', $.proxy(this, 'disableSelection'))
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'))
             .on('paste', '.medium-insert-caption-placeholder', function (e) {
@@ -799,6 +819,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             label: '<span class="fa fa-youtube-play"></span>',
             placeholder: 'Paste a YouTube, Vimeo, Facebook, Twitter or Instagram link and press Enter',
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
+            scrapperProxy: '',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
             styles: {
@@ -829,6 +850,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     }
                 }
             },
+            removeEmbedOnSerialization: false,
             parseOnPaste: false
         };
 
@@ -857,7 +879,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         // Extend editor's functions
         if (this.core.getEditor()) {
             this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
-            this.core.getEditor().serialize = this.editorSerialize;
+            this.core.getEditor().serialize = this.editorSerialize.bind(this);
         }
 
         this.init();
@@ -893,6 +915,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $(document)
             .on('click', $.proxy(this, 'unselectEmbed'))
             .on('keydown', $.proxy(this, 'removeEmbed'))
+            .on('keydown', $.proxy(this, 'scrapeContent'))
             .on('click', '.medium-insert-embeds-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
             .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
@@ -934,17 +957,30 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     /**
      * Extend editor's serialize function
      *
+     * Remove plugin's html
+     *
      * @return {object} Serialized data
      */
 
     Embeds.prototype.editorSerialize = function () {
-        var data = this._serializePreEmbeds();
+        var that = this;
+        var data = this.core.getEditor()._serializePreEmbeds();
 
         $.each(data, function (key) {
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-embeds').removeAttr('contenteditable');
             $data.find('.medium-insert-embeds-overlay').remove();
+
+            if (that.options.removeEmbedOnSerialization) {
+              $.each($data.find('.medium-insert-embeds'), function(i, embed) {
+                var url = $(embed).data('embedSrc');
+                var captionText = $(embed).find('figcaption').text().trim();
+                var captionData = captionText ? ' data-caption="' + captionText + '"' : '';
+
+                $(embed).replaceWith( '<p><a data-embeded="true"' + captionData + ' href="' + url + '">' + url + '</a></p>' );
+              });
+            }
 
             data[key].value = $data.html();
         });
@@ -1228,7 +1264,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 $place.remove();
             }
 
-
             this.core.triggerInput();
 
             if (html.indexOf('facebook') !== -1) {
@@ -1325,6 +1360,48 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         } else if ($(e.target).is('figcaption') === false) {
             this.core.removeCaptions();
         }
+    };
+
+    /**
+     * Scrape content
+     */
+    Embeds.prototype.scrapeContent = function(e) {
+      var that = this;
+
+      // this.options.scrapperProxy &&
+      if (e.which === 13 && this.options.scrapperProxy) {
+
+        var node = window.getSelection();
+        var $parentNode = $($($(node.anchorNode)[0]).parent()[0]);
+        var nodeText = $parentNode.text().trim();
+
+        if ($parentNode.prop("tagName") === 'P' && isURL(nodeText)) {
+          this.options.scrapperProxy(nodeText, function(err, data) {
+            if (data) {
+              that.wrapScrappedContent($parentNode, data, nodeText);
+            }
+          });
+        }
+
+      }
+    };
+
+    function isURL(string) {
+      return /((([A-Za-z]{3,9}:(?:\/\/))(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.))((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\-\.\!\/\\\w]*))?)/gi.test(string);
+    }
+
+    /**
+     * Embed scraped data
+     */
+    Embeds.prototype.wrapScrappedContent = function(node, data, url) {
+      var templateResult = this.templates['src/js/templates/embeds-scrapped.hbs']({
+        title: data.title,
+        description: data.description,
+        domain: data.domain,
+        image: data.image
+      });
+
+      this.embed(templateResult, url, node);
     };
 
     /**
@@ -1828,7 +1905,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        $.proxy(this, 'showImage', data.result.files[0].url, data, data.result.files[0])();
 
         this.core.clean();
         this.sorting();
@@ -1841,7 +1918,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * @returns {void}
      */
 
-    Images.prototype.showImage = function (img, data) {
+    Images.prototype.showImage = function (img, data, file) {
         var $place = this.$el.find('.medium-insert-active'),
             domImage,
             that;
@@ -1856,6 +1933,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+                data.context.find('img').attr('image-width', file.width);
+                data.context.find('img').attr('image-height', file.height);
 
                 if (this.options.uploadCompleted) {
                     this.options.uploadCompleted(data.context, data);
