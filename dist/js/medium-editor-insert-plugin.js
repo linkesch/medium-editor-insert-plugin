@@ -1,11 +1,32 @@
 /*! 
  * medium-editor-insert-plugin v2.2.4 - jQuery insert plugin for MediumEditor
  *
- * https://github.com/orthes/medium-editor-insert-plugin
+ * http://linkesch.com/medium-editor-insert-plugin
  * 
- * Copyright (c) 2014 Pavel Linkesch (http://linkesch.sk)
+ * Copyright (c) 2014 Pavel Linkesch (http://linkesch.com)
  * Released under the MIT license
  */
+
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = function( root, jQuery ) {
+            if ( jQuery === undefined ) {
+                if ( typeof window !== 'undefined' ) {
+                    jQuery = require('jquery');
+                }
+                else {
+                    jQuery = require('jquery')(root);
+                }
+            }
+            factory(jQuery);
+            return jQuery;
+        };
+    } else {
+        factory(jQuery);
+    }
+}(function ($) {
 
 this["MediumInsert"] = this["MediumInsert"] || {};
 this["MediumInsert"]["Templates"] = this["MediumInsert"]["Templates"] || {};
@@ -767,7 +788,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
 })(jQuery, window, document);
 
-;(function ($, window, document, undefined) {
+; (function ($, window, document, undefined) {
 
     'use strict';
 
@@ -807,7 +828,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                         $(document).trigger($event);
                     }
                 }
-            }
+            },
+            parseOnPaste: false
         };
 
     /**
@@ -821,11 +843,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * @return {void}
      */
 
-    function Embeds (el, options) {
+    function Embeds(el, options) {
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
-        this.core = this.$el.data('plugin_'+ pluginName);
+        this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -879,6 +901,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .on('keydown', $.proxy(this, 'processLink'))
             .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
             .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
+
+        if (this.options.parseOnPaste) {
+            this.$el
+                .on('paste', $.proxy(this, 'processPasted'));
+        }
     };
 
     /**
@@ -941,7 +968,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         // Replace paragraph with div to prevent #124 issue with pasting in Chrome,
         // because medium editor wraps inserted content into paragraph and paragraphs can't be nested
         if ($place.is('p')) {
-            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place.replaceWith('<div class="medium-insert-active">' + $place.html() + '</div>');
             $place = this.$el.find('.medium-insert-active');
             this.core.moveCaret($place);
         }
@@ -1045,13 +1072,36 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     };
 
     /**
+     * Process Pasted
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Embeds.prototype.processPasted = function (e) {
+        if ($(".medium-insert-embeds-active").length) {
+            return;
+        }
+        var pastedUrl = e.originalEvent.clipboardData.getData('text');
+
+        var linkRegEx = new RegExp('^(http(s?):)?\/\/','i');
+        if (linkRegEx.test(pastedUrl)) {
+            if (this.options.oembedProxy) {
+                this.oembed(pastedUrl, true);
+            } else {
+                this.parseUrl(pastedUrl, true);
+            }
+        }
+    };
+
+    /**
      * Get HTML via oEmbed proxy
      *
      * @param {string} url
      * @return {void}
      */
 
-    Embeds.prototype.oembed = function (url) {
+    Embeds.prototype.oembed = function (url, pasted) {
         var that = this;
 
         $.support.cors = true;
@@ -1064,7 +1114,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             data: {
                 url: url
             },
-            success: function(data) {
+            success: function (data) {
                 var html = data && data.html;
 
                 if (data && !html && data.type === 'photo' && data.url) {
@@ -1086,13 +1136,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     html = $('<div>').append($div).html();
                 }
 
-                $.proxy(that, 'embed', html)();
+                if (pasted) {
+                    $.proxy(that, 'embed', html, url)();
+                }
+                else {
+                    $.proxy(that, 'embed', html)();
+                }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
-                var responseJSON = (function() {
+            error: function (jqXHR, textStatus, errorThrown) {
+                var responseJSON = (function () {
                     try {
                         return JSON.parse(jqXHR.responseText);
-                    } catch(e) {}
+                    } catch (e) { }
                 })();
 
                 if (typeof window.console !== 'undefined') {
@@ -1110,10 +1165,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * Get HTML using regexp
      *
      * @param {string} url
+     * @param {bool} pasted
      * @return {void}
      */
 
-    Embeds.prototype.parseUrl = function (url) {
+    Embeds.prototype.parseUrl = function (url, pasted) {
         var html;
 
         if (!(new RegExp(['youtube', 'youtu.be', 'vimeo', 'instagram'].join('|')).test(url))) {
@@ -1124,37 +1180,59 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         html = url.replace(/\n?/g, '')
             .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video video-youtube"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
             .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<div class="video video-vimeo"><iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
-            //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
-            //.replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
+        //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
+        //.replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
             .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
-
-        this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
+        if (pasted) {
+            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false, url);
+        }
+        else {
+            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
+        }
     };
 
     /**
      * Add html to page
      *
      * @param {string} html
+     * @param {string} pastedUrl
      * @return {void}
      */
 
-    Embeds.prototype.embed = function (html) {
+    Embeds.prototype.embed = function (html, pastedUrl) {
         var $place = this.$el.find('.medium-insert-embeds-active');
 
         if (!html) {
             alert('Incorrect URL format specified');
             return false;
         } else {
-            $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
-                html: html
-            }));
-            $place.remove();
+            if (pastedUrl) {
+                // Get the element with the pasted url
+                // place the embed template and remove the pasted text
+                $place = this.$el.find(":not(iframe, script, style)")
+                    .contents().filter(
+                        function () {
+                            return this.nodeType === 3 && this.textContent.indexOf(pastedUrl) > -1;
+                        }).parent();
+
+                $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
+                    html: html
+                }));
+                $place.text($place.text().replace(pastedUrl, ''));
+            }
+            else {
+                $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
+                    html: html
+                }));
+                $place.remove();
+            }
+
 
             this.core.triggerInput();
 
             if (html.indexOf('facebook') !== -1) {
-                if (typeof(FB) !== 'undefined') {
+                if (typeof (FB) !== 'undefined') {
                     setTimeout(function () {
                         FB.XFBML.parse();
                     }, 2000);
@@ -1200,7 +1278,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Embeds.prototype.selectEmbed = function (e) {
-        if(this.core.options.enabled) {
+        if (this.core.options.enabled) {
             var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
                 that = this;
 
@@ -1326,7 +1404,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             .show();
 
         $toolbar.find('button').each(function () {
-            if ($embed.hasClass('medium-insert-embeds-'+ $(this).data('action'))) {
+            if ($embed.hasClass('medium-insert-embeds-' + $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
                 active = true;
             }
@@ -1356,7 +1434,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
 
         $lis.find('button').each(function () {
-            var className = 'medium-insert-embeds-'+ $(this).data('action');
+            var className = 'medium-insert-embeds-' + $(this).data('action');
 
             if ($(this).hasClass('medium-editor-button-active')) {
                 $embed.addClass(className);
@@ -2087,3 +2165,5 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     };
 
 })(jQuery, window, document, MediumEditor.util);
+
+}));
