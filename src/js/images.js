@@ -487,10 +487,14 @@
      */
 
     Images.prototype.removeImage = function (e) {
-        var $image, $parent, $empty, selection, range, current, caretPosition, $current, $sibling;
+        var images = [],
+            $selectedImage = this.$el.find('.medium-insert-image-active'),
+            $parent, $empty, selection, range, current, caretPosition, $current, $sibling, selectedHtml, i;
 
         if (e.which === 8 || e.which === 46) {
-            $image = this.$el.find('.medium-insert-image-active');
+            if ($selectedImage.length) {
+                images.push($selectedImage);
+            }
 
             // Remove image even if it's not selected, but backspace/del is pressed in text
             selection = window.getSelection();
@@ -509,34 +513,43 @@
                 }
 
                 if ($sibling && $sibling.hasClass('medium-insert-images')) {
-                    $image = $sibling.find('img');
+                    images.push($sibling.find('img'));
+                }
+
+                // If text is selected, find images in the selection
+                selectedHtml = MediumEditor.selection.getSelectionHtml(document);
+                if (selectedHtml) {
+                    $('<div></div>').html(selectedHtml).find('.medium-insert-images img').each(function () {
+                        images.push($(this));
+                    });
                 }
             }
 
-            if ($image.length) {
-                e.preventDefault();
+            if (images.length) {
+                for (i = 0; i < images.length; i++) {
+                    this.deleteFile(images[i].attr('src'));
 
-                this.deleteFile($image.attr('src'));
+                    $parent = images[i].closest('.medium-insert-images');
+                    images[i].closest('figure').remove();
 
-                $parent = $image.closest('.medium-insert-images');
-                $image.closest('figure').remove();
-
-                $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
-
-                if ($parent.find('figure').length === 0) {
-                    $empty = $parent.next();
-                    if ($empty.is('p') === false || $empty.text() !== '') {
-                        $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
-                        $parent.before($empty);
+                    if ($parent.find('figure').length === 0) {
+                        $empty = $parent.next();
+                        if ($empty.is('p') === false || $empty.text() !== '') {
+                            $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                            $parent.before($empty);
+                        }
+                        $parent.remove();
                     }
-                    $parent.remove();
+                }
 
-                    // Hide addons
-                    this.core.hideAddons();
-
+                // Hide addons
+                this.core.hideAddons();
+                if (!selectedHtml && $empty) {
+                    e.preventDefault();
                     this.core.moveCaret($empty);
                 }
 
+                $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
                 this.core.triggerInput();
             }
         }
