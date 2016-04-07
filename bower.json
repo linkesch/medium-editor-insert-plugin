@@ -2,13 +2,30 @@
   "name": "medium-editor-insert-plugin",
   "version": "2.2.4",
   "description": "jQuery insert plugin for MediumEditor",
+  "homepage": "http://linkesch.com/medium-editor-insert-plugin",
   "main": [
     "dist/js/medium-editor-insert-plugin.js",
     "dist/css/medium-editor-insert-plugin.css"
   ],
   "license": "MIT",
   "authors": [
-    "Pavel linkesch <pavel.linkesch@gmail.com> (http://linkesch.sk)"
+    "Pavel linkesch <pavel.linkesch@gmail.com> (http://linkesch.com)",
+    "Jeremy Benoist <jeremy.benoist@gmail.com>"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "contenteditable",
+    "editor",
+    "medium",
+    "wysiwyg",
+    "rich-text",
+    "images",
+    "embeds",
+    "videos"
   ],
   "ignore": [
     "**/.*",
@@ -23,7 +40,7 @@
     "jquery": ">=1.9.0",
     "medium-editor": "^5.15.0",
     "handlebars": "~4.0.0",
-    "blueimp-file-upload": "~9.11.1",
+    "blueimp-file-upload": "~9.12.1",
     "jquery-sortable": "~0.9.12"
   }
 }
