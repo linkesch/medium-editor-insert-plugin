@@ -487,10 +487,31 @@
      */
 
     Images.prototype.removeImage = function (e) {
-        var $image, $parent, $empty;
+        var $image, $parent, $empty, selection, range, current, caretPosition, $current, $sibling;
 
         if (e.which === 8 || e.which === 46) {
             $image = this.$el.find('.medium-insert-image-active');
+
+            // Remove image even if it's not selected, but backspace/del is pressed in text
+            selection = window.getSelection();
+            if (selection && selection.rangeCount) {
+                range = selection.getRangeAt(0);
+                current = range.commonAncestorContainer;
+                $current = current.nodeName === '#text' ? $(current).parent() : $(current);
+                caretPosition = MediumEditor.selection.getCaretOffsets(current).left;
+
+                // Is backspace pressed and caret is at the beginning of a paragraph, get previous element
+                if (e.which === 8 && caretPosition === 0) {
+                    $sibling = $current.prev();
+                // Is del pressed and caret is at the end of a paragraph, get next element
+                } else if (e.which === 46 && caretPosition === $current.text().length) {
+                    $sibling = $current.next();
+                }
+
+                if ($sibling && $sibling.hasClass('medium-insert-images')) {
+                    $image = $sibling.find('img');
+                }
+            }
 
             if ($image.length) {
                 e.preventDefault();
