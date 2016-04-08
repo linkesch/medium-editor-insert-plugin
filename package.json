@@ -1,0 +1,66 @@
+{
+  "name": "medium-editor-insert",
+  "version": "0.0.1",
+  "description": "Insert extension for MediumEditor",
+  "main": "dist/medium-editor-insert.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orthes/medium-editor-insert"
+  },
+  "author": {
+    "name": "Pavel Linkesch",
+    "url": "http://linkesch.com"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "npm run clean && npm run build:dev && npm run build:prod",
+    "build:dev": "npm run css:dev && webpack src/js/Plugin.js dist/js/medium-editor-insert.js --config ./webpack.config.dev.js --progress --colors",
+    "build:prod": "npm run css:prod && webpack src/js/Plugin.js dist/js/medium-editor-insert.min.js --config ./webpack.config.prod.js --progress --colors",
+    "prepublish": "npm run build",
+    "clean": "rimraf dist build",
+    "lint": "eslint src",
+    "test": "npm run lint && karma start --single-run --no-auto-watch karma.config.js",
+    "css:dev": "node-sass src/sass/medium-editor-insert.scss dist/css/medium-editor-insert.css",
+    "css:prod": "node-sass --output-style=compressed src/sass/medium-editor-insert.scss dist/css/medium-editor-insert.min.css",
+    "css": "npm run css:dev && npm run css:prod",
+    "watch:js": "webpack src/js/Plugin.js dist/js/medium-editor-insert.js --config ./webpack.config.dev.js --progress --colors --watch",
+    "watch:css": "node-sass --watch src/sass/medium-editor-insert.scss dist/css/medium-editor-insert.css",
+    "watch": "npm run watch:js & npm run watch:css"
+  },
+  "keywords": [
+    "contenteditable",
+    "editor",
+    "medium",
+    "wysiwyg",
+    "rich-text",
+    "medium-editor",
+    "images",
+    "embed"
+  ],
+  "peerDependencies": {
+    "medium-editor": "^5.14.4"
+  },
+  "devDependencies": {
+    "babel-core": "^6.4.0",
+    "babel-eslint": "^4.1.6",
+    "babel-istanbul": "^0.6.0",
+    "babel-istanbul-loader": "0.0.1",
+    "babel-loader": "^6.2.1",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-preset-es2015": "^6.3.13",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^3.1.0",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.19",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.3",
+    "karma-jasmine": "^0.3.6",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.7.0",
+    "loader-utils": "^0.2.12",
+    "medium-editor": "^5.14.4",
+    "node-sass": "^3.4.2",
+    "rimraf": "^2.5.0",
+    "webpack": "^1.12.11"
+  }
+}
