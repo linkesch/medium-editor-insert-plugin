@@ -411,10 +411,10 @@
             .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
         if (pasted) {
-            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false, url);
+            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false, url, true);
         }
         else {
-            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
+            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false, url);
         }
     };
 
@@ -422,34 +422,40 @@
      * Add html to page
      *
      * @param {string} html
-     * @param {string} pastedUrl
+     * @param {string} url
+     * @param {bool} was pasted
+     * @param {Node} were to paste it
      * @return {void}
      */
 
-    Embeds.prototype.embed = function (html, pastedUrl) {
-        var $place = this.$el.find('.medium-insert-embeds-active');
+     // html, url, pasted
+
+    Embeds.prototype.embed = function (html, url, pasted, node) {
+        var $place = node || this.$el.find('.medium-insert-embeds-active');
 
         if (!html) {
             alert('Incorrect URL format specified');
             return false;
         } else {
-            if (pastedUrl) {
+            if (pasted) {
                 // Get the element with the pasted url
                 // place the embed template and remove the pasted text
                 $place = this.$el.find(":not(iframe, script, style)")
                     .contents().filter(
                         function () {
-                            return this.nodeType === 3 && this.textContent.indexOf(pastedUrl) > -1;
+                            return this.nodeType === 3 && this.textContent.indexOf(url) > -1;
                         }).parent();
 
                 $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
-                    html: html
+                    html: html,
+                    url: url
                 }));
-                $place.text($place.text().replace(pastedUrl, ''));
+                $place.text($place.text().replace(url, ''));
             }
             else {
                 $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
-                    html: html
+                    html: html,
+                    url: url
                 }));
                 $place.remove();
             }
@@ -591,7 +597,7 @@
         image: data.image
       });
 
-      this.embed(templateResult, url, node);
+      this.embed(templateResult, url, false, node);
     };
 
     /**
