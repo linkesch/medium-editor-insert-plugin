@@ -98,13 +98,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	exports.default = {
-	    /**
-	     * Capitalize first character
-	     *
-	     * @param {string} str
-	     * @return {string}
-	     */
-
 	    ucfirst: function ucfirst(str) {
 	        return str.charAt(0).toUpperCase() + str.slice(1);
 	    },
@@ -112,7 +105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    generateRandomString: function generateRandomString() {
 	        var length = arguments.length <= 0 || arguments[0] === undefined ? 15 : arguments[0];
 
-	        return Math.random().toString(36).substr(2, length + 2);
+	        return Math.random().toString(36).substr(2, length);
 	    },
 
 	    getClosestWithClassName: function getClosestWithClassName(el, className) {
@@ -121,7 +114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    },
 
-	    hasParent: function hasParent(el, parent) {
+	    isChildOf: function isChildOf(el, parent) {
 	        return MediumEditor.util.traverseUp(el, function (element) {
 	            return element === parent;
 	        }) ? true : false;
@@ -205,16 +198,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Object.keys(this._plugin.addons).forEach(function (name) {
 	                var addonOptions = _this2._plugin.addons[name];
 
-	                // If the addon isn't between default ones,
-	                // try to find it in global namespace under MediumEditorInsertAddon name
-	                // (replace "Addon" with an actual addon name)
-	                if (!_this2._plugin.initializedAddons[name] && addonOptions) {
-	                    var className = 'MediumEditorInsert' + _utils2.default.ucfirst(name);
-
-	                    if (window[className]) {
-	                        _this2._plugin.initializedAddons[name] = new window[className](_this2._plugin, addonOptions);
+	                // If the addon is custom one
+	                if (!_this2._plugin.initializedAddons[name]) {
+	                    if (typeof addonOptions === 'function') {
+	                        _this2._plugin.initializedAddons[name] = new addonOptions(_this2._plugin);
 	                    } else {
-	                        window.console.error('Addon "' + name + '" couldn\'t be found!');
+	                        window.console.error('I don\'t know how to initialize custom "' + name + '" addon!');
 	                    }
 	                }
 
@@ -320,7 +309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // Don't show buttons when the editor doesn't belong to editor
 	            this._plugin.getEditorElements().forEach(function (editor) {
-	                if (_utils2.default.hasParent(el, editor)) {
+	                if (_utils2.default.isChildOf(el, editor)) {
 	                    belongsToEditor = true;
 	                    return;
 	                }

@@ -42,16 +42,12 @@ export default class Core {
         Object.keys(this._plugin.addons).forEach((name) => {
             const addonOptions = this._plugin.addons[name];
 
-            // If the addon isn't between default ones,
-            // try to find it in global namespace under MediumEditorInsertAddon name
-            // (replace "Addon" with an actual addon name)
-            if (!this._plugin.initializedAddons[name] && addonOptions) {
-                const className = `MediumEditorInsert${utils.ucfirst(name)}`;
-
-                if (window[className]) {
-                    this._plugin.initializedAddons[name] = new window[className](this._plugin, addonOptions);
+            // If the addon is custom one
+            if (!this._plugin.initializedAddons[name]) {
+                if (typeof addonOptions === 'function') {
+                    this._plugin.initializedAddons[name] = new addonOptions(this._plugin);
                 } else {
-                    window.console.error(`Addon "${name}" couldn't be found!`);
+                    window.console.error(`I don't know how to initialize custom "${name}" addon!`);
                 }
             }
 

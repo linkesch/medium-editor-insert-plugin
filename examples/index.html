@@ -24,10 +24,29 @@
 	<script src="../dist/js/medium-editor-insert.js"></script>
 
 	<script>
+        var CustomAddon = function (plugin) {
+            this._plugin = plugin;
+            this._editor = this._plugin.base;
+
+            this.options = {
+                label: '<span class="fa fa-list"></span>'
+            };
+
+            this.label = this.options.label;
+        };
+
+        CustomAddon.prototype.handleClick = function () {
+            console.log('hell yeah!');
+        };
+
 		var editor = new MediumEditor('.editable', {
             buttonLabels: 'fontawesome',
             extensions: {
-            	'insert': new MediumEditorInsert()
+            	'insert': new MediumEditorInsert({
+                    addons: {
+                        custom: CustomAddon
+                    }
+                })
             }
         });
 	</script>
