@@ -99,8 +99,8 @@ export default class Images {
     insertImage(url, uid) {
         const el = this._plugin.core.selectedElement,
             figure = document.createElement('figure'),
-            img = document.createElement('img'),
-            domImage = new Image();
+            img = document.createElement('img');
+        let domImage;
 
         img.alt = '';
 
@@ -115,6 +115,7 @@ export default class Images {
             figure.appendChild(img);
             el.appendChild(figure);
         } else {
+            domImage = new Image();
             domImage.onload = () => {
                 img.src = domImage.src;
                 figure.appendChild(img);
