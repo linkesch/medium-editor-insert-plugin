@@ -119,6 +119,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return MediumEditor.util.traverseUp(el, function (element) {
 	            return element.classList.contains(className);
 	        });
+	    },
+
+	    hasParent: function hasParent(el, parent) {
+	        return MediumEditor.util.traverseUp(el, function (element) {
+	            return element === parent;
+	        }) ? true : false;
 	    }
 	};
 	module.exports = exports['default'];
@@ -304,10 +310,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this4 = this;
 
 	            var addonClassNames = [];
-	            var isAddon = false;
+	            var isAddon = false,
+	                belongsToEditor = false;
 
 	            // Don't show buttons when the element has text
 	            if (el.innerText.trim() !== '') {
+	                return false;
+	            }
+
+	            // Don't show buttons when the editor doesn't belong to editor
+	            this._plugin.getEditorElements().forEach(function (editor) {
+	                if (_utils2.default.hasParent(el, editor)) {
+	                    belongsToEditor = true;
+	                    return;
+	                }
+	            });
+
+	            if (!belongsToEditor) {
 	                return false;
 	            }
 

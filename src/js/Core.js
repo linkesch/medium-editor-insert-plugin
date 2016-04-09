@@ -133,10 +133,23 @@ export default class Core {
 
     shouldDisplayButtonsOnElement(el) {
         const addonClassNames = [];
-        let isAddon = false;
+        let isAddon = false,
+            belongsToEditor = false;
 
         // Don't show buttons when the element has text
         if (el.innerText.trim() !== '') {
+            return false;
+        }
+
+        // Don't show buttons when the editor doesn't belong to editor
+        this._plugin.getEditorElements().forEach((editor) => {
+            if (utils.hasParent(el, editor)) {
+                belongsToEditor = true;
+                return;
+            }
+        });
+
+        if (!belongsToEditor) {
             return false;
         }
 

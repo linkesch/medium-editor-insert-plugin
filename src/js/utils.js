@@ -1,11 +1,4 @@
 export default {
-    /**
-     * Capitalize first character
-     *
-     * @param {string} str
-     * @return {string}
-     */
-
     ucfirst: (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
@@ -18,5 +11,11 @@ export default {
         return MediumEditor.util.traverseUp(el, (element) => {
             return element.classList.contains(className);
         });
+    },
+
+    hasParent: (el, parent) => {
+        return MediumEditor.util.traverseUp(el, (element) => {
+            return element === parent;
+        }) ? true : false;
     }
 };
