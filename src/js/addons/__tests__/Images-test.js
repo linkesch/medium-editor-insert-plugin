@@ -25,7 +25,7 @@ describe('Images', () => {
         let image;
 
         container.innerHTML = `<div class="medium-editor-insert-images">
-            <figure><img src="01.jpg" alt="" /></figure>
+            <figure><img src="#" alt="" /></figure>
         </div>`;
 
         image = container.getElementsByTagName('img')[0];
@@ -38,7 +38,7 @@ describe('Images', () => {
         let image;
 
         container.innerHTML = `<div class="medium-editor-insert-images">
-            <figure><img src="01.jpg" alt="" class="medium-editor-insert-image-active" /></figure>
+            <figure><img src="#" alt="" class="medium-editor-insert-image-active" /></figure>
         </div>`;
 
         image = container.getElementsByTagName('img')[0];
@@ -51,8 +51,8 @@ describe('Images', () => {
         let images;
 
         container.innerHTML = `<div class="medium-editor-insert-images">
-            <figure><img src="01.jpg" alt="" class="medium-editor-insert-image-active" /></figure>
-            <figure><img src="02.jpg" alt="" /></figure>
+            <figure><img src="#" alt="" class="medium-editor-insert-image-active" /></figure>
+            <figure><img src="#" alt="" /></figure>
         </div>`;
 
         images = container.getElementsByTagName('img');

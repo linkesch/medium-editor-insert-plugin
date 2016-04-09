@@ -143,7 +143,7 @@ export default class Core {
 
         // Don't show buttons when the editor doesn't belong to editor
         this._plugin.getEditorElements().forEach((editor) => {
-            if (utils.hasParent(el, editor)) {
+            if (utils.isChildOf(el, editor)) {
                 belongsToEditor = true;
                 return;
             }

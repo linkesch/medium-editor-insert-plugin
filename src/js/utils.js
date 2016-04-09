@@ -4,7 +4,7 @@ export default {
     },
 
     generateRandomString: (length = 15) => {
-        return Math.random().toString(36).substr(2, length + 2);
+        return Math.random().toString(36).substr(2, length);
     },
 
     getClosestWithClassName: (el, className) => {
@@ -13,7 +13,7 @@ export default {
         });
     },
 
-    hasParent: (el, parent) => {
+    isChildOf: (el, parent) => {
         return MediumEditor.util.traverseUp(el, (element) => {
             return element === parent;
         }) ? true : false;
