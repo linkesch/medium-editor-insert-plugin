@@ -40,6 +40,8 @@ export default class Images {
 	uploadFiles() {
 		const paragraph = this._plugin.core.selectedElement;
 
+        // Replace paragraph with div, because figure is a block element
+        // and can't be nested inside paragraphs
 		if (paragraph.nodeName.toLowerCase() === 'p') {
 			const div = document.createElement('div');
 
@@ -49,6 +51,8 @@ export default class Images {
 		}
 
 		Array.prototype.forEach.call(this._input.files, (file) => {
+            // Generate uid for this image, so we can identify it later
+            // and we can replace preview image with uploaded one
 			const uid = utils.generateRandomString();
 
 			if (this.options.preview) {
@@ -95,22 +99,48 @@ export default class Images {
     insertImage(url, uid) {
         const el = this._plugin.core.selectedElement,
             figure = document.createElement('figure'),
-            img = document.createElement('img');
+            img = document.createElement('img'),
+            domImage = new Image();
 
-        img.src = url;
         img.alt = '';
+
         if (uid) {
             img.setAttribute('data-uid', uid);
         }
-        figure.appendChild(img);
+
+        // If we're dealing with a preview image,
+        // we don't have to preload it before displaying
+        if (url.match(/^data:/)) {
+            img.src = url;
+            figure.appendChild(img);
+            el.appendChild(figure);
+        } else {
+            domImage.onload = () => {
+                img.src = domImage.src;
+                figure.appendChild(img);
+                el.appendChild(figure);
+            };
+            domImage.src = url;
+        }
 
         el.classList.add(this.elementClassName);
-        el.appendChild(figure);
+
+        // Return domImage so we can test this function easily
+        return domImage;
     }
 
     replaceImage(image, url) {
-        image.src = url;
-        image.removeAttribute('data-uid');
+        const domImage = new Image();
+
+        domImage.onload = () => {
+            image.src = domImage.src;
+            image.removeAttribute('data-uid');
+        };
+
+        domImage.src = url;
+
+        // Return domImage so we can test this function easily
+        return domImage;
     }
 
     selectImage(e) {
@@ -125,6 +155,7 @@ export default class Images {
         const el = e.target;
         let clickedImage;
 
+        // Unselect all selected images. If an image is clicked, unselect all except this one.
         if (el.nodeName.toLowerCase() === 'img' && el.classList.contains('medium-editor-insert-image-active')) {
             clickedImage = el;
         }

@@ -194,11 +194,12 @@ describe('Images', () => {
     describe('insertImage()', () => {
         it('should create image and add class to parent', () => {
             const div = document.createElement('div');
-            let figure, image;
+            let domImage, figure, image;
 
             plugin.core.selectElement(div);
 
-            addon.insertImage('01.jpg', 'abcd123');
+            domImage = addon.insertImage('01.jpg', 'abcd123');
+            domImage.onload();
 
             figure = div.getElementsByTagName('figure')[0];
             image = figure.getElementsByTagName('img')[0];
@@ -211,9 +212,12 @@ describe('Images', () => {
     describe('replaceImage()', () => {
         it('should replace image with new one and remove data-uid', () => {
             const image = document.createElement('img');
+            let domImage;
+
             image.src = '01.jpg';
 
-            addon.replaceImage(image, '02.jpg');
+            domImage = addon.replaceImage(image, '02.jpg');
+            domImage.onload();
 
             expect(image.src).toContain('02.jpg');
             expect(image.hasAttribute('data-uid')).toBeFalsy();
