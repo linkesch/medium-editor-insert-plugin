@@ -17,6 +17,7 @@ module.exports = function (config) {
         },
         files: [
               'node_modules/medium-editor/dist/js/medium-editor.js',
+              'node_modules/jasmine-ajax/lib/mock-ajax.js',
               'tests.webpack.js'
         ],
         frameworks: [
