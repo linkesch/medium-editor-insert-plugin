@@ -3,9 +3,6 @@ import utils from '../utils';
 export default class Images {
 
 	constructor(plugin, options) {
-		this._plugin = plugin;
-        this._editor = this._plugin.base;
-
 		this.options = {
 			label: '<span class="fa fa-camera"></span>',
 			preview: true,
@@ -14,8 +11,21 @@ export default class Images {
 
 		Object.assign(this.options, options);
 
+        this._plugin = plugin;
+        this._editor = this._plugin.base;
+        this.elementClassName = 'medium-editor-insert-images';
 		this.label = this.options.label;
+
+        this.events();
 	}
+
+    events() {
+        this._plugin.on(document, 'click', this.unselectImage.bind(this));
+
+        this._plugin.getEditorElements().forEach((editor) => {
+            this._plugin.on(editor, 'click', this.selectImage.bind(this));
+        });
+    }
 
 	handleClick() {
 		this._input = document.createElement('input');
@@ -28,13 +38,13 @@ export default class Images {
 	}
 
 	uploadFiles() {
-		const paragraph = this._plugin.core.activeParagraph;
+		const paragraph = this._plugin.core.selectedElement;
 
 		if (paragraph.nodeName.toLowerCase() === 'p') {
 			const div = document.createElement('div');
 
 			paragraph.parentNode.insertBefore(div, paragraph);
-			this._plugin.core.activeParagraph = div;
+			this._plugin.core.selectElement(div);
 			paragraph.remove();
 		}
 
@@ -68,7 +78,7 @@ export default class Images {
 		xhr.open("POST", this.options.uploadUrl, true);
 		xhr.onreadystatechange = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                const image = this._plugin.core.activeParagraph.querySelector(`[data-uid="${uid}"]`);
+                const image = this._plugin.core.selectedElement.querySelector(`[data-uid="${uid}"]`);
 
                 if (image) {
                     this.replaceImage(image, xhr.responseText);
@@ -83,7 +93,7 @@ export default class Images {
 	}
 
     insertImage(url, uid) {
-        const el = this._plugin.core.activeParagraph,
+        const el = this._plugin.core.selectedElement,
             figure = document.createElement('figure'),
             img = document.createElement('img');
 
@@ -94,13 +104,40 @@ export default class Images {
         }
         figure.appendChild(img);
 
-        el.classList.add('medium-editor-insert-images');
+        el.classList.add(this.elementClassName);
         el.appendChild(figure);
     }
 
     replaceImage(image, url) {
         image.src = url;
         image.removeAttribute('data-uid');
+    }
+
+    selectImage(e) {
+        const el = e.target;
+
+        if (el.nodeName.toLowerCase() === 'img' && utils.getClosestWithClassName(el, this.elementClassName)) {
+            el.classList.add('medium-editor-insert-image-active');
+        }
+    }
+
+    unselectImage(e) {
+        const el = e.target;
+        let clickedImage;
+
+        if (el.nodeName.toLowerCase() === 'img' && el.classList.contains('medium-editor-insert-image-active')) {
+            clickedImage = el;
+        }
+
+        this._plugin.getEditorElements().forEach((editor) => {
+            const images = editor.getElementsByClassName('medium-editor-insert-image-active');
+
+            Array.prototype.forEach.call(images, (image) => {
+                if (image !== clickedImage) {
+                    image.classList.remove('medium-editor-insert-image-active');
+                }
+            });
+        });
     }
 
 }

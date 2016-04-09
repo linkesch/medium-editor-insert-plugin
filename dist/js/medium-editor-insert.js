@@ -95,25 +95,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 	exports.default = {
-		/**
-	  * Capitalize first character
-	  *
-	  * @param {string} str
-	  * @return {string}
-	  */
+	    /**
+	     * Capitalize first character
+	     *
+	     * @param {string} str
+	     * @return {string}
+	     */
 
-		ucfirst: function ucfirst(str) {
-			return str.charAt(0).toUpperCase() + str.slice(1);
-		},
+	    ucfirst: function ucfirst(str) {
+	        return str.charAt(0).toUpperCase() + str.slice(1);
+	    },
 
-		generateRandomString: function generateRandomString() {
-			var length = arguments.length <= 0 || arguments[0] === undefined ? 15 : arguments[0];
+	    generateRandomString: function generateRandomString() {
+	        var length = arguments.length <= 0 || arguments[0] === undefined ? 15 : arguments[0];
 
-			return Math.random().toString(36).substr(2, length + 2);
-		}
+	        return Math.random().toString(36).substr(2, length + 2);
+	    },
+
+	    getClosestWithClassName: function getClosestWithClassName(el, className) {
+	        return MediumEditor.util.traverseUp(el, function (element) {
+	            return element.classList.contains(className);
+	        });
+	    }
 	};
 	module.exports = exports['default'];
 
@@ -184,6 +190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function initAddons() {
 	            var _this2 = this;
 
+	            // Initialiez all default addons, we'll delete ones we don't need later
 	            this._plugin.initializedAddons = {
 	                images: new _Images2.default(this._plugin, this._plugin.addons.images),
 	                embeds: new _Embeds2.default(this._plugin, this._plugin.addons.embeds)
@@ -192,6 +199,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Object.keys(this._plugin.addons).forEach(function (name) {
 	                var addonOptions = _this2._plugin.addons[name];
 
+	                // If the addon isn't between default ones,
+	                // try to find it in global namespace under MediumEditorInsertAddon name
+	                // (replace "Addon" with an actual addon name)
 	                if (!_this2._plugin.initializedAddons[name] && addonOptions) {
 	                    var className = 'MediumEditorInsert' + _utils2.default.ucfirst(name);
 
@@ -202,6 +212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 
+	                // Delete disabled addon
 	                if (!addonOptions) {
 	                    delete _this2._plugin.initializedAddons[name];
 	                }
@@ -249,6 +260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                addonButtonStyle = void 0,
 	                position = void 0;
 
+	            // Don't position buttons if they aren't active
 	            if (this.buttons.classList.contains('medium-editor-insert-buttons-active') === false) {
 	                return;
 	            }
@@ -259,11 +271,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            addonButton = this.buttons.getElementsByClassName('medium-editor-insert-action')[0];
 	            addonsStyle = window.getComputedStyle(addons);
 	            addonButtonStyle = window.getComputedStyle(addonButton);
+
+	            // Calculate position
 	            position = {
 	                top: window.scrollY + elPosition.top,
 	                left: window.scrollX + elPosition.left - parseInt(addonsStyle.left, 10) - parseInt(addonButtonStyle.marginLeft, 10)
 	            };
 
+	            // If left position is lower than 0, the buttons would be out of the viewport.
+	            // In that case, align buttons with the editor
 	            position.left = position.left < 0 ? elPosition.left : position.left;
 
 	            this.buttons.style.left = position.left + 'px';
@@ -274,13 +290,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function toggleButtons() {
 	            var el = this._editor.getSelectedParentElement();
 
-	            if (el.innerText.trim() === '') {
-	                this.activeParagraph = el;
+	            if (this.shouldDisplayButtonsOnElement(el)) {
+	                this.selectElement(el);
 	                this.showButtons();
 	            } else {
-	                this.activeParagraph = null;
+	                this.deselectElement();
 	                this.hideButtons();
 	            }
+	        }
+	    }, {
+	        key: 'shouldDisplayButtonsOnElement',
+	        value: function shouldDisplayButtonsOnElement(el) {
+	            var _this4 = this;
+
+	            var addonClassNames = [];
+	            var isAddon = false;
+
+	            // Don't show buttons when the element has text
+	            if (el.innerText.trim() !== '') {
+	                return false;
+	            }
+
+	            // Get class names used by addons
+	            Object.keys(this._plugin.initializedAddons).forEach(function (addonName) {
+	                var addon = _this4._plugin.initializedAddons[addonName];
+	                if (addon.elementClassName) {
+	                    addonClassNames.push(addon.elementClassName);
+	                }
+	            });
+
+	            // Don't show buttons if the element is an addon element
+	            // - when the element has an addon class, or some of its parents have it
+	            addonClassNames.forEach(function (className) {
+	                if (el.classList.contains(className) || _utils2.default.getClosestWithClassName(el, className)) {
+	                    isAddon = true;
+	                    return;
+	                }
+	            });
+
+	            return !isAddon;
+	        }
+	    }, {
+	        key: 'selectElement',
+	        value: function selectElement(el) {
+	            this.selectedElement = el;
+	        }
+	    }, {
+	        key: 'deselectElement',
+	        value: function deselectElement() {
+	            this.selectedElement = null;
 	        }
 	    }, {
 	        key: 'showButtons',
@@ -366,7 +424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -380,124 +438,166 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Images = function () {
-		function Images(plugin, options) {
-			_classCallCheck(this, Images);
+	    function Images(plugin, options) {
+	        _classCallCheck(this, Images);
 
-			this._plugin = plugin;
-			this._editor = this._plugin.base;
+	        this.options = {
+	            label: '<span class="fa fa-camera"></span>',
+	            preview: true,
+	            uploadUrl: 'upload.php'
+	        };
 
-			this.options = {
-				label: '<span class="fa fa-camera"></span>',
-				preview: true,
-				uploadUrl: 'upload.php'
-			};
+	        Object.assign(this.options, options);
 
-			Object.assign(this.options, options);
+	        this._plugin = plugin;
+	        this._editor = this._plugin.base;
+	        this.elementClassName = 'medium-editor-insert-images';
+	        this.label = this.options.label;
 
-			this.label = this.options.label;
-		}
+	        this.events();
+	    }
 
-		_createClass(Images, [{
-			key: 'handleClick',
-			value: function handleClick() {
-				this._input = document.createElement('input');
-				this._input.type = 'file';
-				this._input.multiple = true;
+	    _createClass(Images, [{
+	        key: 'events',
+	        value: function events() {
+	            var _this = this;
 
-				this._plugin.on(this._input, 'change', this.uploadFiles.bind(this));
+	            this._plugin.on(document, 'click', this.unselectImage.bind(this));
 
-				this._input.click();
-			}
-		}, {
-			key: 'uploadFiles',
-			value: function uploadFiles() {
-				var _this = this;
+	            this._plugin.getEditorElements().forEach(function (editor) {
+	                _this._plugin.on(editor, 'click', _this.selectImage.bind(_this));
+	            });
+	        }
+	    }, {
+	        key: 'handleClick',
+	        value: function handleClick() {
+	            this._input = document.createElement('input');
+	            this._input.type = 'file';
+	            this._input.multiple = true;
 
-				var paragraph = this._plugin.core.activeParagraph;
+	            this._plugin.on(this._input, 'change', this.uploadFiles.bind(this));
 
-				if (paragraph.nodeName.toLowerCase() === 'p') {
-					var div = document.createElement('div');
+	            this._input.click();
+	        }
+	    }, {
+	        key: 'uploadFiles',
+	        value: function uploadFiles() {
+	            var _this2 = this;
 
-					paragraph.parentNode.insertBefore(div, paragraph);
-					this._plugin.core.activeParagraph = div;
-					paragraph.remove();
-				}
+	            var paragraph = this._plugin.core.selectedElement;
 
-				Array.prototype.forEach.call(this._input.files, function (file) {
-					var uid = _utils2.default.generateRandomString();
+	            if (paragraph.nodeName.toLowerCase() === 'p') {
+	                var div = document.createElement('div');
 
-					if (_this.options.preview) {
-						_this.preview(file, uid);
-					}
+	                paragraph.parentNode.insertBefore(div, paragraph);
+	                this._plugin.core.selectElement(div);
+	                paragraph.remove();
+	            }
 
-					_this.upload(file, uid);
-				});
+	            Array.prototype.forEach.call(this._input.files, function (file) {
+	                var uid = _utils2.default.generateRandomString();
 
-				this._plugin.core.hideButtons();
-			}
-		}, {
-			key: 'preview',
-			value: function preview(file, uid) {
-				var _this2 = this;
+	                if (_this2.options.preview) {
+	                    _this2.preview(file, uid);
+	                }
 
-				var reader = new FileReader();
+	                _this2.upload(file, uid);
+	            });
 
-				reader.onload = function (e) {
-					_this2.insertImage(e.target.result, uid);
-				};
+	            this._plugin.core.hideButtons();
+	        }
+	    }, {
+	        key: 'preview',
+	        value: function preview(file, uid) {
+	            var _this3 = this;
 
-				reader.readAsDataURL(file);
-			}
-		}, {
-			key: 'upload',
-			value: function upload(file, uid) {
-				var _this3 = this;
+	            var reader = new FileReader();
 
-				var xhr = new XMLHttpRequest(),
-				    data = new FormData();
+	            reader.onload = function (e) {
+	                _this3.insertImage(e.target.result, uid);
+	            };
 
-				xhr.open("POST", this.options.uploadUrl, true);
-				xhr.onreadystatechange = function () {
-					if (xhr.readyState === 4 && xhr.status === 200) {
-						var image = _this3._plugin.core.activeParagraph.querySelector('[data-uid="' + uid + '"]');
+	            reader.readAsDataURL(file);
+	        }
+	    }, {
+	        key: 'upload',
+	        value: function upload(file, uid) {
+	            var _this4 = this;
 
-						if (image) {
-							_this3.replaceImage(image, xhr.responseText);
-						} else {
-							_this3.insertImage(xhr.responseText);
-						}
-					}
-				};
+	            var xhr = new XMLHttpRequest(),
+	                data = new FormData();
 
-				data.append("file", file);
-				xhr.send(data);
-			}
-		}, {
-			key: 'insertImage',
-			value: function insertImage(url, uid) {
-				var el = this._plugin.core.activeParagraph,
-				    figure = document.createElement('figure'),
-				    img = document.createElement('img');
+	            xhr.open("POST", this.options.uploadUrl, true);
+	            xhr.onreadystatechange = function () {
+	                if (xhr.readyState === 4 && xhr.status === 200) {
+	                    var image = _this4._plugin.core.selectedElement.querySelector('[data-uid="' + uid + '"]');
 
-				img.src = url;
-				img.alt = '';
-				if (uid) {
-					img.setAttribute('data-uid', uid);
-				}
-				figure.appendChild(img);
+	                    if (image) {
+	                        _this4.replaceImage(image, xhr.responseText);
+	                    } else {
+	                        _this4.insertImage(xhr.responseText);
+	                    }
+	                }
+	            };
 
-				el.classList.add('medium-editor-insert-images');
-				el.appendChild(figure);
-			}
-		}, {
-			key: 'replaceImage',
-			value: function replaceImage(image, url) {
-				image.src = url;
-				image.removeAttribute('data-uid');
-			}
-		}]);
+	            data.append("file", file);
+	            xhr.send(data);
+	        }
+	    }, {
+	        key: 'insertImage',
+	        value: function insertImage(url, uid) {
+	            var el = this._plugin.core.selectedElement,
+	                figure = document.createElement('figure'),
+	                img = document.createElement('img');
 
-		return Images;
+	            img.src = url;
+	            img.alt = '';
+	            if (uid) {
+	                img.setAttribute('data-uid', uid);
+	            }
+	            figure.appendChild(img);
+
+	            el.classList.add(this.elementClassName);
+	            el.appendChild(figure);
+	        }
+	    }, {
+	        key: 'replaceImage',
+	        value: function replaceImage(image, url) {
+	            image.src = url;
+	            image.removeAttribute('data-uid');
+	        }
+	    }, {
+	        key: 'selectImage',
+	        value: function selectImage(e) {
+	            var el = e.target;
+
+	            if (el.nodeName.toLowerCase() === 'img' && _utils2.default.getClosestWithClassName(el, this.elementClassName)) {
+	                el.classList.add('medium-editor-insert-image-active');
+	            }
+	        }
+	    }, {
+	        key: 'unselectImage',
+	        value: function unselectImage(e) {
+	            var el = e.target;
+	            var clickedImage = void 0;
+
+	            if (el.nodeName.toLowerCase() === 'img' && el.classList.contains('medium-editor-insert-image-active')) {
+	                clickedImage = el;
+	            }
+
+	            this._plugin.getEditorElements().forEach(function (editor) {
+	                var images = editor.getElementsByClassName('medium-editor-insert-image-active');
+
+	                Array.prototype.forEach.call(images, function (image) {
+	                    if (image !== clickedImage) {
+	                        image.classList.remove('medium-editor-insert-image-active');
+	                    }
+	                });
+	            });
+	        }
+	    }]);
+
+	    return Images;
 	}();
 
 	exports.default = Images;

@@ -33,6 +33,7 @@ export default class Core {
     }
 
     initAddons() {
+        // Initialiez all default addons, we'll delete ones we don't need later
         this._plugin.initializedAddons = {
             images: new Images(this._plugin, this._plugin.addons.images),
             embeds: new Embeds(this._plugin, this._plugin.addons.embeds)
@@ -41,6 +42,9 @@ export default class Core {
         Object.keys(this._plugin.addons).forEach((name) => {
             const addonOptions = this._plugin.addons[name];
 
+            // If the addon isn't between default ones,
+            // try to find it in global namespace under MediumEditorInsertAddon name
+            // (replace "Addon" with an actual addon name)
             if (!this._plugin.initializedAddons[name] && addonOptions) {
                 const className = `MediumEditorInsert${utils.ucfirst(name)}`;
 
@@ -51,6 +55,7 @@ export default class Core {
                 }
             }
 
+            // Delete disabled addon
             if (!addonOptions) {
                 delete this._plugin.initializedAddons[name];
             }
@@ -88,6 +93,7 @@ export default class Core {
     positionButtons() {
         let el, elPosition, addons, addonButton, addonsStyle, addonButtonStyle, position;
 
+        // Don't position buttons if they aren't active
         if (this.buttons.classList.contains('medium-editor-insert-buttons-active') === false) {
             return;
         }
@@ -98,11 +104,15 @@ export default class Core {
         addonButton = this.buttons.getElementsByClassName('medium-editor-insert-action')[0];
         addonsStyle = window.getComputedStyle(addons);
         addonButtonStyle = window.getComputedStyle(addonButton);
+
+        // Calculate position
         position = {
             top: window.scrollY + elPosition.top,
             left: window.scrollX + elPosition.left - parseInt(addonsStyle.left, 10) - parseInt(addonButtonStyle.marginLeft, 10)
         };
 
+        // If left position is lower than 0, the buttons would be out of the viewport.
+        // In that case, align buttons with the editor
         position.left = position.left < 0 ? elPosition.left : position.left;
 
         this.buttons.style.left = `${position.left}px`;
@@ -112,13 +122,50 @@ export default class Core {
     toggleButtons() {
         const el = this._editor.getSelectedParentElement();
 
-        if (el.innerText.trim() === '') {
-            this.activeParagraph = el;
+        if (this.shouldDisplayButtonsOnElement(el)) {
+            this.selectElement(el);
             this.showButtons();
         } else {
-            this.activeParagraph = null;
+            this.deselectElement();
             this.hideButtons();
         }
+    }
+
+    shouldDisplayButtonsOnElement(el) {
+        const addonClassNames = [];
+        let isAddon = false;
+
+        // Don't show buttons when the element has text
+        if (el.innerText.trim() !== '') {
+            return false;
+        }
+
+        // Get class names used by addons
+        Object.keys(this._plugin.initializedAddons).forEach((addonName) => {
+            const addon = this._plugin.initializedAddons[addonName];
+            if (addon.elementClassName) {
+                addonClassNames.push(addon.elementClassName);
+            }
+        });
+
+        // Don't show buttons if the element is an addon element
+        // - when the element has an addon class, or some of its parents have it
+        addonClassNames.forEach((className) => {
+            if (el.classList.contains(className) || utils.getClosestWithClassName(el, className)) {
+                isAddon = true;
+                return;
+            }
+        });
+
+        return !isAddon;
+    }
+
+    selectElement(el) {
+        this.selectedElement = el;
+    }
+
+    deselectElement() {
+        this.selectedElement = null;
     }
 
     showButtons() {

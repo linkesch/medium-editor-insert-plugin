@@ -74,3 +74,6 @@
 
 .medium-editor-insert-buttons-active {
   display: block; }
+
+.medium-editor-insert-image-active {
+  outline: 2px solid #000; }
