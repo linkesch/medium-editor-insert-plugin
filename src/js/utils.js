@@ -1,4 +1,4 @@
-export default {
+const utils = {
     ucfirst: (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
@@ -19,11 +19,25 @@ export default {
         }) ? true : false;
     },
 
-    getElementsByClassName: (editors, className) => {
+    getElementsByClassName: (parents, className) => {
         const results = [];
 
-        editors.forEach((editor) => {
+        Array.prototype.forEach.call(parents, (editor) => {
             const elements = editor.getElementsByClassName(className);
+
+            Array.prototype.forEach.call(elements, (element) => {
+                results.push(element);
+            });
+        });
+
+        return results;
+    },
+
+    getElementsByTagName: (parents, tagName) => {
+        const results = [];
+
+        Array.prototype.forEach.call(parents, (editor) => {
+            const elements = editor.getElementsByTagName(tagName);
 
             Array.prototype.forEach.call(elements, (element) => {
                 results.push(element);
@@ -33,3 +47,5 @@ export default {
         return results;
     }
 };
+
+export default utils;

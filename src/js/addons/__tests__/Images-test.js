@@ -98,7 +98,72 @@ describe('Images', () => {
         document.dispatchEvent(event);
         expect(container.getElementsByTagName('figure').length).toBe(0);
         expect(container.getElementsByClassName('medium-editor-insert-images').length).toBe(0);
+        expect(addon.deleteFile).toHaveBeenCalled();
+    });
+
+    it('should delete image even no image is selected but backspace is pressed in text', () => {
+        let p;
+        const event = new Event('keydown');
+        event.which = MediumEditor.util.keyCode.BACKSPACE;
+
+        spyOn(addon, 'deleteFile');
+
+        container.innerHTML = `<div class="medium-editor-insert-images">
+            <figure><img src="#" alt="" /></figure>
+        </div>
+        <p>asd</p>`;
+
+        p = container.getElementsByTagName('p')[0];
+        MediumEditor.selection.moveCursor(document, p, 0);
+        document.dispatchEvent(event);
+
+        expect(container.getElementsByTagName('figure').length).toBe(0);
+        expect(container.getElementsByClassName('medium-editor-insert-images').length).toBe(0);
         expect(container.getElementsByTagName('p').length).toBe(1);
+        expect(addon.deleteFile).toHaveBeenCalled();
+    });
+
+    it('should delete image even no image is selected but delete is pressed in text', () => {
+        let p;
+        const event = new Event('keydown');
+        event.which = MediumEditor.util.keyCode.DELETE;
+
+        spyOn(addon, 'deleteFile');
+
+        container.innerHTML = `<p>asd</p>
+        <div class="medium-editor-insert-images">
+            <figure><img src="#" alt="" /></figure>
+        </div>`;
+
+        p = container.getElementsByTagName('p')[0];
+        MediumEditor.selection.moveCursor(document, p.firstChild, p.firstChild.textContent.length);
+        document.dispatchEvent(event);
+
+        expect(container.getElementsByTagName('figure').length).toBe(0);
+        expect(container.getElementsByClassName('medium-editor-insert-images').length).toBe(0);
+        expect(container.getElementsByTagName('p').length).toBe(1);
+        expect(addon.deleteFile).toHaveBeenCalled();
+    });
+
+    it('should delete image even image is in selection and backspace is pressed', () => {
+        let p1, p2;
+        const event = new Event('keydown');
+        event.which = MediumEditor.util.keyCode.BACKSPACE;
+
+        spyOn(addon, 'deleteFile');
+
+        container.innerHTML = `<p>start</p>
+        <div class="medium-editor-insert-images">
+            <figure><img src="#" alt="" /></figure>
+        </div>
+        <p>end</p>`;
+
+        p1 = container.getElementsByTagName('p')[0];
+        p2 = container.getElementsByTagName('p')[1];
+
+        MediumEditor.selection.select(document, p1, 0, p2.firstChild, p2.firstChild.textContent.length);
+        document.dispatchEvent(event);
+
         expect(addon.deleteFile).toHaveBeenCalled();
     });
 

@@ -83,4 +83,23 @@ describe('utils', () => {
             test2.remove();
         });
     });
+
+    describe('getElementsByTagName()', () => {
+        it('should return children with tag name that belongs to provided elements', () => {
+            const parent = document.createElement('div'),
+                test = document.createElement('div'),
+                test2 = document.createElement('div');
+
+            parent.appendChild(test);
+            document.body.appendChild(parent);
+            document.body.appendChild(test2);
+
+            expect(utils.getElementsByTagName([parent], 'div').length).toBe(1);
+            expect(utils.getElementsByTagName([parent], 'div')[0]).toBe(test);
+            expect(utils.getElementsByTagName([parent], 'img').length).toBe(0);
+
+            parent.remove();
+            test2.remove();
+        });
+    });
 });

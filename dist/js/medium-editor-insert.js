@@ -97,7 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.default = {
+	var utils = {
 	    ucfirst: function ucfirst(str) {
 	        return str.charAt(0).toUpperCase() + str.slice(1);
 	    },
@@ -120,11 +120,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }) ? true : false;
 	    },
 
-	    getElementsByClassName: function getElementsByClassName(editors, className) {
+	    getElementsByClassName: function getElementsByClassName(parents, className) {
 	        var results = [];
 
-	        editors.forEach(function (editor) {
+	        Array.prototype.forEach.call(parents, function (editor) {
 	            var elements = editor.getElementsByClassName(className);
+
+	            Array.prototype.forEach.call(elements, function (element) {
+	                results.push(element);
+	            });
+	        });
+
+	        return results;
+	    },
+
+	    getElementsByTagName: function getElementsByTagName(parents, tagName) {
+	        var results = [];
+
+	        Array.prototype.forEach.call(parents, function (editor) {
+	            var elements = editor.getElementsByTagName(tagName);
 
 	            Array.prototype.forEach.call(elements, function (element) {
 	                results.push(element);
@@ -134,6 +148,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return results;
 	    }
 	};
+
+	exports.default = utils;
 	module.exports = exports['default'];
 
 /***/ },
@@ -659,28 +675,83 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this5 = this;
 
 	            if ([MediumEditor.util.keyCode.BACKSPACE, MediumEditor.util.keyCode.DELETE].indexOf(e.which) > -1) {
-	                var images = _utils2.default.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active');
+	                (function () {
+	                    var images = _utils2.default.getElementsByClassName(_this5._plugin.getEditorElements(), 'medium-editor-insert-image-active'),
+	                        selection = window.getSelection();
+	                    var selectedHtml = void 0;
 
-	                if (images.length) {
-	                    e.preventDefault();
+	                    // Remove image even if it's not selected, but backspace/del is pressed in text
+	                    if (selection && selection.rangeCount) {
+	                        var range = MediumEditor.selection.getSelectionRange(document),
+	                            focusedElement = MediumEditor.selection.getSelectedParentElement(range),
+	                            caretPosition = MediumEditor.selection.getCaretOffsets(focusedElement).left;
+	                        var sibling = void 0;
 
-	                    images.forEach(function (image) {
-	                        var wrapper = _utils2.default.getClosestWithClassName(image, 'medium-editor-insert-images');
-	                        _this5.deleteFile(image.src);
+	                        // Is backspace pressed and caret is at the beginning of a paragraph, get previous element
+	                        if (e.which === MediumEditor.util.keyCode.BACKSPACE && caretPosition === 0) {
+	                            sibling = focusedElement.previousElementSibling;
+	                            // Is del pressed and caret is at the end of a paragraph, get next element
+	                        } else if (e.which === MediumEditor.util.keyCode.DELETE && caretPosition === focusedElement.innerText.length) {
+	                                sibling = focusedElement.nextElementSibling;
+	                            }
 
-	                        image.parentNode.remove();
-
-	                        if (wrapper.childElementCount === 0) {
-	                            var next = document.createElement('p');
-	                            next.innerHTML = '<br />';
-
-	                            wrapper.parentNode.insertBefore(next, wrapper);
-	                            MediumEditor.selection.moveCursor(document, next, 0);
-
-	                            wrapper.remove();
+	                        if (sibling && sibling.classList.contains('medium-editor-insert-images')) {
+	                            var newImages = sibling.getElementsByTagName('img');
+	                            Array.prototype.forEach.call(newImages, function (image) {
+	                                images.push(image);
+	                            });
 	                        }
-	                    });
-	                }
+
+	                        // If text is selected, find images in the selection
+	                        selectedHtml = MediumEditor.selection.getSelectionHtml(document);
+	                        if (selectedHtml) {
+	                            var temp = document.createElement('div');
+	                            var wrappers = void 0,
+	                                _newImages = void 0;
+	                            temp.innerHTML = selectedHtml;
+
+	                            wrappers = temp.getElementsByClassName('medium-editor-insert-images');
+	                            _newImages = _utils2.default.getElementsByTagName(wrappers, 'img');
+
+	                            Array.prototype.forEach.call(_newImages, function (image) {
+	                                images.push(image);
+	                            });
+	                        }
+	                    }
+
+	                    if (images.length) {
+	                        if (!selectedHtml) {
+	                            e.preventDefault();
+	                        }
+
+	                        images.forEach(function (image) {
+	                            var wrapper = _utils2.default.getClosestWithClassName(image, 'medium-editor-insert-images');
+	                            _this5.deleteFile(image.src);
+
+	                            image.parentNode.remove();
+
+	                            // If wrapper has no images anymore, remove it
+	                            if (wrapper.childElementCount === 0) {
+	                                var next = wrapper.nextElementSibling,
+	                                    prev = wrapper.previousElementSibling;
+
+	                                wrapper.remove();
+
+	                                // If there is no selection, move cursor at the beginning of next paragraph (if delete is pressed),
+	                                // or nove it at the end of previous paragraph (if backspace is pressed)
+	                                if (!selectedHtml) {
+	                                    if (next || prev) {
+	                                        if (next && e.which === MediumEditor.util.keyCode.DELETE || !prev) {
+	                                            MediumEditor.selection.moveCursor(document, next, 0);
+	                                        } else {
+	                                            MediumEditor.selection.moveCursor(document, prev.lastChild, prev.lastChild.textContent.length);
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        });
+	                    }
+	                })();
 	            }
 	        }
 	    }, {
