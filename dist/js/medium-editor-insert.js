@@ -483,6 +483,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils2 = _interopRequireDefault(_utils);
 
+	var _Toolbar = __webpack_require__(5);
+
+	var _Toolbar2 = _interopRequireDefault(_Toolbar);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -505,8 +509,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._plugin = plugin;
 	        this._editor = this._plugin.base;
 	        this.elementClassName = 'medium-editor-insert-images';
+	        this.activeClassName = 'medium-editor-insert-image-active';
 	        this.label = this.options.label;
 
+	        this.initToolbar();
 	        this.events();
 	    }
 
@@ -532,6 +538,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._plugin.on(this._input, 'change', this.uploadFiles.bind(this));
 
 	            this._input.click();
+	        }
+	    }, {
+	        key: 'initToolbar',
+	        value: function initToolbar() {
+	            this.toolbar = new _Toolbar2.default({
+	                plugin: this._plugin,
+	                type: 'images',
+	                activeClassName: this.activeClassName,
+	                buttons: [{
+	                    name: 'align-left',
+	                    action: 'left',
+	                    label: 'Left'
+	                }, {
+	                    name: 'align-center',
+	                    action: 'center',
+	                    label: 'Center'
+	                }, {
+	                    name: 'align-right',
+	                    action: 'right',
+	                    label: 'Right'
+	                }]
+	            });
+
+	            this._editor.extensions.push(this.toolbar);
 	        }
 	    }, {
 	        key: 'uploadFiles',
@@ -657,7 +687,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var el = e.target;
 
 	            if (el.nodeName.toLowerCase() === 'img' && _utils2.default.getClosestWithClassName(el, this.elementClassName)) {
-	                el.classList.add('medium-editor-insert-image-active');
+	                el.classList.add(this.activeClassName);
 
 	                this._editor.selectElement(el);
 	            }
@@ -665,30 +695,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'unselectImage',
 	        value: function unselectImage(e) {
+	            var _this5 = this;
+
 	            var el = e.target;
 	            var clickedImage = void 0,
 	                images = void 0;
 
 	            // Unselect all selected images. If an image is clicked, unselect all except this one.
-	            if (el.nodeName.toLowerCase() === 'img' && el.classList.contains('medium-editor-insert-image-active')) {
+	            if (el.nodeName.toLowerCase() === 'img' && el.classList.contains(this.activeClassName)) {
 	                clickedImage = el;
 	            }
 
-	            images = _utils2.default.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active');
+	            images = _utils2.default.getElementsByClassName(this._plugin.getEditorElements(), this.activeClassName);
 	            Array.prototype.forEach.call(images, function (image) {
 	                if (image !== clickedImage) {
-	                    image.classList.remove('medium-editor-insert-image-active');
+	                    image.classList.remove(_this5.activeClassName);
 	                }
 	            });
 	        }
 	    }, {
 	        key: 'removeImage',
 	        value: function removeImage(e) {
-	            var _this5 = this;
+	            var _this6 = this;
 
 	            if ([MediumEditor.util.keyCode.BACKSPACE, MediumEditor.util.keyCode.DELETE].indexOf(e.which) > -1) {
 	                (function () {
-	                    var images = _utils2.default.getElementsByClassName(_this5._plugin.getEditorElements(), 'medium-editor-insert-image-active'),
+	                    var images = _utils2.default.getElementsByClassName(_this6._plugin.getEditorElements(), _this6.activeClassName),
 	                        selection = window.getSelection();
 	                    var selectedHtml = void 0;
 
@@ -738,7 +770,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                        images.forEach(function (image) {
 	                            var wrapper = _utils2.default.getClosestWithClassName(image, 'medium-editor-insert-images');
-	                            _this5.deleteFile(image.src);
+	                            _this6.deleteFile(image.src);
 
 	                            image.parentNode.remove();
 
@@ -785,6 +817,235 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	exports.default = Images;
+	module.exports = exports['default'];
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utils = __webpack_require__(1);
+
+	var _utils2 = _interopRequireDefault(_utils);
+
+	var _ToolbarButton = __webpack_require__(15);
+
+	var _ToolbarButton2 = _interopRequireDefault(_ToolbarButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MediumEditorToolbar = MediumEditor.extensions.toolbar;
+
+	var Toolbar = function (_MediumEditorToolbar) {
+	    _inherits(Toolbar, _MediumEditorToolbar);
+
+	    function Toolbar(options) {
+	        _classCallCheck(this, Toolbar);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Toolbar).call(this, options));
+
+	        _this.name = options.type + 'Toolbar';
+
+	        options.buttons.forEach(function (buttonOptions) {
+	            var button = new _ToolbarButton2.default(Object.assign({}, {
+	                window: _this.plugin.window,
+	                document: _this.plugin.document,
+	                base: _this.plugin.base
+	            }, buttonOptions));
+
+	            button.init();
+	            _this.plugin.base.extensions.push(button);
+	        });
+
+	        _this.window = options.plugin.window;
+	        _this.document = options.plugin.document;
+	        _this.base = options.plugin.base;
+
+	        _this.init();
+	        return _this;
+	    }
+
+	    _createClass(Toolbar, [{
+	        key: 'createToolbar',
+	        value: function createToolbar() {
+	            var toolbar = this.document.createElement('div');
+
+	            toolbar.id = 'medium-editor-insert-' + this.type + '-toolbar-' + this.getEditorId();
+	            toolbar.className = 'medium-editor-toolbar';
+
+	            if (this.static) {
+	                toolbar.className += ' static-toolbar';
+	            } else if (this.relativeContainer) {
+	                toolbar.className += ' medium-editor-relative-toolbar';
+	            } else {
+	                toolbar.className += ' medium-editor-stalker-toolbar';
+	            }
+
+	            toolbar.appendChild(this.createToolbarButtons());
+
+	            // Add any forms that extensions may have
+	            this.forEachExtension(function (extension) {
+	                if (extension.hasForm) {
+	                    toolbar.appendChild(extension.getForm());
+	                }
+	            });
+
+	            this.attachEventHandlers();
+
+	            return toolbar;
+	        }
+	    }, {
+	        key: 'createToolbarButtons',
+	        value: function createToolbarButtons() {
+	            var _this2 = this;
+
+	            var ul = this.document.createElement('ul');
+	            var li = void 0,
+	                btn = void 0,
+	                buttons = void 0,
+	                extension = void 0,
+	                buttonName = void 0,
+	                buttonOpts = void 0;
+
+	            ul.id = 'medium-editor-insert-' + this.type + '-toolbar-actions' + this.getEditorId();
+	            ul.className = 'medium-editor-toolbar-actions';
+	            ul.style.display = 'block';
+
+	            this.buttons.forEach(function (button) {
+	                if (typeof button === 'string') {
+	                    buttonName = button;
+	                    buttonOpts = null;
+	                } else {
+	                    buttonName = button.name;
+	                    buttonOpts = button;
+	                }
+
+	                // If the button already exists as an extension, it'll be returned
+	                // othwerise it'll create the default built-in button
+	                extension = _this2.base.addBuiltInExtension(buttonName, buttonOpts);
+
+	                if (extension && typeof extension.getButton === 'function') {
+	                    btn = extension.getButton(_this2.base);
+	                    li = _this2.document.createElement('li');
+	                    if (MediumEditor.util.isElement(btn)) {
+	                        li.appendChild(btn);
+	                    } else {
+	                        li.innerHTML = btn;
+	                    }
+	                    ul.appendChild(li);
+	                }
+	            }, this);
+
+	            buttons = ul.querySelectorAll('button');
+	            if (buttons.length > 0) {
+	                buttons[0].classList.add(this.firstButtonClass);
+	                buttons[buttons.length - 1].classList.add(this.lastButtonClass);
+	            }
+
+	            return ul;
+	        }
+	    }, {
+	        key: 'checkState',
+	        value: function checkState() {
+	            var _this3 = this;
+
+	            var activeElements = void 0;
+
+	            if (this.base.preventSelectionUpdates) {
+	                return;
+	            }
+
+	            // Wait for elements to be selected
+	            setTimeout(function () {
+	                activeElements = _utils2.default.getElementsByClassName(_this3.getEditorElements(), _this3.activeClassName);
+
+	                // Hide toolbar when no elements are selected
+	                if (activeElements.length === 0) {
+	                    return _this3.hideToolbar();
+	                }
+
+	                // Now we know there's a focused editable with a selection
+	                _this3.showAndUpdateToolbar();
+	            }, 10);
+	        }
+	    }, {
+	        key: 'setToolbarPosition',
+	        value: function setToolbarPosition() {
+	            var container = _utils2.default.getElementsByClassName(this.getEditorElements(), this.activeClassName)[0];
+	            var anchorPreview = void 0;
+
+	            // If there isn't a valid selection, bail
+	            if (!container) {
+	                return this;
+	            }
+
+	            this.showToolbar();
+	            this.positionStaticToolbar(container);
+
+	            anchorPreview = this.base.getExtensionByName('anchor-preview');
+
+	            if (anchorPreview && typeof anchorPreview.hidePreview === 'function') {
+	                anchorPreview.hidePreview();
+	            }
+	        }
+	    }]);
+
+	    return Toolbar;
+	}(MediumEditorToolbar);
+
+	exports.default = Toolbar;
+	module.exports = exports['default'];
+
+/***/ },
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var ToolbarButton = MediumEditor.extensions.button.extend({
+	    init: function init() {
+	        this.button = this.document.createElement('button');
+	        this.button.classList.add('medium-editor-action');
+	        this.button.innerHTML = '<b>' + this.label + '</b>';
+
+	        this.on(this.button, 'click', this.handleClick.bind(this));
+	    },
+
+	    getButton: function getButton() {
+	        return this.button;
+	    },
+
+	    handleClick: function handleClick() {
+	        console.log(this.name + ' clicked!');
+	    }
+	});
+
+	exports.default = ToolbarButton;
 	module.exports = exports['default'];
 
 /***/ }

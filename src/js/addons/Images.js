@@ -1,4 +1,5 @@
 import utils from '../utils';
+import Toolbar from '../Toolbar';
 
 export default class Images {
 
@@ -17,8 +18,10 @@ export default class Images {
         this._plugin = plugin;
         this._editor = this._plugin.base;
         this.elementClassName = 'medium-editor-insert-images';
+        this.activeClassName = 'medium-editor-insert-image-active';
 		this.label = this.options.label;
 
+        this.initToolbar();
         this.events();
 	}
 
@@ -40,6 +43,33 @@ export default class Images {
 
 		this._input.click();
 	}
+
+    initToolbar() {
+        this.toolbar = new Toolbar({
+            plugin: this._plugin,
+            type: 'images',
+            activeClassName: this.activeClassName,
+            buttons: [
+                {
+                    name: 'align-left',
+                    action: 'left',
+                    label: 'Left'
+                },
+                {
+                    name: 'align-center',
+                    action: 'center',
+                    label: 'Center'
+                },
+                {
+                    name: 'align-right',
+                    action: 'right',
+                    label: 'Right'
+                }
+            ]
+        });
+
+        this._editor.extensions.push(this.toolbar);
+    }
 
 	uploadFiles() {
 		const paragraph = this._plugin.getCore().selectedElement;
@@ -152,7 +182,7 @@ export default class Images {
         const el = e.target;
 
         if (el.nodeName.toLowerCase() === 'img' && utils.getClosestWithClassName(el, this.elementClassName)) {
-            el.classList.add('medium-editor-insert-image-active');
+            el.classList.add(this.activeClassName);
 
             this._editor.selectElement(el);
         }
@@ -163,21 +193,21 @@ export default class Images {
         let clickedImage, images;
 
         // Unselect all selected images. If an image is clicked, unselect all except this one.
-        if (el.nodeName.toLowerCase() === 'img' && el.classList.contains('medium-editor-insert-image-active')) {
+        if (el.nodeName.toLowerCase() === 'img' && el.classList.contains(this.activeClassName)) {
             clickedImage = el;
         }
 
-        images = utils.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active');
+        images = utils.getElementsByClassName(this._plugin.getEditorElements(), this.activeClassName);
         Array.prototype.forEach.call(images, (image) => {
             if (image !== clickedImage) {
-                image.classList.remove('medium-editor-insert-image-active');
+                image.classList.remove(this.activeClassName);
             }
         });
     }
 
     removeImage(e) {
         if ([MediumEditor.util.keyCode.BACKSPACE, MediumEditor.util.keyCode.DELETE].indexOf(e.which) > -1) {
-            const images = utils.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active'),
+            const images = utils.getElementsByClassName(this._plugin.getEditorElements(), this.activeClassName),
                 selection = window.getSelection();
             let selectedHtml;
 
