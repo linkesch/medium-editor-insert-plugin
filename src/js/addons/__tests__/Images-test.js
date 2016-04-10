@@ -16,7 +16,7 @@ describe('Images', () => {
             }
         });
 
-        addon = plugin.initializedAddons.images;
+        addon = plugin.getAddon('images');
         jasmine.Ajax.install();
 	});
 

@@ -74,6 +74,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        embeds: true
 	    },
 
+	    _initializedAddons: {},
+
 	    init: function init() {
 	        MediumEditor.Extension.prototype.init.apply(this, arguments);
 
@@ -82,6 +84,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    destroy: function destroy() {
 	        this.core.removeButtons();
+	    },
+
+	    getCore: function getCore() {
+	        return this.core;
+	    },
+
+	    getAddons: function getAddons() {
+	        return this._initializedAddons;
+	    },
+
+	    getAddon: function getAddon(name) {
+	        return this._initializedAddons[name];
 	    }
 	});
 
@@ -219,8 +233,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function initAddons() {
 	            var _this2 = this;
 
-	            // Initialiez all default addons, we'll delete ones we don't need later
-	            this._plugin.initializedAddons = {
+	            // Initialize all default addons, we'll delete ones we don't need later
+	            this._plugin._initializedAddons = {
 	                images: new _Images2.default(this._plugin, this._plugin.addons.images),
 	                embeds: new _Embeds2.default(this._plugin, this._plugin.addons.embeds)
 	            };
@@ -229,9 +243,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var addonOptions = _this2._plugin.addons[name];
 
 	                // If the addon is custom one
-	                if (!_this2._plugin.initializedAddons[name]) {
+	                if (!_this2._plugin._initializedAddons[name]) {
 	                    if (typeof addonOptions === 'function') {
-	                        _this2._plugin.initializedAddons[name] = new addonOptions(_this2._plugin);
+	                        _this2._plugin._initializedAddons[name] = new addonOptions(_this2._plugin);
 	                    } else {
 	                        window.console.error('I don\'t know how to initialize custom "' + name + '" addon!');
 	                    }
@@ -239,15 +253,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                // Delete disabled addon
 	                if (!addonOptions) {
-	                    delete _this2._plugin.initializedAddons[name];
+	                    delete _this2._plugin._initializedAddons[name];
 	                }
 	            });
 	        }
 	    }, {
 	        key: 'addButtons',
 	        value: function addButtons() {
-	            var _this3 = this;
-
+	            var addons = this._plugin.getAddons();
 	            var html = void 0;
 
 	            this.buttons = document.createElement('div');
@@ -257,8 +270,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            html = '<a class="medium-editor-insert-buttons-show">+</a>\n            <ul class="medium-editor-insert-buttons-addons">';
 
-	            Object.keys(this._plugin.initializedAddons).forEach(function (name) {
-	                var addon = _this3._plugin.initializedAddons[name];
+	            Object.keys(addons).forEach(function (name) {
+	                var addon = addons[name];
 
 	                html += '<li><a class="medium-editor-insert-action" data-addon="' + name + '">' + addon.label + '</a></li>';
 	            });
@@ -326,9 +339,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'shouldDisplayButtonsOnElement',
 	        value: function shouldDisplayButtonsOnElement(el) {
-	            var _this4 = this;
-
-	            var addonClassNames = [];
+	            var addons = this._plugin.getAddons(),
+	                addonClassNames = [];
 	            var isAddon = false,
 	                belongsToEditor = false;
 
@@ -350,8 +362,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            // Get class names used by addons
-	            Object.keys(this._plugin.initializedAddons).forEach(function (addonName) {
-	                var addon = _this4._plugin.initializedAddons[addonName];
+	            Object.keys(addons).forEach(function (addonName) {
+	                var addon = addons[addonName];
 	                if (addon.elementClassName) {
 	                    addonClassNames.push(addon.elementClassName);
 	                }
@@ -402,7 +414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            e.preventDefault();
 
-	            this._plugin.initializedAddons[name].handleClick(e);
+	            this._plugin.getAddon(name).handleClick(e);
 	        }
 	    }]);
 
@@ -526,7 +538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function uploadFiles() {
 	            var _this2 = this;
 
-	            var paragraph = this._plugin.core.selectedElement;
+	            var paragraph = this._plugin.getCore().selectedElement;
 
 	            // Replace paragraph with div, because figure is a block element
 	            // and can't be nested inside paragraphs
@@ -534,7 +546,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var div = document.createElement('div');
 
 	                paragraph.parentNode.insertBefore(div, paragraph);
-	                this._plugin.core.selectElement(div);
+	                this._plugin.getCore().selectElement(div);
 	                paragraph.remove();
 	            }
 
@@ -550,7 +562,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _this2.upload(file, uid);
 	            });
 
-	            this._plugin.core.hideButtons();
+	            this._plugin.getCore().hideButtons();
 	        }
 	    }, {
 	        key: 'preview',
@@ -576,7 +588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            xhr.open("POST", this.options.uploadUrl, true);
 	            xhr.onreadystatechange = function () {
 	                if (xhr.readyState === 4 && xhr.status === 200) {
-	                    var image = _this4._plugin.core.selectedElement.querySelector('[data-uid="' + uid + '"]');
+	                    var image = _this4._plugin.getCore().selectedElement.querySelector('[data-uid="' + uid + '"]');
 
 	                    if (image) {
 	                        _this4.replaceImage(image, xhr.responseText);
@@ -592,7 +604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'insertImage',
 	        value: function insertImage(url, uid) {
-	            var el = this._plugin.core.selectedElement,
+	            var el = this._plugin.getCore().selectedElement,
 	                figure = document.createElement('figure'),
 	                img = document.createElement('img');
 	            var domImage = void 0;

@@ -33,8 +33,8 @@ export default class Core {
     }
 
     initAddons() {
-        // Initialiez all default addons, we'll delete ones we don't need later
-        this._plugin.initializedAddons = {
+        // Initialize all default addons, we'll delete ones we don't need later
+        this._plugin._initializedAddons = {
             images: new Images(this._plugin, this._plugin.addons.images),
             embeds: new Embeds(this._plugin, this._plugin.addons.embeds)
         };
@@ -43,9 +43,9 @@ export default class Core {
             const addonOptions = this._plugin.addons[name];
 
             // If the addon is custom one
-            if (!this._plugin.initializedAddons[name]) {
+            if (!this._plugin._initializedAddons[name]) {
                 if (typeof addonOptions === 'function') {
-                    this._plugin.initializedAddons[name] = new addonOptions(this._plugin);
+                    this._plugin._initializedAddons[name] = new addonOptions(this._plugin);
                 } else {
                     window.console.error(`I don't know how to initialize custom "${name}" addon!`);
                 }
@@ -53,12 +53,13 @@ export default class Core {
 
             // Delete disabled addon
             if (!addonOptions) {
-                delete this._plugin.initializedAddons[name];
+                delete this._plugin._initializedAddons[name];
             }
         });
     }
 
     addButtons() {
+        const addons = this._plugin.getAddons();
         let html;
 
         this.buttons = document.createElement('div');
@@ -69,8 +70,8 @@ export default class Core {
         html = `<a class="medium-editor-insert-buttons-show">+</a>
             <ul class="medium-editor-insert-buttons-addons">`;
 
-        Object.keys(this._plugin.initializedAddons).forEach((name) => {
-            const addon = this._plugin.initializedAddons[name];
+        Object.keys(addons).forEach((name) => {
+            const addon = addons[name];
 
             html += `<li><a class="medium-editor-insert-action" data-addon="${name}">${addon.label}</a></li>`;
         });
@@ -128,7 +129,8 @@ export default class Core {
     }
 
     shouldDisplayButtonsOnElement(el) {
-        const addonClassNames = [];
+        const addons = this._plugin.getAddons(),
+            addonClassNames = [];
         let isAddon = false,
             belongsToEditor = false;
 
@@ -150,8 +152,8 @@ export default class Core {
         }
 
         // Get class names used by addons
-        Object.keys(this._plugin.initializedAddons).forEach((addonName) => {
-            const addon = this._plugin.initializedAddons[addonName];
+        Object.keys(addons).forEach((addonName) => {
+            const addon = addons[addonName];
             if (addon.elementClassName) {
                 addonClassNames.push(addon.elementClassName);
             }
@@ -196,7 +198,7 @@ export default class Core {
 
         e.preventDefault();
 
-        this._plugin.initializedAddons[name].handleClick(e);
+        this._plugin.getAddon(name).handleClick(e);
     }
 
 }

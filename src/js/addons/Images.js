@@ -42,7 +42,7 @@ export default class Images {
 	}
 
 	uploadFiles() {
-		const paragraph = this._plugin.core.selectedElement;
+		const paragraph = this._plugin.getCore().selectedElement;
 
         // Replace paragraph with div, because figure is a block element
         // and can't be nested inside paragraphs
@@ -50,7 +50,7 @@ export default class Images {
 			const div = document.createElement('div');
 
 			paragraph.parentNode.insertBefore(div, paragraph);
-			this._plugin.core.selectElement(div);
+			this._plugin.getCore().selectElement(div);
 			paragraph.remove();
 		}
 
@@ -66,7 +66,7 @@ export default class Images {
 			this.upload(file, uid);
 		});
 
-		this._plugin.core.hideButtons();
+		this._plugin.getCore().hideButtons();
 	}
 
 	preview(file, uid) {
@@ -86,7 +86,7 @@ export default class Images {
 		xhr.open("POST", this.options.uploadUrl, true);
 		xhr.onreadystatechange = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                const image = this._plugin.core.selectedElement.querySelector(`[data-uid="${uid}"]`);
+                const image = this._plugin.getCore().selectedElement.querySelector(`[data-uid="${uid}"]`);
 
                 if (image) {
                     this.replaceImage(image, xhr.responseText);
@@ -101,7 +101,7 @@ export default class Images {
 	}
 
     insertImage(url, uid) {
-        const el = this._plugin.core.selectedElement,
+        const el = this._plugin.getCore().selectedElement,
             figure = document.createElement('figure'),
             img = document.createElement('img');
         let domImage;

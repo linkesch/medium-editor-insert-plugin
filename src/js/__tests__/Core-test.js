@@ -156,9 +156,9 @@ describe('Core', () => {
         const buttons = document.getElementsByClassName('medium-editor-insert-buttons'),
             actions = buttons[0].getElementsByClassName('medium-editor-insert-action');
 
-        spyOn(plugin.initializedAddons.images, 'handleClick');
+        spyOn(plugin.getAddon('images'), 'handleClick');
 
         actions[0].click();
-        expect(plugin.initializedAddons.images.handleClick).toHaveBeenCalled();
+        expect(plugin.getAddon('images').handleClick).toHaveBeenCalled();
     });
 });

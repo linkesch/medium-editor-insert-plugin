@@ -8,6 +8,8 @@ const MediumEditorInsert = MediumEditor.Extension.extend({
         embeds: true
     },
 
+    _initializedAddons: {},
+
     init: function() {
         MediumEditor.Extension.prototype.init.apply(this, arguments);
 
@@ -16,6 +18,18 @@ const MediumEditorInsert = MediumEditor.Extension.extend({
 
     destroy: function() {
         this.core.removeButtons();
+    },
+
+    getCore: function() {
+        return this.core;
+    },
+
+    getAddons: function () {
+        return this._initializedAddons;
+    },
+
+    getAddon: function(name) {
+        return this._initializedAddons[name];
     }
 });
 
