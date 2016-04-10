@@ -22,6 +22,7 @@ describe('Images', () => {
 
     afterEach(() => {
         editor.destroy();
+        container.remove();
         jasmine.Ajax.uninstall();
     });
 
@@ -64,6 +65,41 @@ describe('Images', () => {
 
         expect(images[0].classList.contains('medium-editor-insert-image-active')).toBeFalsy();
         expect(images[1].classList.contains('medium-editor-insert-image-active')).toBeTruthy();
+    });
+
+    it('should remove image on backspace', () => {
+        const event = new Event('keydown');
+        event.which = MediumEditor.util.keyCode.BACKSPACE;
+
+        spyOn(addon, 'deleteFile');
+
+        container.innerHTML = `<div class="medium-editor-insert-images">
+            <figure><img src="#" alt="" class="medium-editor-insert-image-active" /></figure>
+            <figure><img src="#" alt="" /></figure>
+        </div>`;
+
+        document.dispatchEvent(event);
+        expect(container.getElementsByTagName('figure').length).toBe(1);
+        expect(container.getElementsByClassName('medium-editor-insert-images').length).toBe(1);
+        expect(container.getElementsByTagName('p').length).toBe(0);
+        expect(addon.deleteFile).toHaveBeenCalled();
+    });
+
+    it('should remove whole wrapper on backspace when there are no images left', () => {
+        const event = new Event('keydown');
+        event.which = MediumEditor.util.keyCode.BACKSPACE;
+
+        spyOn(addon, 'deleteFile');
+
+        container.innerHTML = `<div class="medium-editor-insert-images">
+            <figure><img src="#" alt="" class="medium-editor-insert-image-active" /></figure>
+        </div>`;
+
+        document.dispatchEvent(event);
+        expect(container.getElementsByTagName('figure').length).toBe(0);
+        expect(container.getElementsByClassName('medium-editor-insert-images').length).toBe(0);
+        expect(container.getElementsByTagName('p').length).toBe(1);
+        expect(addon.deleteFile).toHaveBeenCalled();
     });
 
     describe('handleClick()', () => {
@@ -221,6 +257,24 @@ describe('Images', () => {
 
             expect(image.src).toContain('02.jpg');
             expect(image.hasAttribute('data-uid')).toBeFalsy();
+        });
+    });
+
+    describe('deleteImage()', () => {
+        it('should create AJAX call', () => {
+            spyOn(XMLHttpRequest.prototype, 'open');
+            spyOn(XMLHttpRequest.prototype, 'send');
+
+            addon.options.deleteData = {
+                'CSRF': 'abcd123'
+            };
+            addon.deleteFile('01.jpg');
+
+            expect(XMLHttpRequest.prototype.open).toHaveBeenCalledWith('DELETE', 'delete.php', true);
+            expect(XMLHttpRequest.prototype.send).toHaveBeenCalledWith({
+                file: '01.jpg',
+                CSRF: 'abcd123'
+            });
         });
     });
 });

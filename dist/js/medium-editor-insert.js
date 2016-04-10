@@ -118,6 +118,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return MediumEditor.util.traverseUp(el, function (element) {
 	            return element === parent;
 	        }) ? true : false;
+	    },
+
+	    getElementsByClassName: function getElementsByClassName(editors, className) {
+	        var results = [];
+
+	        editors.forEach(function (editor) {
+	            var elements = editor.getElementsByClassName(className);
+
+	            Array.prototype.forEach.call(elements, function (element) {
+	                results.push(element);
+	            });
+	        });
+
+	        return results;
 	    }
 	};
 	module.exports = exports['default'];
@@ -452,7 +466,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.options = {
 	            label: '<span class="fa fa-camera"></span>',
 	            preview: true,
-	            uploadUrl: 'upload.php'
+	            uploadUrl: 'upload.php',
+	            deleteUrl: 'delete.php',
+	            deleteMethod: 'DELETE',
+	            deleteData: {}
 	        };
 
 	        Object.assign(this.options, options);
@@ -471,6 +488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this = this;
 
 	            this._plugin.on(document, 'click', this.unselectImage.bind(this));
+	            this._plugin.on(document, 'keydown', this.removeImage.bind(this));
 
 	            this._plugin.getEditorElements().forEach(function (editor) {
 	                _this._plugin.on(editor, 'click', _this.selectImage.bind(_this));
@@ -560,8 +578,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function insertImage(url, uid) {
 	            var el = this._plugin.core.selectedElement,
 	                figure = document.createElement('figure'),
-	                img = document.createElement('img'),
-	                domImage = new Image();
+	                img = document.createElement('img');
+	            var domImage = void 0;
 
 	            img.alt = '';
 
@@ -570,12 +588,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            // If we're dealing with a preview image,
-	            // we don't have to preload it befor displaying
+	            // we don't have to preload it before displaying
 	            if (url.match(/^data:/)) {
 	                img.src = url;
 	                figure.appendChild(img);
 	                el.appendChild(figure);
 	            } else {
+	                domImage = new Image();
 	                domImage.onload = function () {
 	                    img.src = domImage.src;
 	                    figure.appendChild(img);
@@ -611,28 +630,71 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (el.nodeName.toLowerCase() === 'img' && _utils2.default.getClosestWithClassName(el, this.elementClassName)) {
 	                el.classList.add('medium-editor-insert-image-active');
+
+	                this._editor.selectElement(el);
 	            }
 	        }
 	    }, {
 	        key: 'unselectImage',
 	        value: function unselectImage(e) {
 	            var el = e.target;
-	            var clickedImage = void 0;
+	            var clickedImage = void 0,
+	                images = void 0;
 
 	            // Unselect all selected images. If an image is clicked, unselect all except this one.
 	            if (el.nodeName.toLowerCase() === 'img' && el.classList.contains('medium-editor-insert-image-active')) {
 	                clickedImage = el;
 	            }
 
-	            this._plugin.getEditorElements().forEach(function (editor) {
-	                var images = editor.getElementsByClassName('medium-editor-insert-image-active');
-
-	                Array.prototype.forEach.call(images, function (image) {
-	                    if (image !== clickedImage) {
-	                        image.classList.remove('medium-editor-insert-image-active');
-	                    }
-	                });
+	            images = _utils2.default.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active');
+	            Array.prototype.forEach.call(images, function (image) {
+	                if (image !== clickedImage) {
+	                    image.classList.remove('medium-editor-insert-image-active');
+	                }
 	            });
+	        }
+	    }, {
+	        key: 'removeImage',
+	        value: function removeImage(e) {
+	            var _this5 = this;
+
+	            if ([MediumEditor.util.keyCode.BACKSPACE, MediumEditor.util.keyCode.DELETE].indexOf(e.which) > -1) {
+	                var images = _utils2.default.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active');
+
+	                if (images.length) {
+	                    e.preventDefault();
+
+	                    images.forEach(function (image) {
+	                        var wrapper = _utils2.default.getClosestWithClassName(image, 'medium-editor-insert-images');
+	                        _this5.deleteFile(image.src);
+
+	                        image.parentNode.remove();
+
+	                        if (wrapper.childElementCount === 0) {
+	                            var next = document.createElement('p');
+	                            next.innerHTML = '<br />';
+
+	                            wrapper.parentNode.insertBefore(next, wrapper);
+	                            MediumEditor.selection.moveCursor(document, next, 0);
+
+	                            wrapper.remove();
+	                        }
+	                    });
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'deleteFile',
+	        value: function deleteFile(image) {
+	            if (this.options.deleteUrl) {
+	                var xhr = new XMLHttpRequest(),
+	                    data = Object.assign({}, {
+	                    file: image
+	                }, this.options.deleteData);
+
+	                xhr.open(this.options.deleteMethod, this.options.deleteUrl, true);
+	                xhr.send(data);
+	            }
 	        }
 	    }]);
 

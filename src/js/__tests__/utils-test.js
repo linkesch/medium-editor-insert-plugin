@@ -1,7 +1,7 @@
 import utils from '../utils';
 
 describe('utils', () => {
-    describe('ucfirst', () => {
+    describe('ucfirst()', () => {
         it('should capitalize first letter', () => {
             expect(utils.ucfirst('test')).toBe('Test');
             expect(utils.ucfirst('TEST')).toBe('TEST');
@@ -9,7 +9,7 @@ describe('utils', () => {
         });
     });
 
-    describe('generateRandomString', () => {
+    describe('generateRandomString()', () => {
         it('should generate random string', () => {
             const string1 = utils.generateRandomString(),
                 string2 = utils.generateRandomString();
@@ -26,7 +26,7 @@ describe('utils', () => {
         });
     });
 
-    describe('getClosestWithClassName', () => {
+    describe('getClosestWithClassName()', () => {
         it('should return closest parent with provided class name', () => {
             const grandparent = document.createElement('div'),
                 parent = document.createElement('div'),
@@ -44,7 +44,7 @@ describe('utils', () => {
         });
     });
 
-    describe('isChildOf', () => {
+    describe('isChildOf()', () => {
         it('should return boolean if element is child of provided parent', () => {
             const grandparent = document.createElement('div'),
                 parent = document.createElement('div'),
@@ -60,6 +60,27 @@ describe('utils', () => {
             expect(utils.isChildOf(child, parent)).toBeTruthy();
             expect(utils.isChildOf(child, grandparent)).toBeTruthy();
             expect(utils.isChildOf(child, notRelative)).toBeFalsy();
+        });
+    });
+
+    describe('getElementsByClassName()', () => {
+        it('should return children with class name that belongs to provided elements', () => {
+            const parent = document.createElement('div'),
+                test = document.createElement('div'),
+                test2 = document.createElement('div');
+            test.classList.add('test');
+            test2.classList.add('test2');
+
+            parent.appendChild(test);
+            document.body.appendChild(parent);
+            document.body.appendChild(test2);
+
+            expect(utils.getElementsByClassName([parent], 'test').length).toBe(1);
+            expect(utils.getElementsByClassName([parent], 'test')[0]).toBe(test);
+            expect(utils.getElementsByClassName([parent], 'test2').length).toBe(0);
+
+            parent.remove();
+            test2.remove();
         });
     });
 });

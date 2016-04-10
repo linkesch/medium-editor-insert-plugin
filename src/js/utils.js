@@ -17,5 +17,19 @@ export default {
         return MediumEditor.util.traverseUp(el, (element) => {
             return element === parent;
         }) ? true : false;
+    },
+
+    getElementsByClassName: (editors, className) => {
+        const results = [];
+
+        editors.forEach((editor) => {
+            const elements = editor.getElementsByClassName(className);
+
+            Array.prototype.forEach.call(elements, (element) => {
+                results.push(element);
+            });
+        });
+
+        return results;
     }
 };

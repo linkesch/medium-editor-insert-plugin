@@ -6,7 +6,10 @@ export default class Images {
 		this.options = {
 			label: '<span class="fa fa-camera"></span>',
 			preview: true,
-			uploadUrl: 'upload.php'
+			uploadUrl: 'upload.php',
+            deleteUrl: 'delete.php',
+            deleteMethod: 'DELETE',
+            deleteData: {}
 		};
 
 		Object.assign(this.options, options);
@@ -21,6 +24,7 @@ export default class Images {
 
     events() {
         this._plugin.on(document, 'click', this.unselectImage.bind(this));
+        this._plugin.on(document, 'keydown', this.removeImage.bind(this));
 
         this._plugin.getEditorElements().forEach((editor) => {
             this._plugin.on(editor, 'click', this.selectImage.bind(this));
@@ -149,27 +153,65 @@ export default class Images {
 
         if (el.nodeName.toLowerCase() === 'img' && utils.getClosestWithClassName(el, this.elementClassName)) {
             el.classList.add('medium-editor-insert-image-active');
+
+            this._editor.selectElement(el);
         }
     }
 
     unselectImage(e) {
         const el = e.target;
-        let clickedImage;
+        let clickedImage, images;
 
         // Unselect all selected images. If an image is clicked, unselect all except this one.
         if (el.nodeName.toLowerCase() === 'img' && el.classList.contains('medium-editor-insert-image-active')) {
             clickedImage = el;
         }
 
-        this._plugin.getEditorElements().forEach((editor) => {
-            const images = editor.getElementsByClassName('medium-editor-insert-image-active');
-
-            Array.prototype.forEach.call(images, (image) => {
-                if (image !== clickedImage) {
-                    image.classList.remove('medium-editor-insert-image-active');
-                }
-            });
+        images = utils.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active');
+        Array.prototype.forEach.call(images, (image) => {
+            if (image !== clickedImage) {
+                image.classList.remove('medium-editor-insert-image-active');
+            }
         });
+    }
+
+    removeImage(e) {
+        if ([MediumEditor.util.keyCode.BACKSPACE, MediumEditor.util.keyCode.DELETE].indexOf(e.which) > -1) {
+            const images = utils.getElementsByClassName(this._plugin.getEditorElements(), 'medium-editor-insert-image-active');
+
+            if (images.length) {
+                e.preventDefault();
+
+                images.forEach((image) => {
+                    const wrapper = utils.getClosestWithClassName(image, 'medium-editor-insert-images');
+                    this.deleteFile(image.src);
+
+                    image.parentNode.remove();
+
+                    if (wrapper.childElementCount === 0) {
+                        const next = document.createElement('p');
+                        next.innerHTML = '<br />';
+
+                        wrapper.parentNode.insertBefore(next, wrapper);
+                        MediumEditor.selection.moveCursor(document, next, 0);
+
+                        wrapper.remove();
+                    }
+                });
+            }
+        }
+    }
+
+    deleteFile(image) {
+        if (this.options.deleteUrl) {
+            const xhr = new XMLHttpRequest(),
+                data = Object.assign({}, {
+                    file: image
+                }, this.options.deleteData);
+
+            xhr.open(this.options.deleteMethod, this.options.deleteUrl, true);
+            xhr.send(data);
+        }
     }
 
 }
