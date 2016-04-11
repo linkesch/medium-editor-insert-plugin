@@ -348,7 +348,7 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        $.proxy(this, 'showImage', data.result.files[0].url, data, data.result.files[0])();
 
         this.core.clean();
         this.sorting();
@@ -361,7 +361,7 @@
      * @returns {void}
      */
 
-    Images.prototype.showImage = function (img, data) {
+    Images.prototype.showImage = function (img, data, file) {
         var $place = this.$el.find('.medium-insert-active'),
             domImage,
             that;
@@ -376,6 +376,8 @@
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+                data.context.find('img').attr('image-width', file.width);
+                data.context.find('img').attr('image-height', file.height);
 
                 if (this.options.uploadCompleted) {
                     this.options.uploadCompleted(data.context, data);

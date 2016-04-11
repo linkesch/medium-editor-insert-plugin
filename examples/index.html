@@ -71,13 +71,38 @@
     <script src="../src/js/images.js"></script>
 
     <script>
-        var editor = new MediumEditor('.editable');
+      var editor = new MediumEditor('.editable');
 
-        $(function () {
-            $('.editable').mediumInsert({
-                editor: editor
-            });
-        });
+      $(function () {
+          $('.editable').mediumInsert({
+              editor: editor,
+              addons: {
+                  images: {
+                      styles: false,
+                      actions: false
+                  },
+                  embeds: {
+                    styles: false,
+                    parseOnPaste: true,
+                    oembedProxy: null,
+                    removeEmbedOnSerialization: true,
+                    toolbarEnabled: false,
+                    scrapperProxy: function(url, cb) {
+                      cb(null, {
+                        title: 'The awesome wiselike site',
+                        description: 'Wiselike where authors, entrepeneurs, designers, architects and a lot of interesting people gather to ask interesting questions',
+                        domain: 'www.wiselike.com',
+                        image: 'https://cdn-images-1.medium.com/fit/c/320/320/0*bNjfj29TaIFGzJbn.'
+                      });
+                    }
+                  }
+              }
+          });
+      });
+
+      window.getHTML = function() {
+        console.log(editor.serialize());
+      }
     </script>
 </body>
 </html>

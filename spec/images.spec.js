@@ -180,7 +180,7 @@ describe('Images addon', function () {
 
         this.addon.showImage('http://image.co', {
             context: context
-        });
+        }, {});
         stubbedImage.onload();
     });
 
@@ -199,7 +199,7 @@ describe('Images addon', function () {
 
         this.addon.showImage('http://image.co', {
             context: context
-        });
+        }, {});
         stubbedImage.onload();
     });
 

@@ -120,7 +120,6 @@
       text-decoration: none;
       background: #fff;
       -webkit-transform: rotate(0);
-          -ms-transform: rotate(0);
               transform: rotate(0);
       -webkit-transition: -webkit-transform 100ms;
               transition: transform 100ms; }
@@ -128,7 +127,6 @@
         -webkit-transition: -webkit-transform 250ms;
                 transition: transform 250ms;
         -webkit-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
                 transform: rotate(45deg); }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
@@ -222,3 +220,32 @@
   height: 100%;
   top: 0;
   left: 0; }
+
+.medium-insert-embeds .scraped-container, .mediumInsert-embeds .scraped-container {
+  overflow: hidden;
+  max-height: 280px;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.44);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(0, 0, 0, 0.09);
+  display: table;
+  width: 100%; }
+  .medium-insert-embeds .scraped-container .info, .mediumInsert-embeds .scraped-container .info {
+    display: table-cell;
+    text-align: left;
+    vertical-align: middle;
+    padding: 20px;
+    font-size: 16px;
+    text-decoration: none;
+    color: inherit; }
+    .medium-insert-embeds .scraped-container .info .title, .mediumInsert-embeds .scraped-container .info .title {
+      display: block;
+      color: rgba(0, 0, 0, 0.9); }
+    .medium-insert-embeds .scraped-container .info .description, .mediumInsert-embeds .scraped-container .info .description {
+      display: block; }
+  .medium-insert-embeds .scraped-container .image, .mediumInsert-embeds .scraped-container .image {
+    display: table-cell;
+    width: 160px;
+    height: 160px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center; }
