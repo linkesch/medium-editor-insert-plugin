@@ -13,17 +13,17 @@
             captionPlaceholder: 'Type caption (optional)',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<span class="fa fa-align-justify"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<span class="fa fa-align-left"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<span class="fa fa-align-right"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
@@ -289,12 +289,13 @@
      */
 
     Embeds.prototype.processPasted = function (e) {
+        var pastedUrl, linkRegEx;
         if ($(".medium-insert-embeds-active").length) {
             return;
         }
-        var pastedUrl = e.originalEvent.clipboardData.getData('text');
 
-        var linkRegEx = new RegExp('^(http(s?):)?\/\/','i');
+        pastedUrl = e.originalEvent.clipboardData.getData('text');
+        linkRegEx = new RegExp('^(http(s?):)?\/\/','i');
         if (linkRegEx.test(pastedUrl)) {
             if (this.options.oembedProxy) {
                 this.oembed(pastedUrl, true);
@@ -339,8 +340,7 @@
 
                 if (pasted) {
                     $.proxy(that, 'embed', html, url)();
-                }
-                else {
+                } else {
                     $.proxy(that, 'embed', html)();
                 }
             },
@@ -392,8 +392,7 @@
 
         if (pasted) {
             this.embed(html, url);
-        }
-        else {
+        } else {
             this.embed(html);
         }
     };
@@ -407,7 +406,8 @@
      */
 
     Embeds.prototype.embed = function (html, pastedUrl) {
-        var $place = this.$el.find('.medium-insert-embeds-active');
+        var $place = this.$el.find('.medium-insert-embeds-active'),
+            $div;
 
         if (!html) {
             alert('Incorrect URL format specified');
@@ -416,7 +416,7 @@
             if (html.indexOf('</script>') > -1) {
                 // Store embed code with <script> tag inside wrapper attribute value.
                 // Make nice attribute value escaping using jQuery.
-                var $div = $('<div>')
+                $div = $('<div>')
                     .attr('data-embed-code', html)
                     .html(html);
                 html = $('<div>').append($div).html();
@@ -435,8 +435,7 @@
                     html: html
                 }));
                 $place.text($place.text().replace(pastedUrl, ''));
-            }
-            else {
+            } else {
                 $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
                     html: html
                 }));
@@ -493,9 +492,10 @@
      */
 
     Embeds.prototype.selectEmbed = function (e) {
+        var that = this,
+            $embed;
         if (this.core.options.enabled) {
-            var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
-                that = this;
+            $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds');
 
             $embed.addClass('medium-insert-embeds-selected');
 
@@ -582,14 +582,14 @@
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2, top, mediumEditor, toolbarContainer;
 
         if ($embed.length === 0) {
             return;
         }
 
-        var mediumEditor = this.core.getEditor();
-        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+        mediumEditor = this.core.getEditor();
+        toolbarContainer = mediumEditor.options.elementsContainer || 'body';
 
         $(toolbarContainer).append(this.templates['src/js/templates/embeds-toolbar.hbs']({
             styles: this.options.styles,
