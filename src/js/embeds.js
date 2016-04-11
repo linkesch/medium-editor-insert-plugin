@@ -187,7 +187,6 @@
      * Extend editor's set content function
      */
      Embeds.prototype.editorSetContent = function(htmlContent) {
-
       var container = document.createElement('div');
       container.innerHTML = htmlContent;
 
@@ -216,8 +215,9 @@
 
         pNode.innerHTML = embedable;
 
-        this.core.getEditor()._setPreContent(pNode.innerHTML);
       }, this);
+
+      this.core.getEditor()._setPreContent(container.innerHTML);
     };
 
 

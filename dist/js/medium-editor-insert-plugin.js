@@ -997,7 +997,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      * Extend editor's set content function
      */
      Embeds.prototype.editorSetContent = function(htmlContent) {
-
       var container = document.createElement('div');
       container.innerHTML = htmlContent;
 
