@@ -31,6 +31,7 @@ module.exports = function (grunt) {
         jscs: {
             src: [
                 'src/js/*.js',
+                'spec/**/*.js',
                 '!src/js/templates.js'
             ],
             options: {

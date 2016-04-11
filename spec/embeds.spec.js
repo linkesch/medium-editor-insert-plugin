@@ -223,7 +223,6 @@ describe('Embeds addon', function () {
     });
 
     it('supports embedding youtube via paste', function () {
-        this.$el = $('.editable');
         var e = {
             originalEvent: {
                 clipboardData: {
@@ -233,6 +232,7 @@ describe('Embeds addon', function () {
                 }
             }
         };
+        this.$el = $('.editable');
         this.$el.append($('<p>https://www.youtube.com/watch?v=BROWqjuTM0g</p>'));
         this.addon.processPasted(e);
 
@@ -261,7 +261,6 @@ describe('Embeds addon', function () {
     });
 
     it('supports embedding vimeo via paste', function () {
-        this.$el = $('.editable');
         var e = {
             originalEvent: {
                 clipboardData: {
@@ -271,6 +270,7 @@ describe('Embeds addon', function () {
                 }
             }
         };
+        this.$el = $('.editable');
         this.$el.append($('<p>http://vimeo.com/2619976</p>'));
         this.addon.processPasted(e);
 
