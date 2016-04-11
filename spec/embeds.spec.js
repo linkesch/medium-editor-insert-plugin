@@ -298,6 +298,46 @@ describe('Embeds addon', function () {
         expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
     });
 
+    it('support embedding twitter', function () {
+        var $event = $.Event('keydown');
+
+        $event.which = 13;
+        $('#fixtures').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">https://twitter.com/medium_editor/status/694987296379125760</p></div>');
+        this.$el = $('.editable');
+        this.$el.mediumInsert({
+            addons: {
+                embeds: {
+                    oembedProxy: false
+                }
+            }
+        });
+        this.$el.trigger($event);
+
+        expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds .twitter-tweet').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
+    });
+
+    it('support embedding facebook', function () {
+        var $event = $.Event('keydown');
+
+        $event.which = 13;
+        $('#fixtures').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">https://www.facebook.com/cneistat/videos/vb.210351389002863/922328184471843/?type=2&theater</p></div>');
+        this.$el = $('.editable');
+        this.$el.mediumInsert({
+            addons: {
+                embeds: {
+                    oembedProxy: false
+                }
+            }
+        });
+        this.$el.trigger($event);
+
+        expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds .fb-post').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
+    });
+
     it('converts bad embed into text', function () {
         var $event = $.Event('keydown');
 

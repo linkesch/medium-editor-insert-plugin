@@ -337,15 +337,6 @@
                     return;
                 }
 
-                if (html && html.indexOf('</script>') > -1) {
-                    // Store embed code with <script> tag inside wrapper attribute value.
-                    // Make nice attribute value escaping using jQuery.
-                    var $div = $('<div>')
-                        .attr('data-embed-code', html)
-                        .html(html);
-                    html = $('<div>').append($div).html();
-                }
-
                 if (pasted) {
                     $.proxy(that, 'embed', html, url)();
                 }
@@ -382,7 +373,7 @@
     Embeds.prototype.parseUrl = function (url, pasted) {
         var html;
 
-        if (!(new RegExp(['youtube', 'youtu.be', 'vimeo', 'instagram'].join('|')).test(url))) {
+        if (!(new RegExp(['youtube', 'youtu.be', 'vimeo', 'instagram', 'twitter', 'facebook'].join('|')).test(url))) {
             $.proxy(this, 'convertBadEmbed', url)();
             return false;
         }
@@ -390,15 +381,20 @@
         html = url.replace(/\n?/g, '')
             .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video video-youtube"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
             .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<div class="video video-vimeo"><iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
-        //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
-        //.replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
+            .replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
+            .replace(/^(https:\/\/www\.facebook\.com\/(.*))$/, '<script src="//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.2" async></script><div class="fb-post" data-href="$1"><div class="fb-xfbml-parse-ignore"><a href="$1">Loading Facebook post...</a></div></div>')
             .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
+        if ((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) === false) {
+            $.proxy(this, 'convertBadEmbed', url)();
+            return false;
+        }
+
         if (pasted) {
-            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false, url);
+            this.embed(html, url);
         }
         else {
-            this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
+            this.embed(html);
         }
     };
 
@@ -417,6 +413,15 @@
             alert('Incorrect URL format specified');
             return false;
         } else {
+            if (html.indexOf('</script>') > -1) {
+                // Store embed code with <script> tag inside wrapper attribute value.
+                // Make nice attribute value escaping using jQuery.
+                var $div = $('<div>')
+                    .attr('data-embed-code', html)
+                    .html(html);
+                html = $('<div>').append($div).html();
+            }
+
             if (pastedUrl) {
                 // Get the element with the pasted url
                 // place the embed template and remove the pasted text
@@ -477,7 +482,7 @@
 
         this.core.triggerInput();
 
-        this.core.moveCaret($place);
+        this.core.moveCaret($empty);
     };
 
     /**
