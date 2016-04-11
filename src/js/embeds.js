@@ -70,6 +70,11 @@
         if (this.core.getEditor()) {
             this.core.getEditor()._serializePreEmbeds = this.core.getEditor().serialize;
             this.core.getEditor().serialize = this.editorSerialize.bind(this);
+
+            if (this.options.removeEmbedOnSerialization) {
+              this.core.getEditor()._setPreContent = this.core.getEditor().setContent;
+              this.core.getEditor().setContent = this.editorSetContent.bind(this);
+            }
         }
 
         this.init();
@@ -177,6 +182,44 @@
 
         return data;
     };
+
+    /**
+     * Extend editor's set content function
+     */
+     Embeds.prototype.editorSetContent = function(htmlContent) {
+
+      var container = document.createElement('div');
+      container.innerHTML = htmlContent;
+
+      var links = container.querySelectorAll('[data-embeded]');
+
+      Array.prototype.forEach.call(links, function(link) {
+        var href = link.href;
+        var caption = link.dataset ? link.dataset.caption : null;
+        caption = caption ? '<figcaption>' + caption + '</figcaption>' : '';
+
+        var embedable = href.replace(/\n?/g, '')
+          .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video video-youtube"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
+          .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<div class="video video-vimeo"><iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
+          .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
+
+        embedable = '<div class="medium-insert-embeds" data-embed-src="' + href + '">' +
+          '<figure>' +
+            '<div class="medium-insert-embed">' +
+              embedable +
+            '</div>' +
+              caption +
+          '</figure>' +
+        '</div>';
+
+        var pNode = link.parentNode;
+
+        pNode.innerHTML = embedable;
+
+        this.core.getEditor()._setPreContent(pNode.innerHTML);
+      }, this);
+    };
+
 
     /**
      * Add embedded element
