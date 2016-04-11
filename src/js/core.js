@@ -20,7 +20,7 @@
      * @return {string}
      */
 
-    function ucfirst (str) {
+    function ucfirst(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
@@ -35,7 +35,7 @@
      * @return {void}
      */
 
-    function Core (el, options) {
+    function Core(el, options) {
         var editor;
 
         this.el = el;
@@ -139,7 +139,7 @@
             $data.find('.medium-insert-buttons').remove();
 
             // Restore original embed code from embed wrapper attribute value.
-            $data.find('[data-embed-code]').each(function() {
+            $data.find('[data-embed-code]').each(function () {
                 var $this = $(this);
                 $this.html($this.attr('data-embed-code'));
             });
@@ -278,7 +278,7 @@
             }
 
             that.$el[addonName](options);
-            that.options.addons[addon] = that.$el.data('plugin_'+ addonName).options;
+            that.options.addons[addon] = that.$el.data('plugin_' + addonName).options;
         });
     };
 
@@ -390,12 +390,12 @@
             this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
             $.each(this.options.addons, function (addon) {
-                if ($el.closest('.medium-insert-'+ addon).length) {
+                if ($el.closest('.medium-insert-' + addon).length) {
                     $current = $el;
                 }
 
-                if ($current.closest('.medium-insert-'+ addon).length) {
-                    $p = $current.closest('.medium-insert-'+ addon);
+                if ($current.closest('.medium-insert-' + addon).length) {
+                    $p = $current.closest('.medium-insert-' + addon);
                     activeAddon = addon;
                     return;
                 }
@@ -430,7 +430,7 @@
 
         if (activeAddon) {
             $buttons.find('li').hide();
-            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();
+            $buttons.find('a[data-addon="' + activeAddon + '"]').parent().show();
         }
     };
 
@@ -517,7 +517,7 @@
             addon = $a.data('addon'),
             action = $a.data('action');
 
-        this.$el.data('plugin_'+ pluginName + ucfirst(addon))[action]();
+        this.$el.data('plugin_' + pluginName + ucfirst(addon))[action]();
     };
 
     /**
@@ -530,7 +530,7 @@
      */
 
     Core.prototype.moveCaret = function ($el, position) {
-        var range, sel, el;
+        var range, sel, el, textEl;
 
         position = position || 0;
         range = document.createRange();
@@ -538,7 +538,7 @@
         el = $el.get(0);
 
         if (!el.childNodes.length) {
-            var textEl = document.createTextNode(' ');
+            textEl = document.createTextNode(' ');
             el.appendChild(textEl);
         }
 
@@ -613,7 +613,7 @@
 
             if ($(that).is('textarea')) {
                 textareaId = $(that).attr('medium-editor-textarea-id');
-                that = $(that).siblings('[medium-editor-textarea-id="'+ textareaId +'"]').get(0);
+                that = $(that).siblings('[medium-editor-textarea-id="' + textareaId + '"]').get(0);
             }
 
             if (!$.data(that, 'plugin_' + pluginName)) {

@@ -22,22 +22,22 @@
             fileDeleteOptions: {},
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<span class="fa fa-align-justify"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<span class="fa fa-align-left"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<span class="fa fa-align-right"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>',
+                    label: '<span class="fa fa-th"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
@@ -239,10 +239,10 @@
             maxFileSize = this.options.fileUploadOptions.maxFileSize,
             reader;
 
-        if (acceptFileTypes && !acceptFileTypes.test(file['type'])) {
-            uploadErrors.push(this.options.messages.acceptFileTypesError + file['name']);
-        } else if (maxFileSize && file['size'] > maxFileSize) {
-            uploadErrors.push(this.options.messages.maxFileSizeError + file['name']);
+        if (acceptFileTypes && !acceptFileTypes.test(file.type)) {
+            uploadErrors.push(this.options.messages.acceptFileTypesError + file.name);
+        } else if (maxFileSize && file.size > maxFileSize) {
+            uploadErrors.push(this.options.messages.maxFileSizeError + file.name);
         }
         if (uploadErrors.length > 0) {
             alert(uploadErrors.join("\n"));
@@ -257,8 +257,7 @@
             $place = this.$el.find('.medium-insert-active');
             if ($place.next().is('p')) {
                 this.core.moveCaret($place.next());
-            }
-            else {
+            } else {
                 $place.after('<p><br></p>'); // add empty paragraph so we can move the caret to the next line.
                 this.core.moveCaret($place.next());
             }
@@ -434,9 +433,11 @@
      */
 
     Images.prototype.selectImage = function (e) {
+        var that = this,
+            $image;
+
         if (this.core.options.enabled) {
-            var $image = $(e.target),
-                that = this;
+            $image = $(e.target);
 
             this.$currentImage = $image;
 
@@ -570,12 +571,9 @@
 
     Images.prototype.deleteFile = function (file) {
         if (this.options.deleteScript) {
-            // If deleteMethod is somehow undefined, defaults to POST
-            var method = this.options.deleteMethod || 'POST';
-
             $.ajax($.extend(true, {}, {
                 url: this.options.deleteScript,
-                type: method,
+                type: this.options.deleteMethod || 'POST',
                 data: { file: file }
             }, this.options.fileDeleteOptions));
         }
@@ -591,10 +589,9 @@
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
+            mediumEditor = this.core.getEditor(),
+            toolbarContainer = mediumEditor.options.elementsContainer || 'body',
             $toolbar, $toolbar2, top;
-
-        var mediumEditor = this.core.getEditor();
-        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
 
         $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
@@ -643,13 +640,18 @@
      */
 
     Images.prototype.toolbarAction = function (e) {
-        if (this.$currentImage === null) return;
-        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
-            $li = $button.closest('li'),
-            $ul = $li.closest('ul'),
-            $lis = $ul.find('li'),
-            $p = this.$el.find('.medium-insert-active'),
-            that = this;
+        var that = this,
+            $button, $li, $ul, $lis, $p;
+
+        if (this.$currentImage === null) {
+            return;
+        }
+
+        $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button');
+        $li = $button.closest('li');
+        $ul = $li.closest('ul');
+        $lis = $ul.find('li');
+        $p = this.$el.find('.medium-insert-active');
 
         $button.addClass('medium-editor-button-active');
         $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
@@ -685,9 +687,14 @@
      */
 
     Images.prototype.toolbar2Action = function (e) {
-        if (this.$currentImage === null) return;
-        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
-            callback = this.options.actions[$button.data('action')].clicked;
+        var $button, callback;
+
+        if (this.$currentImage === null) {
+            return;
+        }
+
+        $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button');
+        callback = this.options.actions[$button.data('action')].clicked;
 
         if (callback) {
             callback(this.$el.find('.medium-insert-image-active'));

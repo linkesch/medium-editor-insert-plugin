@@ -1,0 +1,5 @@
+{
+    "preset": "crockford",
+    "verbose": true,
+    "disallowDanglingUnderscores": false
+}
