@@ -1,6 +1,6 @@
 /*global MediumEditor*/
 
-;(function ($, window, document, Util, undefined) {
+; (function ($, window, document, Util, undefined) {
 
     'use strict';
 
@@ -87,12 +87,12 @@
      * @return {void}
      */
 
-    function Images (el, options) {
+    function Images(el, options) {
         this.el = el;
         this.$el = $(el);
         this.$currentImage = null;
         this.templates = window.MediumInsert.Templates;
-        this.core = this.$el.data('plugin_'+ pluginName);
+        this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -253,9 +253,15 @@
 
         // Replace paragraph with div, because figure elements can't be inside paragraph
         if ($place.is('p')) {
-            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place.replaceWith('<div class="medium-insert-active">' + $place.html() + '</div>');
             $place = this.$el.find('.medium-insert-active');
-            this.core.moveCaret($place);
+            if ($place.next().is('p')) {
+                this.core.moveCaret($place.next());
+            }
+            else {
+                $place.after('<p><br></p>'); // add empty paragraph so we can move the caret to the next line.
+                this.core.moveCaret($place.next());
+            }
         }
 
         $place.addClass('medium-insert-images');
@@ -324,7 +330,7 @@
             progress = 100 - parseInt(data.loaded / data.total * 100, 10);
             $progressbar = data.context.find('.medium-insert-images-progress');
 
-            $progressbar.css('width', progress +'%');
+            $progressbar.css('width', progress + '%');
 
             if (progress === 0) {
                 $progressbar.remove();
@@ -388,7 +394,7 @@
 
             if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
                 $.each(this.options.styles, function (style, options) {
-                    var className = 'medium-insert-images-'+ style;
+                    var className = 'medium-insert-images-' + style;
 
                     $place.removeClass(className);
 
@@ -428,7 +434,7 @@
      */
 
     Images.prototype.selectImage = function (e) {
-        if(this.core.options.enabled) {
+        if (this.core.options.enabled) {
             var $image = $(e.target),
                 that = this;
 
@@ -584,7 +590,7 @@
             .show();
 
         $toolbar.find('button').each(function () {
-            if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {
+            if ($p.hasClass('medium-insert-images-' + $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
                 active = true;
             }
@@ -615,7 +621,7 @@
         $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
 
         $lis.find('button').each(function () {
-            var className = 'medium-insert-images-'+ $(this).data('action');
+            var className = 'medium-insert-images-' + $(this).data('action');
 
             if ($(this).hasClass('medium-editor-button-active')) {
                 $p.addClass(className);
