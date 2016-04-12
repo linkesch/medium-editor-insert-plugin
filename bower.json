@@ -1,6 +1,6 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "2.2.4",
+  "version": "2.3.0",
   "description": "jQuery insert plugin for MediumEditor",
   "homepage": "http://linkesch.com/medium-editor-insert-plugin",
   "main": [

@@ -1,4 +1,13 @@
 
+2.3.0 / 2016-04-12
+==================
+
+  * Add auto embedding urls as soon as they are pasted
+  * Add UMD wrapper and publish to NPM
+  * Fix deleting images when backspace/delete is pressed
+  * Re-enable facebook and twitter embedding without oEmbed
+  * Fix cursor position after image upload
+
 2.2.4 / 2016-04-05
 ==================
 
