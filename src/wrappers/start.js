@@ -1,6 +1,6 @@
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
+        define(['jquery', 'handlebars', 'medium-editor'], factory);
     } else if (typeof module === 'object' && module.exports) {
         module.exports = function( root, jQuery ) {
             if ( jQuery === undefined ) {
@@ -11,10 +11,10 @@
                     jQuery = require('jquery')(root);
                 }
             }
-            factory(jQuery);
+            factory(jQuery, Handlebars, MediumEditor);
             return jQuery;
         };
     } else {
-        factory(jQuery);
+        factory(jQuery, Handlebars, MediumEditor);
     }
-}(function ($) {
+}(function ($, Handlebars, MediumEditor) {
