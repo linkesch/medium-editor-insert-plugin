@@ -57,9 +57,15 @@
 
         // Extend editor's functions
         if (this.options && this.options.editor) {
-            this.options.editor._serialize = this.options.editor.serialize;
-            this.options.editor._destroy = this.options.editor.destroy;
-            this.options.editor._setup = this.options.editor.setup;
+            if (this.options.editor._serialize === undefined) {
+                this.options.editor._serialize = this.options.editor.serialize;
+            }
+            if (this.options.editor._destroy === undefined) {
+                this.options.editor._destroy = this.options.editor.destroy;
+            }
+            if (this.options.editor._setup === undefined) {
+                this.options.editor._setup = this.options.editor.setup;
+            }
             this.options.editor._hideInsertButtons = this.hideButtons;
 
             this.options.editor.serialize = this.editorSerialize;
