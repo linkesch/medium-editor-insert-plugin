@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.3.0 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.3.1 - jQuery insert plugin for MediumEditor
  *
  * http://linkesch.com/medium-editor-insert-plugin
  * 
@@ -9,24 +9,28 @@
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
+        define(['jquery', 'handlebars', 'medium-editor', 'blueimp-file-upload', 'jquery-sortable'], factory);
     } else if (typeof module === 'object' && module.exports) {
         module.exports = function( root, jQuery ) {
             if ( jQuery === undefined ) {
                 if ( typeof window !== 'undefined' ) {
                     jQuery = require('jquery');
+                    Handlebars = require('handlebars');
+                    MediumEditor = require('medium-editor');
                 }
                 else {
                     jQuery = require('jquery')(root);
+                    Handlebars = require('handlebars')(root);
+                    MediumEditor = require('medium-editor')(root);
                 }
             }
-            factory(jQuery);
+            factory(jQuery, Handlebars, MediumEditor);
             return jQuery;
         };
     } else {
-        factory(jQuery);
+        factory(jQuery, Handlebars, MediumEditor);
     }
-}(function ($) {
+}(function ($, Handlebars, MediumEditor) {
 
 this["MediumInsert"] = this["MediumInsert"] || {};
 this["MediumInsert"]["Templates"] = this["MediumInsert"]["Templates"] || {};
@@ -216,9 +220,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         // Extend editor's functions
         if (this.options && this.options.editor) {
-            this.options.editor._serialize = this.options.editor.serialize;
-            this.options.editor._destroy = this.options.editor.destroy;
-            this.options.editor._setup = this.options.editor.setup;
+            if (this.options.editor._serialize === undefined) {
+                this.options.editor._serialize = this.options.editor.serialize;
+            }
+            if (this.options.editor._destroy === undefined) {
+                this.options.editor._destroy = this.options.editor.destroy;
+            }
+            if (this.options.editor._setup === undefined) {
+                this.options.editor._setup = this.options.editor.setup;
+            }
             this.options.editor._hideInsertButtons = this.hideButtons;
 
             this.options.editor.serialize = this.editorSerialize;
@@ -317,7 +327,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Core.prototype.editorDestroy = function () {
         $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).disable();
+            if ($(el).data('plugin_' + pluginName) instanceof Core) {
+                $(el).data('plugin_' + pluginName).disable();
+            }
         });
 
         this._destroy();
@@ -333,7 +345,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this._setup();
 
         $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).enable();
+            if ($(el).data('plugin_' + pluginName) instanceof Core) {
+                $(el).data('plugin_' + pluginName).enable();
+            }
         });
     };
 

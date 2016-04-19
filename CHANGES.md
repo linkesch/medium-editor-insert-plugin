@@ -1,3 +1,8 @@
+2.3.1 / 2016-04-19
+==================
+
+  * Fix UMD dependencies (#314)
+  * Fix extending editor's functions (#310, #316)
 
 2.3.0 / 2016-04-12
 ==================
