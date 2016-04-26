@@ -38,8 +38,7 @@
     "medium-editor": "^5.15.0",
     "handlebars": "~4.0.0",
     "blueimp-file-upload": "~9.12.1",
-    "jquery-sortable": "~0.9.12",
-    "jquery.ui.widget": "^1.10.3"
+    "jquery-sortable": "~0.9.12"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
