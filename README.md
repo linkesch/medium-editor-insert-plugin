@@ -78,6 +78,7 @@ $(function () {
 
 - [Getting Started](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Getting-Started)
 - [Configuration](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Configuration)
+- [Using with webpack](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Using-with-webpack)
 - [Server response](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Server-response)
 - [Custom addons](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Custom-addons)
 - [Upgrading from v0.3](https://github.com/orthes/medium-editor-insert-plugin/wiki/v2.x-Upgrading-from-v0.3)
