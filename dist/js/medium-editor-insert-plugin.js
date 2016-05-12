@@ -1483,6 +1483,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     function Images (el, options) {
         this.el = el;
         this.$el = $(el);
+        this.$currentImage = null;
         this.templates = window.MediumInsert.Templates;
         this.core = this.$el.data('plugin_'+ pluginName);
 
@@ -1821,6 +1822,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             var $image = $(e.target),
                 that = this;
 
+            this.$currentImage = $image;
+
             // Hide keyboard on mobile devices
             this.$el.blur();
 
@@ -1863,6 +1866,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         } else if ($el.is('figcaption') === false) {
             this.core.removeCaptions();
         }
+        this.$currentImage = null;
     };
 
     /**
@@ -1989,6 +1993,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.toolbarAction = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             $li = $button.closest('li'),
             $ul = $li.closest('ul'),
@@ -2030,6 +2035,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.toolbar2Action = function (e) {
+        if (this.$currentImage === null) return;
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
             callback = this.options.actions[$button.data('action')].clicked;
 
