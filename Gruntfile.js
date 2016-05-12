@@ -1,7 +1,5 @@
 module.exports = function (grunt) {
-    // show elapsed time at the end
     require('time-grunt')(grunt);
-    // load grunt tasks just in time
     require('jit-grunt')(grunt, {
         usebanner: 'grunt-banner'
     });
@@ -10,23 +8,34 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         banner: '/*! \n * <%= pkg.name %> v<%= pkg.version %> - <%= pkg.description %>\n *\n * <%= pkg.homepage %>\n * \n * Copyright (c) 2014 <%= pkg.author.name %> (<%= pkg.author.url %>)\n * Released under the <%= pkg.license %> license\n */\n\n',
 
-        uglify: {
-            dist: {
-                options: {
-                    banner: '<%= banner %>'
-                },
-                src: ['src/js/templates.js', 'src/js/core.js', 'src/js/*.js'],
-                dest: 'dist/js/<%= pkg.name %>.min.js'
-            }
-        },
-
         concat: {
             dist: {
                 options: {
                     banner: '<%= banner %>'
                 },
-                src: ['src/js/templates.js', 'src/js/core.js', 'src/js/*.js'],
+                src: ['src/wrappers/start.js', 'src/js/templates.js', 'src/js/core.js', 'src/js/*.js', 'src/wrappers/end.js'],
                 dest: 'dist/js/<%= pkg.name %>.js'
+            }
+        },
+
+        uglify: {
+            dist: {
+                options: {
+                    banner: '<%= banner %>'
+                },
+                src: ['dist/js/<%= pkg.name %>.js'],
+                dest: 'dist/js/<%= pkg.name %>.min.js'
+            }
+        },
+
+        jscs: {
+            src: [
+                'src/js/*.js',
+                'spec/**/*.js',
+                '!src/js/templates.js'
+            ],
+            options: {
+                config: '.jscsrc'
             }
         },
 
@@ -143,9 +152,8 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('test', ['jshint', 'jasmine']);
-    grunt.registerTask('js', ['test', 'handlebars', 'uglify', 'concat']);
+    grunt.registerTask('test', ['jscs', 'jshint', 'jasmine']);
+    grunt.registerTask('js', ['test', 'handlebars', 'concat', 'uglify']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'csso', 'usebanner']);
     grunt.registerTask('default', ['js', 'css']);
-
 };

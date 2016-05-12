@@ -1,6 +1,6 @@
 /*global MediumEditor*/
 
-;(function ($, window, document, Util, undefined) {
+; (function ($, window, document, Util, undefined) {
 
     'use strict';
 
@@ -19,24 +19,25 @@
                 url: 'upload.php',
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
+            fileDeleteOptions: {},
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<span class="fa fa-align-justify"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<span class="fa fa-align-left"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<span class="fa fa-align-right"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 grid: {
-                    label: '<span class="fa fa-th"></span>',
+                    label: '<span class="fa fa-th"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
@@ -86,12 +87,12 @@
      * @return {void}
      */
 
-    function Images (el, options) {
+    function Images(el, options) {
         this.el = el;
         this.$el = $(el);
         this.$currentImage = null;
         this.templates = window.MediumInsert.Templates;
-        this.core = this.$el.data('plugin_'+ pluginName);
+        this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -238,10 +239,10 @@
             maxFileSize = this.options.fileUploadOptions.maxFileSize,
             reader;
 
-        if (acceptFileTypes && !acceptFileTypes.test(file['type'])) {
-            uploadErrors.push(this.options.messages.acceptFileTypesError + file['name']);
-        } else if (maxFileSize && file['size'] > maxFileSize) {
-            uploadErrors.push(this.options.messages.maxFileSizeError + file['name']);
+        if (acceptFileTypes && !acceptFileTypes.test(file.type)) {
+            uploadErrors.push(this.options.messages.acceptFileTypesError + file.name);
+        } else if (maxFileSize && file.size > maxFileSize) {
+            uploadErrors.push(this.options.messages.maxFileSizeError + file.name);
         }
         if (uploadErrors.length > 0) {
             alert(uploadErrors.join("\n"));
@@ -252,9 +253,14 @@
 
         // Replace paragraph with div, because figure elements can't be inside paragraph
         if ($place.is('p')) {
-            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place.replaceWith('<div class="medium-insert-active">' + $place.html() + '</div>');
             $place = this.$el.find('.medium-insert-active');
-            this.core.moveCaret($place);
+            if ($place.next().is('p')) {
+                this.core.moveCaret($place.next());
+            } else {
+                $place.after('<p><br></p>'); // add empty paragraph so we can move the caret to the next line.
+                this.core.moveCaret($place.next());
+            }
         }
 
         $place.addClass('medium-insert-images');
@@ -323,7 +329,7 @@
             progress = 100 - parseInt(data.loaded / data.total * 100, 10);
             $progressbar = data.context.find('.medium-insert-images-progress');
 
-            $progressbar.css('width', progress +'%');
+            $progressbar.css('width', progress + '%');
 
             if (progress === 0) {
                 $progressbar.remove();
@@ -341,14 +347,10 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        var $el = $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        $.proxy(this, 'showImage', data.result.files[0].url, data)();
 
         this.core.clean();
         this.sorting();
-
-        if (this.options.uploadCompleted) {
-            this.options.uploadCompleted($el, data);
-        }
     };
 
     /**
@@ -373,8 +375,13 @@
             domImage = this.getDOMImage();
             domImage.onload = function () {
                 data.context.find('img').attr('src', domImage.src);
+
+                if (this.options.uploadCompleted) {
+                    this.options.uploadCompleted(data.context, data);
+                }
+
                 that.core.triggerInput();
-            };
+            }.bind(this);
             domImage.src = img;
         } else {
             data.context = $(this.templates['src/js/templates/images-image.hbs']({
@@ -386,7 +393,7 @@
 
             if (this.options.autoGrid && $place.find('figure').length >= this.options.autoGrid) {
                 $.each(this.options.styles, function (style, options) {
-                    var className = 'medium-insert-images-'+ style;
+                    var className = 'medium-insert-images-' + style;
 
                     $place.removeClass(className);
 
@@ -404,6 +411,8 @@
 
             if (this.options.preview) {
                 data.submit();
+            } else if (this.options.uploadCompleted) {
+                this.options.uploadCompleted(data.context, data);
             }
         }
 
@@ -424,9 +433,11 @@
      */
 
     Images.prototype.selectImage = function (e) {
-        if(this.core.options.enabled) {
-            var $image = $(e.target),
-                that = this;
+        var that = this,
+            $image;
+
+        if (this.core.options.enabled) {
+            $image = $(e.target);
 
             this.$currentImage = $image;
 
@@ -483,35 +494,69 @@
      */
 
     Images.prototype.removeImage = function (e) {
-        var $image, $parent, $empty;
+        var images = [],
+            $selectedImage = this.$el.find('.medium-insert-image-active'),
+            $parent, $empty, selection, range, current, caretPosition, $current, $sibling, selectedHtml, i;
 
         if (e.which === 8 || e.which === 46) {
-            $image = this.$el.find('.medium-insert-image-active');
+            if ($selectedImage.length) {
+                images.push($selectedImage);
+            }
 
-            if ($image.length) {
-                e.preventDefault();
+            // Remove image even if it's not selected, but backspace/del is pressed in text
+            selection = window.getSelection();
+            if (selection && selection.rangeCount) {
+                range = selection.getRangeAt(0);
+                current = range.commonAncestorContainer;
+                $current = current.nodeName === '#text' ? $(current).parent() : $(current);
+                caretPosition = MediumEditor.selection.getCaretOffsets(current).left;
 
-                this.deleteFile($image.attr('src'));
+                // Is backspace pressed and caret is at the beginning of a paragraph, get previous element
+                if (e.which === 8 && caretPosition === 0) {
+                    $sibling = $current.prev();
+                // Is del pressed and caret is at the end of a paragraph, get next element
+                } else if (e.which === 46 && caretPosition === $current.text().length) {
+                    $sibling = $current.next();
+                }
 
-                $parent = $image.closest('.medium-insert-images');
-                $image.closest('figure').remove();
+                if ($sibling && $sibling.hasClass('medium-insert-images')) {
+                    images.push($sibling.find('img'));
+                }
 
-                $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
+                // If text is selected, find images in the selection
+                selectedHtml = MediumEditor.selection.getSelectionHtml(document);
+                if (selectedHtml) {
+                    $('<div></div>').html(selectedHtml).find('.medium-insert-images img').each(function () {
+                        images.push($(this));
+                    });
+                }
+            }
 
-                if ($parent.find('figure').length === 0) {
-                    $empty = $parent.next();
-                    if ($empty.is('p') === false || $empty.text() !== '') {
-                        $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
-                        $parent.before($empty);
+            if (images.length) {
+                for (i = 0; i < images.length; i++) {
+                    this.deleteFile(images[i].attr('src'));
+
+                    $parent = images[i].closest('.medium-insert-images');
+                    images[i].closest('figure').remove();
+
+                    if ($parent.find('figure').length === 0) {
+                        $empty = $parent.next();
+                        if ($empty.is('p') === false || $empty.text() !== '') {
+                            $empty = $(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+                            $parent.before($empty);
+                        }
+                        $parent.remove();
                     }
-                    $parent.remove();
+                }
 
-                    // Hide addons
-                    this.core.hideAddons();
-
+                // Hide addons
+                this.core.hideAddons();
+                if (!selectedHtml && $empty) {
+                    e.preventDefault();
                     this.core.moveCaret($empty);
                 }
 
+                $('.medium-insert-images-toolbar, .medium-insert-images-toolbar2').remove();
                 this.core.triggerInput();
             }
         }
@@ -526,14 +571,11 @@
 
     Images.prototype.deleteFile = function (file) {
         if (this.options.deleteScript) {
-            // If deleteMethod is somehow undefined, defaults to POST
-            var method = this.options.deleteMethod || 'POST';
-
-            $.ajax({
+            $.ajax($.extend(true, {}, {
                 url: this.options.deleteScript,
-                type: method,
+                type: this.options.deleteMethod || 'POST',
                 data: { file: file }
-            });
+            }, this.options.fileDeleteOptions));
         }
     };
 
@@ -547,10 +589,9 @@
         var $image = this.$el.find('.medium-insert-image-active'),
             $p = $image.closest('.medium-insert-images'),
             active = false,
+            mediumEditor = this.core.getEditor(),
+            toolbarContainer = mediumEditor.options.elementsContainer || 'body',
             $toolbar, $toolbar2, top;
-
-        var mediumEditor = this.core.getEditor();
-        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
 
         $(toolbarContainer).append(this.templates['src/js/templates/images-toolbar.hbs']({
             styles: this.options.styles,
@@ -580,7 +621,7 @@
             .show();
 
         $toolbar.find('button').each(function () {
-            if ($p.hasClass('medium-insert-images-'+ $(this).data('action'))) {
+            if ($p.hasClass('medium-insert-images-' + $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
                 active = true;
             }
@@ -599,19 +640,24 @@
      */
 
     Images.prototype.toolbarAction = function (e) {
-        if (this.$currentImage === null) return;
-        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
-            $li = $button.closest('li'),
-            $ul = $li.closest('ul'),
-            $lis = $ul.find('li'),
-            $p = this.$el.find('.medium-insert-active'),
-            that = this;
+        var that = this,
+            $button, $li, $ul, $lis, $p;
+
+        if (this.$currentImage === null) {
+            return;
+        }
+
+        $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button');
+        $li = $button.closest('li');
+        $ul = $li.closest('ul');
+        $lis = $ul.find('li');
+        $p = this.$el.find('.medium-insert-active');
 
         $button.addClass('medium-editor-button-active');
         $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
 
         $lis.find('button').each(function () {
-            var className = 'medium-insert-images-'+ $(this).data('action');
+            var className = 'medium-insert-images-' + $(this).data('action');
 
             if ($(this).hasClass('medium-editor-button-active')) {
                 $p.addClass(className);
@@ -641,9 +687,14 @@
      */
 
     Images.prototype.toolbar2Action = function (e) {
-        if (this.$currentImage === null) return;
-        var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
-            callback = this.options.actions[$button.data('action')].clicked;
+        var $button, callback;
+
+        if (this.$currentImage === null) {
+            return;
+        }
+
+        $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button');
+        callback = this.options.actions[$button.data('action')].clicked;
 
         if (callback) {
             callback(this.$el.find('.medium-insert-image-active'));

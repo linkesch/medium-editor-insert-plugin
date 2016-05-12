@@ -160,7 +160,7 @@ describe('Images addon', function () {
         });
     });
 
-    it('truggers input event twice on showImage for preview', function (done) {
+    it('triggers input event twice on showImage for preview', function (done) {
         var inputTriggerCount = 0,
             stubbedImage = jasmine.createSpy('image'),
             context = this.$el.prepend('<div class="medium-insert-images medium-insert-active">' +
@@ -182,6 +182,38 @@ describe('Images addon', function () {
             context: context
         });
         stubbedImage.onload();
+    });
+
+    it('calls uploadCompleted when preview is enabled', function (done) {
+        var stubbedImage = jasmine.createSpy('image'),
+            context = this.$el.prepend('<div class="medium-insert-images medium-insert-active">' +
+                '<figure><img src="data:" alt=""></figure>' +
+            '</div>');
+
+        spyOn(this.addon, 'getDOMImage').and.returnValue(stubbedImage);
+
+        this.addon.options.uploadCompleted = function () {
+            expect(true).toBe(true);
+            done();
+        };
+
+        this.addon.showImage('http://image.co', {
+            context: context
+        });
+        stubbedImage.onload();
+    });
+
+    it('calls uploadCompleted when preview is disabled', function (done) {
+        this.addon.options.preview = false;
+
+        this.addon.options.uploadCompleted = function () {
+            expect(true).toBe(true);
+            done();
+        };
+
+        this.addon.showImage(null, {
+            submit: function () {}
+        });
     });
 
     it('supports selecting image', function () {
@@ -266,6 +298,40 @@ describe('Images addon', function () {
 
         expect(this.$el.find('.medium-insert-images').length).toEqual(0);
         expect($('.medium-insert-images-toolbar').length).toEqual(0);
+    });
+
+    it('fires deleteFile function even when images isn\'t selected but backspace is pressed in text', function () {
+        var $p = this.$el.find('p'),
+            $event = $.Event('keydown');
+
+        $event.which = 8;
+
+        spyOn(jQuery, 'ajax');
+
+        $p.before('<div class="medium-insert-images"><figure><img src="delete-image1.jpg" alt=""></figure></div>');
+        $p.html('test');
+
+        placeCaret($p.get(0), 0);
+        this.$el.trigger($event);
+
+        expect(jQuery.ajax.calls.count()).toEqual(1);
+    });
+
+    it('fires deleteFile function even when images isn\'t selected but delete is pressed in text', function () {
+        var $p = this.$el.find('p'),
+            $event = $.Event('keydown');
+
+        $event.which = 46;
+
+        spyOn(jQuery, 'ajax');
+
+        $p.after('<div class="medium-insert-images"><figure><img src="delete-image1.jpg" alt=""></figure></div>');
+        $p.html('test');
+
+        placeCaret($p.get(0), $p.text().length);
+        this.$el.trigger($event);
+
+        expect(jQuery.ajax.calls.count()).toEqual(1);
     });
 
     it('triggers input event after removing image', function (done) {
@@ -368,23 +434,6 @@ describe('Images addon', function () {
         jasmine.clock().tick(50);
 
         $('.medium-insert-images-toolbar2 .medium-editor-action').first().click();
-    });
-
-    it('calls uploadCompleted callback', function (done) {
-        this.addon.options.uploadCompleted = function () {
-            expect(true).toBe(true);
-            done();
-        };
-
-        spyOn(this.addon, 'showImage');
-
-        this.addon.uploadDone(null, {
-            result: {
-                files: [
-                    { url: 'test.jpg' }
-                ]
-            }
-        });
     });
 
     it('validatates file type on upload', function (done) {

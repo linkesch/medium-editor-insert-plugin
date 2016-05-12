@@ -1,16 +1,44 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "2.1.1",
+  "version": "2.3.2",
   "description": "jQuery insert plugin for MediumEditor",
+  "main": "dist/js/medium-editor-insert-plugin.js",
+  "homepage": "http://linkesch.com/medium-editor-insert-plugin",
   "license": "MIT",
-  "homepage": "https://github.com/orthes/medium-editor-insert-plugin",
   "repository": {
     "type": "git",
     "url": "https://github.com/orthes/medium-editor-insert-plugin.git"
   },
+  "bugs": {
+    "url": "https://github.com/orthes/medium-editor-insert-plugin/issues"
+  },
   "author": {
     "name": "Pavel Linkesch",
-    "url": "http://linkesch.sk"
+    "email": "pavel.linkesch@gmail.com",
+    "url": "http://linkesch.com"
+  },
+  "contributors": [
+    {
+      "name": "Jeremy Benoist",
+      "email": "jeremy.benoist@gmail.com"
+    }
+  ],
+  "keywords": [
+    "contenteditable",
+    "editor",
+    "medium",
+    "wysiwyg",
+    "rich-text",
+    "images",
+    "embeds",
+    "videos"
+  ],
+  "dependencies": {
+    "jquery": ">=1.9.0",
+    "medium-editor": "^5.15.0",
+    "handlebars": "~4.0.0",
+    "blueimp-file-upload": "~9.12.1",
+    "jquery-sortable": "~0.9.12"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
@@ -23,6 +51,7 @@
     "grunt-contrib-uglify": "~0.9.1",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-csso": "^0.7.0",
+    "grunt-jscs": "^2.8.0",
     "grunt-sass": "~1.1.0",
     "grunt-template-jasmine-istanbul": "^0.3.4",
     "jit-grunt": "^0.9.1",

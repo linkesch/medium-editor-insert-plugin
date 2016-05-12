@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+; (function ($, window, document, undefined) {
 
     'use strict';
 
@@ -13,17 +13,17 @@
             captionPlaceholder: 'Type caption (optional)',
             styles: {
                 wide: {
-                    label: '<span class="fa fa-align-justify"></span>',
+                    label: '<span class="fa fa-align-justify"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 left: {
-                    label: '<span class="fa fa-align-left"></span>',
+                    label: '<span class="fa fa-align-left"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 },
                 right: {
-                    label: '<span class="fa fa-align-right"></span>',
+                    label: '<span class="fa fa-align-right"></span>'
                     // added: function ($el) {},
                     // removed: function ($el) {}
                 }
@@ -38,7 +38,8 @@
                         $(document).trigger($event);
                     }
                 }
-            }
+            },
+            parseOnPaste: false
         };
 
     /**
@@ -52,11 +53,11 @@
      * @return {void}
      */
 
-    function Embeds (el, options) {
+    function Embeds(el, options) {
         this.el = el;
         this.$el = $(el);
         this.templates = window.MediumInsert.Templates;
-        this.core = this.$el.data('plugin_'+ pluginName);
+        this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
 
@@ -110,6 +111,11 @@
             .on('keydown', $.proxy(this, 'processLink'))
             .on('click', '.medium-insert-embeds-overlay', $.proxy(this, 'selectEmbed'))
             .on('contextmenu', '.medium-insert-embeds-placeholder', $.proxy(this, 'fixRightClickOnPlaceholder'));
+
+        if (this.options.parseOnPaste) {
+            this.$el
+                .on('paste', $.proxy(this, 'processPasted'));
+        }
     };
 
     /**
@@ -172,7 +178,7 @@
         // Replace paragraph with div to prevent #124 issue with pasting in Chrome,
         // because medium editor wraps inserted content into paragraph and paragraphs can't be nested
         if ($place.is('p')) {
-            $place.replaceWith('<div class="medium-insert-active">'+ $place.html() +'</div>');
+            $place.replaceWith('<div class="medium-insert-active">' + $place.html() + '</div>');
             $place = this.$el.find('.medium-insert-active');
             this.core.moveCaret($place);
         }
@@ -276,13 +282,37 @@
     };
 
     /**
+     * Process Pasted
+     *
+     * @param {Event} e
+     * @return {void}
+     */
+
+    Embeds.prototype.processPasted = function (e) {
+        var pastedUrl, linkRegEx;
+        if ($(".medium-insert-embeds-active").length) {
+            return;
+        }
+
+        pastedUrl = e.originalEvent.clipboardData.getData('text');
+        linkRegEx = new RegExp('^(http(s?):)?\/\/','i');
+        if (linkRegEx.test(pastedUrl)) {
+            if (this.options.oembedProxy) {
+                this.oembed(pastedUrl, true);
+            } else {
+                this.parseUrl(pastedUrl, true);
+            }
+        }
+    };
+
+    /**
      * Get HTML via oEmbed proxy
      *
      * @param {string} url
      * @return {void}
      */
 
-    Embeds.prototype.oembed = function (url) {
+    Embeds.prototype.oembed = function (url, pasted) {
         var that = this;
 
         $.support.cors = true;
@@ -295,20 +325,30 @@
             data: {
                 url: url
             },
-            success: function(data) {
+            success: function (data) {
                 var html = data && data.html;
 
-                if (data && !data.html && data.type === 'photo' && data.url) {
+                if (data && !html && data.type === 'photo' && data.url) {
                     html = '<img src="' + data.url + '" alt="">';
                 }
 
-                $.proxy(that, 'embed', html)();
+                if (!html) {
+                    // Prevent render empty embed.
+                    $.proxy(that, 'convertBadEmbed', url)();
+                    return;
+                }
+
+                if (pasted) {
+                    $.proxy(that, 'embed', html, url)();
+                } else {
+                    $.proxy(that, 'embed', html)();
+                }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
-                var responseJSON = (function() {
+            error: function (jqXHR, textStatus, errorThrown) {
+                var responseJSON = (function () {
                     try {
                         return JSON.parse(jqXHR.responseText);
-                    } catch(e) {}
+                    } catch (e) { }
                 })();
 
                 if (typeof window.console !== 'undefined') {
@@ -326,13 +366,14 @@
      * Get HTML using regexp
      *
      * @param {string} url
+     * @param {bool} pasted
      * @return {void}
      */
 
-    Embeds.prototype.parseUrl = function (url) {
+    Embeds.prototype.parseUrl = function (url, pasted) {
         var html;
 
-        if (!(new RegExp(['youtube', 'youtu.be', 'vimeo', 'instagram'].join('|')).test(url))) {
+        if (!(new RegExp(['youtube', 'youtu.be', 'vimeo', 'instagram', 'twitter', 'facebook'].join('|')).test(url))) {
             $.proxy(this, 'convertBadEmbed', url)();
             return false;
         }
@@ -340,37 +381,72 @@
         html = url.replace(/\n?/g, '')
             .replace(/^((http(s)?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/)?)([a-zA-Z0-9\-_]+)(.*)?$/, '<div class="video video-youtube"><iframe width="420" height="315" src="//www.youtube.com/embed/$7" frameborder="0" allowfullscreen></iframe></div>')
             .replace(/^https?:\/\/vimeo\.com(\/.+)?\/([0-9]+)$/, '<div class="video video-vimeo"><iframe src="//player.vimeo.com/video/$2" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
-            //.replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
-            //.replace(/^https:\/\/www\.facebook\.com\/(video.php|photo.php)\?v=(\d+).+$/, '<div class="fb-post" data-href="https://www.facebook.com/photo.php?v=$2"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?v=$2">Post</a></div></div>')
+            .replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
+            .replace(/^(https:\/\/www\.facebook\.com\/(.*))$/, '<script src="//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.2" async></script><div class="fb-post" data-href="$1"><div class="fb-xfbml-parse-ignore"><a href="$1">Loading Facebook post...</a></div></div>')
             .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
 
+        if ((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) === false) {
+            $.proxy(this, 'convertBadEmbed', url)();
+            return false;
+        }
 
-        this.embed((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) ? html : false);
+        if (pasted) {
+            this.embed(html, url);
+        } else {
+            this.embed(html);
+        }
     };
 
     /**
      * Add html to page
      *
      * @param {string} html
+     * @param {string} pastedUrl
      * @return {void}
      */
 
-    Embeds.prototype.embed = function (html) {
-        var $place = this.$el.find('.medium-insert-embeds-active');
+    Embeds.prototype.embed = function (html, pastedUrl) {
+        var $place = this.$el.find('.medium-insert-embeds-active'),
+            $div;
 
         if (!html) {
             alert('Incorrect URL format specified');
             return false;
         } else {
-            $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
-                html: html
-            }));
-            $place.remove();
+            if (html.indexOf('</script>') > -1) {
+                // Store embed code with <script> tag inside wrapper attribute value.
+                // Make nice attribute value escaping using jQuery.
+                $div = $('<div>')
+                    .attr('data-embed-code', html)
+                    .html(html);
+                html = $('<div>').append($div).html();
+            }
+
+            if (pastedUrl) {
+                // Get the element with the pasted url
+                // place the embed template and remove the pasted text
+                $place = this.$el.find(":not(iframe, script, style)")
+                    .contents().filter(
+                        function () {
+                            return this.nodeType === 3 && this.textContent.indexOf(pastedUrl) > -1;
+                        }).parent();
+
+                $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
+                    html: html
+                }));
+                $place.text($place.text().replace(pastedUrl, ''));
+            } else {
+                $place.after(this.templates['src/js/templates/embeds-wrapper.hbs']({
+                    html: html
+                }));
+                $place.remove();
+            }
+
 
             this.core.triggerInput();
 
             if (html.indexOf('facebook') !== -1) {
-                if (typeof(FB) !== 'undefined') {
+                if (typeof (FB) !== 'undefined') {
                     setTimeout(function () {
                         FB.XFBML.parse();
                     }, 2000);
@@ -405,7 +481,7 @@
 
         this.core.triggerInput();
 
-        this.core.moveCaret($place);
+        this.core.moveCaret($empty);
     };
 
     /**
@@ -416,9 +492,10 @@
      */
 
     Embeds.prototype.selectEmbed = function (e) {
-        if(this.core.options.enabled) {
-            var $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds'),
-                that = this;
+        var that = this,
+            $embed;
+        if (this.core.options.enabled) {
+            $embed = $(e.target).hasClass('medium-insert-embeds') ? $(e.target) : $(e.target).closest('.medium-insert-embeds');
 
             $embed.addClass('medium-insert-embeds-selected');
 
@@ -505,14 +582,14 @@
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2, top;
+            $toolbar, $toolbar2, top, mediumEditor, toolbarContainer;
 
         if ($embed.length === 0) {
             return;
         }
 
-        var mediumEditor = this.core.getEditor();
-        var toolbarContainer = mediumEditor.options.elementsContainer || 'body';
+        mediumEditor = this.core.getEditor();
+        toolbarContainer = mediumEditor.options.elementsContainer || 'body';
 
         $(toolbarContainer).append(this.templates['src/js/templates/embeds-toolbar.hbs']({
             styles: this.options.styles,
@@ -542,7 +619,7 @@
             .show();
 
         $toolbar.find('button').each(function () {
-            if ($embed.hasClass('medium-insert-embeds-'+ $(this).data('action'))) {
+            if ($embed.hasClass('medium-insert-embeds-' + $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
                 active = true;
             }
@@ -572,7 +649,7 @@
         $li.siblings().find('.medium-editor-button-active').removeClass('medium-editor-button-active');
 
         $lis.find('button').each(function () {
-            var className = 'medium-insert-embeds-'+ $(this).data('action');
+            var className = 'medium-insert-embeds-' + $(this).data('action');
 
             if ($(this).hasClass('medium-editor-button-active')) {
                 $embed.addClass(className);

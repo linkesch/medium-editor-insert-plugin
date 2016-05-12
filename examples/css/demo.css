@@ -1,25 +1,7 @@
 body {
-    font-family: Georgia, Times, 'Times New Roman', serif;
-    font-size: 16px;
-    line-height: 20px;
-}
-
-.top-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: auto;
-    z-index: 10;
-    padding: 10px;
-    background-color: #000;
-    background-color: rgba(0, 0, 0, .8);
-    box-shadow: 0 0 4px #000;
-    box-sizing: border-box;
-    color: #ccc;
-    font-size: 12px;
-    font-weight: bold;
-    text-align: center;
-    text-transform: uppercase;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 22px;
+    line-height: 30px;
 }
 
 #container {
@@ -35,12 +17,13 @@ body {
     padding: 0 0 20px 0;
 }
 
-h3 {
+h2 {
     font-size: 32px;
     line-height: 42px;
+    text-align: center;
 }
 
-h4 {
+h3 {
     font-size: 26px;
     line-height: 32px;
 }

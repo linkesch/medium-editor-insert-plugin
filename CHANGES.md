@@ -1,4 +1,53 @@
 
+2.3.2 / 2016-04-26
+==================
+
+  * Fix UMD (#320)
+
+2.3.1 / 2016-04-19
+==================
+
+  * Fix UMD dependencies (#314)
+  * Fix extending editor's functions (#310, #316)
+
+2.3.0 / 2016-04-12
+==================
+
+  * Add auto embedding urls as soon as they are pasted
+  * Add UMD wrapper and publish to NPM
+  * Fix deleting images when backspace/delete is pressed
+  * Re-enable facebook and twitter embedding without oEmbed
+  * Fix cursor position after image upload
+
+2.2.4 / 2016-04-05
+==================
+
+  * Change dependency versioning to enable minor releases of medium-editor
+
+2.2.3 / 2016-04-04
+==================
+
+  * Fix performance when uploading images
+  * Update editor's `updatePlaceholder` function
+  * Fix initializing plugin when editor's placeholder is turned off
+
+2.2.2 / 2016-02-27
+==================
+
+  * Fix serializing html with embed codes containing scripts
+
+2.2.1 / 2016-02-05
+==================
+
+  * Fix when `uploadCompleted()` is called - wait until uploaded image replaces preview
+  * Fix uploading high quality images
+  * Fix bug when an image toolbar action effects all instances of the editor (when using multiple editors on the same page)
+
+2.2.0 / 2016-01-11
+==================
+
+  * Add ```fileDeleteOptions``` option to images
+
 2.1.1 / 2015-11-23
 ==================
 

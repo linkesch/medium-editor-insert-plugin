@@ -20,7 +20,7 @@
      * @return {string}
      */
 
-    function ucfirst (str) {
+    function ucfirst(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
@@ -35,7 +35,7 @@
      * @return {void}
      */
 
-    function Core (el, options) {
+    function Core(el, options) {
         var editor;
 
         this.el = el;
@@ -57,16 +57,24 @@
 
         // Extend editor's functions
         if (this.options && this.options.editor) {
-            this.options.editor._serialize = this.options.editor.serialize;
-            this.options.editor._destroy = this.options.editor.destroy;
-            this.options.editor._setup = this.options.editor.setup;
+            if (this.options.editor._serialize === undefined) {
+                this.options.editor._serialize = this.options.editor.serialize;
+            }
+            if (this.options.editor._destroy === undefined) {
+                this.options.editor._destroy = this.options.editor.destroy;
+            }
+            if (this.options.editor._setup === undefined) {
+                this.options.editor._setup = this.options.editor.setup;
+            }
             this.options.editor._hideInsertButtons = this.hideButtons;
 
             this.options.editor.serialize = this.editorSerialize;
             this.options.editor.destroy = this.editorDestroy;
             this.options.editor.setup = this.editorSetup;
 
-            this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
+            if (this.options.editor.getExtensionByName('placeholder') !== undefined) {
+                this.options.editor.getExtensionByName('placeholder').updatePlaceholder = this.editorUpdatePlaceholder;
+            }
         }
     }
 
@@ -136,6 +144,12 @@
 
             $data.find('.medium-insert-buttons').remove();
 
+            // Restore original embed code from embed wrapper attribute value.
+            $data.find('[data-embed-code]').each(function () {
+                var $this = $(this);
+                $this.html($this.attr('data-embed-code'));
+            });
+
             data[key].value = $data.html();
         });
 
@@ -150,7 +164,9 @@
 
     Core.prototype.editorDestroy = function () {
         $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).disable();
+            if ($(el).data('plugin_' + pluginName) instanceof Core) {
+                $(el).data('plugin_' + pluginName).disable();
+            }
         });
 
         this._destroy();
@@ -166,7 +182,9 @@
         this._setup();
 
         $.each(this.elements, function (key, el) {
-            $(el).data('plugin_' + pluginName).enable();
+            if ($(el).data('plugin_' + pluginName) instanceof Core) {
+                $(el).data('plugin_' + pluginName).enable();
+            }
         });
     };
 
@@ -176,16 +194,11 @@
      * @return {void}
      */
 
-    Core.prototype.editorUpdatePlaceholder = function (el) {
-        var $clone = $(el).clone(),
-            cloneHtml;
+    Core.prototype.editorUpdatePlaceholder = function (el, dontShow) {
+        var contents = $(el).children()
+            .not('.medium-insert-buttons').contents();
 
-        $clone.find('.medium-insert-buttons').remove();
-        cloneHtml = $clone.html()
-            .replace(/^\s+|\s+$/g, '')
-            .replace(/^<p( class="medium-insert-active")?><br><\/p>$/, '');
-
-        if (!(el.querySelector('img, blockquote')) && cloneHtml === '') {
+        if (!dontShow && contents.length === 1 && contents[0].nodeName.toLowerCase() === 'br') {
             this.showPlaceholder(el);
             this.base._hideInsertButtons($(el));
         } else {
@@ -275,7 +288,7 @@
             }
 
             that.$el[addonName](options);
-            that.options.addons[addon] = that.$el.data('plugin_'+ addonName).options;
+            that.options.addons[addon] = that.$el.data('plugin_' + addonName).options;
         });
     };
 
@@ -293,11 +306,7 @@
             return;
         }
 
-        // Fix #39
-        // After deleting all content (ctrl+A and delete) in Firefox, all content is deleted and only <br> appears
-        // To force placeholder to appear, set <p><br></p> as content of the $el
-
-        if (this.$el.html().trim() === '' || this.$el.html().trim() === '<br>') {
+        if (this.$el.children().length === 0) {
             this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
@@ -306,7 +315,7 @@
         $text = this.$el
             .contents()
             .filter(function () {
-                return this.nodeName === '#text' && $.trim($(this).text()) !== '';
+                return (this.nodeName === '#text' && $.trim($(this).text()) !== '') || this.nodeName.toLowerCase() === 'br';
             });
 
         $text.each(function () {
@@ -391,12 +400,12 @@
             this.$el.find('.medium-insert-active').removeClass('medium-insert-active');
 
             $.each(this.options.addons, function (addon) {
-                if ($el.closest('.medium-insert-'+ addon).length) {
+                if ($el.closest('.medium-insert-' + addon).length) {
                     $current = $el;
                 }
 
-                if ($current.closest('.medium-insert-'+ addon).length) {
-                    $p = $current.closest('.medium-insert-'+ addon);
+                if ($current.closest('.medium-insert-' + addon).length) {
+                    $p = $current.closest('.medium-insert-' + addon);
                     activeAddon = addon;
                     return;
                 }
@@ -431,7 +440,7 @@
 
         if (activeAddon) {
             $buttons.find('li').hide();
-            $buttons.find('a[data-addon="'+ activeAddon +'"]').parent().show();
+            $buttons.find('a[data-addon="' + activeAddon + '"]').parent().show();
         }
     };
 
@@ -518,7 +527,7 @@
             addon = $a.data('addon'),
             action = $a.data('action');
 
-        this.$el.data('plugin_'+ pluginName + ucfirst(addon))[action]();
+        this.$el.data('plugin_' + pluginName + ucfirst(addon))[action]();
     };
 
     /**
@@ -531,7 +540,7 @@
      */
 
     Core.prototype.moveCaret = function ($el, position) {
-        var range, sel, el;
+        var range, sel, el, textEl;
 
         position = position || 0;
         range = document.createRange();
@@ -539,7 +548,7 @@
         el = $el.get(0);
 
         if (!el.childNodes.length) {
-            var textEl = document.createTextNode(' ');
+            textEl = document.createTextNode(' ');
             el.appendChild(textEl);
         }
 
@@ -614,7 +623,7 @@
 
             if ($(that).is('textarea')) {
                 textareaId = $(that).attr('medium-editor-textarea-id');
-                that = $(that).siblings('[medium-editor-textarea-id="'+ textareaId +'"]').get(0);
+                that = $(that).siblings('[medium-editor-textarea-id="' + textareaId + '"]').get(0);
             }
 
             if (!$.data(that, 'plugin_' + pluginName)) {

@@ -5,8 +5,11 @@ describe('Embeds addon', function () {
         this.editor = new MediumEditor(this.$el.get(0));
         this.$el.mediumInsert({
             editor: this.editor,
-            embeds: {
-                oembedProxy: false
+            addons: {
+                embeds: {
+                    oembedProxy: false,
+                    parseOnPaste: true
+                }
             }
         });
         this.addon = this.$el.data('plugin_mediumInsertEmbeds');
@@ -82,7 +85,7 @@ describe('Embeds addon', function () {
         this.$el.prepend('<div class="medium-insert-embeds">' +
             '<figure><figcaption class="medium-insert-caption-placeholder"></figcaption></figure>' +
             '<div class="medium-insert-embeds-overlay"></div>' +
-        '</div>');
+            '</div>');
 
         this.$el.find('.medium-insert-caption-placeholder').click();
         jasmine.clock().tick(50);
@@ -219,6 +222,24 @@ describe('Embeds addon', function () {
         expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
     });
 
+    it('supports embedding youtube via paste', function () {
+        var e = {
+            originalEvent: {
+                clipboardData: {
+                    getData: function () {
+                        return 'https://www.youtube.com/watch?v=BROWqjuTM0g';
+                    }
+                }
+            }
+        };
+        this.$el = $('.editable');
+        this.$el.append($('<p>https://www.youtube.com/watch?v=BROWqjuTM0g</p>'));
+        this.addon.processPasted(e);
+
+        expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds iframe').length).toEqual(1);
+    });
+
     it('supports embedding vimeo', function () {
         var $event = $.Event('keydown');
 
@@ -239,6 +260,24 @@ describe('Embeds addon', function () {
         expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
     });
 
+    it('supports embedding vimeo via paste', function () {
+        var e = {
+            originalEvent: {
+                clipboardData: {
+                    getData: function () {
+                        return 'http://vimeo.com/2619976';
+                    }
+                }
+            }
+        };
+        this.$el = $('.editable');
+        this.$el.append($('<p>http://vimeo.com/2619976</p>'));
+        this.addon.processPasted(e);
+
+        expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds iframe').length).toEqual(1);
+    });
+
     it('support embedding instagram', function () {
         var $event = $.Event('keydown');
 
@@ -256,6 +295,46 @@ describe('Embeds addon', function () {
 
         expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
         expect(this.$el.find('.medium-insert-embeds iframe').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
+    });
+
+    it('support embedding twitter', function () {
+        var $event = $.Event('keydown');
+
+        $event.which = 13;
+        $('#fixtures').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">https://twitter.com/medium_editor/status/694987296379125760</p></div>');
+        this.$el = $('.editable');
+        this.$el.mediumInsert({
+            addons: {
+                embeds: {
+                    oembedProxy: false
+                }
+            }
+        });
+        this.$el.trigger($event);
+
+        expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds .twitter-tweet').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
+    });
+
+    it('support embedding facebook', function () {
+        var $event = $.Event('keydown');
+
+        $event.which = 13;
+        $('#fixtures').html('<div class="editable"><p class="medium-insert-embeds-input medium-insert-embeds-active">https://www.facebook.com/cneistat/videos/vb.210351389002863/922328184471843/?type=2&theater</p></div>');
+        this.$el = $('.editable');
+        this.$el.mediumInsert({
+            addons: {
+                embeds: {
+                    oembedProxy: false
+                }
+            }
+        });
+        this.$el.trigger($event);
+
+        expect(this.$el.find('.medium-insert-embeds').length).toEqual(1);
+        expect(this.$el.find('.medium-insert-embeds .fb-post').length).toEqual(1);
         expect(this.$el.find('.medium-insert-embeds-input').length).toEqual(0);
     });
 
@@ -336,4 +415,26 @@ describe('Embeds addon', function () {
         expect($serialized.find('.medium-insert-embeds').attr('contenteditable')).toBeUndefined();
         expect($serialized.find('.medium-insert-embeds-overlay').length).toEqual(0);
     });
+
+    it('uses data-embed-code as container html for javascript-based embeds', function () {
+        var html = '<div class="medium-insert-embeds"><figure class="medium-insert-embed"><div data-embed-code="<div>good-value</div>">bad-value</div></figure></div>',
+            editor, $serialized;
+
+        $('#fixtures').html('<div class="editable">' + html + '</div>');
+        this.$el = $('.editable');
+
+        editor = new MediumEditor(this.$el.get(0));
+
+        this.$el.mediumInsert({
+            editor: editor,
+            addons: {
+                embeds: {}
+            }
+        });
+
+        $serialized = $(editor.serialize()['element-0'].value);
+        expect($serialized.find('[data-embed-code]').html()).toEqual('<div>good-value</div>');
+    });
+
+
 });
