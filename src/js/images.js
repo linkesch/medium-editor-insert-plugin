@@ -199,6 +199,9 @@
                 },
                 done: function (e, data) {
                     $.proxy(that, 'uploadDone', e, data)();
+                },
+                fail: function (e, data) {
+                    $.proxy(that, 'uploadFailed', e, data)();
                 }
             };
 
@@ -351,7 +354,41 @@
 
         this.core.clean();
         this.sorting();
+
+        if (this.options.uploadCompleted) {
+            this.options.uploadCompleted($el, data);
+        }
     };
+
+    /**
+     * Callback for failed uploads
+     * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#fail
+     * 
+     * @param {Event} e
+     * @param {object} data
+     * @return {void}
+     */
+    Images.prototype.uploadFailed = function (e, data) {
+        var $image, $parent, $empty;
+        $image = this.$el.find('.medium-insert-active');
+
+        if ($image.length) {
+            this.deleteFile($image.attr('src'));
+            $parent = $image.closest('.medium-insert-images');
+            $image.closest('figure').remove();
+            $('.medium-insert-images-toolbar,.medium-insert-images-toolbar2').remove();
+            $parent.remove();
+
+            // Hide addons
+            this.core.hideAddons();
+            this.core.triggerInput();
+        }
+
+        if (this.options.uploadFailed) {
+            this.options.uploadFailed(this.$el, data);
+        }
+    };
+
 
     /**
      * Add uploaded / preview image to DOM
