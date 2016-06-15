@@ -11,6 +11,7 @@
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
+            storeMeta: false,
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>'
@@ -327,6 +328,10 @@
             },
             success: function (data) {
                 var html = data && data.html;
+
+                if (that.options.storeMeta) {
+                    html += '<div class="medium-insert-embeds-meta"><script type="text/json">' + JSON.stringify(data) + '</script></div>';
+                }
 
                 if (data && !html && data.type === 'photo' && data.url) {
                     html = '<img src="' + data.url + '" alt="">';

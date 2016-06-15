@@ -28,18 +28,14 @@
     margin: 0 0 20px 30px; }
   .medium-insert-images.medium-insert-images-grid, .medium-insert-images-grid.mediumInsert {
     display: -webkit-box;
-    display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    -webkit-flex-wrap: wrap;
-        -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
     -webkit-box-align: start;
-    -webkit-align-items: flex-start;
         -ms-flex-align: start;
             align-items: flex-start;
     -webkit-box-pack: center;
-    -webkit-justify-content: center;
         -ms-flex-pack: center;
             justify-content: center;
     margin: 0.5em -0.5em; }
@@ -120,7 +116,6 @@
       text-decoration: none;
       background: #fff;
       -webkit-transform: rotate(0);
-          -ms-transform: rotate(0);
               transform: rotate(0);
       -webkit-transition: -webkit-transform 100ms;
               transition: transform 100ms; }
@@ -128,7 +123,6 @@
         -webkit-transition: -webkit-transform 250ms;
                 transition: transform 250ms;
         -webkit-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
                 transform: rotate(45deg); }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
