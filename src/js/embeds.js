@@ -116,6 +116,9 @@
             this.$el
                 .on('paste', $.proxy(this, 'processPasted'));
         }
+
+        $(window)
+            .on('resize', $.proxy(this, 'autoRepositionToolbars'));
     };
 
     /**
@@ -582,7 +585,7 @@
     Embeds.prototype.addToolbar = function () {
         var $embed = this.$el.find('.medium-insert-embeds-selected'),
             active = false,
-            $toolbar, $toolbar2, top, mediumEditor, toolbarContainer;
+            $toolbar, $toolbar2, mediumEditor, toolbarContainer;
 
         if ($embed.length === 0) {
             return;
@@ -599,25 +602,6 @@
         $toolbar = $('.medium-insert-embeds-toolbar');
         $toolbar2 = $('.medium-insert-embeds-toolbar2');
 
-        top = $embed.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
-        if (top < 0) {
-            top = 0;
-        }
-
-        $toolbar
-            .css({
-                top: top,
-                left: $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2
-            })
-            .show();
-
-        $toolbar2
-            .css({
-                top: $embed.offset().top + 2, // 2px - distance from a border
-                left: $embed.offset().left + $embed.width() - $toolbar2.width() - 4 // 4px - distance from a border
-            })
-            .show();
-
         $toolbar.find('button').each(function () {
             if ($embed.hasClass('medium-insert-embeds-' + $(this).data('action'))) {
                 $(this).addClass('medium-editor-button-active');
@@ -627,6 +611,61 @@
 
         if (active === false) {
             $toolbar.find('button').first().addClass('medium-editor-button-active');
+        }
+
+        this.repositionToolbars();
+        $toolbar.fadeIn();
+        $toolbar2.fadeIn();
+    };
+
+    Embeds.prototype.autoRepositionToolbars = function () {
+        setTimeout(function () {
+            this.repositionToolbars();
+            this.repositionToolbars();
+        }.bind(this), 0);
+    };
+
+    Embeds.prototype.repositionToolbars = function () {
+        var $toolbar = $('.medium-insert-embeds-toolbar'),
+            $toolbar2 = $('.medium-insert-embeds-toolbar2'),
+            $embed = this.$el.find('.medium-insert-embeds-selected'),
+            elementsContainer = this.core.getEditor().options.elementsContainer,
+            elementsContainerAbsolute = ['absolute', 'fixed'].indexOf(window.getComputedStyle(elementsContainer).getPropertyValue('position')) > -1,
+            elementsContainerBoundary = elementsContainerAbsolute ? elementsContainer.getBoundingClientRect() : null,
+            containerWidth = $(window).width(),
+            position = {};
+
+        if ($toolbar2.length) {
+            position.top = $embed.offset().top + 2; // 2px - distance from a border
+            position.left = $embed.offset().left + $embed.width() - $toolbar2.width() - 4; // 4px - distance from a border
+
+            if (elementsContainerAbsolute) {
+                position.top += elementsContainer.scrollTop - elementsContainerBoundary.top;
+                position.left -= elementsContainerBoundary.left;
+                containerWidth = $(elementsContainer).width();
+            }
+
+            if (position.left + $toolbar2.width() > containerWidth) {
+                position.left = containerWidth - $toolbar2.width();
+            }
+
+            $toolbar2.css(position);
+        }
+
+        if ($toolbar.length) {
+            position.left = $embed.offset().left + $embed.width() / 2 - $toolbar.width() / 2;
+            position.top = $embed.offset().top - $toolbar.height() - 8 - 2 - 5; // 8px - hight of an arrow under toolbar, 2px - height of an embed outset, 5px - distance from an embed
+
+            if (elementsContainerAbsolute) {
+                position.top += elementsContainer.scrollTop - elementsContainerBoundary.top;
+                position.left -= elementsContainerBoundary.left;
+            }
+
+            if (position.top < 0) {
+                position.top = 0;
+            }
+
+            $toolbar.css(position);
         }
     };
 
