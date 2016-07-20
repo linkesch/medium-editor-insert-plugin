@@ -440,7 +440,7 @@
 
         if (activeAddon) {
             $buttons.find('li').hide();
-            $buttons.find('a[data-addon="' + activeAddon + '"]').parent().show();
+            $buttons.find('button[data-addon="' + activeAddon + '"]').parent().show();
         }
     };
 
@@ -523,7 +523,7 @@
      */
 
     Core.prototype.addonAction = function (e) {
-        var $a = $(e.target).is('a') ? $(e.target) : $(e.target).closest('a'),
+        var $a = $(e.currentTarget),
             addon = $a.data('addon'),
             action = $a.data('action');
 
