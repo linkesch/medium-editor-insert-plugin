@@ -469,27 +469,35 @@
     Core.prototype.positionButtons = function (activeAddon) {
         var $buttons = this.$el.find('.medium-insert-buttons'),
             $p = this.$el.find('.medium-insert-active'),
-            $first = $p.find('figure:first').length ? $p.find('figure:first') : $p,
-            left, top;
+            $lastCaption = $p.hasClass('medium-insert-images-grid') ? [] : $p.find('figure:last figcaption'),
+            elementsContainer = this.getEditor() ? this.getEditor().options.elementsContainer : $('body').get(0),
+            elementsContainerAbsolute = ['absolute', 'fixed'].indexOf(window.getComputedStyle(elementsContainer).getPropertyValue('position')) > -1,
+            elementsContainerBoundary = elementsContainerAbsolute ? elementsContainer.getBoundingClientRect() : null,
+            position = {};
 
         if ($p.length) {
-
-            left = $p.position().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons a:first').css('margin-left'), 10);
-            left = left < 0 ? $p.position().left : left;
-            top = $p.position().top + parseInt($p.css('margin-top'), 10);
-
             if (activeAddon) {
-                if ($p.position().left !== $first.position().left) {
-                    left = $first.position().left;
-                }
-
-                top += $p.height() + 15; // 15px offset
+                position.left = $p.offset().left + $p.width() - $buttons.find('.medium-insert-buttons-show').width() - 10;
+                position.top = $p.offset().top + $p.height() - 20 + ($lastCaption.length ? -$lastCaption.height() - parseInt($lastCaption.css('margin-top'), 10) : 10);
+            } else {
+                position.left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons button:first').css('margin-left'), 10);
+                position.top = $p.offset().top;
             }
 
-            $buttons.css({
-                left: left,
-                top: top
-            });
+            if (elementsContainerAbsolute) {
+                position.top += elementsContainer.scrollTop - elementsContainerBoundary.top;
+                position.left -= elementsContainerBoundary.left;
+            }
+
+            if (this.$el.hasClass('medium-editor-placeholder') === false && position.left < 0) {
+                position.left = $p.offset().left;
+
+                if (elementsContainerAbsolute) {
+                    position.left -= elementsContainerBoundary.left;
+                }
+            }
+
+            $buttons.css(position);
         }
     };
 
