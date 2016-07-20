@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.3.2 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.3.3 - jQuery insert plugin for MediumEditor
  *
  * http://linkesch.com/medium-editor-insert-plugin
  * 
@@ -103,27 +103,29 @@
     position: absolute;
     color: #ddd;
     font-size: 0.9em; }
-    .medium-editor-insert-plugin .medium-insert-buttons a {
-      text-decoration: underline;
-      cursor: pointer; }
-    .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show {
-      box-sizing: border-box;
+    .medium-editor-insert-plugin .medium-insert-buttons button {
       display: block;
+      cursor: pointer;
+      color: #ddd;
+      background: #fff;
       width: 32px;
       height: 32px;
-      margin-top: -5px;
+      box-sizing: border-box;
       border-radius: 20px;
-      border: 1px solid;
-      font-size: 25px;
-      line-height: 28px;
+      border: 1px solid #ddd;
+      line-height: 30px;
       text-align: center;
-      text-decoration: none;
-      background: #fff;
+      padding: 0; }
+    .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show {
+      font-size: 25px;
       -webkit-transform: rotate(0);
           -ms-transform: rotate(0);
               transform: rotate(0);
       -webkit-transition: -webkit-transform 100ms;
               transition: transform 100ms; }
+      .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show span {
+        display: block;
+        margin-top: -4px; }
       .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show.medium-insert-buttons-rotate {
         -webkit-transition: -webkit-transform 250ms;
                 transition: transform 250ms;
@@ -141,20 +143,9 @@
       top: -32px; }
       .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li {
         display: inline-block;
-        background-color: #fff; }
-        .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a {
-          box-sizing: border-box;
-          display: inline-block;
-          margin: 0 5px;
-          width: 32px;
-          height: 32px;
-          border-radius: 20px;
-          border: 1px solid;
-          font-size: 20px;
-          line-height: 28px;
-          text-align: center; }
-          .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li a .fa {
-            font-size: 15px; }
+        margin: 0 5px; }
+        .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons li .fa {
+          font-size: 15px; }
 
 .medium-insert-caption-placeholder {
   position: relative; }

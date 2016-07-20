@@ -1,4 +1,10 @@
 
+2.3.3 / 2016-07-20
+==================
+
+  * Fix buttons and toolbars positions when editor is initialized inside absolute positioned container (#356)
+  * Use buttons instead of links to avoid medium-editor conflicts (#355)
+
 2.3.2 / 2016-04-26
 ==================
 
