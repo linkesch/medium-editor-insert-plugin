@@ -579,6 +579,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             if ($p.length && (($p.text().trim() === '' && !activeAddon) || activeAddon === 'images')) {
                 $p.addClass('medium-insert-active');
 
+                if (activeAddon === 'images') {
+                    this.$el.find('.medium-insert-buttons').attr('data-active-addon', activeAddon);
+                } else {
+                    this.$el.find('.medium-insert-buttons').removeAttr('data-active-addon');
+                }
+
                 // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
                 setTimeout(function () {
                     that.positionButtons(activeAddon);
@@ -637,29 +643,26 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $lastCaption = $p.hasClass('medium-insert-images-grid') ? [] : $p.find('figure:last figcaption'),
             elementsContainer = this.getEditor() ? this.getEditor().options.elementsContainer : $('body').get(0),
             elementsContainerAbsolute = ['absolute', 'fixed'].indexOf(window.getComputedStyle(elementsContainer).getPropertyValue('position')) > -1,
-            elementsContainerBoundary = elementsContainerAbsolute ? elementsContainer.getBoundingClientRect() : null,
             position = {};
 
         if ($p.length) {
+            position.left = $p.position().left;
+            position.top = $p.position().top;
+
             if (activeAddon) {
-                position.left = $p.offset().left + $p.width() - $buttons.find('.medium-insert-buttons-show').width() - 10;
-                position.top = $p.offset().top + $p.height() - 20 + ($lastCaption.length ? -$lastCaption.height() - parseInt($lastCaption.css('margin-top'), 10) : 10);
+                position.left += $p.width() - $buttons.find('.medium-insert-buttons-show').width() - 10;
+                position.top += $p.height() - 20 + ($lastCaption.length ? -$lastCaption.height() - parseInt($lastCaption.css('margin-top'), 10) : 10);
             } else {
-                position.left = $p.offset().left - parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons button:first').css('margin-left'), 10);
-                position.top = $p.offset().top;
+                position.left += -parseInt($buttons.find('.medium-insert-buttons-addons').css('left'), 10) - parseInt($buttons.find('.medium-insert-buttons-addons button:first').css('margin-left'), 10);
+                position.top += parseInt($p.css('margin-top'), 10);
             }
 
             if (elementsContainerAbsolute) {
-                position.top += elementsContainer.scrollTop - elementsContainerBoundary.top;
-                position.left -= elementsContainerBoundary.left;
+                position.top += elementsContainer.scrollTop;
             }
 
             if (this.$el.hasClass('medium-editor-placeholder') === false && position.left < 0) {
-                position.left = $p.offset().left;
-
-                if (elementsContainerAbsolute) {
-                    position.left -= elementsContainerBoundary.left;
-                }
+                position.left = $p.position().left;
             }
 
             $buttons.css(position);
@@ -673,6 +676,11 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Core.prototype.toggleAddons = function () {
+        if (this.$el.find('.medium-insert-buttons').attr('data-active-addon') === 'images') {
+            this.$el.find('.medium-insert-buttons').find('button[data-addon="images"]').click();
+            return;
+        }
+
         this.$el.find('.medium-insert-buttons-addons').fadeToggle();
         this.$el.find('.medium-insert-buttons-show').toggleClass('medium-insert-buttons-rotate');
     };
