@@ -237,7 +237,7 @@
         } else {
             this.removePlaceholder();
         }
-     };
+    };
 
     /**
      * Removes the placeholder text.
@@ -245,7 +245,7 @@
      * @return {void}
      */
     Embeds.prototype.removePlaceholder = function () {
-      this.$el.find('.medium-insert-embeds-active').remove();
+        this.$el.find('.medium-insert-embeds-active').remove();
     }
 
     /**
