@@ -505,7 +505,7 @@
             $buttons.css(position);
         }
     };
-    
+
     /*
      * Handles blur events by hiding buttons and placeholder text so they don't populate
      * the textarea content if a form is submitted in the middle of editing.
@@ -513,8 +513,8 @@
      * @return {void}
      */
     Core.prototype.handleBlur = function () {
-      this.hideButtons(this.$el);
-      this.triggerInput();
+        this.hideButtons(this.$el);
+        this.triggerInput();
     }
 
     /**
