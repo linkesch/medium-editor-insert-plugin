@@ -110,6 +110,8 @@
                 e.preventDefault();
             })
             .on('keyup click', $.proxy(this, 'toggleButtons'))
+            .on('blur', $.proxy(this, 'handleBlur'))
+            .on('focus', $.proxy(this, 'toggleButtons'))
             .on('selectstart mousedown', '.medium-insert, .medium-insert-buttons', $.proxy(this, 'disableSelection'))
             .on('click', '.medium-insert-buttons-show', $.proxy(this, 'toggleAddons'))
             .on('click', '.medium-insert-action', $.proxy(this, 'addonAction'))
@@ -503,6 +505,17 @@
             $buttons.css(position);
         }
     };
+    
+    /*
+     * Handles blur events by hiding buttons and placeholder text so they don't populate
+     * the textarea content if a form is submitted in the middle of editing.
+     *
+     * @return {void}
+     */
+    Core.prototype.handleBlur = function () {
+      this.hideButtons(this.$el);
+      this.triggerInput();
+    }
 
     /**
      * Toggles addons buttons
