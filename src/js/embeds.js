@@ -11,6 +11,7 @@
             oembedProxy: 'http://medium.iframe.ly/api/oembed?iframe=1',
             captions: true,
             captionPlaceholder: 'Type caption (optional)',
+            storeMeta: false,
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>'
@@ -331,6 +332,10 @@
             success: function (data) {
                 var html = data && data.html;
 
+                if (that.options.storeMeta) {
+                    html += '<div class="medium-insert-embeds-meta"><script type="text/json">' + JSON.stringify(data) + '</script></div>';
+                }
+
                 if (data && !html && data.type === 'photo' && data.url) {
                     html = '<img src="' + data.url + '" alt="">';
                 }
@@ -387,6 +392,10 @@
             .replace(/^https:\/\/twitter\.com\/(\w+)\/status\/(\d+)\/?$/, '<blockquote class="twitter-tweet" align="center" lang="en"><a href="https://twitter.com/$1/statuses/$2"></a></blockquote><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>')
             .replace(/^(https:\/\/www\.facebook\.com\/(.*))$/, '<script src="//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.2" async></script><div class="fb-post" data-href="$1"><div class="fb-xfbml-parse-ignore"><a href="$1">Loading Facebook post...</a></div></div>')
             .replace(/^https?:\/\/instagram\.com\/p\/(.+)\/?$/, '<span class="instagram"><iframe src="//instagram.com/p/$1/embed/" width="612" height="710" frameborder="0" scrolling="no" allowtransparency="true"></iframe></span>');
+
+        if (this.options.storeMeta) {
+            html += '<div class="medium-insert-embeds-meta"><script type="text/json">' + JSON.stringify({}) + '</script></div>';
+        }
 
         if ((/<("[^"]*"|'[^']*'|[^'">])*>/).test(html) === false) {
             $.proxy(this, 'convertBadEmbed', url)();
