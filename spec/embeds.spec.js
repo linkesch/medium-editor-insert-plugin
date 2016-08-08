@@ -417,7 +417,7 @@ describe('Embeds addon', function () {
     });
 
     it('uses data-embed-code as container html for javascript-based embeds', function () {
-        var html = '<div class="medium-insert-embeds"><figure class="medium-insert-embed"><div data-embed-code="<div>good-value</div>">bad-value</div></figure></div>',
+        var html = '<div class="medium-insert-embeds"><figure class="medium-insert-embed"><div data-embed-code="&amp;lt;blockquote&amp;gt;good-value&amp;lt;/blockquote&amp;gt;">bad-value</div></figure></div>',
             editor, $serialized;
 
         $('#fixtures').html('<div class="editable">' + html + '</div>');
@@ -433,7 +433,7 @@ describe('Embeds addon', function () {
         });
 
         $serialized = $(editor.serialize()['element-0'].value);
-        expect($serialized.find('[data-embed-code]').html()).toEqual('<div>good-value</div>');
+        expect($serialized.find('[data-embed-code]').html()).toEqual('<blockquote>good-value</blockquote>');
     });
 
     it('does include meta when storeMeta is set', function () {
