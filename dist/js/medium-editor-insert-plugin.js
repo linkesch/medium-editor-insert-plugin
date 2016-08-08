@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.3.3 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.4.0 - jQuery insert plugin for MediumEditor
  *
  * http://linkesch.com/medium-editor-insert-plugin
  * 
@@ -308,11 +308,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-buttons').remove();
+            $data.find('.medium-insert-active').removeClass('medium-insert-active');
 
             // Restore original embed code from embed wrapper attribute value.
             $data.find('[data-embed-code]').each(function () {
-                var $this = $(this);
-                $this.html($this.attr('data-embed-code'));
+                var $this = $(this),
+                    html = $('<div />').html($this.attr('data-embed-code')).text();
+                $this.html(html);
             });
 
             data[key].value = $data.html();
@@ -1251,7 +1253,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 // Store embed code with <script> tag inside wrapper attribute value.
                 // Make nice attribute value escaping using jQuery.
                 $div = $('<div>')
-                    .attr('data-embed-code', html)
+                    .attr('data-embed-code', $('<div />').text(html).html())
                     .html(html);
                 html = $('<div>').append($div).html();
             }
@@ -1587,7 +1589,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
-                url: 'upload.php',
+                url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
             fileDeleteOptions: {},
@@ -1750,6 +1752,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-images').find('figcaption, figure').removeAttr('contenteditable');
+            $data.find('.medium-insert-images-progress').remove();
 
             data[key].value = $data.html();
         });

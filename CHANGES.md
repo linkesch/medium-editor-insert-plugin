@@ -1,4 +1,14 @@
 
+2.4.0. / 2016-08-08
+==================
+
+  * Add storeMeta option (#333)
+  * Remove progressbar on serialize (#375)
+  * Encode/decode data-embed-code attribute (#374)
+  * Remove default upload url from the code (#373)
+  * Fix editor being submitted by clicking on the plugin buttons (#366)
+  * Fix button position (#359)
+
 2.3.3 / 2016-07-20
 ==================
 
