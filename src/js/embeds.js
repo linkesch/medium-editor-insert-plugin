@@ -429,7 +429,7 @@
                 // Store embed code with <script> tag inside wrapper attribute value.
                 // Make nice attribute value escaping using jQuery.
                 $div = $('<div>')
-                    .attr('data-embed-code', html)
+                    .attr('data-embed-code', $('<div />').text(html).html())
                     .html(html);
                 html = $('<div>').append($div).html();
             }
