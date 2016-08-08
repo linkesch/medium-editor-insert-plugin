@@ -75,7 +75,14 @@
 
         $(function () {
             $('.editable').mediumInsert({
-                editor: editor
+                editor: editor,
+                addons: {
+                    images: {
+                        fileUploadOptions: {
+                            url: 'upload.php'
+                        }
+                    }
+                }
             });
         });
     </script>
