@@ -143,6 +143,7 @@
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-buttons').remove();
+            $data.find('.medium-insert-active').removeClass('medium-insert-active');
 
             // Restore original embed code from embed wrapper attribute value.
             $data.find('[data-embed-code]').each(function () {

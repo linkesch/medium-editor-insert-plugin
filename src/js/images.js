@@ -179,6 +179,7 @@
             var $data = $('<div />').html(data[key].value);
 
             $data.find('.medium-insert-images').find('figcaption, figure').removeAttr('contenteditable');
+            $data.find('.medium-insert-images-progress').remove();
 
             data[key].value = $data.html();
         });
