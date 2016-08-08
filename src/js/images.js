@@ -16,7 +16,7 @@
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
-                url: 'upload.php',
+                url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
             fileDeleteOptions: {},
