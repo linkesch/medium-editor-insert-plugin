@@ -463,4 +463,34 @@ describe('Images addon', function () {
             files: [{ type: 'image/jpeg', size: 1001 }]
         });
     });
+
+    it('calls callback function after failing upload', function (done) {
+        this.addon.options.fileUploadOptions.maxFileSize = 1000;
+        this.addon.options.uploadFailed = function () {
+            expect(true).toBe(true);
+            done();
+        };
+
+        this.$el.find('p').click();
+
+        this.addon.uploadAdd(null, {
+            files: [{type: 'image/jpeg', size: 1001}]
+        });
+    });
+
+    it('show alert if callback is no function', function (done) {
+        this.addon.options.fileUploadOptions.maxFileSize = 1000;
+        this.addon.options.uploadFailed = "string";
+
+        spyOn(window, 'alert').and.callFake(function (text) {
+            expect(text).not.toBe(null);
+            done();
+        });
+
+        this.$el.find('p').click();
+
+        this.addon.uploadAdd(null, {
+            files: [{type: 'image/jpeg', size: 1001}]
+        });
+    });
 });
