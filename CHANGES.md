@@ -1,4 +1,9 @@
 
+2.4.1. / 2017-04-11
+==================
+
+  * Ability to add upload failed callback to options #377
+
 2.4.0. / 2016-08-08
 ==================
 

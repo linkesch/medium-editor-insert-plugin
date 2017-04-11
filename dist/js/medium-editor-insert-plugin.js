@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.4.0 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.4.1 - jQuery insert plugin for MediumEditor
  *
  * http://linkesch.com/medium-editor-insert-plugin
  * 
@@ -1646,6 +1646,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 acceptFileTypesError: 'This file is not in a supported format: ',
                 maxFileSizeError: 'This file is too big: '
             }
+            // uploadError: function($el, data) {}
             // uploadCompleted: function ($el, data) {}
         };
 
@@ -1822,7 +1823,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             uploadErrors.push(this.options.messages.maxFileSizeError + file.name);
         }
         if (uploadErrors.length > 0) {
+            if (this.options.uploadFailed && typeof this.options.uploadFailed === "function") {
+                this.options.uploadFailed(uploadErrors, data);
+
+                return;
+            }
+
             alert(uploadErrors.join("\n"));
+
             return;
         }
 
