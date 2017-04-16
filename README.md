@@ -68,7 +68,7 @@ Finally, you can initialize the insert plugin:
 
 ```javascript
 $(function () {
-    $('.editable').mediumInsert({
+    $('.editable').MediumInsert({
         editor: editor
     });
 });
