@@ -51,8 +51,9 @@
         }
         this.options = $.extend(true, {}, defaults, options);
         this.options.editor = editor;
-        if (options)
+        if (options) {
             options.editor = editor; // Restore original object definition
+        }
 
         this._defaults = defaults;
         this._name = pluginName;
