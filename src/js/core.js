@@ -311,7 +311,7 @@
             return;
         }
 
-        if (this.$el.children().length === 0) {
+        if (this.$el.html().length === 0) {
             this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
