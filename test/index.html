@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>TEST</title>
+
+		<link rel="stylesheet" href="../bower_components/medium-editor/dist/css/medium-editor.min.css">
+		<link rel="stylesheet" href="../bower_components/medium-editor/dist/css/themes/default.css" id="medium-editor-theme">
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="../bower_components/medium-editor/dist/js/medium-editor.js"></script>
+		<script src="../bower_components/handlebars/handlebars.runtime.min.js"></script>
+		<script src="../bower_components/jquery-sortable/source/js/jquery-sortable-min.js"></script>
+
+		<!-- Unfortunately, jQuery File Upload Plugin has a few more dependencies itself -->
+		<script src="../bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
+		<script src="../bower_components/blueimp-file-upload/js/jquery.iframe-transport.js"></script>
+		<script src="../bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
+		
+		<!-- The plugin itself -->
+		<script src="../dist/js/medium-editor-insert-plugin.min.js"></script>
+		<link rel="stylesheet" href="../dist/css/medium-editor-insert-plugin.min.css">
+
+		<script src="../src/js/templates.js"></script>
+		<script src="../src/js/core.js"></script>
+		<script src="../src/js/embeds.js"></script>
+		<script src="../src/js/images.js"></script>
+
+		<script src="test.js"></script>
+		<script src="customAddon.js"></script>
+	</head>
+
+	<body style="background-color: #f4f4f4">
+		<div style="margin: 50px; padding: 10px; border: 1px dotted #000;" class="editable">
+			this is editable content... whoa
+		</div>
+		<button id="button">click me!</button>
+		<br />
+		<pre id="elContents"></pre>
+	</body>
+
+</html>
