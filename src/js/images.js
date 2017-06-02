@@ -520,7 +520,7 @@
             if (selection && selection.rangeCount) {
                 range = selection.getRangeAt(0);
                 current = range.commonAncestorContainer;
-                $current = current.nodeName === '#text' ? $(current).parent() : $(current);
+                $current = current.nodeName === '#text' || current.nodeName === 'BR' ? $(current).parent() : $(current);
                 caretPosition = MediumEditor.selection.getCaretOffsets(current).left;
 
                 // Is backspace pressed and caret is at the beginning of a paragraph, get previous element
