@@ -69,6 +69,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handl
     + "\n		</div>\n	</figure>\n	<div class=\"medium-insert-embeds-overlay\"></div>\n</div>";
 },"useData":true});
 
+this["MediumInsert"]["Templates"]["src/js/templates/iframe-wrapper.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper;
+
+  return "<div class=\"medium-insert-polls\">\n    <iframe src=\""
+    + ((stack1 = ((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"url","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "\" onload=\"ek$i.utils.resizeFrame(this);\" scrolling=\"no\" style='height: 100%; width: 100%;' frameborder=\"0\">\n    </iframe>\n    <div class=\"medium-insert-polls-overlay\"></div>\n</div>\n";
+},"useData":true});
+
 this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<input type=\"file\" multiple>";
 },"useData":true});
