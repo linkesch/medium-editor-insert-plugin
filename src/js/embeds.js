@@ -104,6 +104,7 @@
         $(document)
             .on('click', $.proxy(this, 'unselectEmbed'))
             .on('keydown', $.proxy(this, 'removeEmbed'))
+            .on('blur', $.proxy(this, 'removePlaceholder'))
             .on('click', '.medium-insert-embeds-toolbar .medium-editor-action', $.proxy(this, 'toolbarAction'))
             .on('click', '.medium-insert-embeds-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
@@ -235,9 +236,18 @@
             }
 
         } else {
-            this.$el.find('.medium-insert-embeds-active').remove();
+            this.removePlaceholder();
         }
     };
+
+    /**
+     * Removes the placeholder text.
+     *
+     * @return {void}
+     */
+    Embeds.prototype.removePlaceholder = function () {
+        this.$el.find('.medium-insert-embeds-active').remove();
+    }
 
     /**
      * Right click on placeholder in Chrome selects whole line. Fix this by placing caret at the end of line
