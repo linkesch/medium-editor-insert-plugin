@@ -546,7 +546,7 @@
 
             if (images.length) {
                 for (i = 0; i < images.length; i++) {
-                    this.deleteFile(images[i]);
+                    this.deleteFile(images[i].attr('src'), images[i]);
 
                     $parent = images[i].closest('.medium-insert-images');
                     images[i].closest('figure').remove();
@@ -577,22 +577,23 @@
     /**
      * Makes ajax call to deleteScript
      *
-     * @param {jQuery} $file The jQuery element of the file to delete
+     * @param {string} file The name of the file to delete
+     * @param {jQuery} $el The jQuery element of the file to delete
      * @returns {void}
      */
 
-    Images.prototype.deleteFile = function ($file) {
+    Images.prototype.deleteFile = function (file, $el) {
         // only take action if there is a truthy value
         if (this.options.deleteScript) {
             // try to run it as a callback
             if (typeof this.options.deleteScript === 'function') {
-                this.options.deleteScript($file);
+                this.options.deleteScript(file, $el);
             // otherwise, it's probably a string, call it as ajax
             } else {
                 $.ajax($.extend(true, {}, {
                     url: this.options.deleteScript,
                     type: this.options.deleteMethod || 'POST',
-                    data: { file: $file.attr('src') }
+                    data: { file: file }
                 }, this.options.fileDeleteOptions));
             }
         }
