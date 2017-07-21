@@ -325,7 +325,7 @@
 
         $text.each(function () {
             // Fix #433
-            // Line break problem after enabled plugin
+            // Line break problem after enabling plugin
             $(this).wrap('<span />');
 
             // Fix #145
