@@ -324,7 +324,9 @@
             });
 
         $text.each(function () {
-            $(this).wrap('<p />');
+            // Fix #433
+            // Line break problem after enabled plugin
+            $(this).wrap('<span />');
 
             // Fix #145
             // Move caret at the end of the element that's being wrapped
