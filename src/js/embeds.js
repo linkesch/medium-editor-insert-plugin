@@ -155,9 +155,11 @@
         var data = this._serializePreEmbeds();
 
         $.each(data, function (key) {
-            var $data = $('<div />').html(data[key].value);
+            var $data = $('<div />').html(data[key].value),
+                $embeds = $data.find('.medium-insert-embeds');
 
-            $data.find('.medium-insert-embeds').removeAttr('contenteditable');
+            $embeds.removeAttr('contenteditable');
+            $embeds.find('figcaption').removeAttr('contenteditable');
             $data.find('.medium-insert-embeds-overlay').remove();
 
             data[key].value = $data.html();
