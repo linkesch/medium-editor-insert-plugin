@@ -221,6 +221,14 @@
             };
         }
 
+        // If the external options contain callbacks for 'add' or 'done', use those instead
+        if (this.options.fileUploadOptions.add) {
+          fileUploadOptions.add = function () { this.options.fileUploadOptions.add.apply(that, arguments) }.bind(that);
+        }
+        if (this.options.fileUploadOptions.done) {
+          fileUploadOptions.done = function () { this.options.fileUploadOptions.done.apply(that, arguments) }.bind(that);
+        }
+
         $file.fileupload($.extend(true, {}, this.options.fileUploadOptions, fileUploadOptions));
 
         $file.click();
