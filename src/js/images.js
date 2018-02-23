@@ -386,7 +386,7 @@
         if (this.options.preview && data.context) {
             domImage = this.getDOMImage();
             domImage.onload = function () {
-                data.context.find('img').attr('src', domImage.src);
+                data.context.find('img').attr('src', domImage.getAttribute('src'));
 
                 if (this.options.uploadCompleted) {
                     this.options.uploadCompleted(data.context, data);
