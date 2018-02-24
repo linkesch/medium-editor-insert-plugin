@@ -1,4 +1,13 @@
 
+2.5.0 / 2018-02-24
+==================
+
+  * Use relative path for uploaded image, instead of absolute (#455)
+  * DeleteScript can now be a callback (#428)
+  * Fix embeds caption (#437)
+  * Fix backspace not triggering delete event (#427)
+  * Fix insert plugin stripping plain text (#413)
+
 2.4.1. / 2017-04-11
 ==================
 
