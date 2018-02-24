@@ -2,10 +2,14 @@
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.svg?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
-[![Dependency Status](http://www.versioneye.com/user/projects/53f742dce09da3467d000389/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742dce09da3467d000389)
-[![Dependency Status](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f742e2e09da3dca800038f)
-[![Codacy Badge](https://www.codacy.com/project/badge/1f8565ed2e554e4fa952ec4da6a2080b)](https://www.codacy.com/public/orthes/mediumeditorinsertplugin)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f8565ed2e554e4fa952ec4da6a2080b)](https://www.codacy.com/app/orthes_3082/medium-editor-insert-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=orthes/medium-editor-insert-plugin&amp;utm_campaign=Badge_Grade)
 [![CDNJS](https://img.shields.io/cdnjs/v/medium-editor-insert-plugin.svg)](https://cdnjs.com/libraries/medium-editor-insert-plugin)
+
+---
+
+**HELP NEEDED!** Are you using the plugin in production? We're looking for contributors that use the plugin on daily basis and would help us move the project forward. Interested? Shoot us a message on [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+---
 
 This plugin expands capabilities of [MediumEditor](https://github.com/yabwe/medium-editor) (a clone of medium.com WYSIWYG editor) and it enables users to insert into the editor various types of content (depending on available addons).
 
@@ -91,6 +95,6 @@ $(function () {
 
 ## Sponsors
 
-[creator5](http://www.creator5.com) | [Maker](https://maker.me/) | [Nusii](http://nusii.com)
--------- | ----- | -----
-[![creator5](http://i.imgur.com/K9uiIuT.png)](http://www.creator5.com) | [![Maker](http://i.imgur.com/8t8wsM8.png)](http://maker.me) | [![nusii](http://i.imgur.com/tvdJ249.png)](http://nusii.com)
+[Maker](https://maker.me) | [nusii](https://nusii.com)
+----- | -----
+[![Maker](http://i.imgur.com/8t8wsM8.png)](https://maker.me) | [![nusii](http://i.imgur.com/tvdJ249.png)](https://nusii.com)
