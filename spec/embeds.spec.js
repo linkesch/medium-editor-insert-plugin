@@ -28,7 +28,9 @@ describe('Embeds addon', function () {
 
         this.$el.append('<div id="p2">&nbsp;</div>');
 
+        placeCaret($p.get(0), 0);
         $p.click();
+
         this.$el.find('.medium-insert-buttons-show').click();
         this.$el.find('.medium-insert-action[data-addon="embeds"]').click();
 
