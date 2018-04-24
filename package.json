@@ -2,7 +2,7 @@
   "name": "medium-editor-insert-plugin",
   "version": "3.0.0",
   "description": "Insert extension for MediumEditor",
-  "main": "dist/medium-editor-insert.js",
+  "main": "dist/js/medium-editor-insert.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/orthes/medium-editor-insert"
