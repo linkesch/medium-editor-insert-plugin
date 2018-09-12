@@ -27,17 +27,14 @@
     float: right;
     margin: 0 0 20px 30px; }
   .medium-insert-images.medium-insert-images-grid, .medium-insert-images-grid.mediumInsert {
-    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-    -webkit-box-align: start;
-        -ms-flex-align: start;
-            align-items: flex-start;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-align: start;
+        align-items: flex-start;
+    -ms-flex-pack: center;
+        justify-content: center;
     margin: 0.5em -0.5em; }
     .medium-insert-images.medium-insert-images-grid figure, .medium-insert-images-grid.mediumInsert figure {
       width: 33.33%;
@@ -114,18 +111,14 @@
       padding: 0; }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show {
       font-size: 25px;
-      -webkit-transform: rotate(0);
-              transform: rotate(0);
-      transition: -webkit-transform 100ms;
+      transform: rotate(0);
       transition: transform 100ms; }
       .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show span {
         display: block;
         margin-top: -4px; }
       .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-show.medium-insert-buttons-rotate {
-        transition: -webkit-transform 250ms;
         transition: transform 250ms;
-        -webkit-transform: rotate(45deg);
-                transform: rotate(45deg); }
+        transform: rotate(45deg); }
     .medium-editor-insert-plugin .medium-insert-buttons .medium-insert-buttons-addons {
       margin: 0;
       padding: 0;
