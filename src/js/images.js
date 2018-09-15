@@ -96,6 +96,9 @@
         this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
+        if (this.core.options.singleUpload) {
+            delete this.options.styles.grid;
+        }
 
         this._defaults = defaults;
         this._name = pluginName;
@@ -206,6 +209,12 @@
                     $.proxy(that, 'uploadDone', e, data)();
                 }
             };
+
+        // If expect to upload single image,
+        // remove multiple attribute from input[type=file] DOM.
+        if (this.core.options.singleUpload) {
+            $file.removeAttr('multiple');
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:

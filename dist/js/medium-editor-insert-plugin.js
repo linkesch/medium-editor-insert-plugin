@@ -172,6 +172,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         defaults = {
             editor: null,
             enabled: true,
+            singleUpload: false,
             addons: {
                 images: true, // boolean or object containing configuration
                 embeds: true
@@ -590,11 +591,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     this.$el.find('.medium-insert-buttons').removeAttr('data-active-addon');
                 }
 
-                // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
-                setTimeout(function () {
-                    that.positionButtons(activeAddon);
-                    that.showButtons(activeAddon);
-                }, activeAddon ? 100 : 0);
+                if (activeAddon === 'images' && this.options.singleUpload) {
+                    this.hideButtons();
+                } else {
+                    // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
+                    setTimeout(function () {
+                        that.positionButtons(activeAddon);
+                        that.showButtons(activeAddon);
+                    }, activeAddon ? 100 : 0);
+                }
             } else {
                 this.hideButtons();
             }
@@ -1674,6 +1679,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
+        if (this.core.options.singleUpload) {
+            delete this.options.styles.grid;
+        }
 
         this._defaults = defaults;
         this._name = pluginName;
@@ -1784,6 +1792,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     $.proxy(that, 'uploadDone', e, data)();
                 }
             };
+
+        // If expect to upload single image,
+        // remove multiple attribute from input[type=file] DOM.
+        if (this.core.options.singleUpload) {
+            $file.removeAttr('multiple');
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:

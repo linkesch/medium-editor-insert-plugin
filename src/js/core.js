@@ -7,6 +7,7 @@
         defaults = {
             editor: null,
             enabled: true,
+            singleUpload: false,
             addons: {
                 images: true, // boolean or object containing configuration
                 embeds: true
@@ -425,11 +426,15 @@
                     this.$el.find('.medium-insert-buttons').removeAttr('data-active-addon');
                 }
 
-                // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
-                setTimeout(function () {
-                    that.positionButtons(activeAddon);
-                    that.showButtons(activeAddon);
-                }, activeAddon ? 100 : 0);
+                if (activeAddon === 'images' && this.options.singleUpload) {
+                    this.hideButtons();
+                } else {
+                    // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
+                    setTimeout(function () {
+                        that.positionButtons(activeAddon);
+                        that.showButtons(activeAddon);
+                    }, activeAddon ? 100 : 0);
+                }
             } else {
                 this.hideButtons();
             }
