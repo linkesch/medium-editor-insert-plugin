@@ -1593,6 +1593,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+            singleUpload: false,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -1784,6 +1785,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     $.proxy(that, 'uploadDone', e, data)();
                 }
             };
+
+        // If expect to upload single image,
+        // remove multiple attribute from input[type=file] DOM.
+        if (this.options.singleUpload) {
+            $file.removeAttr('multiple');
+        }
 
         // Only add progress callbacks for browsers that support XHR2,
         // and test for XHR2 per:
