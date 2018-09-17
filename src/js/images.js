@@ -15,7 +15,6 @@
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            singleUpload: false,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -97,6 +96,9 @@
         this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
+        if (this.core.options.singleUpload) {
+            delete this.options.styles.grid;
+        }
 
         this._defaults = defaults;
         this._name = pluginName;
@@ -210,7 +212,7 @@
 
         // If expect to upload single image,
         // remove multiple attribute from input[type=file] DOM.
-        if (this.options.singleUpload) {
+        if (this.core.options.singleUpload) {
             $file.removeAttr('multiple');
         }
 

@@ -172,6 +172,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         defaults = {
             editor: null,
             enabled: true,
+            singleUpload: false,
             addons: {
                 images: true, // boolean or object containing configuration
                 embeds: true
@@ -590,11 +591,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                     this.$el.find('.medium-insert-buttons').removeAttr('data-active-addon');
                 }
 
-                // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
-                setTimeout(function () {
-                    that.positionButtons(activeAddon);
-                    that.showButtons(activeAddon);
-                }, activeAddon ? 100 : 0);
+                if (activeAddon === 'images' && this.options.singleUpload) {
+                    this.hideButtons();
+                } else {
+                    // If buttons are displayed on addon paragraph, wait 100ms for possible captions to display
+                    setTimeout(function () {
+                        that.positionButtons(activeAddon);
+                        that.showButtons(activeAddon);
+                    }, activeAddon ? 100 : 0);
+                }
             } else {
                 this.hideButtons();
             }
@@ -1593,7 +1598,6 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
-            singleUpload: false,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -1675,6 +1679,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         this.core = this.$el.data('plugin_' + pluginName);
 
         this.options = $.extend(true, {}, defaults, options);
+        if (this.core.options.singleUpload) {
+            delete this.options.styles.grid;
+        }
 
         this._defaults = defaults;
         this._name = pluginName;
@@ -1788,7 +1795,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
         // If expect to upload single image,
         // remove multiple attribute from input[type=file] DOM.
-        if (this.options.singleUpload) {
+        if (this.core.options.singleUpload) {
             $file.removeAttr('multiple');
         }
 
