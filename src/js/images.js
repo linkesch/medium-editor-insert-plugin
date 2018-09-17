@@ -145,7 +145,7 @@
             .on('click', '.medium-insert-images-toolbar2 .medium-editor-action', $.proxy(this, 'toolbar2Action'));
 
         this.$el
-            .on('click', '.medium-insert-images img', $.proxy(this, 'selectImage'));
+            .on('click touchend', '.medium-insert-images img', $.proxy(this, 'selectImage'));
 
         $(window)
             .on('resize', $.proxy(this, 'autoRepositionToolbars'));
