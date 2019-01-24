@@ -1,0 +1,23 @@
+{
+  "projectName": "medium-editor-insert-plugin",
+  "projectOwner": "orthes",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "orthes",
+      "name": "Pavel Linkesch",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/312938?v=4",
+      "profile": "http://linkesch.com",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}

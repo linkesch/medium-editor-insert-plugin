@@ -1,4 +1,5 @@
 # jQuery insert plugin for MediumEditor
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.svg?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
@@ -121,3 +122,15 @@ $(function () {
 [Maker](https://maker.me) | [nusii](https://nusii.com)
 ----- | -----
 [![Maker](http://i.imgur.com/8t8wsM8.png)](https://maker.me) | [![nusii](http://i.imgur.com/tvdJ249.png)](https://nusii.com)
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/all-contributors/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars2.githubusercontent.com/u/312938?v=4" width="100px;" alt="Pavel Linkesch"/><br /><sub><b>Pavel Linkesch</b></sub>](http://linkesch.com)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Code") |
+| :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
