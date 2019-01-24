@@ -15,7 +15,10 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/312938?v=4",
       "profile": "http://linkesch.com",
       "contributions": [
-        "code"
+        "code",
+        "doc",
+        "maintenance",
+        "review"
       ]
     }
   ],

@@ -129,7 +129,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/all-contri
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars2.githubusercontent.com/u/312938?v=4" width="100px;" alt="Pavel Linkesch"/><br /><sub><b>Pavel Linkesch</b></sub>](http://linkesch.com)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Code") |
+| [<img src="https://avatars2.githubusercontent.com/u/312938?v=4" width="100px;" alt="Pavel Linkesch"/><br /><sub><b>Pavel Linkesch</b></sub>](http://linkesch.com)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Code") [📖](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Documentation") [🚧](#maintenance-orthes "Maintenance") [👀](#review-orthes "Reviewed Pull Requests") |
 | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
