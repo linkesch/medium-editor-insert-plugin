@@ -283,6 +283,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GoGoCarl",
+      "name": "Carl Scott",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1719249?v=4",
+      "profile": "http://gogocarl.blogspot.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
