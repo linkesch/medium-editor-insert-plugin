@@ -382,6 +382,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mateid",
+      "name": "Matei Dorobantu",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/366564?v=4",
+      "profile": "http://matei.dorobantu.me",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
