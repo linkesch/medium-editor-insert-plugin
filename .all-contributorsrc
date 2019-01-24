@@ -391,6 +391,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "maxkirchoff",
+      "name": "Max Kirchoff",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/714146?v=4",
+      "profile": "http://www.maxisnow.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
