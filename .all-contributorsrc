@@ -20,6 +20,17 @@
         "maintenance",
         "review"
       ]
+    },
+    {
+      "login": "j0k3r",
+      "name": "Jérémy Benoist",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/62333?v=4",
+      "profile": "http://www.j0k3r.net",
+      "contributions": [
+        "code",
+        "maintenance",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7
