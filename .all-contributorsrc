@@ -121,6 +121,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "brenfrow",
+      "name": "Brandon Renfrow",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1891369?v=4",
+      "profile": "https://github.com/brenfrow",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
