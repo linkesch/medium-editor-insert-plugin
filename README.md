@@ -1,5 +1,5 @@
 # jQuery insert plugin for MediumEditor
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.svg?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
@@ -129,8 +129,8 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/all-contri
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars2.githubusercontent.com/u/312938?v=4" width="100px;" alt="Pavel Linkesch"/><br /><sub><b>Pavel Linkesch</b></sub>](http://linkesch.com)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Code") [📖](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Documentation") [🚧](#maintenance-orthes "Maintenance") [👀](#review-orthes "Reviewed Pull Requests") | [<img src="https://avatars2.githubusercontent.com/u/62333?v=4" width="100px;" alt="Jérémy Benoist"/><br /><sub><b>Jérémy Benoist</b></sub>](http://www.j0k3r.net)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=j0k3r "Code") [🚧](#maintenance-j0k3r "Maintenance") [👀](#review-j0k3r "Reviewed Pull Requests") |
-| :---: | :---: |
+| [<img src="https://avatars2.githubusercontent.com/u/312938?v=4" width="100px;" alt="Pavel Linkesch"/><br /><sub><b>Pavel Linkesch</b></sub>](http://linkesch.com)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Code") [📖](https://github.com/orthes/medium-editor-insert-plugin/commits?author=orthes "Documentation") [🚧](#maintenance-orthes "Maintenance") [👀](#review-orthes "Reviewed Pull Requests") | [<img src="https://avatars2.githubusercontent.com/u/62333?v=4" width="100px;" alt="Jérémy Benoist"/><br /><sub><b>Jérémy Benoist</b></sub>](http://www.j0k3r.net)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=j0k3r "Code") [🚧](#maintenance-j0k3r "Maintenance") [👀](#review-j0k3r "Reviewed Pull Requests") | [<img src="https://avatars3.githubusercontent.com/u/39333?v=4" width="100px;" alt="Nazar Leush"/><br /><sub><b>Nazar Leush</b></sub>](https://github.com/nleush)<br />[💻](https://github.com/orthes/medium-editor-insert-plugin/commits?author=nleush "Code") |
+| :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
