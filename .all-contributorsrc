@@ -49,6 +49,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Jaza",
+      "name": "Jeremy Epstein",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/79373?v=4",
+      "profile": "http://greenash.net.au/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
