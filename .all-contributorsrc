@@ -238,6 +238,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "tasarsu",
+      "name": "Murat Tasarsu",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1642706?v=4",
+      "profile": "http://medya-t.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
