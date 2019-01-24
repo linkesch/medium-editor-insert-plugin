@@ -166,6 +166,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "miloshadzic",
+      "name": "Miloš Hadžić",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/93555?v=4",
+      "profile": "https://rightfold.io",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
