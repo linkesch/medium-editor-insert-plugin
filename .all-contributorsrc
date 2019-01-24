@@ -265,6 +265,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "bgaillard",
+      "name": "Baptiste Gaillard",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1327782?v=4",
+      "profile": "https://github.com/bgaillard",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
