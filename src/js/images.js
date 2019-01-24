@@ -285,9 +285,6 @@
             data.process().done(function () {
                 // If preview is set to true, let the showImage handle the upload start
                 if (that.options.preview) {
-                    // using object URL instead of FileReader,
-                    // because FileReader converts the file/blob to base64 string
-                    // which makes Medium Editor extremely laggy and slow
                     previewImg = document.createElement('img');
                     window.URL = window.URL || window.webkitURL;
                     previewImg.src = window.URL.createObjectURL(data.files[0]);
