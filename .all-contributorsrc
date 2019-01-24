@@ -85,6 +85,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "fbessadok",
+      "name": "Firas Bessadok",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1790778?v=4",
+      "profile": "http://firas.bessadok.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
