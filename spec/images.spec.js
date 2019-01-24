@@ -1,4 +1,3 @@
-/* global xit */
 describe('Images addon', function () {
     beforeEach(function () {
         $('body').append('<div id="fixtures"><div class="editable"></div></div>');
@@ -18,7 +17,7 @@ describe('Images addon', function () {
         jasmine.clock().uninstall();
     });
 
-    xit('creates preview image before upload', function (done) {
+    it('creates preview image before upload', function (done) {
         var $p = this.$el.find('p');
 
         placeCaret($p.get(0), 0);
@@ -26,12 +25,12 @@ describe('Images addon', function () {
 
         this.addon.uploadAdd(null, {
             autoUpload: true,
-            files: [new Blob([''], { type: 'image/jpeg' })],
+            files: [dataURItoBlob('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=')],
             submit: function () {
                 expect(this.$el.find('.medium-insert-images').length).toEqual(1);
                 expect(this.$el.find('.medium-insert-images img').length).toEqual(1);
                 expect(this.$el.find('.medium-insert-images .medium-insert-images-progress').length).toEqual(1);
-                expect(this.$el.find('.medium-insert-images img').attr('src').match(/^data:/).length).toEqual(1);
+                expect(this.$el.find('.medium-insert-images img').attr('src').match(/^(data|blob):/)).toBeTruthy();
                 done();
             }.bind(this),
             process: function () {

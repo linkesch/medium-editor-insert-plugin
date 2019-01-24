@@ -24,7 +24,8 @@
         "jasmine": false,
         "spyOn": false,
         "placeCaret": false,
-        "require": false
+        "require": false,
+        "dataURItoBlob": false
     },
 
     "jquery" : true,
