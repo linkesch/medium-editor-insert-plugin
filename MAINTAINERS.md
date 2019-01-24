@@ -1,6 +1,6 @@
 # Maintainers
 
-## Add contributors
+## How to add contributors to README
 
 After every pull request merge, use [all-contributors bot](https://all-contributors.js.org) to update contributors table in README. Do that by commenting in the same pull request the following message:
 
