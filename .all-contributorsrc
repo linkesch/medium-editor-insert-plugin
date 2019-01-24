@@ -346,6 +346,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "iparamonau",
+      "name": "Ivan Paramonau",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/28841?v=4",
+      "profile": "http://twitter.com/iparamonau",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
