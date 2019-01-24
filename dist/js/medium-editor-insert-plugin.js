@@ -1,5 +1,5 @@
 /*! 
- * medium-editor-insert-plugin v2.5.0 - jQuery insert plugin for MediumEditor
+ * medium-editor-insert-plugin v2.5.1 - jQuery insert plugin for MediumEditor
  *
  * http://linkesch.com/medium-editor-insert-plugin
  * 
@@ -1531,13 +1531,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             if ($(this).hasClass('medium-editor-button-active')) {
                 $embed.addClass(className);
 
-                if (that.options.styles[$(this).data('action')].added) {
+                if ((that.options.styles[$(this).data('action')] || {}).added) {
                     that.options.styles[$(this).data('action')].added($embed);
                 }
             } else {
                 $embed.removeClass(className);
 
-                if (that.options.styles[$(this).data('action')].removed) {
+                if ((that.options.styles[$(this).data('action')] || {}).removed) {
                     that.options.styles[$(this).data('action')].removed($embed);
                 }
             }
@@ -1555,7 +1555,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Embeds.prototype.toolbar2Action = function (e) {
         var $button = $(e.target).is('button') ? $(e.target) : $(e.target).closest('button'),
-            callback = this.options.actions[$button.data('action')].clicked;
+            callback = (this.options.actions[$button.data('action')] || {}).clicked;
 
         if (callback) {
             callback(this.$el.find('.medium-insert-embeds-selected'));
