@@ -25,12 +25,12 @@ describe('Images addon', function () {
 
         this.addon.uploadAdd(null, {
             autoUpload: true,
-            files: [new Blob([''], { type: 'image/jpeg' })],
+            files: [dataURItoBlob('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=')],
             submit: function () {
                 expect(this.$el.find('.medium-insert-images').length).toEqual(1);
                 expect(this.$el.find('.medium-insert-images img').length).toEqual(1);
                 expect(this.$el.find('.medium-insert-images .medium-insert-images-progress').length).toEqual(1);
-                expect(this.$el.find('.medium-insert-images img').attr('src').match(/^data:/).length).toEqual(1);
+                expect(this.$el.find('.medium-insert-images img').attr('src').match(/^(data|blob):/)).toBeTruthy();
                 done();
             }.bind(this),
             process: function () {
@@ -100,7 +100,7 @@ describe('Images addon', function () {
         this.$el.prepend('<div class="medium-insert-images medium-insert-active">' +
             '<figure></figure>' +
             '<figure></figure>' +
-        '</div>');
+            '</div>');
 
         this.addon.uploadAdd(null, {
             autoUpload: true,
@@ -130,7 +130,7 @@ describe('Images addon', function () {
         this.addon.options.preview = false;
         this.$el.prepend('<div class="medium-insert-images medium-insert-active">' +
             '<figure></figure>' +
-        '</div>');
+            '</div>');
 
         this.addon.uploadAdd(null, {
             autoUpload: true,
@@ -163,7 +163,7 @@ describe('Images addon', function () {
         });
 
         this.addon.showImage(null, {
-            submit: function () {}
+            submit: function () { }
         });
     });
 
@@ -172,7 +172,7 @@ describe('Images addon', function () {
             stubbedImage = jasmine.createSpy('image'),
             context = this.$el.prepend('<div class="medium-insert-images medium-insert-active">' +
                 '<figure><img src="data:" alt=""></figure>' +
-            '</div>');
+                '</div>');
 
         spyOn(this.addon, 'getDOMImage').and.returnValue(stubbedImage);
 
@@ -195,7 +195,7 @@ describe('Images addon', function () {
         var stubbedImage = jasmine.createSpy('image'),
             context = this.$el.prepend('<div class="medium-insert-images medium-insert-active">' +
                 '<figure><img src="data:" alt=""></figure>' +
-            '</div>');
+                '</div>');
 
         spyOn(this.addon, 'getDOMImage').and.returnValue(stubbedImage);
 
@@ -219,7 +219,7 @@ describe('Images addon', function () {
         };
 
         this.addon.showImage(null, {
-            submit: function () {}
+            submit: function () { }
         });
     });
 
@@ -481,7 +481,7 @@ describe('Images addon', function () {
         this.$el.find('p').click();
 
         this.addon.uploadAdd(null, {
-            files: [{type: 'image/jpeg', size: 1001}]
+            files: [{ type: 'image/jpeg', size: 1001 }]
         });
     });
 
@@ -497,7 +497,7 @@ describe('Images addon', function () {
         this.$el.find('p').click();
 
         this.addon.uploadAdd(null, {
-            files: [{type: 'image/jpeg', size: 1001}]
+            files: [{ type: 'image/jpeg', size: 1001 }]
         });
     });
 });
