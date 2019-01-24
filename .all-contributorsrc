@@ -40,6 +40,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ai",
+      "name": "Andrey Sitnik",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/19343?v=4",
+      "profile": "http://twitter.com/sitnikcode",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
