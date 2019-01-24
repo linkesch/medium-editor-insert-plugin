@@ -1820,7 +1820,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             file = data.files[0],
             acceptFileTypes = this.options.fileUploadOptions.acceptFileTypes,
             maxFileSize = this.options.fileUploadOptions.maxFileSize,
-            reader;
+            previewImg;
 
         if (acceptFileTypes && !acceptFileTypes.test(file.type)) {
             uploadErrors.push(this.options.messages.acceptFileTypesError + file.name);
@@ -1863,13 +1863,18 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             data.process().done(function () {
                 // If preview is set to true, let the showImage handle the upload start
                 if (that.options.preview) {
-                    reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        $.proxy(that, 'showImage', e.target.result, data)();
+                    // using object URL instead of FileReader,
+                    // because FileReader converts the file/blob to base64 string
+                    // which makes Medium Editor extremely laggy and slow
+                    previewImg = document.createElement('img');
+                    window.URL = window.URL || window.webkitURL;
+                    previewImg.src = window.URL.createObjectURL(data.files[0]);
+                    previewImg.onload = function () {
+                        $.proxy(that, 'showImage', this.src, data)();
+                        setTimeout(function () {
+                            window.URL.revokeObjectURL(this.src);
+                        });
                     };
-
-                    reader.readAsDataURL(data.files[0]);
                 } else {
                     data.submit();
                 }
@@ -2104,7 +2109,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 // Is backspace pressed and caret is at the beginning of a paragraph, get previous element
                 if (e.which === 8 && caretPosition === 0) {
                     $sibling = $current.prev();
-                // Is del pressed and caret is at the end of a paragraph, get next element
+                    // Is del pressed and caret is at the end of a paragraph, get next element
                 } else if (e.which === 46 && caretPosition === $current.text().length) {
                     $sibling = $current.next();
                 }
@@ -2166,7 +2171,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             // try to run it as a callback
             if (typeof this.options.deleteScript === 'function') {
                 this.options.deleteScript(file, $el);
-            // otherwise, it's probably a string, call it as ajax
+                // otherwise, it's probably a string, call it as ajax
             } else {
                 $.ajax($.extend(true, {}, {
                     url: this.options.deleteScript,
