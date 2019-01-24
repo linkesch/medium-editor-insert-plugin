@@ -418,6 +418,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "dazorni",
+      "name": "Sebastian Zorn",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1658380?v=4",
+      "profile": "http://dazorni.de",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
