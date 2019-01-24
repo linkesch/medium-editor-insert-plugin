@@ -1,10 +1,6 @@
 # jQuery insert plugin for MediumEditor
-[![All Contributors](https://img.shields.io/badge/all_contributors-50-orange.svg?style=flat-square)](#contributors)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.svg?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f8565ed2e554e4fa952ec4da6a2080b)](https://www.codacy.com/app/orthes_3082/medium-editor-insert-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=orthes/medium-editor-insert-plugin&amp;utm_campaign=Badge_Grade)
-[![CDNJS](https://img.shields.io/cdnjs/v/medium-editor-insert-plugin.svg)](https://cdnjs.com/libraries/medium-editor-insert-plugin)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orthes/medium-editor-insert-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Build Status](https://travis-ci.org/orthes/medium-editor-insert-plugin.svg?branch=master)](https://travis-ci.org/orthes/medium-editor-insert-plugin) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f8565ed2e554e4fa952ec4da6a2080b)](https://www.codacy.com/app/orthes_3082/medium-editor-insert-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=orthes/medium-editor-insert-plugin&amp;utm_campaign=Badge_Grade) [![CDNJS](https://img.shields.io/cdnjs/v/medium-editor-insert-plugin.svg)](https://cdnjs.com/libraries/medium-editor-insert-plugin)
 
 ---
 
@@ -63,10 +59,10 @@ The first step is to include the plugin with all its dependencies to your code:
 <script src="bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
 <script src="bower_components/medium-editor-insert-plugin/dist/js/medium-editor-insert-plugin.min.js"></script>
 
-<!-- 
+<!--
 OR YOU CAN USE CDN for a Quick Reference in Development Mode. [Dated Dec-2018 Latest Version] Recommented latest verions as moves on!
 
-CSS 
+CSS
 <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor-insert-plugin/2.5.0/css/medium-editor-insert-plugin-frontend.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/medium-editor-insert-plugin/2.5.0/css/medium-editor-insert-plugin.min.css" />
@@ -114,14 +110,6 @@ $(function () {
 - [Versioning](https://github.com/orthes/medium-editor-insert-plugin/wiki/Versioning)
 - [Development & Contributing](https://github.com/orthes/medium-editor-insert-plugin/wiki/Development-&-Contributing)
 - [License](https://github.com/orthes/medium-editor-insert-plugin/wiki/License)
-- [Author & Contributors](https://github.com/orthes/medium-editor-insert-plugin/wiki/Author-&-Contributors)
-
-
-## Sponsors
-
-[Maker](https://maker.me) | [nusii](https://nusii.com)
------ | -----
-[![Maker](http://i.imgur.com/8t8wsM8.png)](https://maker.me) | [![nusii](http://i.imgur.com/tvdJ249.png)](https://nusii.com)
 
 ## Contributors
 
@@ -141,3 +129,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/all-contri
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## License
+
+[MIT](https://github.com/orthes/medium-editor-insert-plugin/blob/master/LICENSE)

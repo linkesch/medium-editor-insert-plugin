@@ -41,6 +41,7 @@
     "medium-editor": "^5.15.0"
   },
   "devDependencies": {
+    "all-contributors-cli": "^5.10.2",
     "grunt": "^1.0.3",
     "grunt-autoprefixer": "^3.0.1",
     "grunt-banner": "^0.6.0",
@@ -59,6 +60,10 @@
     "time-grunt": "^2.0.0"
   },
   "scripts": {
-    "test": "grunt test --verbose"
+    "test": "grunt test --verbose",
+    "contributors:add": "all-contributors add",
+    "contributors:init": "all-contributors init",
+    "contributors:check": "all-contributors check",
+    "contributors:generate": "all-contributors generate"
   }
 }
