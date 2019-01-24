@@ -39,8 +39,8 @@
   "dependencies": {
     "jquery": ">=1.9.0",
     "medium-editor": "^5.15.0",
-    "handlebars": "~4.0.0",
-    "blueimp-file-upload": "~9.12.1",
+    "handlebars": "~4.0.12",
+    "blueimp-file-upload": "~9.28.0",
     "jquery-sortable": "~0.9.12"
   }
 }
