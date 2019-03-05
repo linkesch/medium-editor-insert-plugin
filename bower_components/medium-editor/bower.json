@@ -30,8 +30,10 @@
     "Gruntfile.js",
     "demo",
     "package.json",
-    "src",
-    "README.md",
-    "CHANGES.md"
+    "CHANGES.md",
+    "MAINTAINERS.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "UPGRADE-5.md"
   ]
 }

@@ -86,10 +86,22 @@
   .medium-editor-placeholder:after {
     content: attr(data-placeholder) !important;
     font-style: italic;
-    left: 0;
     position: absolute;
+    left: 0;
     top: 0;
-    white-space: pre; }
+    white-space: pre;
+    padding: inherit;
+    margin: inherit; }
+
+.medium-editor-placeholder-relative {
+  position: relative; }
+  .medium-editor-placeholder-relative:after {
+    content: attr(data-placeholder) !important;
+    font-style: italic;
+    position: relative;
+    white-space: pre;
+    padding: inherit;
+    margin: inherit; }
 
 .medium-toolbar-arrow-under:after, .medium-toolbar-arrow-over:before {
   border-style: solid;
@@ -196,19 +208,23 @@
     margin: 0 10px;
     text-decoration: none; }
 
+.medium-editor-toolbar-form-active {
+  display: block; }
+
 .medium-editor-toolbar-actions:after {
   clear: both;
   content: "";
   display: table; }
 
-[data-medium-editor-element] img {
-  max-width: 100%; }
-
-[data-medium-editor-element] sub {
-  vertical-align: sub; }
-
-[data-medium-editor-element] sup {
-  vertical-align: super; }
+.medium-editor-element {
+  word-wrap: break-word;
+  min-height: 30px; }
+  .medium-editor-element img {
+    max-width: 100%; }
+  .medium-editor-element sub {
+    vertical-align: sub; }
+  .medium-editor-element sup {
+    vertical-align: super; }
 
 .medium-editor-hidden {
   display: none; }

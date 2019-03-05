@@ -7,24 +7,22 @@
  * https://blueimp.net
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  */
-
-/*global require, __dirname, process, console */
 
 ;(function () {
   'use strict'
   var path = require('path')
   var tmpl = require(path.join(__dirname, 'tmpl.js'))
   var fs = require('fs')
-  var uglifyJS = require('uglify-js')
   // Retrieve the content of the minimal runtime:
   var runtime = fs.readFileSync(path.join(__dirname, 'runtime.js'), 'utf8')
   // A regular expression to parse templates from script tags in a HTML page:
-  var regexp = /<script( id="([\w\-]+)")? type="text\/x-tmpl"( id="([\w\-]+)")?>([\s\S]+?)<\/script>/gi
+  var regexp = /<script( id="([\w-]+)")? type="text\/x-tmpl"( id="([\w-]+)")?>([\s\S]+?)<\/script>/gi
   // A regular expression to match the helper function names:
   var helperRegexp = new RegExp(
-    tmpl.helper.match(/\w+(?=\s*=\s*function\s*\()/g).join('\\s*\\(|') + '\\s*\\('
+    tmpl.helper.match(/\w+(?=\s*=\s*function\s*\()/g).join('\\s*\\(|') +
+      '\\s*\\('
   )
   // A list to store the function bodies:
   var list = []
@@ -34,12 +32,18 @@
     // Only add helper functions if they are used inside of the template:
     var helper = helperRegexp.test(str) ? tmpl.helper : ''
     var body = str.replace(tmpl.regexp, tmpl.func)
-    if (helper || (/_e\s*\(/.test(body))) {
+    if (helper || /_e\s*\(/.test(body)) {
       helper = '_e=tmpl.encode' + helper + ','
     }
-    return 'function(' + tmpl.arg + ',tmpl){' +
-    ('var ' + helper + "_s='" + body + "';return _s;")
-      .split("_s+='';").join('') + '}'
+    return (
+      'function(' +
+      tmpl.arg +
+      ',tmpl){' +
+      ('var ' + helper + "_s='" + body + "';return _s;")
+        .split("_s+='';")
+        .join('') +
+      '}'
+    )
   }
   // Loop through the command line arguments:
   process.argv.forEach(function (file, index) {
@@ -78,6 +82,6 @@
   }
   // Combine the generated functions as cache of the minimal runtime:
   code = runtime.replace('{}', '{' + list.join(',') + '}')
-  // Generate the minified code and print it to the console output:
-  console.log(uglifyJS.minify(code, {fromString: true}).code)
-}())
+  // Print the resulting code to the console output:
+  console.log(code)
+})()

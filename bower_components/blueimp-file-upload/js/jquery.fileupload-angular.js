@@ -6,13 +6,13 @@
  * https://blueimp.net
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  */
 
 /* jshint nomen:false */
-/* global define, angular */
+/* global define, angular, require */
 
-(function (factory) {
+;(function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
@@ -24,6 +24,16 @@
             './jquery.fileupload-video',
             './jquery.fileupload-validate'
         ], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS:
+        factory(
+            require('jquery'),
+            require('angular'),
+            require('./jquery.fileupload-image'),
+            require('./jquery.fileupload-audio'),
+            require('./jquery.fileupload-video'),
+            require('./jquery.fileupload-validate')
+        );
     } else {
         factory();
     }
@@ -191,8 +201,8 @@
         // The FileUploadController initializes the fileupload widget and
         // provides scope methods to control the File Upload functionality:
         .controller('FileUploadController', [
-            '$scope', '$element', '$attrs', '$window', 'fileUpload',
-            function ($scope, $element, $attrs, $window, fileUpload) {
+            '$scope', '$element', '$attrs', '$window', 'fileUpload','$q',
+            function ($scope, $element, $attrs, $window, fileUpload, $q) {
                 var uploadMethods = {
                     progress: function () {
                         return $element.fileupload('progress');
@@ -254,19 +264,21 @@
                 $scope.applyOnQueue = function (method) {
                     var list = this.queue.slice(0),
                         i,
-                        file;
+                        file,
+                        promises = [];
                     for (i = 0; i < list.length; i += 1) {
                         file = list[i];
                         if (file[method]) {
-                            file[method]();
+                            promises.push(file[method]());
                         }
                     }
+                    return $q.all(promises);
                 };
                 $scope.submit = function () {
-                    this.applyOnQueue('$submit');
+                    return this.applyOnQueue('$submit');
                 };
                 $scope.cancel = function () {
-                    this.applyOnQueue('$cancel');
+                    return this.applyOnQueue('$cancel');
                 };
                 // Add upload methods to the scope:
                 angular.extend($scope, uploadMethods);
@@ -303,6 +315,7 @@
                     'fileuploadpaste',
                     'fileuploaddrop',
                     'fileuploaddragover',
+                    'fileuploadchunkbeforesend',
                     'fileuploadchunksend',
                     'fileuploadchunkdone',
                     'fileuploadchunkfail',

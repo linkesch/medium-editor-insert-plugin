@@ -11,6 +11,7 @@ var editor = new MediumEditor('.editor', {
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Core Options](#core-options)
     - [`activeButtonClass`](#activebuttonclass)
     - [`buttonLabels`](#buttonlabels)
@@ -32,19 +33,24 @@ var editor = new MediumEditor('.editor', {
     - [`diffTop`](#difftop)
     - [`firstButtonClass`](#firstbuttonclass)
     - [`lastButtonClass`](#lastbuttonclass)
+    - [`relativeContainer`](#relativecontainer)
     - [`standardizeSelectionStart`](#standardizeselectionstart)
     - [`static`](#static)
   - ['static' Toolbar Options](#static-toolbar-options)
     - [`align`](#align)
     - [`sticky`](#sticky)
+    - [`stickyTopOffset`](#stickytopoffset)
     - [`updateOnEmptySelection`](#updateonemptyselection)
   - [Disabling Toolbar](#disabling-toolbar)
 - [Anchor Preview options](#anchor-preview-options)
     - [`hideDelay`](#hidedelay)
     - [`previewValueSelector`](#previewvalueselector)
+    - [`showOnEmptyLinks`](#showonemptylinks)
+    - [`showWhenToolbarIsVisible`](#showwhentoolbarisvisible)
   - [Disabling Anchor Preview](#disabling-anchor-preview)
 - [Placeholder Options](#placeholder-options)
     - [`text`](#text)
+    - [`hideOnClick`](#hideonclick)
   - [Disabling Placeholders](#disabling-placeholders)
 - [Anchor Form options](#anchor-form-options)
     - [`customClassOption`](#customclassoption)
@@ -59,6 +65,7 @@ var editor = new MediumEditor('.editor', {
     - [`cleanReplacements`](#cleanreplacements)
     - [`cleanAttrs`](#cleanattrs)
     - [`cleanTags`](#cleantags)
+    - [`unwrapTags`](#unwraptags)
   - [Disabling Paste Handling](#disabling-paste-handling)
 - [KeyboardCommands Options](#keyboardcommands-options)
     - [`commands`](#commands)
@@ -189,7 +196,7 @@ Enables/disables automatically adding the `target="_blank"` attribute to anchor 
 
 The toolbar for MediumEditor is implemented as a built-in extension which automatically displays whenever the user selects some text.  The toolbar can hold any set of defined built-in buttons, but can also hold any custom buttons passed in as extensions.
 
-Options for the toolbar are passed as an object taht is a member of the outer options object. Example:
+Options for the toolbar are passed as an object that is a member of the outer options object. Example:
 ```js
 var editor = new MediumEditor('.editable', {
     toolbar: {
@@ -201,6 +208,7 @@ var editor = new MediumEditor('.editable', {
         diffTop: -10,
         firstButtonClass: 'medium-editor-button-first',
         lastButtonClass: 'medium-editor-button-last',
+        relativeContainer: null,
         standardizeSelectionStart: false,
         static: false,
 
@@ -249,6 +257,15 @@ CSS class added to the first button in the toolbar.
 CSS class added to the last button in the toolbar.
 
 ***
+#### `relativeContainer`
+**Default:** `null`
+
+DOMElement to append the toolbar to instead of the body.  When an element is passed the toolbar will also be positioned `relative` instead of `absolute`, which means the editor will not attempt to manually position the toolbar automatically.
+
+**NOTE:**
+* Using this in combination with the `static` option for toolbar is not explicitly supported and the behavior in this case is not defined.
+
+***
 #### `standardizeSelectionStart`
 **Default:** `false`
 
@@ -280,6 +297,12 @@ When the __static__ option is `true`, this aligns the static toolbar relative to
 **Default:** `false`
 
 When the __static__ option is `true`, this enables/disables the toolbar "sticking" to the viewport and staying visible on the screen while the page scrolls.
+
+***
+#### `stickyTopOffset`
+**Default:** `0`
+
+When the __sticky__ option is `true`, this set in pixel a top offset above the toolbar.
 
 ***
 #### `updateOnEmptySelection`
@@ -328,6 +351,12 @@ Time in milliseconds to show the anchor tag preview after the mouse has left the
 The default selector to locate where to put the activeAnchor value in the preview. You should only need to override this if you've modified the way in which the anchor-preview extension renders.
 
 ***
+#### `showOnEmptyLinks`
+**Default:** `true`
+
+Determines whether the anchor tag preview shows up on link with href as "" or "#something". You should set this value to false if you do not want the preview to show up in such use cases.
+
+***
 #### `showWhenToolbarIsVisible`
 **Default:** `false`
 
@@ -357,7 +386,8 @@ var editor = new MediumEditor('.editable', {
     placeholder: {
         /* This example includes the default options for placeholder,
            if nothing is passed this is what it used */
-        text: 'Type your text'
+        text: 'Type your text',
+        hideOnClick: true
     }
 });
 ```
@@ -368,6 +398,13 @@ var editor = new MediumEditor('.editable', {
 **Default:** `'Type your text'`
 
 Defines the default placeholder for empty contenteditables when __placeholder__ is not set to false. You can overwrite it by setting a `data-placeholder` attribute on the editor elements.
+
+***
+#### `hideOnClick`
+**Default:** `true`
+
+Causes the placeholder to disappear as soon as the field gains focus. To hide the placeholder only after starting to type, and to show it again as soon as field is empty, set this option to `false`.
+
 
 ### Disabling Placeholders
 
@@ -419,7 +456,7 @@ Text to be shown in the checkbox when the __customClassOption__ is being used.
 #### `linkValidation`
 **Default:** `false`
 
-Enables/disables check for common URL protocols on anchor links.
+Enables/disables check for common URL protocols on anchor links. Converts invalid url characters (ie spaces) to valid characters using `encodeURI`
 
 ***
 #### `placeholderText`
@@ -489,6 +526,13 @@ List of element attributes to remove during paste when __cleanPastedHTML__ is `t
 
 List of element tag names to remove during paste when __cleanPastedHTML__ is `true` or when calling `cleanPaste(text)` or `pasteHTML(html,options)` helper methods.
 
+***
+#### `unwrapTags`
+**Default:** `[]`
+
+List of element tag names to unwrap (remove the element tag but retain its child elements) during paste when __cleanPastedHTML__ is `true` or when calling `cleanPaste(text)` or `pasteHTML(html,options)` helper methods.
+
+***
 ### Disabling Paste Handling
 
 To disable MediumEditor manipulating pasted content, set the both the `forcePlainText` and `cleanPastedHTML` options to `false`:
@@ -577,7 +621,7 @@ var editor = new MediumEditor('.editable', {
 #### `imageDragging`
 **Default:** `true`
 
-The image dragging handler is a built-in extenson for handling dragging & dropping images into the contenteditable.  This feature is ON by default.
+The image dragging handler is a built-in extension for handling dragging & dropping images into the contenteditable.  This feature is ON by default.
 
 ### Disabling Image Dragging
 

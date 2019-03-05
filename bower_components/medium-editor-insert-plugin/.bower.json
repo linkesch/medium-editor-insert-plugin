@@ -1,14 +1,31 @@
 {
   "name": "medium-editor-insert-plugin",
-  "version": "2.2.3",
+  "version": "2.5.1",
   "description": "jQuery insert plugin for MediumEditor",
+  "homepage": "http://linkesch.com/medium-editor-insert-plugin",
   "main": [
     "dist/js/medium-editor-insert-plugin.js",
     "dist/css/medium-editor-insert-plugin.css"
   ],
   "license": "MIT",
   "authors": [
-    "Pavel linkesch <pavel.linkesch@gmail.com> (http://linkesch.sk)"
+    "Pavel linkesch <pavel.linkesch@gmail.com> (http://linkesch.com)",
+    "Jeremy Benoist <jeremy.benoist@gmail.com>"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "contenteditable",
+    "editor",
+    "medium",
+    "wysiwyg",
+    "rich-text",
+    "images",
+    "embeds",
+    "videos"
   ],
   "ignore": [
     "**/.*",
@@ -21,22 +38,18 @@
   ],
   "dependencies": {
     "jquery": ">=1.9.0",
-    "medium-editor": "~5.10",
-    "handlebars": "~4.0.0",
-    "blueimp-file-upload": "~9.11.1",
+    "medium-editor": "^5.15.0",
+    "handlebars": "~4.0.12",
+    "blueimp-file-upload": "~9.28.0",
     "jquery-sortable": "~0.9.12"
   },
-  "devDependencies": {
-    "jquery-cycle2": "~2.1.6"
-  },
-  "homepage": "https://github.com/orthes/medium-editor-insert-plugin",
-  "_release": "2.2.3",
+  "_release": "2.5.1",
   "_resolution": {
     "type": "version",
-    "tag": "2.2.3",
-    "commit": "8a102bd8dbf55af519fb416c6a205bfcd72a505b"
+    "tag": "2.5.1",
+    "commit": "a5c31c86e89c59fe5048d9813fd32f342dd916a9"
   },
-  "_source": "git://github.com/orthes/medium-editor-insert-plugin.git",
+  "_source": "https://github.com/orthes/medium-editor-insert-plugin.git",
   "_target": "^2.0.0",
   "_originalSource": "medium-editor-insert-plugin"
 }

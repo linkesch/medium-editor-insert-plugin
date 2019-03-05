@@ -6,39 +6,49 @@
  * https://blueimp.net
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  *
  * Based on stackoverflow user Stoive's code snippet:
  * http://stackoverflow.com/q/4998908
  */
 
-/*global window, atob, Blob, ArrayBuffer, Uint8Array, define, module */
+/* global atob, Blob, define */
 
 ;(function (window) {
   'use strict'
 
-  var CanvasPrototype = window.HTMLCanvasElement &&
-                          window.HTMLCanvasElement.prototype
-  var hasBlobConstructor = window.Blob && (function () {
-    try {
-      return Boolean(new Blob())
-    } catch (e) {
-      return false
-    }
-  }())
-  var hasArrayBufferViewSupport = hasBlobConstructor && window.Uint8Array &&
+  var CanvasPrototype =
+    window.HTMLCanvasElement && window.HTMLCanvasElement.prototype
+  var hasBlobConstructor =
+    window.Blob &&
+    (function () {
+      try {
+        return Boolean(new Blob())
+      } catch (e) {
+        return false
+      }
+    })()
+  var hasArrayBufferViewSupport =
+    hasBlobConstructor &&
+    window.Uint8Array &&
     (function () {
       try {
         return new Blob([new Uint8Array(100)]).size === 100
       } catch (e) {
         return false
       }
-    }())
-  var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder ||
-                      window.MozBlobBuilder || window.MSBlobBuilder
+    })()
+  var BlobBuilder =
+    window.BlobBuilder ||
+    window.WebKitBlobBuilder ||
+    window.MozBlobBuilder ||
+    window.MSBlobBuilder
   var dataURIPattern = /^data:((.*?)(;charset=.*?)?)(;base64)?,/
-  var dataURLtoBlob = (hasBlobConstructor || BlobBuilder) && window.atob &&
-    window.ArrayBuffer && window.Uint8Array &&
+  var dataURLtoBlob =
+    (hasBlobConstructor || BlobBuilder) &&
+    window.atob &&
+    window.ArrayBuffer &&
+    window.Uint8Array &&
     function (dataURI) {
       var matches,
         mediaType,
@@ -75,10 +85,9 @@
       }
       // Write the ArrayBuffer (or ArrayBufferView) to a blob:
       if (hasBlobConstructor) {
-        return new Blob(
-          [hasArrayBufferViewSupport ? intArray : arrayBuffer],
-          {type: mediaType}
-        )
+        return new Blob([hasArrayBufferViewSupport ? intArray : arrayBuffer], {
+          type: mediaType
+        })
       }
       bb = new BlobBuilder()
       bb.append(arrayBuffer)
@@ -87,15 +96,21 @@
   if (window.HTMLCanvasElement && !CanvasPrototype.toBlob) {
     if (CanvasPrototype.mozGetAsFile) {
       CanvasPrototype.toBlob = function (callback, type, quality) {
-        if (quality && CanvasPrototype.toDataURL && dataURLtoBlob) {
-          callback(dataURLtoBlob(this.toDataURL(type, quality)))
-        } else {
-          callback(this.mozGetAsFile('blob', type))
-        }
+        var self = this
+        setTimeout(function () {
+          if (quality && CanvasPrototype.toDataURL && dataURLtoBlob) {
+            callback(dataURLtoBlob(self.toDataURL(type, quality)))
+          } else {
+            callback(self.mozGetAsFile('blob', type))
+          }
+        })
       }
     } else if (CanvasPrototype.toDataURL && dataURLtoBlob) {
       CanvasPrototype.toBlob = function (callback, type, quality) {
-        callback(dataURLtoBlob(this.toDataURL(type, quality)))
+        var self = this
+        setTimeout(function () {
+          callback(dataURLtoBlob(self.toDataURL(type, quality)))
+        })
       }
     }
   }
@@ -108,4 +123,4 @@
   } else {
     window.dataURLtoBlob = dataURLtoBlob
   }
-}(window))
+})(window)

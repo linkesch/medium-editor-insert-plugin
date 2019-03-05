@@ -1,6 +1,6 @@
 {
   "name": "blueimp-tmpl",
-  "version": "3.3.0",
+  "version": "3.11.0",
   "title": "JavaScript Templates",
   "description": "1KB lightweight, fast & powerful JavaScript templating engine with zero dependencies. Compatible with server-side environments like Node.js, module loaders like RequireJS, Browserify or webpack and all web browsers.",
   "keywords": [
@@ -19,14 +19,23 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "expect.js": "0.3.1",
-    "mocha": "2.3.4",
-    "standard": "6.0.7",
-    "uglify-js": "2.6.1"
+    "chai": "^4.1.1",
+    "eslint": "^4.5.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^3.5.0",
+    "prettier-eslint-cli": "^4.2.1",
+    "uglify-js": "^3.0.28"
   },
   "scripts": {
-    "test": "standard js/*.js test/*.js && mocha",
-    "build": "cd js && uglifyjs tmpl.js -c -m -o tmpl.min.js --source-map tmpl.min.js.map",
+    "format": "prettier-eslint --no-semi --single-quote --write **/*.js",
+    "lint": "eslint .",
+    "unit": "mocha",
+    "test": "npm run lint && npm run unit",
+    "build": "cd js && uglifyjs tmpl.js -c -m -o tmpl.min.js --source-map url=tmpl.min.js.map",
     "preversion": "npm test",
     "version": "npm run build && git add -A js",
     "postversion": "git push --tags origin master master:gh-pages && npm publish"

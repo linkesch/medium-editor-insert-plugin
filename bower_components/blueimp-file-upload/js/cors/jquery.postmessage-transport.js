@@ -6,12 +6,12 @@
  * https://blueimp.net
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  */
 
 /* global define, require, window, document */
 
-(function (factory) {
+;(function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
@@ -64,6 +64,12 @@
                 loc = $('<a>').prop('href', options.postMessage)[0],
                 target = loc.protocol + '//' + loc.host,
                 xhrUpload = options.xhr().upload;
+            // IE always includes the port for the host property of a link
+            // element, but not in the location.host or origin property for the
+            // default http port 80 and https port 443, so we strip it:
+            if (/^(http:\/\/.+:80)|(https:\/\/.+:443)$/.test(target)) {
+              target = target.replace(/:(80|443)$/, '');
+            }
             return {
                 send: function (_, completeCallback) {
                     counter += 1;

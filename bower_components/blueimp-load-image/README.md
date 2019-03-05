@@ -1,5 +1,4 @@
 # JavaScript Load Image
-
 > A JavaScript library to load and transform image files.
 
 ## Table of contents
@@ -15,6 +14,7 @@
 - [Options](#options)
 - [Meta data parsing](#meta-data-parsing)
 - [Exif parser](#exif-parser)
+- [IPTC parser](#iptc-parser)
 - [License](#license)
 - [Credits](#credits)
 
@@ -23,11 +23,10 @@
 
 ## Description
 JavaScript Load Image is a library to load images provided as File or Blob
-objects or via URL.  
-It returns an optionally scaled and/or cropped HTML img or canvas element via an
-asynchronous callback.  
-It also provides a method to parse image meta data to extract Exif tags and
-thumbnails and to restore the complete image header after resizing.
+objects or via URL. It returns an optionally scaled and/or cropped HTML img or
+canvas element. It also provides methods to parse image meta data to extract
+IPTC and Exif tags as well as embedded thumbnail images and to restore the
+complete image header after resizing.
 
 ## Setup
 Include the (combined and minified) JavaScript Load Image script in your HTML
@@ -41,10 +40,17 @@ Or alternatively, choose which components you want to include:
 
 ```html
 <script src="js/load-image.js"></script>
-<script src="js/load-image-orientation.js"></script>
+
+<script src="js/load-image-scale.js"></script>
 <script src="js/load-image-meta.js"></script>
+<script src="js/load-image-fetch.js"></script>
+<script src="js/load-image-orientation.js"></script>
+
 <script src="js/load-image-exif.js"></script>
 <script src="js/load-image-exif-map.js"></script>
+
+<script src="js/load-image-iptc.js"></script>
+<script src="js/load-image-iptc-map.js"></script>
 ```
 
 ## Usage
@@ -194,9 +200,18 @@ Requires `canvas: true`.
 * **crop**: Crops the image to the maxWidth/maxHeight constraints if set to
 `true`.  
 Enabling the `crop` option also enables the `canvas` option.
-* **orientation**: Allows to transform the canvas coordinates according to the
-EXIF orientation specification.  
-Setting the `orientation` also enables the `canvas` option.
+* **orientation**: Transform the canvas according to the specified Exif
+orientation, which can be an `integer` in the range of `1` to `8` or the boolean
+value `true`.  
+When set to `true`, it will set the orientation value based on the EXIF data of
+the image, which will be parsed automatically if the exif library is available.  
+Setting the `orientation` also enables the `canvas` option.  
+Setting `orientation` to `true` also enables the `meta` option.
+* **meta**: Automatically parses the image meta data if set to `true`.  
+The meta data is passed to the callback as second argument.  
+If the file is given as URL and the browser supports the
+[fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API), fetches
+the file as Blob to be able to parse the meta data.
 * **canvas**: Returns the image as
 [canvas](https://developer.mozilla.org/en/HTML/Canvas) element if set to `true`.
 * **crossOrigin**: Sets the crossOrigin property on the img element for loading
@@ -259,16 +274,16 @@ loadImage.parseMetaData(
 The third argument is an options object which defines the maximum number of
 bytes to parse for the image meta data, allows to disable the imageHead creation
 and is also passed along to segment parsers registered via loadImage extensions,
-e.g. the Exif parser.
+e.g. the Exif and IPTC parsers.
 
 **Note:**  
 Blob objects of resized images can be created via
 [canvas.toBlob()](https://github.com/blueimp/JavaScript-Canvas-to-Blob).
 
 ### Exif parser
-If you include the Load Image Exif Parser extension, the **parseMetaData**
-callback **data** contains the additional property **exif** if Exif data could
-be found in the given image.  
+If you include the Load Image Exif Parser extension, the argument passed to the
+callback for **parseMetaData** will contain the additional property **exif** if
+Exif data could be found in the given image.  
 The **exif** object stores the parsed Exif tags:
 
 ```js
@@ -291,7 +306,7 @@ become available, as well as two additional methods, **exif.getText()** and
 ```js
 var flashText = data.exif.getText('Flash'); // e.g.: 'Flash fired, auto mode',
 
-// A map of all parsed tags with their mapped names as keys and their text values:
+// A map of all parsed tags with their mapped names/text as keys/values:
 var allTags = data.exif.getAll();
 ```
 
@@ -303,13 +318,48 @@ disable certain aspects of the parser:
 * **disableExifSub**: Disables parsing of the Exif Sub IFD.
 * **disableExifGps**: Disables parsing of the Exif GPS Info IFD.
 
+### IPTC parser
+If you include the Load Image IPTC Parser extension, the argument passed to the
+callback for **parseMetaData** will contain the additional property **iptc** if
+IPTC data could be found in the given image.  
+The **iptc** object stores the parsed IPTC tags:
+
+```js
+var objectname = data.iptc[0x5];
+```
+
+It also provides an **iptc.get()** method to retrieve the tag value via the
+tag's mapped name:
+
+```js
+var objectname = data.iptc.get('ObjectName');
+```
+
+By default, the only available mapped names are **ObjectName**.  
+If you also include the Load Image IPTC Map library, additional tag mappings
+become available, as well as two additional methods, **iptc.getText()** and
+**iptc.getAll()**:
+
+```js
+var keywords = data.iptc.getText('Keywords'); // e.g.: ['Weather','Sky']
+
+// A map of all parsed tags with their mapped names/text as keys/values:
+var allTags = data.iptc.getAll();
+```
+
+The IPTC parser also adds additional options for the parseMetaData method, to
+disable certain aspects of the parser:
+
+* **disableIptc**: Disables IPTC parsing.
+
 ## License
 The JavaScript Load Image script is released under the
-[MIT license](http://www.opensource.org/licenses/MIT).
+[MIT license](https://opensource.org/licenses/MIT).
 
 ## Credits
 
 * Image meta data handling implementation based on the help and contribution of
 Achim Stöhr.
 * Exif tags mapping based on Jacob Seidelin's
-[exif-js](https://github.com/jseidelin/exif-js).
+[exif-js](https://github.com/jseidelin/exif-js) library.
+* IPTC parser implementation by [Dave Bevan](https://github.com/bevand10).

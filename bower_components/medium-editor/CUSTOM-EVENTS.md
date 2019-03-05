@@ -1,12 +1,12 @@
 # MediumEditor Custom Events (v5.0.0)
 
-MediumEditor exposes a variety of custom events for convienience when using the editor with your web application.  You can attach and detach listeners to these custom events, as well as manually trigger any custom events including your own custom events.
+MediumEditor exposes a variety of custom events for convenience when using the editor with your web application.  You can attach and detach listeners to these custom events, as well as manually trigger any custom events including your own custom events.
 
 **NOTE:**
 
 Custom event listeners are triggered in the order that they were 'subscribed' to.  Most functionality within medium-editor uses these custom events to trigger updates, so in general, it can be assumed that most of the built-in functionality has already been completed before any of your custom event listeners will be called.
 
-If you need to override the editor's bult-in behavior, try overriding the built-in extensions with your own [custom extension](src/js/extensions).
+If you need to override the editor's built-in behavior, try overriding the built-in extensions with your own [custom extension](src/js/extensions).
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -16,13 +16,16 @@ If you need to override the editor's bult-in behavior, try overriding the built-
   - [`MediumEditor.unsubscribe(name, listener)`](#mediumeditorunsubscribename-listener)
   - [`MediumEditor.trigger(name, data, editable)`](#mediumeditortriggername-data-editable)
 - [Custom Events](#custom-events)
+  - [`addElement`](#addelement)
   - [`blur`](#blur)
   - [`editableInput`](#editableinput)
   - [`externalInteraction`](#externalinteraction)
   - [`focus`](#focus)
+  - [`removeElement`](#removeelement)
 - [Toolbar Custom Events](#toolbar-custom-events)
   - [`hideToolbar`](#hidetoolbar)
   - [`positionToolbar`](#positiontoolbar)
+  - [`positionedToolbar`](#positionedtoolbar)
   - [`showToolbar`](#showtoolbar)
 - [Proxied Custom Events](#proxied-custom-events)
       - [`editableClick`](#editableclick)
@@ -55,7 +58,7 @@ Attaches a listener for the specified custom event name.
 
   * Name of the event to listen to.  See the list of built-in [Custom Events](#custom-events) below.
 
-2. _**listener(data, editable)** (`function`)_: 
+2. _**listener(data, editable)** (`function`)_:
 
   * Listener method that will be called whenever the custom event is triggered.
 
@@ -79,7 +82,7 @@ Detaches a custom event listener for the specified custom event name.
 
   * Name of the event to detach the listener for.
 
-2. _**listener** (`function`)_: 
+2. _**listener** (`function`)_:
 
   * A reference to the listener to detach.  This must be a match by-reference and not a copy.
 
@@ -108,6 +111,20 @@ Manually triggers a custom event.
 
 These events are custom to MediumEditor so there may be one or more native events that can trigger them.
 
+### `addElement`
+
+`addElement` is triggered whenever an element is added to the editor after the editor has been instantiated.  This custom event will be triggered **after** the element has already been initialized by the editor and added to the internal array of **elements**.  If the element being added was a `<textarea>`, the element passed to the listener will be the created `<div contenteditable=true>` element and not the root `<textarea>`.
+
+**Arguments to listener**
+
+1. _**data** (`object`)_
+  * Properties of data object
+    * `target`: element which was added to the editor
+    * `currentTarget`: element which was added to the editor
+2. _**editable** (`HTMLElement`)_
+  * element which was added to the editor
+
+***
 ### `blur`
 
 `blur` is triggered whenever a `contenteditable` element within an editor has lost focus to an element other than an editor maintained element (ie Toolbar, Anchor Preview, etc).
@@ -126,7 +143,7 @@ Example:
 ***
 ### `editableInput`
 
-`editableInput` is triggered whenever the content of a `contenteditable` changes, including keypresses, toolbar actions, or any other user interaction that changes the html within the element.  For non-IE browsers, this is just a proxied version of the native `input` event.  However, Internet Explorer has never supported the `input` event on `contenteditable` elements so for these browsers the `editableInput` event is triggered through a combination of:
+`editableInput` is triggered whenever the content of a `contenteditable` changes, including keypresses, toolbar actions, or any other user interaction that changes the html within the element.  For non-IE browsers, this is just a proxied version of the native `input` event.  However, Internet Explorer and has never supported the `input` event on `contenteditable` elements, and Edge has some support for `input` on `contenteditable` (which may be fixed in upcoming release of Edge) so for these browsers the `editableInput` event is triggered through a combination of:
 * native `keypress` event on the element
 * native `selectionchange` event on the document
 * monitoring calls the `document.execCommand()`
@@ -139,7 +156,21 @@ Example:
 ***
 ### `focus`
 
-`focus` is triggered whenver a `contentedtiable` element within an editor receives focus. If the user interacts with any editor maintained elements (ie toolbar), `blur` is NOT triggered because focus has not been lost.  Thus, `focus` will only be triggered when an `contenteditable` element (or the editor that contains it) is first interacted with.
+`focus` is triggered whenever a `contenteditable` element within an editor receives focus. If the user interacts with any editor maintained elements (ie toolbar), `blur` is NOT triggered because focus has not been lost.  Thus, `focus` will only be triggered when an `contenteditable` element (or the editor that contains it) is first interacted with.
+
+***
+### `removeElement`
+
+`removeElement` is triggered whenever an element is removed from the editor after the editor has been instantiated.  This custom event will be triggered **after** the element has already been removed from the editor and any events attached to it have already been removed.  If the element being removed was a `<div>` created to correspond to a `<textarea>`, the element will already have been removed from the DOM.
+
+**Arguments to listener**
+
+1. _**data** (`object`)_
+  * Properties of data object
+    * `target`: element which was removed from the editor
+    * `currentTarget`: element which was removed from the editor
+2. _**editable** (`HTMLElement`)_
+  * element which was removed from the editor
 
 ## Toolbar Custom Events
 
@@ -152,12 +183,15 @@ These events are triggered by the toolbar when the toolbar extension has not bee
 ### `positionToolbar`
 `positionToolbar` is triggered each time the current selection is checked and the toolbar's position is about to be updated. This event is triggered after all of the buttons have had their state updated, but before the toolbar is moved to the correct location.  This event will be triggered even if nothing will be changed about the toolbar's appearance.
 
+### `positionedToolbar`
+`positionedToolbar` is triggered each time the current selection is checked, the toolbar is displayed, and the toolbar's position was updated. This differs from the `positionToolbar` event in that the visibility and location of the toolbar has already been changed (as opposed to the event triggering before those changes occur). This event will be triggered even if nothing was changed about the toolbar's appearance.
+
 ### `showToolbar`
 `showToolbar` is triggered whenever the toolbar was hidden and has just been displayed.
 
 ## Proxied Custom Events
 
-These events are triggered whenever a native browser event is triggered for any of the `contenteditable` elements monitored by this instnace of MediumEditor.
+These events are triggered whenever a native browser event is triggered for any of the `contenteditable` elements monitored by this instance of MediumEditor.
 
 For example, the `editableClick` custom event will be triggered when a native `click` event is fired on any of the `contenteditable` elements. This provides a single event listener that can get fired for all elements, and also allows for the `contenteditable` element that triggered the event to be passed to the listener.
 

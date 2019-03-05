@@ -1,0 +1,31 @@
+@import "settings";
+@import "animations/image-loading";
+@import "animations/pop-upwards";
+@import "components/anchor-preview";
+@import "components/file-dragging";
+@import "components/placeholder";
+@import "components/toolbar";
+@import "components/toolbar-form";
+@import "util/clearfix";
+
+// contenteditable rules
+.medium-editor-element {
+    word-wrap: break-word;
+    min-height: 30px;
+
+    img {
+        max-width: 100%;
+    }
+
+    sub {
+        vertical-align: sub;
+    }
+
+    sup {
+        vertical-align: super;
+    }
+}
+
+.medium-editor-hidden {
+    display: none;
+}
