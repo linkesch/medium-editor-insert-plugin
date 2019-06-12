@@ -59,6 +59,26 @@ describe('Images addon', function () {
         expect(this.$el.find('.medium-insert-images img').attr('src')).toEqual('test.jpg');
     });
 
+    it('replaces preview by uploaded image, with user built url', function () {
+        var stubbedImage = jasmine.createSpy('image');
+        spyOn(this.addon, 'getDOMImage').and.returnValue(stubbedImage);
+        spyOn(this.addon.options, 'returnURLFromUploadResult').and.callFake(function (result) {
+            return result.success[0].id;
+        });
+        this.$el.prepend('<div class="medium-insert-images medium-insert-active"><figure><img src="data:" alt=""></figure></div>');
+
+        this.addon.uploadDone(null, {
+            context: this.$el.find('figure'),
+            result: {
+                success: [
+                    { id: 'test-image-url.jpg' }
+                ]
+            }
+        });
+        stubbedImage.onload();
+        expect(this.$el.find('.medium-insert-images img').attr('src')).toEqual('test-image-url.jpg');
+    });
+
     it('uploads without preview when it is set like this in options', function (done) {
         var $p = this.$el.find('p');
 
