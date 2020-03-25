@@ -1,5 +1,6 @@
 .medium-insert-images {
     text-align: center;
+    position: relative;
     figure {
          margin: 0;
          display: block;
@@ -38,6 +39,16 @@
                 margin: 0.5em;
             }
         }
+    }
+    .medium-editor-insert-error {
+        color: #FFF;
+        text-transform: uppercase;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,.8);
     }
 }
 

@@ -8,7 +8,8 @@
  */
 
 .medium-insert-images, .mediumInsert {
-  text-align: center; }
+  text-align: center;
+  position: relative; }
   .medium-insert-images figure, .mediumInsert figure {
     margin: 0;
     display: block; }
@@ -42,6 +43,15 @@
       .medium-insert-images.medium-insert-images-grid figure img, .medium-insert-images-grid.mediumInsert figure img {
         max-width: calc(100% - 1em);
         margin: 0.5em; }
+  .medium-insert-images .medium-editor-insert-error, .mediumInsert .medium-editor-insert-error {
+    color: #FFF;
+    text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); }
 
 .medium-insert-embeds, .mediumInsert-embeds {
   text-align: center;

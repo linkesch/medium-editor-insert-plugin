@@ -105,8 +105,26 @@ this["MediumInsert"]["Templates"]["src/js/templates/embeds-wrapper.hbs"] = Handl
     + "\n		</div>\n	</figure>\n	<div class=\"medium-insert-embeds-overlay\"></div>\n</div>";
 },"useData":true});
 
-this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<input type=\"file\" multiple>";
+this["MediumInsert"]["Templates"]["src/js/templates/images-error.hbs"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "<div contenteditable=\"false\" class=\"medium-editor-insert-error\">"
+    + container.escapeExpression(((helper = (helper = helpers.message || (depth0 != null ? depth0.message : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"message","hash":{},"data":data}) : helper)))
+    + "</div>";
+},"useData":true});
+
+this["MediumInsert"]["Templates"]["src/js/templates/images-fileupload.hbs"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return " name=\""
+    + container.escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"name","hash":{},"data":data}) : helper)))
+    + "\"";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<input type=\"file\" multiple"
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.name : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + " accept=\"image/*\">";
 },"useData":true});
 
 this["MediumInsert"]["Templates"]["src/js/templates/images-image.hbs"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
@@ -312,6 +330,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
             $data.find('.medium-insert-buttons').remove();
             $data.find('.medium-insert-active').removeClass('medium-insert-active');
+
+            // Remove images not fully uploaded
+            $data.find('.medium-insert-images img[src^="blob"]').parents('.medium-insert-images').remove();
 
             // Restore original embed code from embed wrapper attribute value.
             $data.find('[data-embed-code]').each(function () {
@@ -1593,11 +1614,15 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+            fileUploadInputName: null,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
             fileDeleteOptions: {},
+            fileUploadResponseImageUrl: function (data) {
+                return data.result.files[0].url;
+            },
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>'
@@ -1649,7 +1674,8 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             },
             messages: {
                 acceptFileTypesError: 'This file is not in a supported format: ',
-                maxFileSizeError: 'This file is too big: '
+                maxFileSizeError: 'This file is too big: ',
+                error: 'An error occurred!'
             }
             // uploadError: function($el, data) {}
             // uploadCompleted: function ($el, data) {}
@@ -1774,7 +1800,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Images.prototype.add = function () {
         var that = this,
-            $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
+            $file = $(this.templates['src/js/templates/images-fileupload.hbs']({name: this.options.fileUploadInputName})),
             fileUploadOptions = {
                 dataType: 'json',
                 add: function (e, data) {
@@ -1782,6 +1808,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
                 },
                 done: function (e, data) {
                     $.proxy(that, 'uploadDone', e, data)();
+                },
+                fail: function (e, data) {
+                    $.proxy(that, 'uploadFail', e, data)();
                 }
             };
 
@@ -1930,6 +1959,27 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     };
 
     /**
+     * Callback for failed upload requests.
+     * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#done
+     *
+     * @param {Event} e
+     * @param {object} data
+     * @return {void}
+     */
+
+    Images.prototype.uploadFail = function (e, data) {
+        if (this.options.preview && data.context) {
+            var root = data.context.parent();// jscs:ignore requireVarDeclFirst
+            data.context.append(this.templates['src/js/templates/images-error.hbs']({message: this.options.messages.error}));
+            setTimeout(function () {
+                root.remove();
+            }, 5000);
+        }
+        this.core.clean();
+        this.sorting();
+    };
+
+    /**
      * Callback for successful upload requests.
      * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#done
      *
@@ -1939,7 +1989,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        $.proxy(this, 'showImage', this.options.fileUploadResponseImageUrl(data), data)();
 
         this.core.clean();
         this.sorting();

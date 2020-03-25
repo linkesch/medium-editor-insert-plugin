@@ -15,11 +15,15 @@
             captions: true,
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
+            fileUploadInputName: null,
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
             },
             fileDeleteOptions: {},
+            fileUploadResponseImageUrl: function (data) {
+                return data.result.files[0].url;
+            },
             styles: {
                 wide: {
                     label: '<span class="fa fa-align-justify"></span>'
@@ -71,7 +75,8 @@
             },
             messages: {
                 acceptFileTypesError: 'This file is not in a supported format: ',
-                maxFileSizeError: 'This file is too big: '
+                maxFileSizeError: 'This file is too big: ',
+                error: 'An error occurred!'
             }
             // uploadError: function($el, data) {}
             // uploadCompleted: function ($el, data) {}
@@ -196,7 +201,7 @@
 
     Images.prototype.add = function () {
         var that = this,
-            $file = $(this.templates['src/js/templates/images-fileupload.hbs']()),
+            $file = $(this.templates['src/js/templates/images-fileupload.hbs']({name: this.options.fileUploadInputName})),
             fileUploadOptions = {
                 dataType: 'json',
                 add: function (e, data) {
@@ -204,6 +209,9 @@
                 },
                 done: function (e, data) {
                     $.proxy(that, 'uploadDone', e, data)();
+                },
+                fail: function (e, data) {
+                    $.proxy(that, 'uploadFail', e, data)();
                 }
             };
 
@@ -352,6 +360,27 @@
     };
 
     /**
+     * Callback for failed upload requests.
+     * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#done
+     *
+     * @param {Event} e
+     * @param {object} data
+     * @return {void}
+     */
+
+    Images.prototype.uploadFail = function (e, data) {
+        if (this.options.preview && data.context) {
+            var root = data.context.parent();// jscs:ignore requireVarDeclFirst
+            data.context.append(this.templates['src/js/templates/images-error.hbs']({message: this.options.messages.error}));
+            setTimeout(function () {
+                root.remove();
+            }, 5000);
+        }
+        this.core.clean();
+        this.sorting();
+    };
+
+    /**
      * Callback for successful upload requests.
      * https://github.com/blueimp/jQuery-File-Upload/wiki/Options#done
      *
@@ -361,7 +390,7 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+        $.proxy(this, 'showImage', this.options.fileUploadResponseImageUrl(data), data)();
 
         this.core.clean();
         this.sorting();
