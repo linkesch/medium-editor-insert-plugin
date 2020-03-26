@@ -16,6 +16,7 @@
             captionPlaceholder: 'Type caption for image (optional)',
             autoGrid: 3,
             fileUploadInputName: null,
+            fileUploadChunkOptions: false, // {chunkdone: function(e, data, callback), done: function(e, data, success, error)}
             fileUploadOptions: { // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
                 url: null,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
@@ -215,11 +216,19 @@
                 }
             };
 
-        // Only add progress callbacks for browsers that support XHR2,
-        // and test for XHR2 per:
-        // http://stackoverflow.com/questions/6767887/
-        // what-is-the-best-way-to-check-for-xhr2-file-upload-support
-        if (new XMLHttpRequest().upload) {
+        if (this.options.fileUploadChunkOptions) {
+            // Added behaviour for chunked file upload
+            fileUploadOptions.chunkdone = function (e, data) {
+                that.options.fileUploadChunkOptions.chunkdone(e, data, $.proxy(that, 'uploadProgress'));
+            };
+            fileUploadOptions.done = function (e, data) {
+                that.options.fileUploadChunkOptions.done(e, data, $.proxy(that, 'uploadDone'), $.proxy(that, 'uploadFail'));
+            };
+        } else if (new XMLHttpRequest().upload) {
+            // Only add progress callbacks for browsers that support XHR2,
+            // and test for XHR2 per:
+            // http://stackoverflow.com/questions/6767887/
+            // what-is-the-best-way-to-check-for-xhr2-file-upload-support
             fileUploadOptions.progress = function (e, data) {
                 $.proxy(that, 'uploadProgress', e, data)();
             };
