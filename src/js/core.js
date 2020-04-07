@@ -151,6 +151,9 @@
             // Remove images not fully uploaded
             $data.find('.medium-insert-images img[src^="blob"]').parents('.medium-insert-images').remove();
 
+            // Unwrap video url with not inserted embed
+            $data.find('.medium-insert-embeds:not([contenteditable="false"])').children().unwrap();
+
             // Restore original embed code from embed wrapper attribute value.
             $data.find('[data-embed-code]').each(function () {
                 var $this = $(this),
