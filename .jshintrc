@@ -2,7 +2,6 @@
     "globals": {
         "MediumEditor": true
     },
-
     "predef": {
         "jQuery": false,
         "document": false,
@@ -16,6 +15,7 @@
         "sinon": false,
         "alert": false,
         "FB": false,
+        "instgrm": false,
         "describe": false,
         "it": false,
         "expect": false,
@@ -27,11 +27,9 @@
         "require": false,
         "dataURItoBlob": false
     },
-
-    "jquery" : true,
-    "browser" : true,
-
-    "boss" : false,
+    "jquery": true,
+    "browser": true,
+    "boss": false,
     "curly": false,
     "debug": false,
     "devel": false,
