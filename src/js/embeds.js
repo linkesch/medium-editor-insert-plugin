@@ -466,6 +466,14 @@
                     }, 2000);
                 }
             }
+
+            if (html.indexOf('instagram') !== -1) {
+                if (typeof instgrm !== 'undefined') {
+                    setTimeout(function () {
+                        instgrm.Embeds.process();
+                    }, 0);
+                }
+            }
         }
     };
 
