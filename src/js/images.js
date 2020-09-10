@@ -72,6 +72,9 @@
             messages: {
                 acceptFileTypesError: 'This file is not in a supported format: ',
                 maxFileSizeError: 'This file is too big: '
+            },
+            returnURLFromUploadResult: function (result) {
+                return result.files[0].url;
             }
             // uploadError: function($el, data) {}
             // uploadCompleted: function ($el, data) {}
@@ -361,7 +364,16 @@
      */
 
     Images.prototype.uploadDone = function (e, data) {
-        $.proxy(this, 'showImage', data.result.files[0].url, data)();
+
+        var url = '';
+
+        if (typeof this.options.returnURLFromUploadResult === 'function') {
+            url = this.options.returnURLFromUploadResult(data.result);
+        } else {
+            url = defaults.returnURLFromUploadResult(data.result);
+        }
+
+        $.proxy(this, 'showImage', url, data)();
 
         this.core.clean();
         this.sorting();
