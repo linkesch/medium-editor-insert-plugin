@@ -307,6 +307,22 @@ describe('Images addon', function () {
         expect($('.medium-insert-images-toolbar').length).toEqual(0);
     });
 
+    it('only the selected image is removed', function () {
+        var $p = this.$el.find('p'),
+            $event = $.Event('keydown');
+
+        $event.which = 8;
+
+        $p.before('<div class="medium-insert-images"><figure><img src="delete-image1.jpg" alt=""></figure></div>');
+        $p.before('<div class="medium-insert-images"><figure><img src="delete-image2.jpg" alt=""></figure></div>');
+
+        this.$el.find('img').first().addClass('medium-insert-image-active');
+        this.$el.trigger($event);
+
+        expect(this.$el.find('.medium-insert-images').length).toEqual(1);
+        expect(this.$el.find('img').first().attr('src')).toEqual('delete-image2.jpg');
+    });
+
     it('fires deleteFile function even when images isn\'t selected but backspace is pressed in text', function () {
         var $p = this.$el.find('p'),
             $event = $.Event('keydown');
